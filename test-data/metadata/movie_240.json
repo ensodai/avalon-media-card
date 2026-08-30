@@ -1,0 +1,185 @@
+{
+  "title": "Крёстный отец 2",
+  "originalTitle": "The Godfather Part II",
+  "description": "В центре драмы представители нового поколения гангстерского клана — дона Корлеоне и его сына, для которых не существует моральных преград на пути достижения поставленых целей. Они превращают мафию, построенную по патриархальным, еще сицилийским законам, в весьма прагматичную, жесткую корпорацию, плавно интегрирующуюся в большой бизнес Америки.",
+  "posterUrl": "https://image.tmdb.org/t/p/w342/tOLQ3iRDfbwhVaw3QjDzIOS7zcu.jpg",
+  "backgroundUrl": "https://image.tmdb.org/t/p/w1280/kGzFbGhp99zva6oZODW5atUtnqi.jpg",
+  "genres": [
+    {
+      "id": 18,
+      "name": "драма"
+    },
+    {
+      "id": 80,
+      "name": "криминал"
+    }
+  ],
+  "keywords": [
+    {
+      "id": 131,
+      "name": "italy"
+    },
+    {
+      "id": 242,
+      "name": "new york city"
+    },
+    {
+      "id": 613,
+      "name": "new year's eve"
+    },
+    {
+      "id": 700,
+      "name": "italian american"
+    },
+    {
+      "id": 701,
+      "name": "cuba"
+    },
+    {
+      "id": 818,
+      "name": "based on novel or book"
+    },
+    {
+      "id": 1715,
+      "name": "symbolism"
+    },
+    {
+      "id": 1936,
+      "name": "blackmail"
+    },
+    {
+      "id": 2944,
+      "name": "senator"
+    },
+    {
+      "id": 3149,
+      "name": "gangster"
+    },
+    {
+      "id": 6049,
+      "name": "praise"
+    },
+    {
+      "id": 9663,
+      "name": "sequel"
+    },
+    {
+      "id": 9748,
+      "name": "revenge"
+    },
+    {
+      "id": 9826,
+      "name": "murder"
+    },
+    {
+      "id": 10085,
+      "name": "betrayal"
+    },
+    {
+      "id": 10291,
+      "name": "organized crime"
+    },
+    {
+      "id": 10391,
+      "name": "mafia"
+    },
+    {
+      "id": 10909,
+      "name": "lawyer"
+    },
+    {
+      "id": 11259,
+      "name": "extortion"
+    },
+    {
+      "id": 14632,
+      "name": "suburb"
+    },
+    {
+      "id": 155538,
+      "name": "sicilian mafia"
+    },
+    {
+      "id": 156024,
+      "name": "corrupt politician"
+    },
+    {
+      "id": 208611,
+      "name": "1950s"
+    },
+    {
+      "id": 252123,
+      "name": "new year"
+    },
+    {
+      "id": 312898,
+      "name": "violence"
+    }
+  ],
+  "releaseDate": "1974",
+  "director": "Фрэнсис Форд Коппола",
+  "directorImageUrl": "https://image.tmdb.org/t/p/w185/IwGgkmW6IoJ9vuNF0T9CU3FYUX.jpg",
+  "directorId": "1776",
+  "cast": [
+    {
+      "name": "Аль Пачино",
+      "character": "Don Michael Corleone",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/m8HAAjq1T75JypKk0v1FFQn4ysZ.jpg",
+      "id": "1158"
+    },
+    {
+      "name": "Роберт Дюваль",
+      "character": "Tom Hagen",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/3tcKxC5Sc3DJ6XPDKKC2EAomEWn.jpg",
+      "id": "3087"
+    },
+    {
+      "name": "Дайан Китон",
+      "character": "Kay Corleone",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/A8B3BsFgbmw2WEmJuQX38qeU9eR.jpg",
+      "id": "3092"
+    },
+    {
+      "name": "Роберт Де Ниро",
+      "character": "Vito Corleone",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/cT8htcckIuyI1Lqwt1CvD02ynTh.jpg",
+      "id": "380"
+    },
+    {
+      "name": "John Cazale",
+      "character": "Frederico 'Fredo' Corleone",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/7uKBc2BVbLlAiHuSdfioe1OUnCX.jpg",
+      "id": "3096"
+    },
+    {
+      "name": "Талия Шайр",
+      "character": "Constanzia 'Connie' Corleone",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/oktJmlLeyYKBCWPNjHskDwAfjct.jpg",
+      "id": "3094"
+    },
+    {
+      "name": "Ли Страсберг",
+      "character": "Hyman Roth",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/niSM7ejzddgaTcxjgJMYEFCr9Y2.jpg",
+      "id": "3171"
+    },
+    {
+      "name": "Michael V. Gazzo",
+      "character": "Frank Pentangeli",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/g9QvAnjOxC9S1MQnBymMwOUX7q9.jpg",
+      "id": "3172"
+    },
+    {
+      "name": "Джи Ди Спрэдлин",
+      "character": "Senator Pat Geary",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/pWNa9H3ABB3Ug9CwTfVNtHsCFjV.jpg",
+      "id": "3173"
+    },
+    {
+      "name": "Richard Bright",
+      "character": "Al Neri",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/potMaJ2u5PRjXZb7qF9lSW1ldNZ.jpg",
+      "id": "3174"
+    }
+  ]
+}

@@ -1,0 +1,121 @@
+{
+  "title": "Пассажир",
+  "originalTitle": "Passenger",
+  "description": "Через несколько недель после начала жизни в доме на колёсах молодая пара становится свидетелями страшной аварии, в которой погибает водитель. Вскоре их начинает преследовать демоническая сущность, от которой невозможно уйти — куда бы они ни отправились, она следует за ними.",
+  "posterUrl": "https://image.tmdb.org/t/p/w342/grlCRoCv2uT7WGvpkWSKxjPPVqc.jpg",
+  "backgroundUrl": "https://image.tmdb.org/t/p/w1280/3pDfu71mrzSuFYyIfnKEjt8z4BC.jpg",
+  "genres": [
+    {
+      "id": 27,
+      "name": "ужасы"
+    },
+    {
+      "id": 53,
+      "name": "триллер"
+    }
+  ],
+  "keywords": [
+    {
+      "id": 6844,
+      "name": "stalker"
+    },
+    {
+      "id": 7312,
+      "name": "road trip"
+    },
+    {
+      "id": 10114,
+      "name": "evil spirit"
+    },
+    {
+      "id": 33494,
+      "name": "couple"
+    },
+    {
+      "id": 208156,
+      "name": "frantic"
+    },
+    {
+      "id": 241827,
+      "name": "demonic"
+    },
+    {
+      "id": 256183,
+      "name": "supernatural horror"
+    },
+    {
+      "id": 257596,
+      "name": "vanlife"
+    },
+    {
+      "id": 325776,
+      "name": "baffled"
+    }
+  ],
+  "releaseDate": "2026",
+  "director": "Андре Эвредал",
+  "directorImageUrl": "https://image.tmdb.org/t/p/w185/c57bevrSyeEzgKfUUrfTax27IVn.jpg",
+  "directorId": "135113",
+  "cast": [
+    {
+      "name": "Лу Льобелл",
+      "character": "Maddie",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/vjCaa2EhEFgkraE6l2Vypzb93fz.jpg",
+      "id": "2476148"
+    },
+    {
+      "name": "Джейкоб Скипио",
+      "character": "Tyler",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/gcZSJy9LZ8DUDP480Q2K1OhL1Ct.jpg",
+      "id": "2256312"
+    },
+    {
+      "name": "Мелисса Лео",
+      "character": "Diana",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/ueAIX0MH68xCei3N8vFLS0EUEjY.jpg",
+      "id": "6832"
+    },
+    {
+      "name": "Джозеф Лопес",
+      "character": "The Passenger",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/ozlHXphP1TLrLwPLJMxY00Rhnx1.jpg",
+      "id": "2143439"
+    },
+    {
+      "name": "Тони Дуп",
+      "character": "Preacher",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/wmhu0egMzWXak0hn13Obso06KDU.jpg",
+      "id": "79907"
+    },
+    {
+      "name": "Бонни Диконе",
+      "character": "Diner Waitress",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/j2RljxlSGPYRIJ3TlWvEoGCj5KG.jpg",
+      "id": "3592347"
+    },
+    {
+      "name": "Давиэль Джонсон",
+      "character": "Neighborhood Volunteer",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/aLTVHMv4EMniPAXXzMmDoItCLvi.jpg",
+      "id": "1366658"
+    },
+    {
+      "name": "Джессика Крус",
+      "character": "Diner Customer",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/oZ2etqaqV1fKiRe4gPA7buBNJmN.jpg",
+      "id": "4821062"
+    },
+    {
+      "name": "Майлз Фаулер",
+      "character": "Daniel",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/sHOx0Ns0SjrFG3plsVocre04cO5.jpg",
+      "id": "2905575"
+    },
+    {
+      "name": "Алан Тронг",
+      "character": "",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/mKIXKpKmHLyw6BzhyRNAUDnWhQ1.jpg",
+      "id": "1422210"
+    }
+  ]
+}

@@ -1,0 +1,9 @@
+{
+  "subtitles.index_fmt": "Subtitles %d",
+  "dubs.multiple_fmt": "Audio tracks (%1$d): %2$s etc.",
+  "dubs.single_fmt": "Audio track: %s",
+  "season.index_fmt": "Season %d",
+  "season.collaps_fmt": "Collaps • Season %d",
+  "episodes.collaps_count_fmt": "Collaps • %d episodes",
+  "episode.index_fmt": "Episode %d"
+}

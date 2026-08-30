@@ -1,0 +1,140 @@
+{
+  "title": "Бойцовский клуб",
+  "originalTitle": "Fight Club",
+  "description": "Сотрудник страховой компании страдает хронической бессонницей и отчаянно пытается вырваться из мучительно скучной жизни. Однажды в очередной командировке он встречает некоего Тайлера Дёрдена — харизматического торговца мылом с извращенной философией. Тайлер уверен, что самосовершенствование — удел слабых, а единственное, ради чего стоит жить, — саморазрушение.\r Проходит немного времени, и вот уже новые друзья лупят друг друга почем зря на стоянке перед баром, и очищающий мордобой доставляет им высшее блаженство. Приобщая других мужчин к простым радостям физической жестокости, они основывают тайный Бойцовский клуб, который начинает пользоваться невероятной популярностью.",
+  "posterUrl": "https://image.tmdb.org/t/p/w342/66RvLrRJTm4J8l3uHXWF09AICol.jpg",
+  "backgroundUrl": "https://image.tmdb.org/t/p/w1280/c6OLXfKAk5BKeR6broC8pYiCquX.jpg",
+  "genres": [
+    {
+      "id": 18,
+      "name": "драма"
+    },
+    {
+      "id": 53,
+      "name": "триллер"
+    }
+  ],
+  "keywords": [
+    {
+      "id": 818,
+      "name": "based on novel or book"
+    },
+    {
+      "id": 825,
+      "name": "support group"
+    },
+    {
+      "id": 851,
+      "name": "dual identity"
+    },
+    {
+      "id": 1541,
+      "name": "nihilism"
+    },
+    {
+      "id": 1721,
+      "name": "fight"
+    },
+    {
+      "id": 3927,
+      "name": "rage and hate"
+    },
+    {
+      "id": 4142,
+      "name": "insomnia"
+    },
+    {
+      "id": 4565,
+      "name": "dystopia"
+    },
+    {
+      "id": 9181,
+      "name": "alter ego"
+    },
+    {
+      "id": 11687,
+      "name": "breaking the fourth wall"
+    },
+    {
+      "id": 156761,
+      "name": "split personality"
+    },
+    {
+      "id": 179173,
+      "name": "quitting a job"
+    },
+    {
+      "id": 212803,
+      "name": "dissociative identity disorder"
+    },
+    {
+      "id": 260426,
+      "name": "self destructiveness"
+    }
+  ],
+  "releaseDate": "1999",
+  "director": "Дэвид Финчер",
+  "directorImageUrl": "https://image.tmdb.org/t/p/w185/tpEczFclQZeKAiCeKZZ0adRvtfz.jpg",
+  "directorId": "7467",
+  "cast": [
+    {
+      "name": "Эдвард Нортон",
+      "character": "Narrator",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/8nytsqL59SFJTVYVrN72k6qkGgJ.jpg",
+      "id": "819"
+    },
+    {
+      "name": "Брэд Питт",
+      "character": "Tyler Durden",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/m09Y1YfPPeNYYUSHnnVqahkrC1o.jpg",
+      "id": "287"
+    },
+    {
+      "name": "Хелена Бонем Картер",
+      "character": "Marla Singer",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/hJMbNSPJ2PCahsP3rNEU39C8GWU.jpg",
+      "id": "1283"
+    },
+    {
+      "name": "Meat Loaf",
+      "character": "Robert Paulson",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/1zkohpaG3my4qQAZGVgzgPuXwZ6.jpg",
+      "id": "7470"
+    },
+    {
+      "name": "Джаред Лето",
+      "character": "Angel Face",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/ca3x0OfIKbJppZh8S1Alx3GfUZO.jpg",
+      "id": "7499"
+    },
+    {
+      "name": "Зак Гренье",
+      "character": "Richard Chesler (Regional Manager)",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/fSyQKZO39sUsqY283GXiScOg3Hi.jpg",
+      "id": "7471"
+    },
+    {
+      "name": "Холт Маккэллани",
+      "character": "The Mechanic",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/xHnvYcJv6YEku9pIg8LoDNHWQy.jpg",
+      "id": "7497"
+    },
+    {
+      "name": "Эйон Бэйли",
+      "character": "Ricky",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/3DW13W47cKk4LQZwS4EvRaNBoVu.jpg",
+      "id": "7498"
+    },
+    {
+      "name": "Richmond Arquette",
+      "character": "Intern at Hospital",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/7byGiVac0GjBSVD1h6ylZlVXZK6.jpg",
+      "id": "7472"
+    },
+    {
+      "name": "Дэвид Эндрюс",
+      "character": "Thomas at Remaining Men Together",
+      "id": "7219"
+    }
+  ]
+}

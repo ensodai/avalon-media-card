@@ -1,0 +1,103 @@
+{
+  "title": "Энола Холмс 3",
+  "originalTitle": "Enola Holmes 3",
+  "subtitle": "Enola Holmes 3",
+  "description": "Детектив Энола Холмс отправляется на Мальту, однако ее планы выйти замуж рушатся: из-за исчезновения Шерлока она втягивается в опасное дело.",
+  "posterUrl": "https://image.tmdb.org/t/p/w342/eTjUnXaWpkQbuDcBQV8oI1IeC9r.jpg",
+  "backgroundUrl": "https://image.tmdb.org/t/p/w1280/jLuGZc84MvPYCQomQg9DI72mstt.jpg",
+  "rating": "7,0",
+  "runtime": 109,
+  "genres": [
+    {
+      "id": 12,
+      "name": "приключения"
+    },
+    {
+      "id": 80,
+      "name": "криминал"
+    },
+    {
+      "id": 9648,
+      "name": "детектив"
+    }
+  ],
+  "productionCompanies": [
+    {
+      "id": 923,
+      "name": "Legendary Pictures",
+      "logoUrl": "https://image.tmdb.org/t/p/w200/5UQsZrfbfG2dYJbx8DxfoTr2Bvu.png"
+    },
+    {
+      "id": 121424,
+      "name": "PCMA Productions",
+      "logoUrl": "https://image.tmdb.org/t/p/w200/laQkxRzl2PTQFHPKVUE54UM38sw.png"
+    }
+  ],
+  "releaseDate": "2026-06-30",
+  "tagline": "Это я?",
+  "director": "Филип Барантини",
+  "directorImageUrl": "https://image.tmdb.org/t/p/w185/8v03JkqIDNm6TnaTuCiD929bexm.jpg",
+  "directorId": "191750",
+  "cast": [
+    {
+      "name": "Милли Бобби Браун",
+      "character": "Enola Holmes",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/k9KGzGDVhXKfOGpoN62MNuXL28q.jpg",
+      "id": "1356210"
+    },
+    {
+      "name": "Генри Кавилл",
+      "character": "Sherlock Holmes",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/kN3A5oLgtKYAxa9lAkpsIGYKYVo.jpg",
+      "id": "73968"
+    },
+    {
+      "name": "Хелена Бонем Картер",
+      "character": "Eudoria Holmes",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/hJMbNSPJ2PCahsP3rNEU39C8GWU.jpg",
+      "id": "1283"
+    },
+    {
+      "name": "Луис Партридж",
+      "character": "Tewkesbury",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/Q6X8fZQchv1gWjI9pWU58yZ0wb.jpg",
+      "id": "1558986"
+    },
+    {
+      "name": "Химеш Патель",
+      "character": "Dr. Watson",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/qCjfMjUxiAHdVpIMI9YN5MUdn24.jpg",
+      "id": "1227717"
+    },
+    {
+      "name": "Шэрон Дункан-Брюстер",
+      "character": "Moriarty",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/gp5h6rOrqBrIGgID4AMd58O6Ow6.jpg",
+      "id": "195666"
+    },
+    {
+      "name": "Хэтти Морахэн",
+      "character": "Lady Tewkesbury",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/hrgiUfA0a0Lms2ZJhNIv2Xy7urP.jpg",
+      "id": "56103"
+    },
+    {
+      "name": "Сьюзан Уокома",
+      "character": "Edith",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/puEiaNQZyG2gGfIZCyexbtrcv1F.jpg",
+      "id": "1531926"
+    },
+    {
+      "name": "Джо Аццопарди",
+      "character": "Mikiel",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/pImRPY1hkIXU7oLZO1znJOdoDDg.jpg",
+      "id": "1516315"
+    },
+    {
+      "name": "Николас Аарон",
+      "character": "Sergeant Nicholas Smith",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/rMBLVlFDfOr6ZoU1iHF6QARv9VP.jpg",
+      "id": "68535"
+    }
+  ]
+}

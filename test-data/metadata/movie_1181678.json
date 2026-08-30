@@ -1,0 +1,92 @@
+{
+  "title": "Хочешь быть моим сыном?",
+  "originalTitle": "¿Quieres ser mi hijo?",
+  "subtitle": "¿Quieres ser mi hijo?",
+  "description": "В фильме \"Хочешь быть моим сыном?\" рассказывается история Лу, женщины в возрасте, которая всегда придавала большое значение семейным ценностям и стабильности. Однако однажды ей приходит весьма шокирующая новость: ее партнер, с которым она прожила 15 лет, оказывается втянутым во внебрачные отношения.  С этого момента Лу решает начать все с чистого листа. Она осознает, что ее жизнь принимает неожиданный оборот, и для того, чтобы найти себя и смысл жизни, ей приходится сделать нечто невероятное. Судьба сводит ее с Максом, молодым и беспечным парнем, который ведет непоследовательный образ жизни и не скрывает своих женских завоеваний.",
+  "posterUrl": "https://image.tmdb.org/t/p/w342/6PQJsmuvSMZQMmlJfTpjIkrizUh.jpg",
+  "backgroundUrl": "https://image.tmdb.org/t/p/w1280/xyWKrni8WrYzqn7ztvI5nIY0h62.jpg",
+  "rating": "8,5",
+  "runtime": 100,
+  "genres": [
+    {
+      "id": 35,
+      "name": "комедия"
+    },
+    {
+      "id": 10749,
+      "name": "мелодрама"
+    }
+  ],
+  "productionCompanies": [
+    {
+      "id": 6679,
+      "name": "MarVista Entertainment",
+      "logoUrl": "https://image.tmdb.org/t/p/w200/r3r7qbHKgo8N0yr7r1TjLmzLXfQ.png"
+    }
+  ],
+  "releaseDate": "2023-09-21",
+  "tagline": "",
+  "director": "Ihtzi Hurtado",
+  "directorImageUrl": "https://image.tmdb.org/t/p/w185/iZ4I41zQfLr6zP2hLWQkawHUhbM.jpg",
+  "directorId": "3009489",
+  "cast": [
+    {
+      "name": "Людвика Палета",
+      "character": "Lucía",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/dcozq8kwFH1XEu547PZ6OpJcznz.jpg",
+      "id": "947296"
+    },
+    {
+      "name": "Juanpa Zurita",
+      "character": "Javier",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/kVWholhVRM5CwVO1WZ8DRIr8CQV.jpg",
+      "id": "2723354"
+    },
+    {
+      "name": "Эрнан Мендоса",
+      "character": "",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/yU4nRJhLXr4eZdujCX1ZsPNFIpC.jpg",
+      "id": "1096780"
+    },
+    {
+      "name": "Harold Azuara",
+      "character": "La Avispa",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/jBZiH0YqASbQZ24PIxu1KGEHUED.jpg",
+      "id": "1592680"
+    },
+    {
+      "name": "Agustín Arana",
+      "character": "",
+      "id": "1243415"
+    },
+    {
+      "name": "Yuriria del Valle",
+      "character": "Maguis",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/qf0YEZkYATzdIQtIxTJrLMM61ES.jpg",
+      "id": "1328903"
+    },
+    {
+      "name": "Karla Rico",
+      "character": "María",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/vqcCm2e1LJJHYrhn7517LI0bKpb.jpg",
+      "id": "2510650"
+    },
+    {
+      "name": "Jorge Gidi",
+      "character": "Jorge",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/mi7CGVAkoeZ0UGk7lnIlQofzb6Q.jpg",
+      "id": "2448572"
+    },
+    {
+      "name": "Isabel Gonzalez",
+      "character": "Lucía (15 años)",
+      "id": "1017827"
+    },
+    {
+      "name": "Macarena Oz",
+      "character": "",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/5Ewx5jEU8bd4eP144fEO1GRfafI.jpg",
+      "id": "1319017"
+    }
+  ]
+}

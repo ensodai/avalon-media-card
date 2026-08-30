@@ -1,0 +1,10 @@
+CREATE TABLE IF NOT EXISTS user_settings
+(
+    id         VARCHAR(36) NOT NULL PRIMARY KEY,
+    created_at TIMESTAMP   DEFAULT CURRENT_TIMESTAMP NOT NULL,
+    updated_at TIMESTAMP   DEFAULT CURRENT_TIMESTAMP NOT NULL,
+    user_id    VARCHAR(36) NOT NULL REFERENCES users (id) ON DELETE CASCADE,
+    locale     VARCHAR(10) DEFAULT 'ru' NOT NULL
+);
+
+CREATE UNIQUE INDEX IF NOT EXISTS user_settings_user_id_unique ON user_settings (user_id);

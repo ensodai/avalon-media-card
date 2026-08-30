@@ -1,0 +1,137 @@
+{
+  "title": "Криминальное чтиво",
+  "originalTitle": "Pulp Fiction",
+  "description": "Пути двух наемных убийц, профессионального бойца, двух бандитов и жены гангстера пересекаются в этом закрученном кровавом путешествии по злачному центру Лос-Анджелеса.",
+  "posterUrl": "https://image.tmdb.org/t/p/w342/dzkW0SKRUaQ46PruMA9lQscgQl4.jpg",
+  "backgroundUrl": "https://image.tmdb.org/t/p/w1280/suaEOtk1N1sgg2MTM7oZd2cfVp3.jpg",
+  "genres": [
+    {
+      "id": 53,
+      "name": "триллер"
+    },
+    {
+      "id": 80,
+      "name": "криминал"
+    },
+    {
+      "id": 35,
+      "name": "комедия"
+    }
+  ],
+  "keywords": [
+    {
+      "id": 2151,
+      "name": "drug crime"
+    },
+    {
+      "id": 2231,
+      "name": "drug dealer"
+    },
+    {
+      "id": 3149,
+      "name": "gangster"
+    },
+    {
+      "id": 8627,
+      "name": "stolen money"
+    },
+    {
+      "id": 9730,
+      "name": "crime boss"
+    },
+    {
+      "id": 10123,
+      "name": "dark comedy"
+    },
+    {
+      "id": 11436,
+      "name": "redemption"
+    },
+    {
+      "id": 12670,
+      "name": "los angeles, california"
+    },
+    {
+      "id": 14604,
+      "name": "theft"
+    },
+    {
+      "id": 157171,
+      "name": "nonlinear timeline"
+    },
+    {
+      "id": 171366,
+      "name": "multiple storylines"
+    },
+    {
+      "id": 207268,
+      "name": "neo-noir"
+    }
+  ],
+  "releaseDate": "1994",
+  "director": "Квентин Тарантино",
+  "directorImageUrl": "https://image.tmdb.org/t/p/w185/1gjcpAa99FAOWGnrUvHEXXsRs7o.jpg",
+  "directorId": "138",
+  "cast": [
+    {
+      "name": "Джон Траволта",
+      "character": "Vincent Vega",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/ap8eEYfBKTLixmVVpRlq4NslDD5.jpg",
+      "id": "8891"
+    },
+    {
+      "name": "Сэмюэл Л. Джексон",
+      "character": "Jules Winnfield",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/qdfRtvPCj51C9Uy5VEgjgj69JyV.jpg",
+      "id": "2231"
+    },
+    {
+      "name": "Ума Турман",
+      "character": "Mia Wallace",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/hlYG0MC6im0MHNq1xixxVilfwyR.jpg",
+      "id": "139"
+    },
+    {
+      "name": "Брюс Уиллис",
+      "character": "Butch Coolidge",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/w3aXr1e7gQCn8MSp1vW4sXHn99P.jpg",
+      "id": "62"
+    },
+    {
+      "name": "Винг Реймз",
+      "character": "Marsellus Wallace",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/tOVDvu1EQP78AwaUw6uh1wN818E.jpg",
+      "id": "10182"
+    },
+    {
+      "name": "Харви Кейтель",
+      "character": "The Wolf",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/7P30hza1neYWW3r7rSQOC736K2Z.jpg",
+      "id": "1037"
+    },
+    {
+      "name": "Эрик Штольц",
+      "character": "Lance",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/idFuM00MeVmwGAiqvDaJcBiLAmD.jpg",
+      "id": "7036"
+    },
+    {
+      "name": "Тим Рот",
+      "character": "Pumpkin",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/qSizF2i9gz6c6DbAC5RoIq8sVqX.jpg",
+      "id": "3129"
+    },
+    {
+      "name": "Аманда Пламмер",
+      "character": "Honey Bunny",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/wEwyajjePFVVn2wFdH1NH7z9Qn5.jpg",
+      "id": "99"
+    },
+    {
+      "name": "Мария де Медейруш",
+      "character": "Fabienne",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/v53G55qSYaVRvbgUZ2uch4gVHT6.jpg",
+      "id": "2319"
+    }
+  ]
+}

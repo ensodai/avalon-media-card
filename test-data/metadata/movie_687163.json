@@ -1,0 +1,165 @@
+{
+  "title": "Проект «Конец света»",
+  "originalTitle": "Project Hail Mary",
+  "description": "Астронавт Райленд Грейс просыпается на космическом корабле, не помня ни себя, ни свою миссию. Постепенно мужчина приходит к выводу, что он — единственный выживший из экипажа, отправленного в звёздную систему Тау Кита в поисках спасения от катастрофы на Земле. Райленду предстоит положиться на свои обширные научные знания, изобретательность и силу воли, но, возможно, ему не придётся искать в одиночку.",
+  "posterUrl": "https://image.tmdb.org/t/p/w342/jucD9FzLjVsFfBiFcSdoLa6rPOl.jpg",
+  "backgroundUrl": "https://image.tmdb.org/t/p/w1280/8Tfys3mDZVp4tNoH2ktm06a0Tau.jpg",
+  "genres": [
+    {
+      "id": 878,
+      "name": "фантастика"
+    },
+    {
+      "id": 12,
+      "name": "приключения"
+    }
+  ],
+  "keywords": [
+    {
+      "id": 732,
+      "name": "coma"
+    },
+    {
+      "id": 818,
+      "name": "based on novel or book"
+    },
+    {
+      "id": 1670,
+      "name": "sun"
+    },
+    {
+      "id": 2568,
+      "name": "language barrier"
+    },
+    {
+      "id": 3801,
+      "name": "space travel"
+    },
+    {
+      "id": 3930,
+      "name": "bravery"
+    },
+    {
+      "id": 4040,
+      "name": "space mission"
+    },
+    {
+      "id": 6054,
+      "name": "friendship"
+    },
+    {
+      "id": 9882,
+      "name": "space"
+    },
+    {
+      "id": 9951,
+      "name": "alien"
+    },
+    {
+      "id": 11469,
+      "name": "memory loss"
+    },
+    {
+      "id": 14626,
+      "name": "astronaut"
+    },
+    {
+      "id": 14760,
+      "name": "scientist"
+    },
+    {
+      "id": 209673,
+      "name": "calm"
+    },
+    {
+      "id": 234644,
+      "name": "science teacher"
+    },
+    {
+      "id": 238329,
+      "name": "save the planet"
+    },
+    {
+      "id": 252937,
+      "name": "spaceship"
+    },
+    {
+      "id": 310034,
+      "name": "interspecies friendship"
+    },
+    {
+      "id": 325765,
+      "name": "amused"
+    },
+    {
+      "id": 375249,
+      "name": "epic sci-fi"
+    }
+  ],
+  "releaseDate": "2026",
+  "director": "Фил Лорд",
+  "directorImageUrl": "https://image.tmdb.org/t/p/w185/2MagibFHZxky3FmMubyABUnf4lw.jpg",
+  "directorId": "107446",
+  "cast": [
+    {
+      "name": "Райан Гослинг",
+      "character": "Ryland Grace",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/lyUyVARQKhGxaxy0FbPJCQRpiaW.jpg",
+      "id": "30614"
+    },
+    {
+      "name": "Сандра Хюллер",
+      "character": "Eva Stratt",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/t7wGqC2dRwTEnt9Fk5pxQ0uXTqs.jpg",
+      "id": "7152"
+    },
+    {
+      "name": "Джеймс Ортис",
+      "character": "Rocky (voice)",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/unzBwVsoq8rAH8BAYlPR1zsWQ4E.jpg",
+      "id": "2096164"
+    },
+    {
+      "name": "Лайонел Бойс",
+      "character": "Carl",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/hpIxX5nkfA3pWCW8rYkEUCSBVyS.jpg",
+      "id": "2320708"
+    },
+    {
+      "name": "Милана Вайнтруб",
+      "character": "Olesya Ilyukhina",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/i5Cou9ExwTZvRRtl79V75CsI7oC.jpg",
+      "id": "1454946"
+    },
+    {
+      "name": "Кен Люн",
+      "character": "Yao",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/hpatUP6u74gkpDRmn9voNY9V43O.jpg",
+      "id": "2131"
+    },
+    {
+      "name": "Прия Кансара",
+      "character": "Mary (voice)",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/zv9kpaQ8AVBfjI2LAAZV58NeVQg.jpg",
+      "id": "3554544"
+    },
+    {
+      "name": "Миа Сотерье",
+      "character": "Dr. Browne",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/bU4Twfk4as290gPFouByj7Wjd2.jpg",
+      "id": "1749206"
+    },
+    {
+      "name": "Аннель Олалейе",
+      "character": "Olivia",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/V0UqW30EQaHjGhwDnb6dT0AWmz.jpg",
+      "id": "3074054"
+    },
+    {
+      "name": "Майя Эва Хосейн",
+      "character": "Rekha",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/lDHbsnyUoBzmtbMevNl4F2n8B8B.jpg",
+      "id": "6080198"
+    }
+  ]
+}

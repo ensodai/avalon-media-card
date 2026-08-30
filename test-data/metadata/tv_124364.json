@@ -1,0 +1,148 @@
+{
+  "title": "Извне",
+  "originalTitle": "FROM",
+  "description": "Затерянный в лесу американский городок пленяет каждого, кому не посчастливилось проехать его по пути — покинуть это место оказывается буквально невозможно. Днем невольные жители пытаются выстроить подобие нормального быта и найти способ выбраться, а по ночам спасаются от пугающих обитателей леса, которые приходят навестить горожан, как только заходит солнце.",
+  "posterUrl": "https://image.tmdb.org/t/p/w342/dFJ8exnjJoEfTlHoR58L4OlTSEu.jpg",
+  "backgroundUrl": "https://image.tmdb.org/t/p/w1280/xLdw1xdHocKYFFvx7w41NchXMfJ.jpg",
+  "genres": [
+    {
+      "id": 9648,
+      "name": "детектив"
+    },
+    {
+      "id": 18,
+      "name": "драма"
+    },
+    {
+      "id": 10765,
+      "name": "НФ и Фэнтези"
+    }
+  ],
+  "keywords": [
+    {
+      "id": 10596,
+      "name": "argentina"
+    },
+    {
+      "id": 13006,
+      "name": "torture"
+    },
+    {
+      "id": 14601,
+      "name": "explosion"
+    },
+    {
+      "id": 155497,
+      "name": "truck driver"
+    },
+    {
+      "id": 164865,
+      "name": "male stripper"
+    }
+  ],
+  "releaseDate": "2022",
+  "director": "Джек Бендер",
+  "directorImageUrl": "https://image.tmdb.org/t/p/w185/k0WxQFE0ecGSSJ3H9tt2Eqcn0FX.jpg",
+  "directorId": "28976",
+  "cast": [
+    {
+      "name": "Гарольд Перрино",
+      "character": "Boyd Stevens",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/bVSLpGUaislREbujmknOqadrxYM.jpg",
+      "id": "6195"
+    },
+    {
+      "name": "Каталина Сандино Морено",
+      "character": "Tabitha Matthews",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/78V4H40NXJ6dzqFZaEe1fBelw56.jpg",
+      "id": "5887"
+    },
+    {
+      "name": "Рики Хе",
+      "character": "Kenny Liu",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/ib7G6gYrJqSWMk2kX93ygVlrSPX.jpg",
+      "id": "1927025"
+    },
+    {
+      "name": "Дэвид Алпей",
+      "character": "Jade Herrera",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/ezGCb3pOtEDZy3QNZxX6bQtKWiY.jpg",
+      "id": "60089"
+    },
+    {
+      "name": "Хлоя ван Ландсхот",
+      "character": "Kristi Miller",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/9sQDQxKcp0UAl5nKfeoHwcn3eGs.jpg",
+      "id": "2520942"
+    },
+    {
+      "name": "Ханна Черами",
+      "character": "Julie Matthews",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/bVNJpvLKWwzxvLPFFmhsoMsR5qu.jpg",
+      "id": "1562430"
+    },
+    {
+      "name": "Пега Гафури",
+      "character": "Fatima",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/iLl3NYHTmp2n4CqlukO3bUTNhCf.jpg",
+      "id": "3437121"
+    },
+    {
+      "name": "Саймон Уэбстер",
+      "character": "Ethan Matthews",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/8K8D5ZQIb4fDSGxTKL2FVjFloWW.jpg",
+      "id": "3118207"
+    },
+    {
+      "name": "Элизабет Сондерс",
+      "character": "Donna",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/j3gPh9XkEJb789p7U0JgA1CFnpC.jpg",
+      "id": "108895"
+    },
+    {
+      "name": "Эйвери Конрад",
+      "character": "Sara Myers",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/hiyJ1IUgy3C7rcp5D5hoqTz4JCZ.jpg",
+      "id": "2578201"
+    }
+  ],
+  "status": "Идет",
+  "seasons": [
+    {
+      "id": "a2400a29-2eb0-4039-8344-121a5e9537bd",
+      "seasonNumber": 1,
+      "name": "Сезон 1",
+      "overview": "",
+      "posterUrl": "https://image.tmdb.org/t/p/w342/djC1sCniTesOzTMoc71fY8GAKFy.jpg",
+      "episodeCount": 10,
+      "airDate": "2022-02-20"
+    },
+    {
+      "id": "4509b17f-631d-4f94-b556-8b238cbf28b1",
+      "seasonNumber": 2,
+      "name": "Сезон 2",
+      "overview": "",
+      "posterUrl": "https://image.tmdb.org/t/p/w342/s6fAdAhhMK3nxYACd2iz5pKZI5h.jpg",
+      "episodeCount": 10,
+      "airDate": "2023-04-23"
+    },
+    {
+      "id": "59afdedf-1be2-4886-942f-18d022b1fa63",
+      "seasonNumber": 3,
+      "name": "Сезон 3",
+      "overview": "",
+      "posterUrl": "https://image.tmdb.org/t/p/w342/9nakBMqL4ITaJYs90lTyJNVdrc0.jpg",
+      "episodeCount": 10,
+      "airDate": "2024-09-22"
+    },
+    {
+      "id": "327f2fd4-a9c5-4b46-8fbc-496bf2c96446",
+      "seasonNumber": 4,
+      "name": "Сезон 4",
+      "overview": "Чем ближе жители городка к ответам, которые они ищут, тем страшнее становится их поиск. Кто такой Человек в Жёлтом и чего он хочет? Станет ли откровение Джейд и Табиты ключом к тому, чтобы наконец вернуться домой? Как долго Бойд сможет удерживать город вместе, даже когда его тело и разум разрушаются? И какую роль сыграет самый недавний гость городка в грядущих событиях? Четвёртый сезон откроет двери, которые некоторым в городе захочется навсегда оставить закрытыми.",
+      "posterUrl": "https://image.tmdb.org/t/p/w342/dFJ8exnjJoEfTlHoR58L4OlTSEu.jpg",
+      "episodeCount": 10,
+      "airDate": "2026-04-19"
+    }
+  ]
+}

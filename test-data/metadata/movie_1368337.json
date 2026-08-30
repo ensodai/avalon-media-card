@@ -1,0 +1,161 @@
+{
+  "title": "Одиссея",
+  "originalTitle": "The Odyssey",
+  "description": "После Троянской войны Одиссей, царь Итаки, во главе небольшого войска возвращается домой к своей жене Пенелопе. На своём пути Одиссей сталкивается со множеством испытаний, встречает циклопов, сирен и великанов-людоедов.",
+  "posterUrl": "https://image.tmdb.org/t/p/w342/exOPvjnLaKMp00fsk8E3UpfPtNC.jpg",
+  "backgroundUrl": "https://image.tmdb.org/t/p/w1280/r57L2UBLPKcHdZQYg8tagv9XqK2.jpg",
+  "genres": [
+    {
+      "id": 12,
+      "name": "приключения"
+    },
+    {
+      "id": 28,
+      "name": "боевик"
+    },
+    {
+      "id": 14,
+      "name": "фэнтези"
+    }
+  ],
+  "keywords": [
+    {
+      "id": 2036,
+      "name": "greek mythology"
+    },
+    {
+      "id": 3265,
+      "name": "trojan war"
+    },
+    {
+      "id": 3799,
+      "name": "ship"
+    },
+    {
+      "id": 12995,
+      "name": "historical fiction"
+    },
+    {
+      "id": 14704,
+      "name": "ancient world"
+    },
+    {
+      "id": 15060,
+      "name": "period drama"
+    },
+    {
+      "id": 41011,
+      "name": "based on song, poem or rhyme"
+    },
+    {
+      "id": 174378,
+      "name": "greek history"
+    },
+    {
+      "id": 181240,
+      "name": "voyage"
+    },
+    {
+      "id": 187305,
+      "name": "peplum"
+    },
+    {
+      "id": 189119,
+      "name": "ancient"
+    },
+    {
+      "id": 189601,
+      "name": "trojan horse"
+    },
+    {
+      "id": 208980,
+      "name": "mediterranean sea"
+    },
+    {
+      "id": 235616,
+      "name": "bronze age"
+    },
+    {
+      "id": 249756,
+      "name": "mythical"
+    },
+    {
+      "id": 311653,
+      "name": "odyssey"
+    },
+    {
+      "id": 317728,
+      "name": "sword and sandal"
+    },
+    {
+      "id": 375250,
+      "name": "epic fantasy"
+    }
+  ],
+  "releaseDate": "2026",
+  "director": "Кристофер Нолан",
+  "directorImageUrl": "https://image.tmdb.org/t/p/w185/xuAIuYSmsUzKlUMBFGVZaWsY3DZ.jpg",
+  "directorId": "525",
+  "cast": [
+    {
+      "name": "Мэтт Деймон",
+      "character": "Odysseus",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/aCvBXTAR9B1qRjIRzMBYhhbm1fR.jpg",
+      "id": "1892"
+    },
+    {
+      "name": "Том Холланд",
+      "character": "Telemachus",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/xKBAaPIa1c7tzZD3Y0MhBLv4hPE.jpg",
+      "id": "1136406"
+    },
+    {
+      "name": "Энн Хэтэуэй",
+      "character": "Penelope",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/nbccV2pMoyLTCeg5DQip24Eq0Jp.jpg",
+      "id": "1813"
+    },
+    {
+      "name": "Роберт Паттинсон",
+      "character": "Antinous",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/3qZ09UE7lN6AtorfXFRYpEtSY93.jpg",
+      "id": "11288"
+    },
+    {
+      "name": "Лупита Нионго",
+      "character": "Helen / Clytemnestra",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/mJMpsADPpt0bmXEzs3ywrUiCkpD.jpg",
+      "id": "1267329"
+    },
+    {
+      "name": "Шарлиз Терон",
+      "character": "Calypso",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/gd7ShD0yt4bsR2STeQ19KQ6hvXL.jpg",
+      "id": "6885"
+    },
+    {
+      "name": "Зендея",
+      "character": "Athena",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/1qup8tSt95HLbcy2c2xrx4iJNxv.jpg",
+      "id": "505710"
+    },
+    {
+      "name": "Бенни Сафди",
+      "character": "Agamemnon",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/u10A5DpUYRB1zMF7YoGYcyvhois.jpg",
+      "id": "227564"
+    },
+    {
+      "name": "Джон Бернтал",
+      "character": "Menelaus",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/o0t6EVkJOrFAjESDilZUlf46IbQ.jpg",
+      "id": "19498"
+    },
+    {
+      "name": "Джон Легуизамо",
+      "character": "Eumaeus",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/kwYCdxTlDh9zauUCg4mp2XTCQTw.jpg",
+      "id": "5723"
+    }
+  ]
+}

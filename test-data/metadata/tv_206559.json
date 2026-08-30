@@ -1,0 +1,276 @@
+{
+  "title": "Биннеландеры",
+  "originalTitle": "Binnelanders",
+  "subtitle": "Binnelanders",
+  "description": "Binnelanders (ранее Binneland и Binneland Sub Judice) — южноафриканская мыльная опера на языке африкаанс. Действие происходит в вымышленной частной больнице Биннеланд Клиник в Претории и вокруг нее, а сюжетная линия рассказывает об испытаниях, травмах и невзгодах персонала и пациентов больницы. Продюсерами сериала являются Фридрих и Эльсье Старк из Stark Productions.",
+  "posterUrl": "https://image.tmdb.org/t/p/w342/AlNWXugy5a9Qhw9pWDGMBtIlNB0.jpg",
+  "backgroundUrl": "https://image.tmdb.org/t/p/w1280/s1dTt4M31q2HwD5Fkl1tf5tQzJg.jpg",
+  "rating": "5,5",
+  "genres": [
+    {
+      "id": 10766,
+      "name": "Мыльная опера"
+    }
+  ],
+  "productionCompanies": [
+    {
+      "id": 240436,
+      "name": "Stark Studios",
+      "logoUrl": "https://image.tmdb.org/t/p/w200/uQbJVxmj5hhGWmym13JOs2rFAM8.png"
+    }
+  ],
+  "releaseDate": "2005-10-13",
+  "tagline": "",
+  "cast": [
+    {
+      "name": "Ханс Стридом",
+      "character": "Dr. At Koster",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/o5MURlJJCC67EvJ2hYXMFpvwFEb.jpg",
+      "id": "70966"
+    },
+    {
+      "name": "Germandt Geldenhuys",
+      "character": "Louis Koster",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/7ektNcRTOtIr4eopAybV00JiRN.jpg",
+      "id": "2057047"
+    },
+    {
+      "name": "Je-ani Swiegelaar",
+      "character": "Naomi Koster",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/7ikfkseBLPdPD55NFWW4hJlwS9L.jpg",
+      "id": "1854858"
+    },
+    {
+      "name": "Gerald Steyn",
+      "character": "Dr. Uys Wagener",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/dYnfi6UYok930QgcqECBhKRdiWg.jpg",
+      "id": "3947231"
+    },
+    {
+      "name": "Marlee van der Merwe",
+      "character": "Dr. Ella Swart",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/epCX7JDvUxDI7JCrRFXw2FhQZ4.jpg",
+      "id": "230817"
+    },
+    {
+      "name": "Roberto Kyle",
+      "character": "Dr. Joe Olivier",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/6uQJc7epTqEJ1BsSrSpFFJ6YMyi.jpg",
+      "id": "3182686"
+    },
+    {
+      "name": "Melinda Viljoen",
+      "character": "Tracy Jonker",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/8VviPGl59PZhHDXO4R5q0HrP95Q.jpg",
+      "id": "4195190"
+    },
+    {
+      "name": "Antoinette Modise",
+      "character": "Bonnie Jacobs",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/5OEpJvTOpDh4snWx6eKWKcDgryV.jpg",
+      "id": "4266950"
+    },
+    {
+      "name": "Megan Troskie",
+      "character": "Thalia Ferreira",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/84kqZzeWF8L397qMQM2lcSZ9IFa.jpg",
+      "id": "4268808"
+    },
+    {
+      "name": "Izette Blignaut",
+      "character": "Petro van Zyl",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/5DtYuUg1dsQvWG2ReArFuR1DdrY.jpg",
+      "id": "4526442"
+    }
+  ],
+  "numberOfSeasons": 22,
+  "numberOfEpisodes": 5112,
+  "status": "Идет",
+  "network": "M-Net",
+  "seasons": [
+    {
+      "id": "301848",
+      "seasonNumber": 1,
+      "name": "Сезон 1",
+      "overview": "",
+      "episodeCount": 52,
+      "airDate": "2005-10-13"
+    },
+    {
+      "id": "301849",
+      "seasonNumber": 2,
+      "name": "Сезон 2",
+      "overview": "",
+      "episodeCount": 88,
+      "airDate": "2006-04-13"
+    },
+    {
+      "id": "301850",
+      "seasonNumber": 3,
+      "name": "Сезон 3",
+      "overview": "",
+      "episodeCount": 260,
+      "airDate": "2007-05-09"
+    },
+    {
+      "id": "301851",
+      "seasonNumber": 4,
+      "name": "Сезон 4",
+      "overview": "",
+      "episodeCount": 260,
+      "airDate": "2008-05-07"
+    },
+    {
+      "id": "301852",
+      "seasonNumber": 5,
+      "name": "Сезон 5",
+      "overview": "",
+      "episodeCount": 237,
+      "airDate": "2009-05-07"
+    },
+    {
+      "id": "301853",
+      "seasonNumber": 6,
+      "name": "Сезон 6",
+      "overview": "",
+      "episodeCount": 260,
+      "airDate": "2010-04-05"
+    },
+    {
+      "id": "301854",
+      "seasonNumber": 7,
+      "name": "Сезон 7",
+      "overview": "",
+      "episodeCount": 260,
+      "airDate": "2011-04-04"
+    },
+    {
+      "id": "301855",
+      "seasonNumber": 8,
+      "name": "Сезон 8",
+      "overview": "",
+      "episodeCount": 260,
+      "airDate": "2012-04-02"
+    },
+    {
+      "id": "301856",
+      "seasonNumber": 9,
+      "name": "Сезон 9",
+      "overview": "",
+      "episodeCount": 260,
+      "airDate": "2013-04-01"
+    },
+    {
+      "id": "301857",
+      "seasonNumber": 10,
+      "name": "Сезон 10",
+      "overview": "",
+      "posterUrl": "https://image.tmdb.org/t/p/w342/n8or9JBQ52qELY7TccfLbB3FLws.jpg",
+      "episodeCount": 260,
+      "airDate": "2014-03-31"
+    },
+    {
+      "id": "301858",
+      "seasonNumber": 11,
+      "name": "Сезон 11",
+      "overview": "",
+      "episodeCount": 260,
+      "airDate": "2015-03-30"
+    },
+    {
+      "id": "301859",
+      "seasonNumber": 12,
+      "name": "Сезон 12",
+      "overview": "",
+      "episodeCount": 315,
+      "airDate": "2016-03-28"
+    },
+    {
+      "id": "301860",
+      "seasonNumber": 13,
+      "name": "Сезон 13",
+      "overview": "",
+      "episodeCount": 260,
+      "airDate": "2017-06-12"
+    },
+    {
+      "id": "301861",
+      "seasonNumber": 14,
+      "name": "Сезон 14",
+      "overview": "",
+      "episodeCount": 260,
+      "airDate": "2018-06-11"
+    },
+    {
+      "id": "301862",
+      "seasonNumber": 15,
+      "name": "Сезон 15",
+      "overview": "",
+      "episodeCount": 260,
+      "airDate": "2019-06-10"
+    },
+    {
+      "id": "301863",
+      "seasonNumber": 16,
+      "name": "Сезон 16",
+      "overview": "",
+      "posterUrl": "https://image.tmdb.org/t/p/w342/2g4RnUinfqMyeQnwNpRROkbgbRQ.jpg",
+      "episodeCount": 260,
+      "airDate": "2020-06-08"
+    },
+    {
+      "id": "301864",
+      "seasonNumber": 17,
+      "name": "Сезон 17",
+      "overview": "",
+      "posterUrl": "https://image.tmdb.org/t/p/w342/5URikDdjnciD9t5VgqMpcIKQyVU.jpg",
+      "episodeCount": 260,
+      "airDate": "2021-06-07"
+    },
+    {
+      "id": "351344",
+      "seasonNumber": 18,
+      "name": "Сезон 18",
+      "overview": "",
+      "posterUrl": "https://image.tmdb.org/t/p/w342/tdX2Fb6yXpxBolz0OXPp3JSQWB8.jpg",
+      "episodeCount": 260,
+      "airDate": "2022-06-06"
+    },
+    {
+      "id": "351346",
+      "seasonNumber": 19,
+      "name": "Сезон 19",
+      "overview": "",
+      "posterUrl": "https://image.tmdb.org/t/p/w342/qPoSrOelpnCtZw63SKfl6KigmWH.jpg",
+      "episodeCount": 260,
+      "airDate": "2023-06-05"
+    },
+    {
+      "id": "394733",
+      "seasonNumber": 20,
+      "name": "Сезон 20",
+      "overview": "",
+      "posterUrl": "https://image.tmdb.org/t/p/w342/3bzECfllho8PphdYujLUIuhncJD.jpg",
+      "episodeCount": 260,
+      "airDate": "2024-06-03"
+    },
+    {
+      "id": "457248",
+      "seasonNumber": 21,
+      "name": "Сезон 21",
+      "overview": "",
+      "posterUrl": "https://image.tmdb.org/t/p/w342/iwc1CFXTepqF3LuCi1P7crzL6Kr.jpg",
+      "episodeCount": 260,
+      "airDate": "2025-06-02"
+    },
+    {
+      "id": "517620",
+      "seasonNumber": 22,
+      "name": "Сезон 22",
+      "overview": "",
+      "posterUrl": "https://image.tmdb.org/t/p/w342/j4GU4T3F66j8Im1PfMsbJ1rQkMI.jpg",
+      "episodeCount": 45,
+      "airDate": "2026-06-01"
+    }
+  ]
+}

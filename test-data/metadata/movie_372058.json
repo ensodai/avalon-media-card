@@ -1,0 +1,87 @@
+{
+  "title": "Твоё имя",
+  "originalTitle": "Your Name.",
+  "description": "Токийский парень Таки и провинциальная девушка Мицуха обнаруживают, что между ними существует странная связь. Во сне они меняются телами и проживают жизни друг друга. Но однажды эта способность исчезает так же внезапно, как появилась. Таки решает во что бы то ни стало отыскать Мицуху.",
+  "posterUrl": "https://image.tmdb.org/t/p/w342/iH2WDCYLIUjc7oPWRT7Kxgxza6k.jpg",
+  "backgroundUrl": "https://image.tmdb.org/t/p/w1280/mMtUybQ6hL24FXo0F3Z4j2KG7kZ.jpg",
+  "genres": [
+    {
+      "id": 16,
+      "name": "мультфильм"
+    },
+    {
+      "id": 10749,
+      "name": "мелодрама"
+    },
+    {
+      "id": 18,
+      "name": "драма"
+    }
+  ],
+  "releaseDate": "2016",
+  "director": "Макото Синкай",
+  "directorImageUrl": "https://image.tmdb.org/t/p/w185/z8TN4Nkmhem6XqcnH2jMn5Ayf97.jpg",
+  "directorId": "74091",
+  "cast": [
+    {
+      "name": "Рюноскэ Камики",
+      "character": "Taki Tachibana (voice)",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/ut7ewXjdgUmgkhJ1EtbOo9tbc7s.jpg",
+      "id": "225730"
+    },
+    {
+      "name": "Монэ Камишираиши",
+      "character": "Mitsuha Miyamizu (voice)",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/cPydoy2sSqFDsbXeBPmzQGPmq0R.jpg",
+      "id": "1369100"
+    },
+    {
+      "name": "Рё Нарита",
+      "character": "Katsuhiko Teshigawara (voice)",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/f42OXn4J7cM62wtykL196YW7x85.jpg",
+      "id": "1668610"
+    },
+    {
+      "name": "Аой Юки",
+      "character": "Sayaka Natori (voice)",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/a5Mkd66GV1l3c9bZZtnvjUf33T2.jpg",
+      "id": "936275"
+    },
+    {
+      "name": "Нобунага Симадзаки",
+      "character": "Tsukasa Fujii (voice)",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/qke5rZusHsjSlvB0NKlJ5dQF5D.jpg",
+      "id": "1210634"
+    },
+    {
+      "name": "Кайто Исикава",
+      "character": "Shinta Takagi (voice)",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/fzjIkotjUHHs3wgftM9tqdsG8ph.jpg",
+      "id": "1324666"
+    },
+    {
+      "name": "Канон Тани",
+      "character": "Yotsuha Miyamizu (voice)",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/udR4Cax2EecH3ZkATE4h6ejiGD9.jpg",
+      "id": "1344919"
+    },
+    {
+      "name": "Масаки Тэрасома",
+      "character": "Toshiki Miyamizu (voice)",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/eol7Ul4buAam9SmJDuFIWln0Cd3.jpg",
+      "id": "219659"
+    },
+    {
+      "name": "Саяка Охара",
+      "character": "Futaha Miyamizu (voice)",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/4WQXLzj0gjYqkYFcTTxAkIwedvr.jpg",
+      "id": "148447"
+    },
+    {
+      "name": "Кадзухико Иноуэ",
+      "character": "Taki's Father (voice)",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/3BpYtYRiLAmTNbCm2LXlXnkMRit.jpg",
+      "id": "89968"
+    }
+  ]
+}

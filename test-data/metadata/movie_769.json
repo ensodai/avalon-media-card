@@ -1,0 +1,99 @@
+{
+  "title": "Славные парни",
+  "originalTitle": "GoodFellas",
+  "subtitle": "GoodFellas",
+  "description": "От экстравагантной воплотившейся мечты до настоящего кошмара: бывший мафиози Генри Хилл вспоминает свои яркие годы в качестве члена нью-йоркского преступного клана.",
+  "posterUrl": "https://image.tmdb.org/t/p/w342/ft6opiB2onxZe8PhSTba53wYpFb.jpg",
+  "backgroundUrl": "https://image.tmdb.org/t/p/w1280/gILte6Zd7m1YneIr6MVhh30S9pr.jpg",
+  "rating": "8,5",
+  "runtime": 145,
+  "genres": [
+    {
+      "id": 18,
+      "name": "драма"
+    },
+    {
+      "id": 80,
+      "name": "криминал"
+    }
+  ],
+  "productionCompanies": [
+    {
+      "id": 8880,
+      "name": "Winkler Films",
+      "logoUrl": "https://image.tmdb.org/t/p/w200/fE7LBw7Jz8R29EABFGCvWNriZxN.png"
+    },
+    {
+      "id": 174,
+      "name": "Warner Bros. Pictures",
+      "logoUrl": "https://image.tmdb.org/t/p/w200/zhD3hhtKB5qyv7ZeL4uLpNxgMVU.png"
+    }
+  ],
+  "releaseDate": "1990-09-12",
+  "tagline": "«Тридцать лет из жизни мафии»",
+  "director": "Мартин Скорсезе",
+  "directorImageUrl": "https://image.tmdb.org/t/p/w185/g3DjfKsgZQWZiw30I20hZVk1oMX.jpg",
+  "directorId": "1032",
+  "cast": [
+    {
+      "name": "Роберт Де Ниро",
+      "character": "James Conway",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/cT8htcckIuyI1Lqwt1CvD02ynTh.jpg",
+      "id": "380"
+    },
+    {
+      "name": "Рэй Лиотта",
+      "character": "Henry Hill",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/jdwGJbJNSRQiG2kB5MJxiu2clCQ.jpg",
+      "id": "11477"
+    },
+    {
+      "name": "Джо Пеши",
+      "character": "Tommy DeVito",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/pEHQoL8yOndOq59iXlgsOpUTcTk.jpg",
+      "id": "4517"
+    },
+    {
+      "name": "Лоррейн Бракко",
+      "character": "Karen Hill",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/tAtpCzN4sTOy1RHpMpJj52zTO4S.jpg",
+      "id": "11478"
+    },
+    {
+      "name": "Paul Sorvino",
+      "character": "Paul Cicero",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/1gF0UskusEdDcNaBDJ2CMsz5Agi.jpg",
+      "id": "7004"
+    },
+    {
+      "name": "Фрэнк Сиверо",
+      "character": "Frankie Carbone",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/eqvhj0iNtcsN6EJhd21Goqi1DSq.jpg",
+      "id": "11480"
+    },
+    {
+      "name": "Tony Darrow",
+      "character": "Sonny Bunz",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/kc6cGKm2yYx5ekHo4zGizhMLBge.jpg",
+      "id": "11482"
+    },
+    {
+      "name": "Майк Старр",
+      "character": "Frenchy",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/hJGhV91dSUiFJ8GwGDTEEri79LX.jpg",
+      "id": "5170"
+    },
+    {
+      "name": "Фрэнк Винсент",
+      "character": "Billy Batts",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/tkKFnuEmgecPYRqAlDZqfWRMst2.jpg",
+      "id": "7164"
+    },
+    {
+      "name": "Chuck Low",
+      "character": "Morris Kessler",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/zaw5Tyk2K6aawV13fQ4tSPdbEUp.jpg",
+      "id": "11479"
+    }
+  ]
+}

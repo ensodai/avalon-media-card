@@ -1,0 +1,108 @@
+{
+  "title": "Человек-паук: Нет пути домой",
+  "originalTitle": "Spider-Man: No Way Home",
+  "subtitle": "Spider-Man: No Way Home",
+  "description": "Жизнь и репутация Питера Паркера оказываются под угрозой, поскольку Мистерио раскрыл всему миру тайну личности Человека-паука. Пытаясь исправить ситуацию, Питер обращается за помощью к Стивену Стрэнджу, но вскоре всё становится намного опаснее.",
+  "posterUrl": "https://image.tmdb.org/t/p/w342/qad0kyRLHG1Qccp2A0YCCUbvhiD.jpg",
+  "backgroundUrl": "https://image.tmdb.org/t/p/w1280/14QbnygCuTO0vl7CAFmPf1fgZfV.jpg",
+  "rating": "7,9",
+  "runtime": 148,
+  "genres": [
+    {
+      "id": 28,
+      "name": "боевик"
+    },
+    {
+      "id": 12,
+      "name": "приключения"
+    },
+    {
+      "id": 878,
+      "name": "фантастика"
+    }
+  ],
+  "productionCompanies": [
+    {
+      "id": 420,
+      "name": "Marvel Studios",
+      "logoUrl": "https://image.tmdb.org/t/p/w200/hUzeosd33nzE5MCNsZxCGEKTXaQ.png"
+    },
+    {
+      "id": 84041,
+      "name": "Pascal Pictures",
+      "logoUrl": "https://image.tmdb.org/t/p/w200/nw4kyc29QRpNtFbdsBHkRSFavvt.png"
+    },
+    {
+      "id": 5,
+      "name": "Columbia Pictures",
+      "logoUrl": "https://image.tmdb.org/t/p/w200/71BqEFAF4V3qjjMPCpLuyJFB9A.png"
+    }
+  ],
+  "releaseDate": "2021-12-15",
+  "tagline": "«Мультивселенная на свободе»",
+  "director": "Джон Уоттс",
+  "directorImageUrl": "https://image.tmdb.org/t/p/w185/l0t4YtvyRAj35R5hoIp8cs8maCr.jpg",
+  "directorId": "1293994",
+  "cast": [
+    {
+      "name": "Том Холланд",
+      "character": "Peter Parker / Spider-Man",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/xKBAaPIa1c7tzZD3Y0MhBLv4hPE.jpg",
+      "id": "1136406"
+    },
+    {
+      "name": "Зендея",
+      "character": "MJ",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/1qup8tSt95HLbcy2c2xrx4iJNxv.jpg",
+      "id": "505710"
+    },
+    {
+      "name": "Бенедикт Камбербэтч",
+      "character": "Doctor Strange",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/wz3MRiMmoz6b5X3oSzMRC9nLxY1.jpg",
+      "id": "71580"
+    },
+    {
+      "name": "Джейкоб Баталон",
+      "character": "Ned Leeds",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/53YhaL4xw4Sb1ssoHkeSSBaO29c.jpg",
+      "id": "1649152"
+    },
+    {
+      "name": "Джон Фавро",
+      "character": "Happy Hogan",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/8MtRRnEHaBSw8Ztdl8saXiw1egP.jpg",
+      "id": "15277"
+    },
+    {
+      "name": "Джейми Фокс",
+      "character": "Max Dillon / Electro",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/zD8Nsy4Xrghp7WunwpCj5JKBPeU.jpg",
+      "id": "134"
+    },
+    {
+      "name": "Уиллем Дефо",
+      "character": "Norman Osborn / Green Goblin",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/ui8e4sgZAwMPi3hzEO53jyBJF9B.jpg",
+      "id": "5293"
+    },
+    {
+      "name": "Альфред Молина",
+      "character": "Dr. Otto Octavius / Doc Ock",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/nJo91Czesn6z0d0pkfbDoVZY3sg.jpg",
+      "id": "658"
+    },
+    {
+      "name": "Бенедикт Вонг",
+      "character": "Wong",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/yYfLyrC2CE6vBWSJfkpuVKL2POM.jpg",
+      "id": "30082"
+    },
+    {
+      "name": "Тони Револори",
+      "character": "Flash Thompson",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/tSF6XmXDikrKZbFUeoDnafXxKjT.jpg",
+      "id": "1291350"
+    }
+  ]
+}

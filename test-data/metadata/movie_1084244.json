@@ -1,0 +1,201 @@
+{
+  "title": "История игрушек 5",
+  "originalTitle": "Toy Story 5",
+  "description": "Вуди, Джесси и Базз Лайтер сталкиваются с новой угрозой — планшетом «ЛилиПад», который стал любимой игрушкой 8-летней Бонни и занимает всё больше её времени.",
+  "posterUrl": "https://image.tmdb.org/t/p/w342/84igQj0DU3TgPrtQ7bHXHCio1sV.jpg",
+  "backgroundUrl": "https://image.tmdb.org/t/p/w1280/qjTqY5coNiz6sVtPng40IzltsoN.jpg",
+  "genres": [
+    {
+      "id": 16,
+      "name": "мультфильм"
+    },
+    {
+      "id": 10751,
+      "name": "семейный"
+    },
+    {
+      "id": 35,
+      "name": "комедия"
+    },
+    {
+      "id": 12,
+      "name": "приключения"
+    }
+  ],
+  "keywords": [
+    {
+      "id": 2041,
+      "name": "island"
+    },
+    {
+      "id": 2673,
+      "name": "horse"
+    },
+    {
+      "id": 4931,
+      "name": "pig"
+    },
+    {
+      "id": 4932,
+      "name": "farm"
+    },
+    {
+      "id": 9663,
+      "name": "sequel"
+    },
+    {
+      "id": 9673,
+      "name": "love"
+    },
+    {
+      "id": 9743,
+      "name": "stranded"
+    },
+    {
+      "id": 9823,
+      "name": "rivalry"
+    },
+    {
+      "id": 11107,
+      "name": "rescue mission"
+    },
+    {
+      "id": 13027,
+      "name": "wedding"
+    },
+    {
+      "id": 18251,
+      "name": "tire swing"
+    },
+    {
+      "id": 33553,
+      "name": "walkie talkie"
+    },
+    {
+      "id": 33602,
+      "name": "cowgirl"
+    },
+    {
+      "id": 155291,
+      "name": "cowboy"
+    },
+    {
+      "id": 167541,
+      "name": "buddy comedy"
+    },
+    {
+      "id": 179431,
+      "name": "duringcreditsstinger"
+    },
+    {
+      "id": 187065,
+      "name": "toy comes to life"
+    },
+    {
+      "id": 188316,
+      "name": "hippo"
+    },
+    {
+      "id": 200234,
+      "name": "shocking"
+    },
+    {
+      "id": 216734,
+      "name": "abandonment"
+    },
+    {
+      "id": 233270,
+      "name": "toilet paper"
+    },
+    {
+      "id": 235220,
+      "name": "replacement"
+    },
+    {
+      "id": 265589,
+      "name": "toy"
+    },
+    {
+      "id": 278301,
+      "name": "frog"
+    },
+    {
+      "id": 278823,
+      "name": "3d animation"
+    },
+    {
+      "id": 312222,
+      "name": "tablet"
+    },
+    {
+      "id": 315025,
+      "name": "ipad"
+    }
+  ],
+  "releaseDate": "2026",
+  "director": "Эндрю Стэнтон",
+  "directorImageUrl": "https://image.tmdb.org/t/p/w185/fo6ePCWEVB0L1sccrvB99Iaoqcg.jpg",
+  "directorId": "7",
+  "cast": [
+    {
+      "name": "Том Хэнкс",
+      "character": "Woody (voice)",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/oFvZoKI6lvU03n4YoNGAll9rkas.jpg",
+      "id": "31"
+    },
+    {
+      "name": "Тим Аллен",
+      "character": "Buzz Lightyear (voice)",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/woWhZzFILVhYMAvsPL171HjMY0y.jpg",
+      "id": "12898"
+    },
+    {
+      "name": "Джоан Кьюсак",
+      "character": "Jessie (voice)",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/59UIeHZFYrKyP20lXqijtfTXglO.jpg",
+      "id": "3234"
+    },
+    {
+      "name": "Грета Ли",
+      "character": "Lilypad (voice)",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/6SydTis4XUcovlwIGskT59JowLX.jpg",
+      "id": "1260481"
+    },
+    {
+      "name": "Конан О'Брайен",
+      "character": "Smarty Pants (voice)",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/deRbViPut0t80miscBpP2DhBJU5.jpg",
+      "id": "81200"
+    },
+    {
+      "name": "Крэйг Робинсон",
+      "character": "Atlas (voice)",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/mTyTrOWUSOBJMOlDpnd4OYx7FlJ.jpg",
+      "id": "64342"
+    },
+    {
+      "name": "Шелби Рабара",
+      "character": "Snappy (voice)",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/ouMiEKlhCj2LFKEQtI6fGRMDemF.jpg",
+      "id": "206869"
+    },
+    {
+      "name": "Тони Хейл",
+      "character": "Forky (voice)",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/ar4uapp4w5wMkThZcqWUNMSTO8z.jpg",
+      "id": "25147"
+    },
+    {
+      "name": "Скарлетт Спирс",
+      "character": "Bonnie (voice)",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/h0loJ4v3wbUfUA6dxUYv7B6fET1.jpg",
+      "id": "5374940"
+    },
+    {
+      "name": "Джей Эрнандес",
+      "character": "Bonnie’s Dad (voice)",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/rh4pzTAJvy0i84HYV4xZxCXuXgV.jpg",
+      "id": "19487"
+    }
+  ]
+}

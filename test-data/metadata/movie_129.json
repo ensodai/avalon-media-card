@@ -1,0 +1,123 @@
+{
+  "title": "Унесённые призраками",
+  "originalTitle": "千と千尋の神隠し",
+  "subtitle": "千と千尋の神隠し",
+  "description": "Тихиро с мамой и папой переезжает в новый дом. Заблудившись по дороге, они оказываются в странном пустынном городе, где их ждет великолепный пир. Родители с жадностью набрасываются на еду и к ужасу девочки превращаются в свиней, став пленниками злой колдуньи Юбабы. Теперь, оказавшись одна среди волшебных существ и загадочных видений, Тихиро должна придумать, как избавить своих родителей от чар коварной старухи.",
+  "posterUrl": "https://image.tmdb.org/t/p/w342/5TC0SLHRu19fHdigQnxONjwq1iE.jpg",
+  "backgroundUrl": "https://image.tmdb.org/t/p/w1280/dyJvKsNs2KP8qQnAXbRwDjblViy.jpg",
+  "rating": "8,5",
+  "runtime": 124,
+  "genres": [
+    {
+      "id": 16,
+      "name": "мультфильм"
+    },
+    {
+      "id": 10751,
+      "name": "семейный"
+    },
+    {
+      "id": 14,
+      "name": "фэнтези"
+    }
+  ],
+  "productionCompanies": [
+    {
+      "id": 10342,
+      "name": "Studio Ghibli",
+      "logoUrl": "https://image.tmdb.org/t/p/w200/uFuxPEZRUcBTEiYIxjHJq62Vr77.png"
+    },
+    {
+      "id": 1779,
+      "name": "Tokuma Shoten",
+      "logoUrl": "https://image.tmdb.org/t/p/w200/41nGzTdCnORYZIZzaGZtfsBwQCl.png"
+    },
+    {
+      "id": 6755,
+      "name": "Nippon Television Network Corporation",
+      "logoUrl": "https://image.tmdb.org/t/p/w200/bWiM2iY82B32NGmPCOFatgfekIR.png"
+    },
+    {
+      "id": 11847,
+      "name": "Mitsubishi",
+      "logoUrl": "https://image.tmdb.org/t/p/w200/rZP0I1p3hZNUMNFPHUSal6rWThQ.png"
+    },
+    {
+      "id": 1778,
+      "name": "dentsu",
+      "logoUrl": "https://image.tmdb.org/t/p/w200/b5rT6VbYza3LyfltCmz1OcqzWJM.png"
+    },
+    {
+      "id": 1780,
+      "name": "TFC",
+      "logoUrl": "https://image.tmdb.org/t/p/w200/4Qzhr7FxVtaMwmsh7118G3yvOhO.png"
+    }
+  ],
+  "releaseDate": "2001-07-20",
+  "tagline": "«Туннель привел Тихиро в таинственный город ...»",
+  "director": "Хаяо Миядзаки",
+  "directorImageUrl": "https://image.tmdb.org/t/p/w185/ouhjt9KugzhWtdEyBPipihB3ic8.jpg",
+  "directorId": "608",
+  "cast": [
+    {
+      "name": "Руми Хиираги",
+      "character": "Chihiro (voice)",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/nTKM4GgfkrZvAOFL55uhEuckt7M.jpg",
+      "id": "19587"
+    },
+    {
+      "name": "Мию Ирино",
+      "character": "Haku (voice)",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/8qEEhHUObNvGQr4e6eqLu5z4qTz.jpg",
+      "id": "19588"
+    },
+    {
+      "name": "Мари Нацуки",
+      "character": "Yubaba / Zeniba (voice)",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/MIFzUc77Sx57FQOZsoiGWEbpH2.jpg",
+      "id": "19589"
+    },
+    {
+      "name": "Такаши Наито",
+      "character": "Father (voice)",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/xwsm0ygjG79jLIogutwo6r64igy.jpg",
+      "id": "19590"
+    },
+    {
+      "name": "Ясуко Савагути",
+      "character": "Mother (voice)",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/rWspusb13VeJowmctnniXYYTcqq.jpg",
+      "id": "19591"
+    },
+    {
+      "name": "Тацуя Гасюин",
+      "character": "Aogaeru (voice)",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/fLqIdkShknsJmZy4EfBWuWyHN4C.jpg",
+      "id": "19592"
+    },
+    {
+      "name": "Рюноскэ Камики",
+      "character": "Boh (voice)",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/ut7ewXjdgUmgkhJ1EtbOo9tbc7s.jpg",
+      "id": "225730"
+    },
+    {
+      "name": "Юми Тамай",
+      "character": "Rin (voice)",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/x9Td7e5F21cK9S1FCkobfqiJZ1c.jpg",
+      "id": "19594"
+    },
+    {
+      "name": "Йо Оидзуми",
+      "character": "Bandai Frog (voice)",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/qw5KLuww2AEAk6JEssEkJY3wBn1.jpg",
+      "id": "40450"
+    },
+    {
+      "name": "Коба Хаяши",
+      "character": "River Spirit (voice)",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/ceQ58tRgqMZ9gePHg8xkKarZm0M.jpg",
+      "id": "554423"
+    }
+  ]
+}

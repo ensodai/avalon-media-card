@@ -1,0 +1,97 @@
+{
+  "title": "Харакири",
+  "originalTitle": "切腹",
+  "subtitle": "切腹",
+  "description": "После распада своего клана, безработный самурай Хансиро Цугумо прибыл в поместье лорда Ию, с просьбой совершить харакири в его имении.  Члены клана Ию, полагая что отчаявшийся ронин просто уповает на милостыню, пытаются заставить его совершить харакири, но они его сильно недооценивают.",
+  "posterUrl": "https://image.tmdb.org/t/p/w342/6Cw2LJzt6jRALHystjzWazeB4Pg.jpg",
+  "backgroundUrl": "https://image.tmdb.org/t/p/w1280/nC3IjYhUgZWgfKfFX0ygMigFwgc.jpg",
+  "rating": "8,4",
+  "runtime": 135,
+  "genres": [
+    {
+      "id": 28,
+      "name": "боевик"
+    },
+    {
+      "id": 18,
+      "name": "драма"
+    },
+    {
+      "id": 36,
+      "name": "история"
+    }
+  ],
+  "productionCompanies": [
+    {
+      "id": 192,
+      "name": "Shochiku",
+      "logoUrl": "https://image.tmdb.org/t/p/w200/93eAKlnQecDdMtucfOprzcjMw9V.png"
+    }
+  ],
+  "releaseDate": "1962-09-15",
+  "tagline": "",
+  "director": "小林正樹",
+  "directorImageUrl": "https://image.tmdb.org/t/p/w185/5epZ39mf1Ii7xOjqYx2YYq39y5X.jpg",
+  "directorId": "76978",
+  "cast": [
+    {
+      "name": "Тацуя Накадай",
+      "character": "Hanshiro Tsugumo",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/xKm47PZ0u1B5V21yBiXyDSfPITw.jpg",
+      "id": "70131"
+    },
+    {
+      "name": "石濱朗",
+      "character": "Motome Chijiiwa",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/sQC3XSIR0LeYPz11VJt8nJoeRKY.jpg",
+      "id": "76977"
+    },
+    {
+      "name": "岩下志麻",
+      "character": "Miho Tsugumo",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/1dMsifeO8GoAbA3ycEGYni3w0E1.jpg",
+      "id": "76976"
+    },
+    {
+      "name": "Тэцуро Тамба",
+      "character": "Hikokuro Omodaka",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/ihugQ2afio03fcKSGXdkcQKTVmt.jpg",
+      "id": "10071"
+    },
+    {
+      "name": "三島雅夫",
+      "character": "Tango Inaba",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/bfPdwV4TCWJ7jjf16MFNsOndHWB.jpg",
+      "id": "125721"
+    },
+    {
+      "name": "中谷一郎",
+      "character": "Hayato Yazaki",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/yGWAZguLnWvXW9xcAIE7Eo6VGfU.jpg",
+      "id": "118993"
+    },
+    {
+      "name": "佐藤慶",
+      "character": "Masakazu",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/xyb1DI4HViq1aEvc3pgJV5Xw2Sn.jpg",
+      "id": "33730"
+    },
+    {
+      "name": "稲葉義男",
+      "character": "Jinai Chijiiwa",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/5qIAqM5PegWTNq67qNofz78fb6U.jpg",
+      "id": "20828"
+    },
+    {
+      "name": "井川比佐志",
+      "character": "Retainer",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/a9gtqgpKeNoihZjLzVG9sSPsJTI.jpg",
+      "id": "96637"
+    },
+    {
+      "name": "武内亨",
+      "character": "Retainer",
+      "id": "1176109"
+    }
+  ]
+}

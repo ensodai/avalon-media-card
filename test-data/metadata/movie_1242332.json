@@ -1,0 +1,119 @@
+{
+  "title": "Нормал",
+  "originalTitle": "Normal",
+  "subtitle": "Normal",
+  "description": "Улисс приезжает в небольшой городок Нормал, чтобы временно занять должность шерифа. Город кажется безопасным, почти сонным и дружелюбным. Но после ограбления банка Улисс обнаруживает преступный заговор, в который вовлечён весь город. Теперь ему предстоит решить, готов ли он пойти до конца и разрушить кажущуюся идиллию.",
+  "posterUrl": "https://image.tmdb.org/t/p/w342/1GXYen1mBGlNeIVes6sJHvgLeLC.jpg",
+  "backgroundUrl": "https://image.tmdb.org/t/p/w1280/1YU6Hy3x7fUh7dfOzSfjifTp20g.jpg",
+  "rating": "7,1",
+  "runtime": 90,
+  "genres": [
+    {
+      "id": 28,
+      "name": "боевик"
+    },
+    {
+      "id": 80,
+      "name": "криминал"
+    },
+    {
+      "id": 53,
+      "name": "триллер"
+    }
+  ],
+  "productionCompanies": [
+    {
+      "id": 125584,
+      "name": "Aperture Media Partners",
+      "logoUrl": "https://image.tmdb.org/t/p/w200/56Lrmj9izLx7SEa0uPp0fVvssea.png"
+    },
+    {
+      "id": 210819,
+      "name": "QWGmire",
+      "logoUrl": "https://image.tmdb.org/t/p/w200/lXW15vGgeQIIGia0oFycQgALb9Y.png"
+    },
+    {
+      "id": 86647,
+      "name": "OPE Partners",
+      "logoUrl": "https://image.tmdb.org/t/p/w200/jefZmEJlxUAkuuwkH9CHQchgmJX.png"
+    },
+    {
+      "id": 223268,
+      "name": "Le Foole"
+    },
+    {
+      "id": 207939,
+      "name": "Tradecraft"
+    },
+    {
+      "id": 289959,
+      "name": "Normal Films"
+    }
+  ],
+  "releaseDate": "2026-04-16",
+  "tagline": "«Маленький городок. Большой секрет»",
+  "director": "Бен Уитли",
+  "directorImageUrl": "https://image.tmdb.org/t/p/w185/r8veHr3ExfEfVYWVR93hIDf4RiP.jpg",
+  "directorId": "137467",
+  "cast": [
+    {
+      "name": "Боб Оденкёрк",
+      "character": "Ulysses Richardson",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/rF0Lb6SBhGSTvjRffmlKRSeI3jE.jpg",
+      "id": "59410"
+    },
+    {
+      "name": "Генри Уинклер",
+      "character": "Mayor Kibner",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/mGlSRA5RDswEDmY8oWEizXliShp.jpg",
+      "id": "31903"
+    },
+    {
+      "name": "Лина Хиди",
+      "character": "Moira",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/cDyZLf8ddz0EgoUjpv4jjzy7qxA.jpg",
+      "id": "17286"
+    },
+    {
+      "name": "Билли МакЛеллан",
+      "character": "Deputy Mike Nelson",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/9ObnhjbbeVEhk8g941FrLq4W0r7.jpg",
+      "id": "63814"
+    },
+    {
+      "name": "Райан Аллен",
+      "character": "Deputy Blaine Anderson",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/99O5NjoOmO4uCmTYaQhipj1qMNx.jpg",
+      "id": "62651"
+    },
+    {
+      "name": "Рина Джолли",
+      "character": "Lori",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/zd29cqltwMWnRVPJ08vsV02CYYQ.jpg",
+      "id": "3902965"
+    },
+    {
+      "name": "Брендан Флетчер",
+      "character": "Keith",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/azeMOxQdCw18ABRwwOMIo3lV1If.jpg",
+      "id": "32205"
+    },
+    {
+      "name": "Питер Шинкода",
+      "character": "Joe",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/lCQl28poQr4bLwqZjhryGkV73jO.jpg",
+      "id": "172994"
+    },
+    {
+      "name": "Джессика МакЛауд",
+      "character": "Alex",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/nJXORUI8JJVkYTCO4Lpjxz6VgzF.jpg",
+      "id": "84466"
+    },
+    {
+      "name": "Алекс МакМиллан",
+      "character": "Kent",
+      "id": "5765001"
+    }
+  ]
+}

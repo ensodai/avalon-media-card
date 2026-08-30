@@ -1,0 +1,169 @@
+{
+  "title": "Закулисье реальности",
+  "originalTitle": "Backrooms",
+  "description": "Когда неудачливый продавец мебели Кларк обнаруживает скрытый портал в другое измерение в подвале своего магазина, он оказывается в бесконечном лабиринте извилистых жёлтых коридоров. В этом мире время и пространство не подчиняются логике, а нечто жуткое может скрываться за каждым углом.",
+  "posterUrl": "https://image.tmdb.org/t/p/w342/oBY8IQb9NpzbkCo0xzpz7Q1DCu.jpg",
+  "backgroundUrl": "https://image.tmdb.org/t/p/w1280/dqmMWNWfLnExDRpMtIMqI97GQFR.jpg",
+  "genres": [
+    {
+      "id": 27,
+      "name": "ужасы"
+    },
+    {
+      "id": 9648,
+      "name": "детектив"
+    },
+    {
+      "id": 878,
+      "name": "фантастика"
+    }
+  ],
+  "keywords": [
+    {
+      "id": 387,
+      "name": "california"
+    },
+    {
+      "id": 1299,
+      "name": "monster"
+    },
+    {
+      "id": 2726,
+      "name": "therapist"
+    },
+    {
+      "id": 5707,
+      "name": "childhood trauma"
+    },
+    {
+      "id": 7464,
+      "name": "alcoholism"
+    },
+    {
+      "id": 9887,
+      "name": "surrealism"
+    },
+    {
+      "id": 163053,
+      "name": "found footage"
+    },
+    {
+      "id": 210608,
+      "name": "1990s"
+    },
+    {
+      "id": 223914,
+      "name": "other dimension"
+    },
+    {
+      "id": 239125,
+      "name": "based on web series"
+    },
+    {
+      "id": 272553,
+      "name": "psychological"
+    },
+    {
+      "id": 281917,
+      "name": "liminal"
+    },
+    {
+      "id": 283085,
+      "name": "body horror"
+    },
+    {
+      "id": 295907,
+      "name": "psychological horror"
+    },
+    {
+      "id": 306411,
+      "name": "liminal space"
+    },
+    {
+      "id": 319324,
+      "name": "analog horror"
+    },
+    {
+      "id": 323910,
+      "name": "sci-fi horror"
+    },
+    {
+      "id": 325777,
+      "name": "bewildered"
+    },
+    {
+      "id": 325817,
+      "name": "foreboding"
+    },
+    {
+      "id": 332022,
+      "name": "liminal horror"
+    }
+  ],
+  "releaseDate": "2026",
+  "director": "Кейн Парсонс",
+  "directorImageUrl": "https://image.tmdb.org/t/p/w185/l4hXiK0NI84l328p6V3DEvDtgFE.jpg",
+  "directorId": "3688382",
+  "cast": [
+    {
+      "name": "Чиветел Эджиофор",
+      "character": "Clark",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/kq5DDnqqofoRI0t6ddtRlsJnNPT.jpg",
+      "id": "5294"
+    },
+    {
+      "name": "Ренате Реинсве",
+      "character": "Mary",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/q0ljTd4fyFSJKxPgmcrKtdg3HKo.jpg",
+      "id": "1576786"
+    },
+    {
+      "name": "Марк Дюпласс",
+      "character": "Phil",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/lRDf99rAfcdqt8Cqk4LsIT7XSD2.jpg",
+      "id": "45407"
+    },
+    {
+      "name": "Финн Беннетт",
+      "character": "Bobby",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/p4ya77nmLlhS2cyPKUZi9zVD4Mu.jpg",
+      "id": "1512452"
+    },
+    {
+      "name": "Лукита Максуэлл",
+      "character": "Kat",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/g5g6XxUAtSdPfsJrSoFkl7vH51d.jpg",
+      "id": "1709431"
+    },
+    {
+      "name": "Эван Джогиа",
+      "character": "Naren Warne",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/7BX0Lg39bHlgtvWZpszTr1YjTAW.jpg",
+      "id": "212934"
+    },
+    {
+      "name": "Роберт Боброцкий",
+      "character": "Pirate Clark",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/3SK7NuuBKR5PSJwsQ7HO4qHIM9C.jpg",
+      "id": "4848549"
+    },
+    {
+      "name": "Эмбер Эмброуз",
+      "character": "Young Mary",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/w7h6l4ltuWaMYanGgzwyhAHGL2y.jpg",
+      "id": "5725467"
+    },
+    {
+      "name": "Криста Косонен",
+      "character": "Nora",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/7iW2mxbxBgV5sX2y0fSY78lewW4.jpg",
+      "id": "72482"
+    },
+    {
+      "name": "Филип Грэйнджер",
+      "character": "Meterman",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/bkrnrtSiUnumWVpAOy5QDcOePiA.jpg",
+      "id": "64670"
+    }
+  ]
+}

@@ -1,0 +1,426 @@
+{
+  "title": "Риск!",
+  "originalTitle": "Jeopardy!",
+  "subtitle": "Jeopardy!",
+  "description": "",
+  "posterUrl": "https://image.tmdb.org/t/p/w342/hfz0IgebqGENG6ZnuqKQKMFk2vy.jpg",
+  "backgroundUrl": "https://image.tmdb.org/t/p/w1280/55tcKzl0gZ0lR1q7TrVJm0h9lkT.jpg",
+  "rating": "6,9",
+  "genres": [
+    {
+      "id": 10764,
+      "name": "Реалити-шоу"
+    },
+    {
+      "id": 10751,
+      "name": "семейный"
+    }
+  ],
+  "productionCompanies": [
+    {
+      "id": 11073,
+      "name": "Sony Pictures Television",
+      "logoUrl": "https://image.tmdb.org/t/p/w200/wHs44fktdoj6c378ZbSWfzKsM2Z.png"
+    },
+    {
+      "id": 10471,
+      "name": "Columbia TriStar Television",
+      "logoUrl": "https://image.tmdb.org/t/p/w200/tHIwIKoXdLKA8Nt3XeRInh71OvD.png"
+    },
+    {
+      "id": 62313,
+      "name": "Jeopardy Productions"
+    },
+    {
+      "id": 119837,
+      "name": "Merv Griffin Enterprises"
+    }
+  ],
+  "releaseDate": "1984-09-10",
+  "tagline": "",
+  "director": "Michael Davies",
+  "directorImageUrl": "https://image.tmdb.org/t/p/w185/8PepDg2EoBnZ6WEOgO8FOPpQNWZ.jpg",
+  "directorId": "1224910",
+  "cast": [
+    {
+      "name": "Кен Дженнингс",
+      "character": "Self - Host",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/8AToAnfRNlIBT8zRKq24JdXVRu4.jpg",
+      "id": "1218568"
+    },
+    {
+      "name": "Джонни Гилберт",
+      "character": "Self - Announcer (voice)",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/kaemnryG3n9coES6AwsU2YJHRnD.jpg",
+      "id": "1213789"
+    }
+  ],
+  "numberOfSeasons": 42,
+  "numberOfEpisodes": 9393,
+  "status": "Идет",
+  "network": "Syndication",
+  "seasons": [
+    {
+      "id": "9401",
+      "seasonNumber": 0,
+      "name": "Спецматериалы",
+      "overview": "",
+      "episodeCount": 11,
+      "airDate": "1983-09-18"
+    },
+    {
+      "id": "9367",
+      "seasonNumber": 1,
+      "name": "Сезон 1",
+      "overview": "",
+      "episodeCount": 162,
+      "airDate": "1984-09-10"
+    },
+    {
+      "id": "9368",
+      "seasonNumber": 2,
+      "name": "Сезон 2",
+      "overview": "",
+      "episodeCount": 194,
+      "airDate": "1985-09-09"
+    },
+    {
+      "id": "9369",
+      "seasonNumber": 3,
+      "name": "Сезон 3",
+      "overview": "",
+      "episodeCount": 231,
+      "airDate": "1986-09-08"
+    },
+    {
+      "id": "9370",
+      "seasonNumber": 4,
+      "name": "Сезон 4",
+      "overview": "",
+      "episodeCount": 220,
+      "airDate": "1987-09-07"
+    },
+    {
+      "id": "9371",
+      "seasonNumber": 5,
+      "name": "Сезон 5",
+      "overview": "",
+      "episodeCount": 215,
+      "airDate": "1988-09-05"
+    },
+    {
+      "id": "9372",
+      "seasonNumber": 6,
+      "name": "Сезон 6",
+      "overview": "",
+      "episodeCount": 201,
+      "airDate": "1989-09-04"
+    },
+    {
+      "id": "9373",
+      "seasonNumber": 7,
+      "name": "Сезон 7",
+      "overview": "",
+      "episodeCount": 212,
+      "airDate": "1990-09-03"
+    },
+    {
+      "id": "9374",
+      "seasonNumber": 8,
+      "name": "Сезон 8",
+      "overview": "",
+      "episodeCount": 194,
+      "airDate": "1991-09-02"
+    },
+    {
+      "id": "9375",
+      "seasonNumber": 9,
+      "name": "Сезон 9",
+      "overview": "",
+      "episodeCount": 229,
+      "airDate": "1992-09-07"
+    },
+    {
+      "id": "9378",
+      "seasonNumber": 10,
+      "name": "Сезон 10",
+      "overview": "",
+      "episodeCount": 230,
+      "airDate": "1993-09-06"
+    },
+    {
+      "id": "9380",
+      "seasonNumber": 11,
+      "name": "Сезон 11",
+      "overview": "",
+      "episodeCount": 213,
+      "airDate": "1994-09-05"
+    },
+    {
+      "id": "9381",
+      "seasonNumber": 12,
+      "name": "Сезон 12",
+      "overview": "",
+      "episodeCount": 229,
+      "airDate": "1995-09-04"
+    },
+    {
+      "id": "9383",
+      "seasonNumber": 13,
+      "name": "Сезон 13",
+      "overview": "",
+      "episodeCount": 218,
+      "airDate": "1996-09-02"
+    },
+    {
+      "id": "9385",
+      "seasonNumber": 14,
+      "name": "Сезон 14",
+      "overview": "",
+      "episodeCount": 230,
+      "airDate": "1997-09-01"
+    },
+    {
+      "id": "9386",
+      "seasonNumber": 15,
+      "name": "Сезон 15",
+      "overview": "",
+      "episodeCount": 230,
+      "airDate": "1998-09-07"
+    },
+    {
+      "id": "9387",
+      "seasonNumber": 16,
+      "name": "Сезон 16",
+      "overview": "",
+      "episodeCount": 230,
+      "airDate": "1999-09-06"
+    },
+    {
+      "id": "9389",
+      "seasonNumber": 17,
+      "name": "Сезон 17",
+      "overview": "",
+      "episodeCount": 230,
+      "airDate": "2000-09-04"
+    },
+    {
+      "id": "9390",
+      "seasonNumber": 18,
+      "name": "Сезон 18",
+      "overview": "",
+      "episodeCount": 229,
+      "airDate": "2001-09-03"
+    },
+    {
+      "id": "9392",
+      "seasonNumber": 19,
+      "name": "Сезон 19",
+      "overview": "",
+      "episodeCount": 230,
+      "airDate": "2002-09-02"
+    },
+    {
+      "id": "9393",
+      "seasonNumber": 20,
+      "name": "Сезон 20",
+      "overview": "",
+      "episodeCount": 230,
+      "airDate": "2003-09-08"
+    },
+    {
+      "id": "9394",
+      "seasonNumber": 21,
+      "name": "Сезон 21",
+      "overview": "",
+      "episodeCount": 230,
+      "airDate": "2004-09-06"
+    },
+    {
+      "id": "9395",
+      "seasonNumber": 22,
+      "name": "Сезон 22",
+      "overview": "",
+      "episodeCount": 230,
+      "airDate": "2005-09-12"
+    },
+    {
+      "id": "9396",
+      "seasonNumber": 23,
+      "name": "Сезон 23",
+      "overview": "",
+      "episodeCount": 230,
+      "airDate": "2006-09-11"
+    },
+    {
+      "id": "9397",
+      "seasonNumber": 24,
+      "name": "Сезон 24",
+      "overview": "",
+      "posterUrl": "https://image.tmdb.org/t/p/w342/4oQeIPhQdhGIfDv4XOpx6ovY7w5.jpg",
+      "episodeCount": 230,
+      "airDate": "2007-09-10"
+    },
+    {
+      "id": "9398",
+      "seasonNumber": 25,
+      "name": "Сезон 25",
+      "overview": "",
+      "posterUrl": "https://image.tmdb.org/t/p/w342/l3DmfjuJl2ux1WXzsjtjljUZHoR.jpg",
+      "episodeCount": 230,
+      "airDate": "2008-09-08"
+    },
+    {
+      "id": "9399",
+      "seasonNumber": 26,
+      "name": "Сезон 26",
+      "overview": "",
+      "posterUrl": "https://image.tmdb.org/t/p/w342/l3DmfjuJl2ux1WXzsjtjljUZHoR.jpg",
+      "episodeCount": 230,
+      "airDate": "2009-09-14"
+    },
+    {
+      "id": "9400",
+      "seasonNumber": 27,
+      "name": "Сезон 27",
+      "overview": "",
+      "posterUrl": "https://image.tmdb.org/t/p/w342/l3DmfjuJl2ux1WXzsjtjljUZHoR.jpg",
+      "episodeCount": 230,
+      "airDate": "2010-09-13"
+    },
+    {
+      "id": "176960",
+      "seasonNumber": 28,
+      "name": "Сезон 28",
+      "overview": "",
+      "posterUrl": "https://image.tmdb.org/t/p/w342/l3DmfjuJl2ux1WXzsjtjljUZHoR.jpg",
+      "episodeCount": 230,
+      "airDate": "2011-09-19"
+    },
+    {
+      "id": "176961",
+      "seasonNumber": 29,
+      "name": "Сезон 29",
+      "overview": "",
+      "posterUrl": "https://image.tmdb.org/t/p/w342/l3DmfjuJl2ux1WXzsjtjljUZHoR.jpg",
+      "episodeCount": 230,
+      "airDate": "2012-09-17"
+    },
+    {
+      "id": "9402",
+      "seasonNumber": 30,
+      "name": "Сезон 30",
+      "overview": "",
+      "posterUrl": "https://image.tmdb.org/t/p/w342/1H7g10a25KyjhcptPeDhRiezptU.jpg",
+      "episodeCount": 230,
+      "airDate": "2013-09-16"
+    },
+    {
+      "id": "176962",
+      "seasonNumber": 31,
+      "name": "Сезон 31",
+      "overview": "",
+      "posterUrl": "https://image.tmdb.org/t/p/w342/w6IuAySlbGtxY1A2uUpkrVjnXMr.jpg",
+      "episodeCount": 230,
+      "airDate": "2014-09-15"
+    },
+    {
+      "id": "176963",
+      "seasonNumber": 32,
+      "name": "Сезон 32",
+      "overview": "",
+      "posterUrl": "https://image.tmdb.org/t/p/w342/wJmIG2CIjGM4ChEFf6PcV762eIB.jpg",
+      "episodeCount": 230,
+      "airDate": "2015-09-14"
+    },
+    {
+      "id": "176849",
+      "seasonNumber": 33,
+      "name": "Сезон 33",
+      "overview": "",
+      "posterUrl": "https://image.tmdb.org/t/p/w342/gznNccjuVhNEjYt8IUopLuBh6GV.jpg",
+      "episodeCount": 230,
+      "airDate": "2016-09-12"
+    },
+    {
+      "id": "176680",
+      "seasonNumber": 34,
+      "name": "Сезон 34",
+      "overview": "",
+      "posterUrl": "https://image.tmdb.org/t/p/w342/gznNccjuVhNEjYt8IUopLuBh6GV.jpg",
+      "episodeCount": 230,
+      "airDate": "2017-09-11"
+    },
+    {
+      "id": "176725",
+      "seasonNumber": 35,
+      "name": "Сезон 35",
+      "overview": "",
+      "posterUrl": "https://image.tmdb.org/t/p/w342/mK0a4VYtDpi3wfXOBbzlmZBErQ4.jpg",
+      "episodeCount": 230,
+      "airDate": "2018-09-10"
+    },
+    {
+      "id": "176665",
+      "seasonNumber": 36,
+      "name": "Сезон 36",
+      "overview": "",
+      "posterUrl": "https://image.tmdb.org/t/p/w342/8CqBrGO5JLR7OMmBmLXzdLshkP5.jpg",
+      "episodeCount": 190,
+      "airDate": "2019-09-09"
+    },
+    {
+      "id": "175754",
+      "seasonNumber": 37,
+      "name": "Сезон 37",
+      "overview": "",
+      "posterUrl": "https://image.tmdb.org/t/p/w342/aSIHw2DyO6QqW2k2Ak5J2JPojG.jpg",
+      "episodeCount": 230,
+      "airDate": "2020-09-14"
+    },
+    {
+      "id": "202365",
+      "seasonNumber": 38,
+      "name": "Сезон 38",
+      "overview": "",
+      "posterUrl": "https://image.tmdb.org/t/p/w342/6Iwg6enhbWr54vVSmvD1ttPAQSj.jpg",
+      "episodeCount": 240,
+      "airDate": "2021-09-13"
+    },
+    {
+      "id": "308231",
+      "seasonNumber": 39,
+      "name": "Сезон 39",
+      "overview": "",
+      "posterUrl": "https://image.tmdb.org/t/p/w342/67JYOtGQLYRldIgZMgHr0dyjlIn.jpg",
+      "episodeCount": 230,
+      "airDate": "2022-09-12"
+    },
+    {
+      "id": "349424",
+      "seasonNumber": 40,
+      "name": "Сезон 40",
+      "overview": "",
+      "posterUrl": "https://image.tmdb.org/t/p/w342/7dJGVVaxTIwJOGkyYHGcXSIMeHg.jpg",
+      "episodeCount": 236,
+      "airDate": "2023-09-11"
+    },
+    {
+      "id": "403730",
+      "seasonNumber": 41,
+      "name": "Сезон 41",
+      "overview": "",
+      "episodeCount": 230,
+      "airDate": "2024-09-09"
+    },
+    {
+      "id": "467865",
+      "seasonNumber": 42,
+      "name": "Сезон 42",
+      "overview": "",
+      "posterUrl": "https://image.tmdb.org/t/p/w342/jIESEWjYAhqLKIP3cRl0kDafcIW.jpg",
+      "episodeCount": 230,
+      "airDate": "2025-09-08"
+    }
+  ]
+}

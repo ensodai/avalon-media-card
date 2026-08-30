@@ -1,0 +1,168 @@
+{
+  "title": "Новичок",
+  "originalTitle": "The Rookie",
+  "description": "Начинать с чистого листа всегда нелегко, особенно для уроженца маленького городка Джона Нолана, который после инцидента, перевернувшего его жизнь, решил воплотить в жизнь давнюю мечту и присоединиться к полиции Лос-Анджелеса. Возрастного новичка встречают с понятным скептицизмом, однако жизненный опыт, упорство и чувство юмора дают Джону преимущество.",
+  "posterUrl": "https://image.tmdb.org/t/p/w342/jfxInWjSixQeeyT7oiBvdXjd7HM.jpg",
+  "backgroundUrl": "https://image.tmdb.org/t/p/w1280/6iNWfGVCEfASDdlNb05TP5nG0ll.jpg",
+  "genres": [
+    {
+      "id": 80,
+      "name": "криминал"
+    },
+    {
+      "id": 18,
+      "name": "драма"
+    },
+    {
+      "id": 35,
+      "name": "комедия"
+    }
+  ],
+  "releaseDate": "2018",
+  "director": "Нейтан Филлион",
+  "directorImageUrl": "https://image.tmdb.org/t/p/w185/aW6vCxkUZtwb6iH2Wf88Uq0XNVv.jpg",
+  "directorId": "51797",
+  "cast": [
+    {
+      "name": "Нейтан Филлион",
+      "character": "John Nolan",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/aW6vCxkUZtwb6iH2Wf88Uq0XNVv.jpg",
+      "id": "51797"
+    },
+    {
+      "name": "Мелисса О'Нил",
+      "character": "Lucy Chen",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/9KqgbNttW79hAP9xQ5Ffd2fjGk.jpg",
+      "id": "1234713"
+    },
+    {
+      "name": "Эрик Винтер",
+      "character": "Tim Bradford",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/tDQSZv5rHm4s2hwwVWpp5EMQ0w9.jpg",
+      "id": "74409"
+    },
+    {
+      "name": "Алисса Диас",
+      "character": "Angela Lopez",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/ihLNjM4E1Fjx5h4l8EL6r3iDRTa.jpg",
+      "id": "134180"
+    },
+    {
+      "name": "Мекиа Кокс",
+      "character": "Nyla Harper",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/r8RrebMle9U3Xiwl2hiD6pFdfSl.jpg",
+      "id": "202952"
+    },
+    {
+      "name": "Ричард Т. Джонс",
+      "character": "Wade Grey",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/hdko2C45Wr5G03Z8JwGjWMynP84.jpg",
+      "id": "55755"
+    },
+    {
+      "name": "Шон Эшмор",
+      "character": "Wesley Evers",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/tXA1gFtsp9HWnzlQsaZSoZC8L4r.jpg",
+      "id": "11023"
+    },
+    {
+      "name": "Дженна Дуан",
+      "character": "Bailey Nune",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/8zZkN1ewGxN8MHiqB8lRmBle8yf.jpg",
+      "id": "20381"
+    },
+    {
+      "name": "Лиссет Чавес",
+      "character": "Celina Juarez",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/fFnGQVFGAtTZcmLAr7XuUhvtjEW.jpg",
+      "id": "1600095"
+    },
+    {
+      "name": "Дерик Августин",
+      "character": "Miles Penn",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/lJNKxDavwDrGhingpGpzlKfd6I9.jpg",
+      "id": "1411745"
+    }
+  ],
+  "status": "Идет",
+  "seasons": [
+    {
+      "id": "75146d35-0481-404e-b035-65d924f8d2ac",
+      "seasonNumber": 1,
+      "name": "Сезон 1",
+      "overview": "Случай подталкивает 45-летнего мужчину к осуществлению мечты — стать полицейским. Но чтобы попасть на службу, он должен доказать полиции Лос-Анджелеса свою пригодность.",
+      "posterUrl": "https://image.tmdb.org/t/p/w342/7pa9uGyAWfB3px28JFVsfosNuw1.jpg",
+      "episodeCount": 20,
+      "airDate": "2018-10-15"
+    },
+    {
+      "id": "68999bb1-6f49-4b92-808c-98f824b5d583",
+      "seasonNumber": 2,
+      "name": "Сезон 2",
+      "overview": "Ставки как никогда высоки для Нолана и его коллег-новичков из полиции Лос-Анджелеса, которые борются с преступностью, выясняют отношения и обучаются на рабочем месте.",
+      "posterUrl": "https://image.tmdb.org/t/p/w342/va2zsahrlkgif9Q3lr2ZTmV9Rwg.jpg",
+      "episodeCount": 20,
+      "airDate": "2019-09-28"
+    },
+    {
+      "id": "4ea4a614-120e-4598-87ad-3c0412fe37a8",
+      "seasonNumber": 3,
+      "name": "Сезон 3",
+      "overview": "После окончания обучения Нолану с коллегами-новичками предстоит справиться с профессиональными и личными трудностями.",
+      "posterUrl": "https://image.tmdb.org/t/p/w342/zwsTsUTOGwIPEQQHJFPe2jtE06O.jpg",
+      "episodeCount": 14,
+      "airDate": "2021-01-02"
+    },
+    {
+      "id": "ecf181d2-1f16-4c3f-9555-4581da99bb53",
+      "seasonNumber": 4,
+      "name": "Сезон 4",
+      "overview": "Офицер Нолан и отряд полиции Лос-Анджелеса сталкиваются со сложнейшей задачей — раскрыть преступления, жертвами которых стали их коллеги.",
+      "posterUrl": "https://image.tmdb.org/t/p/w342/tDMztsBrRYYqwwXJuazKDiVfbIM.jpg",
+      "episodeCount": 22,
+      "airDate": "2021-09-25"
+    },
+    {
+      "id": "ab5ee88a-7ef4-44e7-a733-dc3f7fcbcb13",
+      "seasonNumber": 5,
+      "name": "Сезон 5",
+      "overview": "Джон Нолан становится инструктором, обучая свою новую напарницу-новичка Селину Хуарес и справляясь с трудностями своей новой роли, в то время как его отношения с Бейли продолжают развиваться.",
+      "posterUrl": "https://image.tmdb.org/t/p/w342/sDnWuO0uvzMfWjgNEj4csanhD7G.jpg",
+      "episodeCount": 22,
+      "airDate": "2022-09-24"
+    },
+    {
+      "id": "463ee24c-8067-484f-847c-39164610b0f6",
+      "seasonNumber": 6,
+      "name": "Сезон 6",
+      "overview": "Джон Нолан, самый возрастной новичок в полиции Лос-Анджелеса, использовал свой жизненный опыт, решимость и чувство юмора, чтобы не отставать от новобранцев, которые на 20 лет моложе его. Приближаясь к завершению обучения, Нолан сталкивается с самым серьёзным испытанием в своей карьере полицейского, когда ему приходится примириться с выбором, который он сделал в стремлении к правде.",
+      "posterUrl": "https://image.tmdb.org/t/p/w342/slbQ2Y47nZ3vDtz6vv1cHDSiOgi.jpg",
+      "episodeCount": 10,
+      "airDate": "2024-02-19"
+    },
+    {
+      "id": "db7f1c47-2ebd-4395-a377-d74c32f1e90f",
+      "seasonNumber": 7,
+      "name": "Сезон 7",
+      "overview": "Джон и его команда приветствуют двух новых новичков и продолжают охоту на двух опасных заключенных, у которых после побега из тюрьмы возникли очень личные чувства вендетты.",
+      "posterUrl": "https://image.tmdb.org/t/p/w342/ySRbyPqKZBpMF3IDr349580O957.jpg",
+      "episodeCount": 18,
+      "airDate": "2025-01-06"
+    },
+    {
+      "id": "eb2d8d45-39e7-4a90-8b4e-b1ac392f2b34",
+      "seasonNumber": 8,
+      "name": "Сезон 8",
+      "overview": "Джон Нолан и его команда отправляются на международную операцию с высокими ставками в Прагу, после чего вновь оказываются втянутыми в постоянно меняющиеся опасности службы в полиции Лос-Анджелеса. Тем временем дома подразделение сталкивается с растущим политическим давлением, неразрешёнными угрозами и возвращающимися противниками — включая намёки на то, что коррумпированный адвокат Моника Стивенс может вскоре снова появиться на сцене.",
+      "posterUrl": "https://image.tmdb.org/t/p/w342/jMTUO6vymaBTVT5xe5VRVBuvEOm.jpg",
+      "episodeCount": 18,
+      "airDate": "2026-01-06"
+    },
+    {
+      "id": "12cdf59d-01c2-4a8f-b049-9aab7ce1ed5c",
+      "seasonNumber": 9,
+      "name": "Сезон 9",
+      "overview": ""
+    }
+  ]
+}

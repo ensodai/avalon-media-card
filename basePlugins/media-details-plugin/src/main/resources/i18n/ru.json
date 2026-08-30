@@ -1,0 +1,16 @@
+{
+  "details.cast_title": "В главных ролях",
+  "details.episode_title_fmt": "Серия %d",
+  "details.recommendations": "Рекомендации",
+  "details.similar_tv": "Похожие сериалы",
+  "details.similar_movies": "Похожие фильмы",
+  "details.untitled": "Без названия",
+  "details.in_collection": "В коллекции",
+  "details.add_to_collection": "В коллекцию",
+  "details.add_to_list": "В список",
+  "status.watching": "Смотрю",
+  "status.completed": "Просмотрено",
+  "status.dropped": "Брошено",
+  "status.planned": "В планах",
+  "status.add": "Добавить статус"
+}

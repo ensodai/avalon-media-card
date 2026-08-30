@@ -1,0 +1,165 @@
+{
+  "title": "Побег из Шоушенка",
+  "originalTitle": "The Shawshank Redemption",
+  "description": "Бухгалтер Энди Дюфрейн обвинён в убийстве собственной жены и её любовника. Оказавшись в тюрьме под названием Шоушенк, он сталкивается с жестокостью и беззаконием, царящими по обе стороны решётки. Каждый, кто попадает в эти стены, становится их рабом до конца жизни. Но Энди, обладающий живым умом и доброй душой, находит подход как к заключённым, так и к охранникам, добиваясь их особого к себе расположения.",
+  "posterUrl": "https://image.tmdb.org/t/p/w342/yvmKPlTIi0xdcFQIFcQKQJcI63W.jpg",
+  "backgroundUrl": "https://image.tmdb.org/t/p/w1280/zfbjgQE1uSd9wiPTX4VzsLi0rGG.jpg",
+  "genres": [
+    {
+      "id": 18,
+      "name": "драма"
+    },
+    {
+      "id": 80,
+      "name": "криминал"
+    }
+  ],
+  "keywords": [
+    {
+      "id": 378,
+      "name": "prison"
+    },
+    {
+      "id": 417,
+      "name": "corruption"
+    },
+    {
+      "id": 796,
+      "name": "police brutality"
+    },
+    {
+      "id": 818,
+      "name": "based on novel or book"
+    },
+    {
+      "id": 2885,
+      "name": "prison cell"
+    },
+    {
+      "id": 3929,
+      "name": "hope"
+    },
+    {
+      "id": 4779,
+      "name": "delinquent"
+    },
+    {
+      "id": 6054,
+      "name": "friendship"
+    },
+    {
+      "id": 6089,
+      "name": "freedom"
+    },
+    {
+      "id": 8622,
+      "name": "parole board"
+    },
+    {
+      "id": 9777,
+      "name": "prison escape"
+    },
+    {
+      "id": 11436,
+      "name": "redemption"
+    },
+    {
+      "id": 12662,
+      "name": "wrongful imprisonment"
+    },
+    {
+      "id": 165583,
+      "name": "interracial friendship"
+    },
+    {
+      "id": 180172,
+      "name": "framed for murder"
+    },
+    {
+      "id": 207883,
+      "name": "1940s"
+    },
+    {
+      "id": 236369,
+      "name": "voiceover"
+    },
+    {
+      "id": 311315,
+      "name": "dramatic"
+    },
+    {
+      "id": 325842,
+      "name": "powerful"
+    },
+    {
+      "id": 377433,
+      "name": "epic"
+    }
+  ],
+  "releaseDate": "1994",
+  "director": "Фрэнк Дарабонт",
+  "directorImageUrl": "https://image.tmdb.org/t/p/w185/vZ50guP86otYTiBSGfi35GNHWVf.jpg",
+  "directorId": "4027",
+  "cast": [
+    {
+      "name": "Тим Роббинс",
+      "character": "Andy Dufresne",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/3FfJMIVwXgsIXbAT8ECBSZJAncR.jpg",
+      "id": "504"
+    },
+    {
+      "name": "Морган Фримен",
+      "character": "Ellis Boyd 'Red' Redding",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/905k0RFzH0Kd6gx8oSxRdnr6FL.jpg",
+      "id": "192"
+    },
+    {
+      "name": "Боб Гантон",
+      "character": "Warden Norton",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/ulbVvuBToBN3aCGcV028hwO0MOP.jpg",
+      "id": "4029"
+    },
+    {
+      "name": "Уильям Сэдлер",
+      "character": "Heywood",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/rWeb2kjYCA7V9MC9kRwRpm57YoY.jpg",
+      "id": "6573"
+    },
+    {
+      "name": "Клэнси Браун",
+      "character": "Captain Byron T. Hadley",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/1JeBRNG7VS7r64V9lOvej9bZXW5.jpg",
+      "id": "6574"
+    },
+    {
+      "name": "Гил Беллоуз",
+      "character": "Tommy",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/eCOIv2nSGnWTHdn88NoMyNOKWyR.jpg",
+      "id": "6575"
+    },
+    {
+      "name": "Джеймс Уитмор",
+      "character": "Brooks Hatlen",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/nYMAbkfwFIgKK84vnLoQctI6vHg.jpg",
+      "id": "6577"
+    },
+    {
+      "name": "Марк Ролстон",
+      "character": "Bogs Diamond",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/hcrNRIptYMRXgkJ9k76BlQu6DQp.jpg",
+      "id": "6576"
+    },
+    {
+      "name": "Джеффри ДеМанн",
+      "character": "1946 D.A.",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/70bkLdlkBB7x2NztuJAh4pjdyxy.jpg",
+      "id": "12645"
+    },
+    {
+      "name": "Larry Brandenburg",
+      "character": "Skeet",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/y13c1a4keaLnoTbi3dERwolQXWP.jpg",
+      "id": "92119"
+    }
+  ]
+}

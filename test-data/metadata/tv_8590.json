@@ -1,0 +1,278 @@
+{
+  "title": "Жизнь прекрасна",
+  "originalTitle": "Plus belle la vie",
+  "subtitle": "Plus belle la vie",
+  "description": "Сериал «Жизнь прекрасна» рассказывает о жителях вымышленного района в Марселе. Каждый эпизод охватывает один день и повествует о работе, личной и повседневной жизни героев. Обычно в сериале задействовано сразу несколько историй: детективная, социальная и бытовая. Многие из них не лишены юмора, но также могут поднимать острые общественные проблемы или касаться запретных тем. Действие из квартир главных героев перемещается в среднюю школу, больницу, здание суда, тюрьму, парк, бар и окрестности Марселя.",
+  "posterUrl": "https://image.tmdb.org/t/p/w342/jmU8HlTDn87xmRqXagcL2swDr8I.jpg",
+  "backgroundUrl": "https://image.tmdb.org/t/p/w1280/lqDlYLNA0RdMXDiz70lU8Ib1nwW.jpg",
+  "rating": "4,4",
+  "genres": [
+    {
+      "id": 18,
+      "name": "драма"
+    },
+    {
+      "id": 35,
+      "name": "комедия"
+    },
+    {
+      "id": 80,
+      "name": "криминал"
+    }
+  ],
+  "productionCompanies": [
+    {
+      "id": 22381,
+      "name": "Rendez-Vous Production"
+    },
+    {
+      "id": 23448,
+      "name": "Telfrance",
+      "logoUrl": "https://image.tmdb.org/t/p/w200/rKUrVCN0CkbrsaX3iO6bdx1cHYJ.png"
+    },
+    {
+      "id": 2318,
+      "name": "Région Provence Côte d'Azur"
+    }
+  ],
+  "releaseDate": "2004-08-30",
+  "tagline": "",
+  "cast": [
+    {
+      "name": "Michel Cordes",
+      "character": "Roland Marci",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/bjZCeUoijC5WKVtOXLJybbxHe9D.jpg",
+      "id": "579259"
+    },
+    {
+      "name": "Laurent Kerusoré",
+      "character": "Thomas Marci",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/j5TrKscirrGlDCgKfCVvUi7GhFH.jpg",
+      "id": "2540637"
+    },
+    {
+      "name": "Éléonore Sarrazin",
+      "character": "Sabrina Gocelin",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/rAhGVKidwE1ZfmXE9MoxH4vGYaG.jpg",
+      "id": "3626077"
+    },
+    {
+      "name": "Cécilia Hornus",
+      "character": "Blanche Marci",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/bbaFaqPoywxRGmypJJEFliLx7QB.jpg",
+      "id": "1720648"
+    },
+    {
+      "name": "Rebecca Hampton",
+      "character": "Céline Frémont",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/4jlGAkNfly8wrm3af6vIjpBgizt.jpg",
+      "id": "144916"
+    },
+    {
+      "name": "Anne Décis",
+      "character": "Luna Torres",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/eMjwJnXLwOzP3gFEySdoeCwwalu.jpg",
+      "id": "2198192"
+    },
+    {
+      "name": "Serge Dupire",
+      "character": "Vincent Chaumette",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/sIZiRHuq5uqoVqEle9iy0OnYCAP.jpg",
+      "id": "35531"
+    },
+    {
+      "name": "Sylvie Flepp",
+      "character": "Mirta Torres",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/umrpSZv7Kblg7bvQ6t91Gvn1jHS.jpg",
+      "id": "1389470"
+    },
+    {
+      "name": "Lisa Cipriani",
+      "character": "Camille Rimez",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/vuKCQ6Wdl2GPHdqepBUKUjbnlRQ.jpg",
+      "id": "231436"
+    },
+    {
+      "name": "Pauline Bression",
+      "character": "Emma Rimez",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/pIvGvGgLJoynQu5okoXSra3Ra72.jpg",
+      "id": "2845438"
+    }
+  ],
+  "numberOfSeasons": 18,
+  "numberOfEpisodes": 4667,
+  "status": "Завершен",
+  "network": "France 3",
+  "seasons": [
+    {
+      "id": "147916",
+      "seasonNumber": 0,
+      "name": "Спецматериалы",
+      "overview": "",
+      "episodeCount": 68,
+      "airDate": "2006-12-26"
+    },
+    {
+      "id": "83365",
+      "seasonNumber": 1,
+      "name": "Сезон 1",
+      "overview": "",
+      "posterUrl": "https://image.tmdb.org/t/p/w342/6fQyh7NSWf6jpug5vjmpwVH4iK5.jpg",
+      "episodeCount": 260,
+      "airDate": "2004-08-30"
+    },
+    {
+      "id": "94352",
+      "seasonNumber": 2,
+      "name": "Сезон 2",
+      "overview": "",
+      "posterUrl": "https://image.tmdb.org/t/p/w342/6fQyh7NSWf6jpug5vjmpwVH4iK5.jpg",
+      "episodeCount": 260,
+      "airDate": "2005-09-05"
+    },
+    {
+      "id": "94353",
+      "seasonNumber": 3,
+      "name": "Сезон 3",
+      "overview": "",
+      "posterUrl": "https://image.tmdb.org/t/p/w342/6fQyh7NSWf6jpug5vjmpwVH4iK5.jpg",
+      "episodeCount": 260,
+      "airDate": "2006-09-11"
+    },
+    {
+      "id": "94354",
+      "seasonNumber": 4,
+      "name": "Сезон 4",
+      "overview": "",
+      "posterUrl": "https://image.tmdb.org/t/p/w342/6fQyh7NSWf6jpug5vjmpwVH4iK5.jpg",
+      "episodeCount": 260,
+      "airDate": "2007-09-10"
+    },
+    {
+      "id": "94355",
+      "seasonNumber": 5,
+      "name": "Сезон 5",
+      "overview": "",
+      "posterUrl": "https://image.tmdb.org/t/p/w342/6fQyh7NSWf6jpug5vjmpwVH4iK5.jpg",
+      "episodeCount": 260,
+      "airDate": "2008-09-08"
+    },
+    {
+      "id": "94356",
+      "seasonNumber": 6,
+      "name": "Сезон 6",
+      "overview": "",
+      "posterUrl": "https://image.tmdb.org/t/p/w342/6fQyh7NSWf6jpug5vjmpwVH4iK5.jpg",
+      "episodeCount": 260,
+      "airDate": "2009-09-14"
+    },
+    {
+      "id": "94357",
+      "seasonNumber": 7,
+      "name": "Сезон 7",
+      "overview": "",
+      "posterUrl": "https://image.tmdb.org/t/p/w342/6fQyh7NSWf6jpug5vjmpwVH4iK5.jpg",
+      "episodeCount": 260,
+      "airDate": "2010-10-04"
+    },
+    {
+      "id": "94358",
+      "seasonNumber": 8,
+      "name": "Сезон 8",
+      "overview": "",
+      "posterUrl": "https://image.tmdb.org/t/p/w342/6fQyh7NSWf6jpug5vjmpwVH4iK5.jpg",
+      "episodeCount": 235,
+      "airDate": "2011-10-03"
+    },
+    {
+      "id": "94359",
+      "seasonNumber": 9,
+      "name": "Сезон 9",
+      "overview": "",
+      "posterUrl": "https://image.tmdb.org/t/p/w342/6fQyh7NSWf6jpug5vjmpwVH4iK5.jpg",
+      "episodeCount": 285,
+      "airDate": "2012-09-10"
+    },
+    {
+      "id": "94360",
+      "seasonNumber": 10,
+      "name": "Сезон 10",
+      "overview": "",
+      "posterUrl": "https://image.tmdb.org/t/p/w342/6fQyh7NSWf6jpug5vjmpwVH4iK5.jpg",
+      "episodeCount": 260,
+      "airDate": "2013-10-14"
+    },
+    {
+      "id": "67375",
+      "seasonNumber": 11,
+      "name": "Сезон 11",
+      "overview": "",
+      "posterUrl": "https://image.tmdb.org/t/p/w342/6fQyh7NSWf6jpug5vjmpwVH4iK5.jpg",
+      "episodeCount": 260,
+      "airDate": "2014-10-13"
+    },
+    {
+      "id": "83768",
+      "seasonNumber": 12,
+      "name": "Сезон 12",
+      "overview": "",
+      "posterUrl": "https://image.tmdb.org/t/p/w342/6fQyh7NSWf6jpug5vjmpwVH4iK5.jpg",
+      "episodeCount": 260,
+      "airDate": "2015-10-12"
+    },
+    {
+      "id": "83767",
+      "seasonNumber": 13,
+      "name": "Сезон 13",
+      "overview": "",
+      "posterUrl": "https://image.tmdb.org/t/p/w342/6fQyh7NSWf6jpug5vjmpwVH4iK5.jpg",
+      "episodeCount": 260,
+      "airDate": "2016-10-10"
+    },
+    {
+      "id": "110402",
+      "seasonNumber": 14,
+      "name": "Сезон 14",
+      "overview": "",
+      "posterUrl": "https://image.tmdb.org/t/p/w342/6fQyh7NSWf6jpug5vjmpwVH4iK5.jpg",
+      "episodeCount": 260,
+      "airDate": "2017-10-09"
+    },
+    {
+      "id": "143457",
+      "seasonNumber": 15,
+      "name": "Сезон 15",
+      "overview": "",
+      "posterUrl": "https://image.tmdb.org/t/p/w342/6fQyh7NSWf6jpug5vjmpwVH4iK5.jpg",
+      "episodeCount": 260,
+      "airDate": "2018-10-08"
+    },
+    {
+      "id": "143458",
+      "seasonNumber": 16,
+      "name": "Сезон 16",
+      "overview": "",
+      "posterUrl": "https://image.tmdb.org/t/p/w342/6fQyh7NSWf6jpug5vjmpwVH4iK5.jpg",
+      "episodeCount": 200,
+      "airDate": "2019-10-07"
+    },
+    {
+      "id": "165814",
+      "seasonNumber": 17,
+      "name": "Сезон 17",
+      "overview": "",
+      "posterUrl": "https://image.tmdb.org/t/p/w342/aEy2gS0Yff7GmWpksNInTek9wV2.jpg",
+      "episodeCount": 257,
+      "airDate": "2020-09-07"
+    },
+    {
+      "id": "213046",
+      "seasonNumber": 18,
+      "name": "Сезон 18",
+      "overview": "",
+      "posterUrl": "https://image.tmdb.org/t/p/w342/Adu7ReQjsX7XF9mzjqxBctDIQkx.jpg",
+      "episodeCount": 310,
+      "airDate": "2021-09-01"
+    }
+  ]
+}

@@ -1,0 +1,9 @@
+{
+  "rutube.channel_fmt": "Channel «%s»",
+  "rutube.channel_quality_fmt": "Channel «%1$s» • %2$s",
+  "rutube.all_episodes_quality_fmt": "All episodes • %s",
+  "rutube.season_title_fmt": "%1$s • Season %2$d (%3$s)",
+  "rutube.composite_release_fmt": "Rutube (Composite release) • %s",
+  "rutube.season_filter_fmt": "Season %d",
+  "rutube.episode_title_fmt": "Episode %d"
+}

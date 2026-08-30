@@ -1,0 +1,16 @@
+{
+  "details.cast_title": "Top Cast",
+  "details.episode_title_fmt": "Episode %d",
+  "details.recommendations": "Recommendations",
+  "details.similar_tv": "Similar TV Shows",
+  "details.similar_movies": "Similar Movies",
+  "details.untitled": "Untitled",
+  "details.in_collection": "In Collection",
+  "details.add_to_collection": "Add to Collection",
+  "details.add_to_list": "Add to list",
+  "status.watching": "Watching",
+  "status.completed": "Completed",
+  "status.dropped": "Dropped",
+  "status.planned": "Plan to watch",
+  "status.add": "Add status"
+}

@@ -1,0 +1,280 @@
+{
+  "title": "7de Laan",
+  "originalTitle": "7de Laan",
+  "subtitle": "7de Laan",
+  "description": "",
+  "posterUrl": "https://image.tmdb.org/t/p/w342/vQcC4Kcx0ZEXxmj0gUrfkFR14LU.jpg",
+  "backgroundUrl": "https://image.tmdb.org/t/p/w1280/ovnj5NSQRAn54e81ecIyAIfKRZK.jpg",
+  "rating": "8,3",
+  "genres": [
+    {
+      "id": 10766,
+      "name": "Мыльная опера"
+    }
+  ],
+  "productionCompanies": [
+    {
+      "id": 215203,
+      "name": "Danie Odendaal Produksies"
+    }
+  ],
+  "releaseDate": "2000-04-04",
+  "tagline": "",
+  "cast": [
+    {
+      "name": "Ingrid Paulus",
+      "character": "Vanessa Meintjies",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/yUMPE0nDuJIyMG6bpA6Zk3LRErY.jpg",
+      "id": "4471757"
+    },
+    {
+      "name": "Hildegardt Whites",
+      "character": "Bonita Meintjies",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/6V5h9yegswHwoukdZLbDiQcArQk.jpg",
+      "id": "4471759"
+    },
+    {
+      "name": "Carina Nel",
+      "character": "Alexa Welman",
+      "id": "4471760"
+    },
+    {
+      "name": "Kristen Raath",
+      "character": "Amorey Welman",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/eVkex6F210FfsWuGlU7x2O5emfV.jpg",
+      "id": "2666796"
+    },
+    {
+      "name": "David Rees",
+      "character": "Chris Welman",
+      "id": "155947"
+    },
+    {
+      "name": "Deirdre Wolhuter",
+      "character": "Mariaan Welman",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/pWj9BLzi4xUobwiuDMKz6ygLH1w.jpg",
+      "id": "1166020"
+    },
+    {
+      "name": "Nicholas Nkuna",
+      "character": "Fikani Chauke",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/ygwwEz9ioCTq9B7wyJrfm4YDZT7.jpg",
+      "id": "2582926"
+    },
+    {
+      "name": "Keabetswe Motsilanyane",
+      "character": "Lesedi Moloi",
+      "id": "2685311"
+    },
+    {
+      "name": "Dirk Stoltz",
+      "character": "DeWet Basson",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/bZvNz1dHsaGPy03G9dcZ2VplbjN.jpg",
+      "id": "1073482"
+    },
+    {
+      "name": "Nazli George",
+      "character": "Ivy Petersen",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/qayOqneIyjaXTjLanBbvjHqxDX3.jpg",
+      "id": "1139441"
+    }
+  ],
+  "numberOfSeasons": 24,
+  "numberOfEpisodes": 6032,
+  "status": "Завершен",
+  "network": "SABC 2",
+  "seasons": [
+    {
+      "id": "373516",
+      "seasonNumber": 1,
+      "name": "Сезон 1",
+      "overview": "",
+      "episodeCount": 104,
+      "airDate": "2000-04-04"
+    },
+    {
+      "id": "373517",
+      "seasonNumber": 2,
+      "name": "Сезон 2",
+      "overview": "",
+      "episodeCount": 208,
+      "airDate": "2002-01-24"
+    },
+    {
+      "id": "373518",
+      "seasonNumber": 3,
+      "name": "Сезон 3",
+      "overview": "",
+      "episodeCount": 260,
+      "airDate": "2003-01-20"
+    },
+    {
+      "id": "373519",
+      "seasonNumber": 4,
+      "name": "Сезон 4",
+      "overview": "",
+      "episodeCount": 260,
+      "airDate": "2004-01-19"
+    },
+    {
+      "id": "373520",
+      "seasonNumber": 5,
+      "name": "Сезон 5",
+      "overview": "",
+      "episodeCount": 260,
+      "airDate": "2005-01-17"
+    },
+    {
+      "id": "373521",
+      "seasonNumber": 6,
+      "name": "Сезон 6",
+      "overview": "",
+      "episodeCount": 260,
+      "airDate": "2006-01-16"
+    },
+    {
+      "id": "373522",
+      "seasonNumber": 7,
+      "name": "Сезон 7",
+      "overview": "",
+      "episodeCount": 260,
+      "airDate": "2007-01-15"
+    },
+    {
+      "id": "373523",
+      "seasonNumber": 8,
+      "name": "Сезон 8",
+      "overview": "",
+      "episodeCount": 260,
+      "airDate": "2008-01-14"
+    },
+    {
+      "id": "373524",
+      "seasonNumber": 9,
+      "name": "Сезон 9",
+      "overview": "",
+      "episodeCount": 260,
+      "airDate": "2009-01-12"
+    },
+    {
+      "id": "373525",
+      "seasonNumber": 10,
+      "name": "Сезон 10",
+      "overview": "",
+      "episodeCount": 260,
+      "airDate": "2010-01-11"
+    },
+    {
+      "id": "373526",
+      "seasonNumber": 11,
+      "name": "Сезон 11",
+      "overview": "",
+      "episodeCount": 260,
+      "airDate": "2011-01-10"
+    },
+    {
+      "id": "373527",
+      "seasonNumber": 12,
+      "name": "Сезон 12",
+      "overview": "",
+      "episodeCount": 260,
+      "airDate": "2012-01-09"
+    },
+    {
+      "id": "373528",
+      "seasonNumber": 13,
+      "name": "Сезон 13",
+      "overview": "",
+      "episodeCount": 260,
+      "airDate": "2013-01-07"
+    },
+    {
+      "id": "373529",
+      "seasonNumber": 14,
+      "name": "Сезон 14",
+      "overview": "",
+      "episodeCount": 260,
+      "airDate": "2014-01-06"
+    },
+    {
+      "id": "373530",
+      "seasonNumber": 15,
+      "name": "Сезон 15",
+      "overview": "",
+      "episodeCount": 260,
+      "airDate": "2015-01-05"
+    },
+    {
+      "id": "373531",
+      "seasonNumber": 16,
+      "name": "Сезон 16",
+      "overview": "",
+      "episodeCount": 260,
+      "airDate": "2016-01-04"
+    },
+    {
+      "id": "373532",
+      "seasonNumber": 17,
+      "name": "Сезон 17",
+      "overview": "",
+      "episodeCount": 260,
+      "airDate": "2017-01-02"
+    },
+    {
+      "id": "373533",
+      "seasonNumber": 18,
+      "name": "Сезон 18",
+      "overview": "",
+      "episodeCount": 260,
+      "airDate": "2018-01-01"
+    },
+    {
+      "id": "373534",
+      "seasonNumber": 19,
+      "name": "Сезон 19",
+      "overview": "",
+      "episodeCount": 260,
+      "airDate": "2018-12-31"
+    },
+    {
+      "id": "373535",
+      "seasonNumber": 20,
+      "name": "Сезон 20",
+      "overview": "",
+      "episodeCount": 260,
+      "airDate": "2019-12-31"
+    },
+    {
+      "id": "373536",
+      "seasonNumber": 21,
+      "name": "Сезон 21",
+      "overview": "",
+      "episodeCount": 260,
+      "airDate": "2020-01-01"
+    },
+    {
+      "id": "373537",
+      "seasonNumber": 22,
+      "name": "Сезон 22",
+      "overview": "",
+      "episodeCount": 260,
+      "airDate": "2020-12-30"
+    },
+    {
+      "id": "373538",
+      "seasonNumber": 23,
+      "name": "Сезон 23",
+      "overview": "",
+      "episodeCount": 260,
+      "airDate": "2021-12-29"
+    },
+    {
+      "id": "373539",
+      "seasonNumber": 24,
+      "name": "Сезон 24",
+      "overview": "",
+      "episodeCount": 260,
+      "airDate": "2022-12-28"
+    }
+  ]
+}

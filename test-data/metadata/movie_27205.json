@@ -1,0 +1,108 @@
+{
+  "title": "Начало",
+  "originalTitle": "Inception",
+  "subtitle": "Inception",
+  "description": "Дом Кобб — талантливый вор, лучший из лучших в опасном искусстве извлечения: он крадёт ценные секреты из глубин подсознания во время сна, когда человеческий разум наиболее уязвим. Редкие способности Кобба сделали его ценным игроком в привычном к предательству мире промышленного шпионажа, но они же превратили его в извечного беглеца и лишили всего, что он когда-либо любил.  И вот у Кобба появляется шанс исправить ошибки. Его последнее дело может вернуть всё назад, но для этого ему нужно совершить невозможное — инициацию. Вместо идеальной кражи Кобб и его команда спецов должны будут провернуть обратное. Теперь их задача — не украсть идею, а внедрить её. Если у них получится, это и станет идеальным преступлением.  Но никакое планирование или мастерство не могут подготовить команду к встрече с опасным противником, который, кажется, предугадывает каждый их ход. Врагом, увидеть которого мог бы лишь Кобб.",
+  "posterUrl": "https://image.tmdb.org/t/p/w342/piQXcdOGgv1O9HQ07pI0tnjkGJw.jpg",
+  "backgroundUrl": "https://image.tmdb.org/t/p/w1280/8ZTVqvKDQ8emSGUEMjsS4yHAwrp.jpg",
+  "rating": "8,4",
+  "runtime": 148,
+  "genres": [
+    {
+      "id": 28,
+      "name": "боевик"
+    },
+    {
+      "id": 878,
+      "name": "фантастика"
+    },
+    {
+      "id": 12,
+      "name": "приключения"
+    }
+  ],
+  "productionCompanies": [
+    {
+      "id": 923,
+      "name": "Legendary Pictures",
+      "logoUrl": "https://image.tmdb.org/t/p/w200/5UQsZrfbfG2dYJbx8DxfoTr2Bvu.png"
+    },
+    {
+      "id": 9996,
+      "name": "Syncopy",
+      "logoUrl": "https://image.tmdb.org/t/p/w200/3tvBqYsBhxWeHlu62SIJ1el93O7.png"
+    },
+    {
+      "id": 174,
+      "name": "Warner Bros. Pictures",
+      "logoUrl": "https://image.tmdb.org/t/p/w200/zhD3hhtKB5qyv7ZeL4uLpNxgMVU.png"
+    }
+  ],
+  "releaseDate": "2010-07-15",
+  "tagline": "«Твой разум – место преступления»",
+  "director": "Кристофер Нолан",
+  "directorImageUrl": "https://image.tmdb.org/t/p/w185/xuAIuYSmsUzKlUMBFGVZaWsY3DZ.jpg",
+  "directorId": "525",
+  "cast": [
+    {
+      "name": "Леонардо ДиКаприо",
+      "character": "Dom Cobb",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/mkdRcVIQl4WZhDf1vXKWTD7HZrZ.jpg",
+      "id": "6193"
+    },
+    {
+      "name": "Джозеф Гордон-Левитт",
+      "character": "Arthur",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/z2FA8js799xqtfiFjBTicFYdfk.jpg",
+      "id": "24045"
+    },
+    {
+      "name": "Кэн Ватанабэ",
+      "character": "Saito",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/psAXOYp9SBOXvg6AXzARDedNQ9P.jpg",
+      "id": "3899"
+    },
+    {
+      "name": "Том Харди",
+      "character": "Eames",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/d81K0RH8UX7tZj49tZaQhZ9ewH.jpg",
+      "id": "2524"
+    },
+    {
+      "name": "Эллиот Пейдж",
+      "character": "Ariadne",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/nXO8DE4biVXY4UDYP0NdIY1zvXS.jpg",
+      "id": "27578"
+    },
+    {
+      "name": "Дилип Рао",
+      "character": "Yusuf",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/jRNn8SZqFXuI5wOOlHwYsWh0hXs.jpg",
+      "id": "95697"
+    },
+    {
+      "name": "Киллиан Мёрфи",
+      "character": "Robert Fischer, Jr.",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/2lKs67r7FI4bPu0AXxMUJZxmUXn.jpg",
+      "id": "2037"
+    },
+    {
+      "name": "Том Беренджер",
+      "character": "Peter Browning",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/zLxzAdAfu7y02yEx29JSLDgXJZ4.jpg",
+      "id": "13022"
+    },
+    {
+      "name": "Марион Котийяр",
+      "character": "Mal Cobb",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/biitzOF0GffIqFYLyOPkoiaOngQ.jpg",
+      "id": "8293"
+    },
+    {
+      "name": "Пит Постлетуэйт",
+      "character": "Maurice Fischer",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/2gpa75Ci4y2OKmOc8WXnaeGgyKF.jpg",
+      "id": "4935"
+    }
+  ]
+}

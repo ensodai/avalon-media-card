@@ -1,0 +1,213 @@
+{
+  "title": "Семь Самураев",
+  "originalTitle": "Seven Samurai",
+  "description": "Япония, XVI век. В стране полыхает гражданская война, повсюду орудуют банды разбойников и мародеров. Бедные крестьяне нанимают для защиты деревни семерых самураев, которые немного сплачивают раздробленных и малодушных селян в процессе подготовки и укрепления деревни.",
+  "posterUrl": "https://image.tmdb.org/t/p/w342/6UzaYYURo3T6e4jBHHWaUWRNayZ.jpg",
+  "backgroundUrl": "https://image.tmdb.org/t/p/w1280/qvZ91FwMq6O47VViAr8vZNQz3WI.jpg",
+  "genres": [
+    {
+      "id": 28,
+      "name": "боевик"
+    },
+    {
+      "id": 18,
+      "name": "драма"
+    }
+  ],
+  "keywords": [
+    {
+      "id": 233,
+      "name": "japan"
+    },
+    {
+      "id": 779,
+      "name": "martial arts"
+    },
+    {
+      "id": 1462,
+      "name": "samurai"
+    },
+    {
+      "id": 1938,
+      "name": "sword"
+    },
+    {
+      "id": 3691,
+      "name": "forbidden love"
+    },
+    {
+      "id": 4402,
+      "name": "peasant"
+    },
+    {
+      "id": 4631,
+      "name": "looting"
+    },
+    {
+      "id": 5329,
+      "name": "rice"
+    },
+    {
+      "id": 5330,
+      "name": "fencing"
+    },
+    {
+      "id": 5331,
+      "name": "village"
+    },
+    {
+      "id": 11426,
+      "name": "moral ambiguity"
+    },
+    {
+      "id": 12999,
+      "name": "black and white"
+    },
+    {
+      "id": 14643,
+      "name": "battle"
+    },
+    {
+      "id": 15060,
+      "name": "period drama"
+    },
+    {
+      "id": 33344,
+      "name": "bandit"
+    },
+    {
+      "id": 33558,
+      "name": "practice"
+    },
+    {
+      "id": 154846,
+      "name": "farmer"
+    },
+    {
+      "id": 186753,
+      "name": "jidaigeki"
+    },
+    {
+      "id": 208244,
+      "name": "16th century"
+    },
+    {
+      "id": 210754,
+      "name": "class relations"
+    },
+    {
+      "id": 225219,
+      "name": "reflective"
+    },
+    {
+      "id": 229151,
+      "name": "collectivism"
+    },
+    {
+      "id": 233409,
+      "name": "plunder"
+    },
+    {
+      "id": 254655,
+      "name": "downtrodden farmers"
+    },
+    {
+      "id": 259384,
+      "name": "seven"
+    },
+    {
+      "id": 312122,
+      "name": "bushi"
+    },
+    {
+      "id": 312285,
+      "name": "tactical warfare"
+    },
+    {
+      "id": 312898,
+      "name": "violence"
+    },
+    {
+      "id": 315053,
+      "name": "critical"
+    },
+    {
+      "id": 325811,
+      "name": "excited"
+    },
+    {
+      "id": 325830,
+      "name": "informative"
+    },
+    {
+      "id": 342828,
+      "name": "violent"
+    }
+  ],
+  "releaseDate": "1954",
+  "director": "Акира Куросава",
+  "directorImageUrl": "https://image.tmdb.org/t/p/w185/g2iwSho2vJxVz7cbD1FAKAmPD6A.jpg",
+  "directorId": "5026",
+  "cast": [
+    {
+      "name": "Тосиро Мифунэ",
+      "character": "Kikuchiyo",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/cZ5ybA7cDA0EBMaM5jX2f7RNBVb.jpg",
+      "id": "7450"
+    },
+    {
+      "name": "Такаси Симура",
+      "character": "Kambei Shimada",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/ydyAm2vyBbEPZRICIMqqjDm0NM9.jpg",
+      "id": "7453"
+    },
+    {
+      "name": "稲葉義男",
+      "character": "Gorobei Katayama",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/5qIAqM5PegWTNq67qNofz78fb6U.jpg",
+      "id": "20828"
+    },
+    {
+      "name": "宮口精二",
+      "character": "Kyuzo",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/mAGkZlsowKzgpvvi40mRLU4vA53.jpg",
+      "id": "20829"
+    },
+    {
+      "name": "Минору Тиаки",
+      "character": "Heihachi Hayashida",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/9E3efYEg8pxANdfVLqYGiX8zJE8.jpg",
+      "id": "7454"
+    },
+    {
+      "name": "Дайскэ Като",
+      "character": "Shichiroji",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/dTcLO2XWLwp6RiJTpwDjxzbnuSp.jpg",
+      "id": "7457"
+    },
+    {
+      "name": "木村功",
+      "character": "Katsushiro Okamoto",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/afLPuf3x7UYXryAbqAGqmRcVNNW.jpg",
+      "id": "20830"
+    },
+    {
+      "name": "津島恵子",
+      "character": "Shino",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/c4h0z00YkEUav0lGHoqVpeUzbul.jpg",
+      "id": "20831"
+    },
+    {
+      "name": "島崎雪子",
+      "character": "Rikichi's Wife",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/wX1QqvkIdBQbNexTCxbmXyu6dUf.jpg",
+      "id": "554250"
+    },
+    {
+      "name": "藤原釜足",
+      "character": "Manzô - Father of Shino",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/jf1aok2Ln5XG805BDzBJc2PjZQg.jpg",
+      "id": "96552"
+    }
+  ]
+}

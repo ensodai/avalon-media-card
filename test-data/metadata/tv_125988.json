@@ -1,0 +1,113 @@
+{
+  "title": "Укрытие",
+  "originalTitle": "Silo",
+  "description": "На отравленной гибнущей планете будущего тысячи людей ютятся в огромном подземном укрытии. Нарушение шерифом основного правила и серия загадочных смертей вынуждают инженера Джульетту заняться раскрытием тайн и поиском правды о бункере.",
+  "posterUrl": "https://image.tmdb.org/t/p/w342/gRkvq6FgiGRdtCwhVIozaUqhoDL.jpg",
+  "backgroundUrl": "https://image.tmdb.org/t/p/w1280/uTWhbLc7Bj4qNSdW3ZvZKL8cOHv.jpg",
+  "genres": [
+    {
+      "id": 10765,
+      "name": "НФ и Фэнтези"
+    },
+    {
+      "id": 18,
+      "name": "драма"
+    }
+  ],
+  "releaseDate": "2023",
+  "director": "Берт",
+  "directorImageUrl": "https://image.tmdb.org/t/p/w185/voqGE0lT9mU9bz6L4HX7TUHi0R.jpg",
+  "directorId": "1376980",
+  "cast": [
+    {
+      "name": "Ребекка Фергюсон",
+      "character": "Juliette Nichols",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/lJloTOheuQSirSLXNA3JHsrMNfH.jpg",
+      "id": "933238"
+    },
+    {
+      "name": "Коммон",
+      "character": "Robert Sims",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/eggJAnJxpn8wYraX7ea5svETB54.jpg",
+      "id": "4238"
+    },
+    {
+      "name": "Чиназа Уче",
+      "character": "Paul Billings",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/5fbbLI9BPiByyIIRYu9pbRQwyUN.jpg",
+      "id": "1717255"
+    },
+    {
+      "name": "Эшли Цукерман",
+      "character": "Daniel Keene",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/tKT5ybCjMOV4whEQ6jy8ZQnrP7C.jpg",
+      "id": "219960"
+    },
+    {
+      "name": "Шэйн МакРей",
+      "character": "Knox",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/ixNSdZDJ6fZzZc2Pdx4Dwr8wHir.jpg",
+      "id": "83222"
+    },
+    {
+      "name": "Ремми Милнер",
+      "character": "Shirley Campbell",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/4LDy6vhBZ11kOevBdAGBRM34d3L.jpg",
+      "id": "2298156"
+    },
+    {
+      "name": "Александрия Райли",
+      "character": "Camille Sims",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/7rEJ2m0ur4uFPG0YzBQpYQB8Crt.jpg",
+      "id": "2189998"
+    },
+    {
+      "name": "Рид Бирни",
+      "character": "Henry",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/dfLgNLUt6Xs2MJJTi6B1iWdXjU6.jpg",
+      "id": "163774"
+    },
+    {
+      "name": "Лора Иннес",
+      "character": "Senator Thurman",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/kIHB4vHQXt0CbQxuwEOXF2hnpeT.jpg",
+      "id": "454973"
+    },
+    {
+      "name": "Джессика Браун-Финдли",
+      "character": "Charlotte Keene",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/zaqkavcb9ur0W1h1QAxJfKnCJ2h.jpg",
+      "id": "567269"
+    }
+  ],
+  "status": "Идет",
+  "seasons": [
+    {
+      "id": "83181c5a-c891-4b3d-89d3-e781a2a60506",
+      "seasonNumber": 1,
+      "name": "Сезон 1",
+      "overview": "В мрачном антиутопическом будущем человечество цепляется за выживание глубоко под землей в пределах колоссального бункера. Джульетта, инженер, которой поручено разгадать тайну смерти коллеги, раскрывает поразительные секреты, которые угрожают самой сути их замкнутого мира.",
+      "posterUrl": "https://image.tmdb.org/t/p/w342/pVsPWmqscpvgv83ld138POqKM6p.jpg",
+      "episodeCount": 10,
+      "airDate": "2023-05-04"
+    },
+    {
+      "id": "4cdaf174-dc74-4b95-ab0a-bc5d7adb9384",
+      "seasonNumber": 2,
+      "name": "Сезон 2",
+      "overview": "Джульетта Николс, оказавшаяся за пределами бункера с отказавшим костюмом, мчится наперегонки со временем, ошеломленная тем, что рядом находится другой бункер, который может стать ее единственной надеждой на выживание. Тем временем внутри бункера назревают беспорядки, и Бернард Холланд собирает жителей, чтобы поддержать порядок на фоне растущих вопросов об их мире. По мере того как Джульетта сталкивается с неожиданными опасностями вблизи нового силоса, начинают всплывать скрытые истины о происхождении силосов и мира за их пределами, углубляя тайну.",
+      "posterUrl": "https://image.tmdb.org/t/p/w342/sZrBGRiZrp5KlbNfgszwryPDo2N.jpg",
+      "episodeCount": 10,
+      "airDate": "2024-11-14"
+    },
+    {
+      "id": "ea5b2519-8391-4504-aa6d-31142775c4fd",
+      "seasonNumber": 3,
+      "name": "Сезон 3",
+      "overview": "Третий сезон раскрывает историю происхождения, действие которой происходит на несколько столетий раньше, одновременно продолжая сагу о дистопическом обществе из 10 000 человек, живущих под землёй при загадочных обстоятельствах. В настоящем Джульетта Николс выживает после принудительной «чистки», но возвращается с потерей памяти, пока убежище оправляется от восстания и сталкивается с новой опасной угрозой. Тем временем в «прежние времена» журналистка Хелен Дрю и конгрессмен Дэниел Кин раскрывают заговор, который втягивает их в цепь событий с катастрофическими, необратимыми последствиями.",
+      "posterUrl": "https://image.tmdb.org/t/p/w342/gRkvq6FgiGRdtCwhVIozaUqhoDL.jpg",
+      "episodeCount": 10,
+      "airDate": "2026-07-02"
+    }
+  ]
+}

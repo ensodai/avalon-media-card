@@ -1,0 +1,169 @@
+{
+  "title": "Миньоны и монстры",
+  "originalTitle": "Minions & Monsters",
+  "description": "1920-е годы. Миньоны снимаются в кино и покоряют Голливуд. Чтобы снять свой собственный фильм о монстрах, они отправляются на поиски самых пугающих существ.",
+  "posterUrl": "https://image.tmdb.org/t/p/w342/5Bu0nKJxTQd2bVUDF9qrpEEFt1a.jpg",
+  "backgroundUrl": "https://image.tmdb.org/t/p/w1280/kkcwhgSFd81QDlXo8ytrpHPQjhy.jpg",
+  "genres": [
+    {
+      "id": 12,
+      "name": "приключения"
+    },
+    {
+      "id": 16,
+      "name": "мультфильм"
+    },
+    {
+      "id": 35,
+      "name": "комедия"
+    },
+    {
+      "id": 10751,
+      "name": "семейный"
+    },
+    {
+      "id": 14,
+      "name": "фэнтези"
+    }
+  ],
+  "keywords": [
+    {
+      "id": 2343,
+      "name": "magic"
+    },
+    {
+      "id": 9663,
+      "name": "sequel"
+    },
+    {
+      "id": 9675,
+      "name": "prequel"
+    },
+    {
+      "id": 9951,
+      "name": "alien"
+    },
+    {
+      "id": 12396,
+      "name": "hollywood"
+    },
+    {
+      "id": 15285,
+      "name": "spin off"
+    },
+    {
+      "id": 18354,
+      "name": "henchman"
+    },
+    {
+      "id": 33490,
+      "name": "filmmaking"
+    },
+    {
+      "id": 154802,
+      "name": "silent film"
+    },
+    {
+      "id": 164246,
+      "name": "nostalgic"
+    },
+    {
+      "id": 168319,
+      "name": "framing device"
+    },
+    {
+      "id": 190969,
+      "name": "women's suffrage"
+    },
+    {
+      "id": 207876,
+      "name": "1920s"
+    },
+    {
+      "id": 220903,
+      "name": "humanoid robot"
+    },
+    {
+      "id": 278823,
+      "name": "3d animation"
+    },
+    {
+      "id": 289108,
+      "name": "monsters"
+    },
+    {
+      "id": 325782,
+      "name": "cheerful"
+    },
+    {
+      "id": 364802,
+      "name": "early sound film"
+    }
+  ],
+  "releaseDate": "2026",
+  "director": "Пьер Коффен",
+  "directorImageUrl": "https://image.tmdb.org/t/p/w185/eAA9uWRqHlm1LT3nZfXb7UuPfVb.jpg",
+  "directorId": "124747",
+  "cast": [
+    {
+      "name": "Пьер Коффен",
+      "character": "James / Henry / Ed / Dick / The Minions (voice)",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/eAA9uWRqHlm1LT3nZfXb7UuPfVb.jpg",
+      "id": "124747"
+    },
+    {
+      "name": "Трей Паркер",
+      "character": "Goomi (voice)",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/3tJe8t90lrcQzXj9cRcpW9wmj2c.jpg",
+      "id": "34517"
+    },
+    {
+      "name": "Эллисон Дженни",
+      "character": "Olivia (voice)",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/kSaSnQ9xU8eVNL0mTppab95dZA8.jpg",
+      "id": "19"
+    },
+    {
+      "name": "Кристоф Вальц",
+      "character": "Max (voice)",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/jMvLGCVXLaBqjRLf5olyvEucZob.jpg",
+      "id": "27319"
+    },
+    {
+      "name": "Джефф Бриджес",
+      "character": "Frank / Elwood (voice)",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/xms1RAY6q7Lzp7wNeRCB0kzhucn.jpg",
+      "id": "1229"
+    },
+    {
+      "name": "Джесси Айзенберг",
+      "character": "Dort (voice)",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/yYhwWRcxDHTn63gSEF1vnDAD7cD.jpg",
+      "id": "44735"
+    },
+    {
+      "name": "Зои Дойч",
+      "character": "Debbie (voice)",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/tn6ErnytTct7HNAFG2dW17QcBk5.jpg",
+      "id": "1059597"
+    },
+    {
+      "name": "Бобби Мойнахан",
+      "character": "Phillips (voice)",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/gOvwNz5joi5yWJ7dAhuF8WA2aas.jpg",
+      "id": "452205"
+    },
+    {
+      "name": "Фил Ламарр",
+      "character": "Howard (voice)",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/xP2kNlsmXtzXq0geutflO4K9mSE.jpg",
+      "id": "31549"
+    },
+    {
+      "name": "Джордж Лукас",
+      "character": "George Lucas (voice)",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/mDLDvsx8PaZoEThkBdyaG1JxPdf.jpg",
+      "id": "1"
+    }
+  ]
+}

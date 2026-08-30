@@ -1,0 +1,5 @@
+{
+  "episodes.all_fmt": "%d episodes (all)",
+  "episodes.count_of_total_fmt": "%1$d of %2$d episodes",
+  "episode.ordinal_fmt": "Episode %d"
+}

@@ -1,0 +1,172 @@
+{
+  "title": "Менталист",
+  "originalTitle": "The Mentalist",
+  "description": "После того как серийный убийца убил его семью, Патрик Джейн отказался от карьеры экстрасенса и использует свои способности, чтобы помогать правоохранительным органам.",
+  "posterUrl": "https://image.tmdb.org/t/p/w342/sdlnS04iwOeYzng0CAOyiycNTM3.jpg",
+  "backgroundUrl": "https://image.tmdb.org/t/p/w1280/q3pCsNvJ7CmdJUz2sJEEUY3pOPC.jpg",
+  "genres": [
+    {
+      "id": 80,
+      "name": "криминал"
+    },
+    {
+      "id": 18,
+      "name": "драма"
+    },
+    {
+      "id": 9648,
+      "name": "детектив"
+    }
+  ],
+  "keywords": [
+    {
+      "id": 1335,
+      "name": "sense of guilt"
+    },
+    {
+      "id": 7312,
+      "name": "road trip"
+    },
+    {
+      "id": 10037,
+      "name": "le mans"
+    },
+    {
+      "id": 14725,
+      "name": "race car driver"
+    },
+    {
+      "id": 206467,
+      "name": "race car crash"
+    },
+    {
+      "id": 242128,
+      "name": "motorsport"
+    },
+    {
+      "id": 294348,
+      "name": "factual"
+    },
+    {
+      "id": 325809,
+      "name": "enthusiastic"
+    }
+  ],
+  "releaseDate": "2008",
+  "director": "Tom Szentgyorgyi",
+  "directorImageUrl": "https://image.tmdb.org/t/p/w185/gPiQnaMSfIexiPlEmyq5ZKVrinY.jpg",
+  "directorId": "1215660",
+  "cast": [
+    {
+      "name": "Саймон Бейкер",
+      "character": "Patrick Jane",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/oay0Lo2zl0lJdguptxgx1BK9Xq7.jpg",
+      "id": "1284159"
+    },
+    {
+      "name": "Робин Танни",
+      "character": "Teresa Lisbon",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/vOmWyYNoVEaPPvoto4IW8dSXn7I.jpg",
+      "id": "17346"
+    },
+    {
+      "name": "Тим Кан",
+      "character": "Kimball Cho",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/Ae7qMN6fJTut145qpeSn1NOu8yx.jpg",
+      "id": "52947"
+    },
+    {
+      "name": "Рокмонд Данбар",
+      "character": "Dennis Abbott",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/gim7zIrYkbKWsp2Kod7fp74fWyI.jpg",
+      "id": "17345"
+    },
+    {
+      "name": "Джо Адлер",
+      "character": "Jason Wylie",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/bsle7zqj6HBs6NYstkwDwQY7EEf.jpg",
+      "id": "970561"
+    },
+    {
+      "name": "Джози Лорен",
+      "character": "Michelle Vega",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/vZJc51rwheOC0TCdUkA4KM1UfXu.jpg",
+      "id": "146516"
+    }
+  ],
+  "status": "Завершен",
+  "seasons": [
+    {
+      "id": "75fd23a8-ce53-453e-9feb-2c7cec905eb8",
+      "seasonNumber": 0,
+      "name": "Спецматериалы",
+      "overview": "",
+      "posterUrl": "https://image.tmdb.org/t/p/w342/n777EHyaK4yKiErzbvMGxKfdcV3.jpg",
+      "episodeCount": 2,
+      "airDate": "2009-08-20"
+    },
+    {
+      "id": "bd18505a-628f-42cc-bb42-5dc3c9d85707",
+      "seasonNumber": 1,
+      "name": "Сезон 1",
+      "overview": "",
+      "posterUrl": "https://image.tmdb.org/t/p/w342/oFKiqSbaEXtQl96g0v6e5HXKptx.jpg",
+      "episodeCount": 23,
+      "airDate": "2008-09-23"
+    },
+    {
+      "id": "331e14e8-547b-40b6-8fdb-c0158ac5d9f0",
+      "seasonNumber": 2,
+      "name": "Сезон 2",
+      "overview": "",
+      "posterUrl": "https://image.tmdb.org/t/p/w342/7bAwr7PAW0ynlnHfni5HaSzl7ci.jpg",
+      "episodeCount": 23,
+      "airDate": "2009-09-24"
+    },
+    {
+      "id": "7ed2ad21-fb36-436c-af12-40a4451322c6",
+      "seasonNumber": 3,
+      "name": "Сезон 3",
+      "overview": "",
+      "posterUrl": "https://image.tmdb.org/t/p/w342/w2CoyTnYvf4JfjCxRueSLAyuTOJ.jpg",
+      "episodeCount": 24,
+      "airDate": "2010-09-23"
+    },
+    {
+      "id": "61e09b44-88df-49ed-a546-ff10f0308fa5",
+      "seasonNumber": 4,
+      "name": "Сезон 4",
+      "overview": "",
+      "posterUrl": "https://image.tmdb.org/t/p/w342/8ojyaUIHRaqEpEa6XAAXrUXFyCu.jpg",
+      "episodeCount": 24,
+      "airDate": "2011-09-22"
+    },
+    {
+      "id": "b114dfc3-a5bd-4368-837e-b08c7a4c0dcb",
+      "seasonNumber": 5,
+      "name": "Сезон 5",
+      "overview": "",
+      "posterUrl": "https://image.tmdb.org/t/p/w342/3LsyuIXcNDV1mnyZIiBN64GbNzr.jpg",
+      "episodeCount": 22,
+      "airDate": "2012-09-30"
+    },
+    {
+      "id": "e9b61a47-6593-4fbf-af6f-f5a84529d044",
+      "seasonNumber": 6,
+      "name": "Сезон 6",
+      "overview": "",
+      "posterUrl": "https://image.tmdb.org/t/p/w342/3wbMbYqry3ZLSuvFFy4lhbBQq34.jpg",
+      "episodeCount": 22,
+      "airDate": "2013-09-29"
+    },
+    {
+      "id": "d2b98c81-9f3e-4822-a2ba-9b9e1ff40eea",
+      "seasonNumber": 7,
+      "name": "Сезон 7",
+      "overview": "",
+      "posterUrl": "https://image.tmdb.org/t/p/w342/xroML8XHuaB6MP9VKmHg3429037.jpg",
+      "episodeCount": 13,
+      "airDate": "2014-11-30"
+    }
+  ]
+}

@@ -1,0 +1,353 @@
+{
+  "title": "Дневное шоу с Тревором Ноем",
+  "originalTitle": "The Daily Show",
+  "subtitle": "The Daily Show",
+  "description": "\"Дневное шоу с Тревором Ноем\" - американская вечерняя сатирическая телевизионная программа, транслирующаяся каждый понедельник по четверг на Comedy Central и в Канаде The Comedy Network. Описывая себя как фальшивую новостную программу, \"Дневное шоу с Тревором Ноем\" привлекает свою комедию и сатиру из последних новостей, политических деятелей, медиа-организаций и, зачастую, аспектов самого шоу.",
+  "posterUrl": "https://image.tmdb.org/t/p/w342/ixcfyK7it6FjRM36Te4OdblAq4X.jpg",
+  "backgroundUrl": "https://image.tmdb.org/t/p/w1280/qLMfcvdCcCGD2BNLH8b6ZCBuO7D.jpg",
+  "rating": "6,4",
+  "genres": [
+    {
+      "id": 10763,
+      "name": "Новости"
+    },
+    {
+      "id": 35,
+      "name": "комедия"
+    }
+  ],
+  "productionCompanies": [
+    {
+      "id": 1538,
+      "name": "Comedy Central",
+      "logoUrl": "https://image.tmdb.org/t/p/w200/1y7qNFwczl2zZS62Hrlw6dsAwgR.png"
+    },
+    {
+      "id": 6329,
+      "name": "MTV Entertainment Studios",
+      "logoUrl": "https://image.tmdb.org/t/p/w200/4lZJiVHPClma8YB9hXodraFXSwi.png"
+    },
+    {
+      "id": 68479,
+      "name": "Ark Angel"
+    },
+    {
+      "id": 8290,
+      "name": "Busboy Productions"
+    },
+    {
+      "id": 281059,
+      "name": "Mad Cow Productions"
+    },
+    {
+      "id": 270146,
+      "name": "Paramount Television Studios",
+      "logoUrl": "https://image.tmdb.org/t/p/w200/4r6rIxegOrrVeJwqRxpzNrCRQMD.png"
+    }
+  ],
+  "releaseDate": "1996-07-22",
+  "tagline": "",
+  "director": "James Dixon",
+  "directorId": "3049848",
+  "numberOfSeasons": 32,
+  "numberOfEpisodes": 4260,
+  "status": "Идет",
+  "network": "Comedy Central",
+  "seasons": [
+    {
+      "id": "6869",
+      "seasonNumber": 0,
+      "name": "Спецматериалы",
+      "overview": "",
+      "episodeCount": 99,
+      "airDate": "1999-12-15"
+    },
+    {
+      "id": "6853",
+      "seasonNumber": 1,
+      "name": "Сезон 1",
+      "overview": "",
+      "posterUrl": "https://image.tmdb.org/t/p/w342/yCk9E4zzDi5W9zpDc2L8vCeLA.jpg",
+      "episodeCount": 7,
+      "airDate": "1996-07-22"
+    },
+    {
+      "id": "6854",
+      "seasonNumber": 2,
+      "name": "Сезон 2",
+      "overview": "",
+      "posterUrl": "https://image.tmdb.org/t/p/w342/w7sob0PFeYV0S2Q8v1PMhge8qQS.jpg",
+      "episodeCount": 16,
+      "airDate": "1997-01-06"
+    },
+    {
+      "id": "6855",
+      "seasonNumber": 3,
+      "name": "Сезон 3",
+      "overview": "",
+      "posterUrl": "https://image.tmdb.org/t/p/w342/jXrc4QyW1berVN4ZaX2eX0jOPsq.jpg",
+      "episodeCount": 33,
+      "airDate": "1998-03-09"
+    },
+    {
+      "id": "6856",
+      "seasonNumber": 4,
+      "name": "Сезон 4",
+      "overview": "",
+      "posterUrl": "https://image.tmdb.org/t/p/w342/5geFJYuUrQPdNSiKPvJAfw1xCAu.jpg",
+      "episodeCount": 159,
+      "airDate": "1999-01-11"
+    },
+    {
+      "id": "6857",
+      "seasonNumber": 5,
+      "name": "Сезон 5",
+      "overview": "",
+      "posterUrl": "https://image.tmdb.org/t/p/w342/qd87rtrifcts3nV9pza1N17xWtU.jpg",
+      "episodeCount": 166,
+      "airDate": "2000-01-04"
+    },
+    {
+      "id": "6858",
+      "seasonNumber": 6,
+      "name": "Сезон 6",
+      "overview": "",
+      "posterUrl": "https://image.tmdb.org/t/p/w342/yiQeAEBblEDLVqg2ninkMvgj1d7.jpg",
+      "episodeCount": 158,
+      "airDate": "2001-01-09"
+    },
+    {
+      "id": "6859",
+      "seasonNumber": 7,
+      "name": "Сезон 7",
+      "overview": "",
+      "posterUrl": "https://image.tmdb.org/t/p/w342/rnbkP4MG91w72LyGyHlBUfZC3Rv.jpg",
+      "episodeCount": 160,
+      "airDate": "2002-01-08"
+    },
+    {
+      "id": "6860",
+      "seasonNumber": 8,
+      "name": "Сезон 8",
+      "overview": "",
+      "posterUrl": "https://image.tmdb.org/t/p/w342/1Vii2YyKtU6fLcKhHzsx5zk2Kay.jpg",
+      "episodeCount": 161,
+      "airDate": "2003-01-07"
+    },
+    {
+      "id": "6861",
+      "seasonNumber": 9,
+      "name": "Сезон 9",
+      "overview": "",
+      "posterUrl": "https://image.tmdb.org/t/p/w342/mtE8VmeNr0UX1Q6B48HTjhu33kN.jpg",
+      "episodeCount": 161,
+      "airDate": "2004-01-06"
+    },
+    {
+      "id": "6862",
+      "seasonNumber": 10,
+      "name": "Сезон 10",
+      "overview": "",
+      "posterUrl": "https://image.tmdb.org/t/p/w342/y5LJHtLDL1H7ZIcNUfuGQpmYbaG.jpg",
+      "episodeCount": 159,
+      "airDate": "2005-01-04"
+    },
+    {
+      "id": "6863",
+      "seasonNumber": 11,
+      "name": "Сезон 11",
+      "overview": "",
+      "posterUrl": "https://image.tmdb.org/t/p/w342/pn7dQLjbYCpthiGTOKh2svdKscr.jpg",
+      "episodeCount": 161,
+      "airDate": "2006-01-04"
+    },
+    {
+      "id": "6864",
+      "seasonNumber": 12,
+      "name": "Сезон 12",
+      "overview": "",
+      "posterUrl": "https://image.tmdb.org/t/p/w342/7FGRSBm7ofcsGrGm8t1qPRfNAKG.jpg",
+      "episodeCount": 138,
+      "airDate": "2007-01-08"
+    },
+    {
+      "id": "6865",
+      "seasonNumber": 13,
+      "name": "Сезон 13",
+      "overview": "",
+      "posterUrl": "https://image.tmdb.org/t/p/w342/y7hvsKSD8rwVcFcFrK01SrbdKQv.jpg",
+      "episodeCount": 160,
+      "airDate": "2008-01-07"
+    },
+    {
+      "id": "6866",
+      "seasonNumber": 14,
+      "name": "Сезон 14",
+      "overview": "",
+      "posterUrl": "https://image.tmdb.org/t/p/w342/rDXpjby6TwgZGgOIV2C3TGV7pFz.jpg",
+      "episodeCount": 161,
+      "airDate": "2009-01-05"
+    },
+    {
+      "id": "6867",
+      "seasonNumber": 15,
+      "name": "Сезон 15",
+      "overview": "",
+      "posterUrl": "https://image.tmdb.org/t/p/w342/9RJ8xiky5HjRaHyTqHr6Wnq7PsX.jpg",
+      "episodeCount": 161,
+      "airDate": "2010-01-04"
+    },
+    {
+      "id": "6868",
+      "seasonNumber": 16,
+      "name": "Сезон 16",
+      "overview": "",
+      "posterUrl": "https://image.tmdb.org/t/p/w342/kqgmQuTwhhLVfKryvvRsDbphgP6.jpg",
+      "episodeCount": 124,
+      "airDate": "2011-01-03"
+    },
+    {
+      "id": "6870",
+      "seasonNumber": 17,
+      "name": "Сезон 17",
+      "overview": "",
+      "posterUrl": "https://image.tmdb.org/t/p/w342/gF5TfevTC8TygbP7UxAhHyxcBX.jpg",
+      "episodeCount": 157,
+      "airDate": "2011-10-03"
+    },
+    {
+      "id": "6871",
+      "seasonNumber": 18,
+      "name": "Сезон 18",
+      "overview": "",
+      "posterUrl": "https://image.tmdb.org/t/p/w342/slYpAA2Z59Hqe9hly1Icie77j0N.jpg",
+      "episodeCount": 158,
+      "airDate": "2012-10-01"
+    },
+    {
+      "id": "6872",
+      "seasonNumber": 19,
+      "name": "Сезон 19",
+      "overview": "",
+      "posterUrl": "https://image.tmdb.org/t/p/w342/uW0IkZO2jTkkvcJNnQyORow567m.jpg",
+      "episodeCount": 159,
+      "airDate": "2013-09-30"
+    },
+    {
+      "id": "62883",
+      "seasonNumber": 20,
+      "name": "Сезон 20",
+      "overview": "",
+      "posterUrl": "https://image.tmdb.org/t/p/w342/sef2tN05NkqEBebMpxYUbqmhtTJ.jpg",
+      "episodeCount": 142,
+      "airDate": "2014-09-29"
+    },
+    {
+      "id": "69386",
+      "seasonNumber": 21,
+      "name": "Сезон 21",
+      "overview": "",
+      "posterUrl": "https://image.tmdb.org/t/p/w342/eD57c6ZXKhCXDL1x04BQ8f3UvUo.jpg",
+      "episodeCount": 161,
+      "airDate": "2015-09-28"
+    },
+    {
+      "id": "82654",
+      "seasonNumber": 22,
+      "name": "Сезон 22",
+      "overview": "",
+      "posterUrl": "https://image.tmdb.org/t/p/w342/tsZObxYYSYHW5T4BJh2tx43awxi.jpg",
+      "episodeCount": 163,
+      "airDate": "2016-10-03"
+    },
+    {
+      "id": "93178",
+      "seasonNumber": 23,
+      "name": "Сезон 23",
+      "overview": "",
+      "posterUrl": "https://image.tmdb.org/t/p/w342/tsZObxYYSYHW5T4BJh2tx43awxi.jpg",
+      "episodeCount": 157,
+      "airDate": "2017-10-02"
+    },
+    {
+      "id": "110826",
+      "seasonNumber": 24,
+      "name": "Сезон 24",
+      "overview": "",
+      "posterUrl": "https://image.tmdb.org/t/p/w342/tsZObxYYSYHW5T4BJh2tx43awxi.jpg",
+      "episodeCount": 158,
+      "airDate": "2018-10-01"
+    },
+    {
+      "id": "136086",
+      "seasonNumber": 25,
+      "name": "Сезон 25",
+      "overview": "",
+      "posterUrl": "https://image.tmdb.org/t/p/w342/tsZObxYYSYHW5T4BJh2tx43awxi.jpg",
+      "episodeCount": 160,
+      "airDate": "2019-09-30"
+    },
+    {
+      "id": "168511",
+      "seasonNumber": 26,
+      "name": "Сезон 26",
+      "overview": "",
+      "posterUrl": "https://image.tmdb.org/t/p/w342/nz5fAg1OomLZ7fxiM4RnLbJxppc.jpg",
+      "episodeCount": 116,
+      "airDate": "2020-09-28"
+    },
+    {
+      "id": "202361",
+      "seasonNumber": 27,
+      "name": "Сезон 27",
+      "overview": "",
+      "posterUrl": "https://image.tmdb.org/t/p/w342/keWvkxMEfa3whsRyWFGPcNVbIN8.jpg",
+      "episodeCount": 140,
+      "airDate": "2021-09-27"
+    },
+    {
+      "id": "310853",
+      "seasonNumber": 28,
+      "name": "Сезон 28",
+      "overview": "",
+      "posterUrl": "https://image.tmdb.org/t/p/w342/9xcM8pbsMNR7eLdVCzzfcB59xgT.jpg",
+      "episodeCount": 122,
+      "airDate": "2022-10-03"
+    },
+    {
+      "id": "375682",
+      "seasonNumber": 29,
+      "name": "Сезон 29",
+      "overview": "",
+      "posterUrl": "https://image.tmdb.org/t/p/w342/9mK4ZRWpKUA77XNv6rnI8gnyrhQ.jpg",
+      "episodeCount": 138,
+      "airDate": "2024-02-12"
+    },
+    {
+      "id": "433278",
+      "seasonNumber": 30,
+      "name": "Сезон 30",
+      "overview": "",
+      "posterUrl": "https://image.tmdb.org/t/p/w342/2hnZC9YtpJO0VRdBXxima60QFQc.jpg",
+      "episodeCount": 142,
+      "airDate": "2025-01-06"
+    },
+    {
+      "id": "486161",
+      "seasonNumber": 31,
+      "name": "Сезон 31",
+      "overview": "",
+      "posterUrl": "https://image.tmdb.org/t/p/w342/sos0NA5OkuUtKyCt1YvW4Zevp9h.jpg",
+      "episodeCount": 100,
+      "airDate": "2026-01-05"
+    },
+    {
+      "id": "526930",
+      "seasonNumber": 32,
+      "name": "Сезон 32",
+      "overview": "",
+      "episodeCount": 2,
+      "airDate": "2026-09-07"
+    }
+  ]
+}

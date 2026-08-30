@@ -1,0 +1,91 @@
+{
+  "title": "Могила светлячков",
+  "originalTitle": "火垂るの墓",
+  "subtitle": "火垂るの墓",
+  "description": "Последние дни Второй мировой войны, американская авиация бомбит беззащитные японские города. В водоворот каждодневного кошмара попадают 14-летний Сэйта и его сестренка Сэцуко - потеряв близких, они остались совсем одни. Мальчик в одночасье становится взрослым и осознаёт, что от него зависит жизнь маленькой сестры. Укрывшись в заброшенном убежище, Сэйта и Сэцуко пытаются выжить собственными силами. И пусть в их глазах смертоносный огонь в небе - всего лишь огоньки светлячков, жестокая война не щадит даже невинные детские души, вынося им беспощадный приговор.",
+  "posterUrl": "https://image.tmdb.org/t/p/w342/nJYXr0RAznczy5tCZtYcjoYMjEg.jpg",
+  "backgroundUrl": "https://image.tmdb.org/t/p/w1280/aHaqZpOL7UyVu0nKqp3SMz0o2E1.jpg",
+  "rating": "8,4",
+  "runtime": 88,
+  "genres": [
+    {
+      "id": 16,
+      "name": "мультфильм"
+    },
+    {
+      "id": 18,
+      "name": "драма"
+    },
+    {
+      "id": 10752,
+      "name": "военный"
+    }
+  ],
+  "productionCompanies": [
+    {
+      "id": 10342,
+      "name": "Studio Ghibli",
+      "logoUrl": "https://image.tmdb.org/t/p/w200/uFuxPEZRUcBTEiYIxjHJq62Vr77.png"
+    }
+  ],
+  "releaseDate": "1988-04-16",
+  "tagline": "",
+  "director": "Исао Такахата",
+  "directorImageUrl": "https://image.tmdb.org/t/p/w185/qbvnGLByh0N9ni7gZSREIgvO1sM.jpg",
+  "directorId": "628",
+  "cast": [
+    {
+      "name": "Цутому Тацуми",
+      "character": "Seita (voice)",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/opRQfqXqAcUaqLMNARi78S7KZVa.jpg",
+      "id": "72413"
+    },
+    {
+      "name": "Аяно Сираиси",
+      "character": "Setsuko (voice)",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/ltxZJRUAMsKqnflUKw1zlSjMhcu.jpg",
+      "id": "72414"
+    },
+    {
+      "name": "Йошико Шинохара",
+      "character": "Mother (voice)",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/yvpARjDfEri1a3nh7OXywzWb1Xn.jpg",
+      "id": "72415"
+    },
+    {
+      "name": "Акэми Ямагути",
+      "character": "Auntie (voice)",
+      "id": "72416"
+    },
+    {
+      "name": "Масаё Сакай",
+      "character": "Woman who takes care of Setsuko (voice)",
+      "id": "3773484"
+    },
+    {
+      "name": "Кодзо Хасида",
+      "character": "Obayashi Chairman (voice)",
+      "id": "3773478"
+    },
+    {
+      "name": "Кадзуми Нодзаки",
+      "character": "Cousin (voice)",
+      "id": "3773488"
+    },
+    {
+      "name": "Йошио Мацуока",
+      "character": "Gosaku (voice)",
+      "id": "3773491"
+    },
+    {
+      "name": "Масахиро Канэтаке",
+      "character": "Aunt's House Guest (voice)",
+      "id": "3773492"
+    },
+    {
+      "name": "Киёши Янэгава",
+      "character": "Patrolman (voice)",
+      "id": "3773494"
+    }
+  ]
+}

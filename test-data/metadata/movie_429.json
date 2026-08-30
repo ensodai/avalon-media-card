@@ -1,0 +1,103 @@
+{
+  "title": "Хороший, плохой, злой",
+  "originalTitle": "Il buono, il brutto, il cattivo",
+  "subtitle": "Il buono, il brutto, il cattivo",
+  "description": "В разгар гражданской войны таинственный стрелок скитается по просторам Дикого Запада. У него нет ни дома, ни друзей, ни компаньонов, пока он не встречает двоих незнакомцев, таких же безжалостных и циничных. По воле судьбы трое мужчин вынуждены объединить свои усилия в поисках украденного золота. Но совместная работа — не самое подходящее занятие для таких отъявленных бандитов, как они. Компаньоны вскоре понимают, что в их дерзком и опасном путешествии по разорённой войной стране самое важное — никому не доверять и держать пистолет наготове, если хочешь остаться в живых.",
+  "posterUrl": "https://image.tmdb.org/t/p/w342/fGDK72duT0YbdORyNo1QVuzDYzE.jpg",
+  "backgroundUrl": "https://image.tmdb.org/t/p/w1280/Adrip2Jqzw56KeuV2nAxucKMNXA.jpg",
+  "rating": "8,5",
+  "runtime": 178,
+  "genres": [
+    {
+      "id": 37,
+      "name": "вестерн"
+    }
+  ],
+  "productionCompanies": [
+    {
+      "id": 60,
+      "name": "United Artists",
+      "logoUrl": "https://image.tmdb.org/t/p/w200/4YldLvCWQL9VIAHQ2Fu3Ffkh9Si.png"
+    },
+    {
+      "id": 7508,
+      "name": "PEA"
+    },
+    {
+      "id": 42498,
+      "name": "Arturo González PC"
+    },
+    {
+      "id": 47,
+      "name": "Constantin Film",
+      "logoUrl": "https://image.tmdb.org/t/p/w200/i7Z9ot2o3N5Sa3HrF09kniFs2y8.png"
+    }
+  ],
+  "releaseDate": "1966-12-23",
+  "tagline": "«Для этих трёх мужчин гражданская война – не ад, для них она – учебка»",
+  "director": "Sergio Leone",
+  "directorImageUrl": "https://image.tmdb.org/t/p/w185/2576qoW8l9Z1nKGM10ar60aIwUu.jpg",
+  "directorId": "4385",
+  "cast": [
+    {
+      "name": "Клинт Иствуд",
+      "character": "Blondie",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/8TwdCfeOZH7ucRlfLZ6wObxa7cO.jpg",
+      "id": "190"
+    },
+    {
+      "name": "Елай Воллак",
+      "character": "Tuco Ramirez",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/egLe8r2PwbTx9ocwS1Zu2vsYC9v.jpg",
+      "id": "3265"
+    },
+    {
+      "name": "Lee Van Cleef",
+      "character": "Sentenza / Angel Eyes",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/prcDQR2pp0b92j0G8rnX5kQeQk0.jpg",
+      "id": "4078"
+    },
+    {
+      "name": "Альдо Джуффре",
+      "character": "Alcoholic Union Captain",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/aT6eECl1R3YGYL4KatyIQrq0zG8.jpg",
+      "id": "5813"
+    },
+    {
+      "name": "Луиджи Пистилли",
+      "character": "Father Pablo Ramirez",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/bH5vmD2CMBHzJyBe0P0bL6iTUNL.jpg",
+      "id": "5814"
+    },
+    {
+      "name": "Rada Rassimov",
+      "character": "Maria",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/xJhnSHn2vKp0MJ2KZaihrgqq0Mc.jpg",
+      "id": "5815"
+    },
+    {
+      "name": "Enzo Petito",
+      "character": "Storekeeper",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/6CYnAdcOg1pns5TKI8Pj6VjefT1.jpg",
+      "id": "1077276"
+    },
+    {
+      "name": "Claudio Scarchilli",
+      "character": "Tuco Henchman",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/bOSIxQUHXkSHevhWsIp9I6j5b8d.jpg",
+      "id": "1077277"
+    },
+    {
+      "name": "Antonio Casale",
+      "character": "Bill Carson / Jackson",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/uAhNOD1ZA9Gh1CmCWkb4RRI1OKd.jpg",
+      "id": "5818"
+    },
+    {
+      "name": "Livio Lorenzon",
+      "character": "Baker",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/AkIJIeGG2w0RIWejf6QoReu3ZhB.jpg",
+      "id": "5817"
+    }
+  ]
+}

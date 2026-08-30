@@ -1,0 +1,45 @@
+--- /home/esoda/dev/avalon_media_card/avalon-media-card/client/src/commonMain/kotlin/org/ensodai/avalonmediacard/presentation/screens/commonComponents/AvalonTvRightDrawer.kt
++++ /home/esoda/dev/avalon_media_card/avalon-media-card/client/src/commonMain/kotlin/org/ensodai/avalonmediacard/presentation/screens/commonComponents/AvalonTvRightDrawer.kt
+@@ -19,6 +19,8 @@
+ import androidx.compose.ui.unit.sp
+ import androidx.compose.ui.window.Popup
+ import androidx.compose.ui.window.PopupProperties
++import androidx.compose.runtime.saveable.rememberSaveableStateHolder
++import androidx.compose.ui.focus.focusRestorer
+ 
+ 
+ import kotlinx.coroutines.delay
+@@ -111,17 +113,11 @@
+                     .focusRequester(focusRequester)
+                     .padding(24.dp)
+             ) {
+-                val currentScreen = state.current
+-                if (currentScreen != null) {
+-                    AnimatedContent(
+-                        targetState = currentScreen,
+-                        transitionSpec = {
+-                            (slideInHorizontally { width -> width / 2 } + fadeIn()) togetherWith 
+-                            (slideOutHorizontally { width -> -width / 2 } + fadeOut())
+-                        },
+-                        label = "TvDrawerTransition"
+-                    ) { screen ->
+-                        Column(modifier = Modifier.fillMaxSize()) {
++                val saveableStateHolder = rememberSaveableStateHolder()
++                state.entries.forEach { screen ->
++                    val isActive = screen == state.current
++                    saveableStateHolder.SaveableStateProvider(key = screen.id) {
++                        Column(modifier = Modifier.fillMaxSize().focusRestorer()) {
+                             // Header шторки
+                             Row(
+                                 modifier = Modifier
+@@ -171,7 +167,9 @@
+ 
+                             // Содержимое шторки
+                             Box(modifier = Modifier.weight(1f)) {
+-                                screen.content()
++                                if (isActive) {
++                                    screen.content()
++                                }
+                             }
+                         }
+                     }

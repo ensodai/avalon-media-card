@@ -1,0 +1,14 @@
+{
+  "sidebar.home": "Главная",
+  "sidebar.movies": "Фильмы",
+  "sidebar.tv_shows": "Сериалы",
+  "sidebar.trends": "Тренды",
+  "sidebar.search": "Поиск",
+  "search.placeholder": "Начните вводить название...",
+  "search.results": "Результаты поиска",
+  "search.error": "Ошибка поиска",
+  "media.tv": "Сериал",
+  "media.movie": "Фильм",
+  "media.media": "Медиа",
+  "feed.error_loading": "Ошибка загрузки"
+}

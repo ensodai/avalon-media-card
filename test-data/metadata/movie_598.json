@@ -1,0 +1,117 @@
+{
+  "title": "Город бога",
+  "originalTitle": "Cidade de Deus",
+  "subtitle": "Cidade de Deus",
+  "description": "60-е годы XX века. «Город Бога» — квартал в Рио-де-Жанейро, где живут главные герои — 8-летний Ракета, мечтающий стать фотографом, и его одногодок Дадинью. Дадинью принимает участие в вооруженном ограблении, организованном живущим по соседству гангстером Кабалейрой; с согласия Кабалейры он совершает свое первое убийство. 70-е годы. Ракета постоянно балансирует между мелкими правонарушениями и честной жизнью. На счету у Дадинью уже несколько убийств. Он возглавляет банду, которой управляет, используя хитрость и хладнокровное предательство. Поняв, что настоящая власть и большие деньги может дать только контроль над торговлей наркотиками в их квартале, он безжалостно идет к своей цели. 80-е годы. Ракета наконец получает фотоаппарат и осуществляет свою детскую мечту. Мечта Дадинью тоже сбылась: в 18 лет он стал самым крутым торговцем наркотиками в Рио.",
+  "posterUrl": "https://image.tmdb.org/t/p/w342/xUM7xcRNuWFAtwK8mYRWcqQNwKe.jpg",
+  "backgroundUrl": "https://image.tmdb.org/t/p/w1280/uvitbjFU4JqvMwIkMWHp69bmUzG.jpg",
+  "rating": "8,4",
+  "runtime": 130,
+  "genres": [
+    {
+      "id": 18,
+      "name": "драма"
+    },
+    {
+      "id": 80,
+      "name": "криминал"
+    }
+  ],
+  "productionCompanies": [
+    {
+      "id": 345,
+      "name": "O2 Filmes",
+      "logoUrl": "https://image.tmdb.org/t/p/w200/hj2nqoG2F9COm16fqvM0YpY3jL4.png"
+    },
+    {
+      "id": 346,
+      "name": "VideoFilmes",
+      "logoUrl": "https://image.tmdb.org/t/p/w200/ymwuRMQkrQojx55MeMO861Rdecz.png"
+    },
+    {
+      "id": 856,
+      "name": "Wild Bunch",
+      "logoUrl": "https://image.tmdb.org/t/p/w200/3tfzS2CrX6Ntbu927XzHXEPDA6y.png"
+    },
+    {
+      "id": 11445,
+      "name": "Hank Levine Film & Music"
+    },
+    {
+      "id": 13969,
+      "name": "Globo Filmes",
+      "logoUrl": "https://image.tmdb.org/t/p/w200/pFh6R6D4wpztG5aSblu14TtrR57.png"
+    },
+    {
+      "id": 274216,
+      "name": "Lumière",
+      "logoUrl": "https://image.tmdb.org/t/p/w200/ydSyng1Q80Hungi3p634pJRhDG6.png"
+    }
+  ],
+  "releaseDate": "2002-08-30",
+  "tagline": "«Бейся или не выживешь… Беги или никогда не сбежишь…»",
+  "director": "Фернанду Мейреллиш",
+  "directorImageUrl": "https://image.tmdb.org/t/p/w185/usc1zwBXEHN4A6rkvJcmgWpc7rS.jpg",
+  "directorId": "8557",
+  "cast": [
+    {
+      "name": "Alexandre Rodrigues",
+      "character": "Buscapé - Rocket",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/iExs5h6LeFmdR3kDtSS5xYU1Qgx.jpg",
+      "id": "8595"
+    },
+    {
+      "name": "Leandro Firmino",
+      "character": "Zé Pequeno - Li'l Zé",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/aEzWJgEzId04EP8C2UFQaF28WTW.jpg",
+      "id": "8596"
+    },
+    {
+      "name": "Phellipe Haagensen",
+      "character": "Bené - Benny",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/3dxy4unadLTAb6aUQUyX2r3AkE.jpg",
+      "id": "8597"
+    },
+    {
+      "name": "Douglas Silva",
+      "character": "Dadinho - Li'l Dice",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/7C2ZoLBU0W2gwnGbNRbi1cyIU2h.jpg",
+      "id": "8598"
+    },
+    {
+      "name": "Jonathan Haagensen",
+      "character": "Cabeleira - Shaggy",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/cha3GxI1MfbCjc973iUNKUvopQF.jpg",
+      "id": "8599"
+    },
+    {
+      "name": "Matheus Nachtergaele",
+      "character": "Sandro Cenoura - Carrot",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/zgTT5AP7NYa2hN0jUqHIHkNyp2v.jpg",
+      "id": "8600"
+    },
+    {
+      "name": "Seu Jorge",
+      "character": "Mané Galinha - Knockout Ned",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/p8VUk0ZSzfAF9uWjWg2jEVpPtTy.jpg",
+      "id": "5659"
+    },
+    {
+      "name": "Jefechander Suplino",
+      "character": "Alicate - Clipper",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/3hfJKrxcP01xNuUEZxL6iGpZTPt.jpg",
+      "id": "8601"
+    },
+    {
+      "name": "Алиси Брага",
+      "character": "Angélica",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/d9JdgvUiqyWuGQLmozNfGZOpIBz.jpg",
+      "id": "8602"
+    },
+    {
+      "name": "Emerson Gomes",
+      "character": "Barbantinho - Stringy",
+      "id": "3883645"
+    }
+  ]
+}

@@ -1,0 +1,5 @@
+{
+  "plugin_name": "Адаптер Lampac",
+  "plugin_description": "Шлюз интеграции с Lampac NextGen (70+ балансеров, торренты JacRed и HLS-прокси)",
+  "lampac.provider_title": "Lampac (Онлайн)"
+}

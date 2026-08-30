@@ -1,0 +1,126 @@
+{
+  "title": "Человек-паук: Через вселенные",
+  "originalTitle": "Spider-Man: Into the Spider-Verse",
+  "subtitle": "Spider-Man: Into the Spider-Verse",
+  "description": "В центре сюжета уникальной и инновационной в визуальном плане картины подросток из Нью-Йорка Майлз Моралес, который живет в мире безграничных возможностей вселенных Человека-паука, где костюм супергероя носит не только он.",
+  "posterUrl": "https://image.tmdb.org/t/p/w342/wmEKJr81CABBU68Qy2wYPwQHn0L.jpg",
+  "backgroundUrl": "https://image.tmdb.org/t/p/w1280/8mnXR9rey5uQ08rZAvzojKWbDQS.jpg",
+  "rating": "8,4",
+  "runtime": 117,
+  "genres": [
+    {
+      "id": 16,
+      "name": "мультфильм"
+    },
+    {
+      "id": 28,
+      "name": "боевик"
+    },
+    {
+      "id": 12,
+      "name": "приключения"
+    },
+    {
+      "id": 878,
+      "name": "фантастика"
+    }
+  ],
+  "productionCompanies": [
+    {
+      "id": 5,
+      "name": "Columbia Pictures",
+      "logoUrl": "https://image.tmdb.org/t/p/w200/71BqEFAF4V3qjjMPCpLuyJFB9A.png"
+    },
+    {
+      "id": 77973,
+      "name": "Lord Miller",
+      "logoUrl": "https://image.tmdb.org/t/p/w200/eUZ0kfE4uyO0JYIrjgUSOqWPqjK.png"
+    },
+    {
+      "id": 84041,
+      "name": "Pascal Pictures",
+      "logoUrl": "https://image.tmdb.org/t/p/w200/nw4kyc29QRpNtFbdsBHkRSFavvt.png"
+    },
+    {
+      "id": 2251,
+      "name": "Sony Pictures Animation",
+      "logoUrl": "https://image.tmdb.org/t/p/w200/5ilV5mH3gxTEU7p5wjxptHvXkyr.png"
+    },
+    {
+      "id": 14439,
+      "name": "Arad Productions"
+    },
+    {
+      "id": 7505,
+      "name": "Marvel Entertainment",
+      "logoUrl": "https://image.tmdb.org/t/p/w200/837VMM4wOkODc1idNxGT0KQJlej.png"
+    }
+  ],
+  "releaseDate": "2018-12-06",
+  "tagline": "«Не он один носит маску»",
+  "director": "Боб Персичетти",
+  "directorImageUrl": "https://image.tmdb.org/t/p/w185/jmpNVUvvhJB2X2eOSKpveFnetM8.jpg",
+  "directorId": "936670",
+  "cast": [
+    {
+      "name": "Шамик Мур",
+      "character": "Miles Morales (voice)",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/ovUKfVOwJ7CadEHaG3NDsfA5xRq.jpg",
+      "id": "587506"
+    },
+    {
+      "name": "Джейк Джонсон",
+      "character": "Peter B. Parker (voice)",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/3UNfW2qZgRkW81neNVfQvaRC92K.jpg",
+      "id": "543505"
+    },
+    {
+      "name": "Хейли Стайнфелд",
+      "character": "Gwen Stacy (voice)",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/4K2dzM3odGiVZOQOD6RjVxNq2ZQ.jpg",
+      "id": "130640"
+    },
+    {
+      "name": "Махершала Али",
+      "character": "Uncle Aaron (voice)",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/9ZmSejm5lnUVY5IJ1iNx2QEjnHb.jpg",
+      "id": "932967"
+    },
+    {
+      "name": "Брайан Тайри Генри",
+      "character": "Jefferson Davis (voice)",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/2MsJh0bpyzwvOUnXOltHp3j85Pb.jpg",
+      "id": "226366"
+    },
+    {
+      "name": "Лили Томлин",
+      "character": "Aunt May (voice)",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/eoFMSqRykiaXMGCiz7Kxehfqy1W.jpg",
+      "id": "10437"
+    },
+    {
+      "name": "Луна Лорен Велес",
+      "character": "Rio Morales (voice)",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/98BvmTJCZHx0jPv0oNcv04Jkmfb.jpg",
+      "id": "141610"
+    },
+    {
+      "name": "Зои Кравиц",
+      "character": "Mary Jane (voice)",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/n0mhAgmY6eJQmA7kaugsTZEJgHo.jpg",
+      "id": "37153"
+    },
+    {
+      "name": "Джон Малейни",
+      "character": "Spider-Ham (voice)",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/i3dGv3WoIONVLSlOpW4NIaT8Fs2.jpg",
+      "id": "933558"
+    },
+    {
+      "name": "Кимико Гленн",
+      "character": "Peni Parker (voice)",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/6QnVIyHKbzx0ZsUr3BmIwnZxujL.jpg",
+      "id": "1443708"
+    }
+  ]
+}

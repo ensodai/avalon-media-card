@@ -1,0 +1,705 @@
+{
+  "title": "Tagesschau",
+  "originalTitle": "Tagesschau",
+  "subtitle": "Tagesschau",
+  "description": "",
+  "posterUrl": "https://image.tmdb.org/t/p/w342/7dFZJ2ZJJdcmkp05B9NWlqTJ5tq.jpg",
+  "backgroundUrl": "https://image.tmdb.org/t/p/w1280/jWXrQstj7p3Wl5MfYWY6IHqRpDb.jpg",
+  "rating": "6,8",
+  "genres": [
+    {
+      "id": 10763,
+      "name": "Новости"
+    }
+  ],
+  "productionCompanies": [
+    {
+      "id": 7201,
+      "name": "NDR",
+      "logoUrl": "https://image.tmdb.org/t/p/w200/ljV8ZT3CIYCEIEDlTyBliXJVCZr.png"
+    },
+    {
+      "id": 1251,
+      "name": "ARD",
+      "logoUrl": "https://image.tmdb.org/t/p/w200/fc0O0mvjl8PbHgZXXY2VgPYos1Z.png"
+    }
+  ],
+  "releaseDate": "1952-12-26",
+  "tagline": "",
+  "numberOfSeasons": 75,
+  "numberOfEpisodes": 21352,
+  "status": "Идет",
+  "network": "Das Erste",
+  "seasons": [
+    {
+      "id": "134441",
+      "seasonNumber": 1,
+      "name": "Сезон 1",
+      "overview": "",
+      "posterUrl": "https://image.tmdb.org/t/p/w342/lEOhLYxSlqYcAlSSunb0fbXkKM5.jpg",
+      "episodeCount": 6,
+      "airDate": "1952-12-26"
+    },
+    {
+      "id": "170277",
+      "seasonNumber": 2,
+      "name": "Сезон 2",
+      "overview": "",
+      "posterUrl": "https://image.tmdb.org/t/p/w342/irxJNLAXFNwkoARq62Aj4MBRxoG.jpg",
+      "episodeCount": 1,
+      "airDate": "1953-01-01"
+    },
+    {
+      "id": "170278",
+      "seasonNumber": 3,
+      "name": "Сезон 3",
+      "overview": "",
+      "posterUrl": "https://image.tmdb.org/t/p/w342/1rltcJ60qGJhCVavjLxU6pnBgda.jpg",
+      "episodeCount": 1,
+      "airDate": "1954-01-01"
+    },
+    {
+      "id": "170279",
+      "seasonNumber": 4,
+      "name": "Сезон 4",
+      "overview": "",
+      "posterUrl": "https://image.tmdb.org/t/p/w342/efXlmRCWwvJgeTyVrbMGkiTQdKw.jpg",
+      "episodeCount": 1,
+      "airDate": "1955-01-01"
+    },
+    {
+      "id": "170280",
+      "seasonNumber": 5,
+      "name": "Сезон 5",
+      "overview": "",
+      "posterUrl": "https://image.tmdb.org/t/p/w342/dXEXqPsyzKmXf055cX4EQxaAkpU.jpg",
+      "episodeCount": 1,
+      "airDate": "1956-01-01"
+    },
+    {
+      "id": "170281",
+      "seasonNumber": 6,
+      "name": "Сезон 6",
+      "overview": "",
+      "posterUrl": "https://image.tmdb.org/t/p/w342/1yli38KN1RlPWbf6PFacEYvynjx.jpg",
+      "episodeCount": 1,
+      "airDate": "1957-01-01"
+    },
+    {
+      "id": "170282",
+      "seasonNumber": 7,
+      "name": "Сезон 7",
+      "overview": "",
+      "posterUrl": "https://image.tmdb.org/t/p/w342/29RPG4xnaELzYygPEhcrirywMpg.jpg",
+      "episodeCount": 1,
+      "airDate": "1958-01-01"
+    },
+    {
+      "id": "170283",
+      "seasonNumber": 8,
+      "name": "Сезон 8",
+      "overview": "",
+      "posterUrl": "https://image.tmdb.org/t/p/w342/3SqVCtdjuWZMiZCJiDKePelxeiU.jpg",
+      "episodeCount": 1,
+      "airDate": "1959-01-01"
+    },
+    {
+      "id": "170284",
+      "seasonNumber": 9,
+      "name": "Сезон 9",
+      "overview": "",
+      "posterUrl": "https://image.tmdb.org/t/p/w342/cYWhJUTOLhG3vy7esupVjObD9Qj.jpg",
+      "episodeCount": 1,
+      "airDate": "1960-01-01"
+    },
+    {
+      "id": "170285",
+      "seasonNumber": 10,
+      "name": "Сезон 10",
+      "overview": "",
+      "posterUrl": "https://image.tmdb.org/t/p/w342/dxKp1LGNuRhIS8gTAiDfa1VKEYc.jpg",
+      "episodeCount": 1,
+      "airDate": "1961-01-01"
+    },
+    {
+      "id": "170286",
+      "seasonNumber": 11,
+      "name": "Сезон 11",
+      "overview": "",
+      "posterUrl": "https://image.tmdb.org/t/p/w342/ujnEVEtl5TZRUyYL33CHhUFxir3.jpg",
+      "episodeCount": 1,
+      "airDate": "1962-01-01"
+    },
+    {
+      "id": "170287",
+      "seasonNumber": 12,
+      "name": "Сезон 12",
+      "overview": "",
+      "posterUrl": "https://image.tmdb.org/t/p/w342/z4FdJH8QIFMkcr3vNSxxGjeB4WM.jpg",
+      "episodeCount": 1,
+      "airDate": "1963-01-01"
+    },
+    {
+      "id": "170288",
+      "seasonNumber": 13,
+      "name": "Сезон 13",
+      "overview": "",
+      "posterUrl": "https://image.tmdb.org/t/p/w342/tC4hRgLakMBzB85JgpKG7fCohYU.jpg",
+      "episodeCount": 1,
+      "airDate": "1964-01-01"
+    },
+    {
+      "id": "170289",
+      "seasonNumber": 14,
+      "name": "Сезон 14",
+      "overview": "",
+      "posterUrl": "https://image.tmdb.org/t/p/w342/oAO67W18ttbvZE0OYaDHb5rsWc7.jpg",
+      "episodeCount": 1,
+      "airDate": "1965-01-01"
+    },
+    {
+      "id": "170290",
+      "seasonNumber": 15,
+      "name": "Сезон 15",
+      "overview": "",
+      "posterUrl": "https://image.tmdb.org/t/p/w342/eBIZQAnb0o1aloNmoPoNKZX8fCf.jpg",
+      "episodeCount": 1,
+      "airDate": "1966-01-01"
+    },
+    {
+      "id": "170291",
+      "seasonNumber": 16,
+      "name": "Сезон 16",
+      "overview": "",
+      "posterUrl": "https://image.tmdb.org/t/p/w342/lUAhQNO8bzjQP7wd1o10EuhGTNV.jpg",
+      "episodeCount": 365,
+      "airDate": "1967-01-01"
+    },
+    {
+      "id": "170292",
+      "seasonNumber": 17,
+      "name": "Сезон 17",
+      "overview": "",
+      "posterUrl": "https://image.tmdb.org/t/p/w342/5AM8lpT176wJydmdOJcIn1HMaH0.jpg",
+      "episodeCount": 366,
+      "airDate": "1968-01-01"
+    },
+    {
+      "id": "170293",
+      "seasonNumber": 18,
+      "name": "Сезон 18",
+      "overview": "",
+      "posterUrl": "https://image.tmdb.org/t/p/w342/q8UmYymc9ZvyphASxjzZyGQ9eEA.jpg",
+      "episodeCount": 365,
+      "airDate": "1969-01-01"
+    },
+    {
+      "id": "170294",
+      "seasonNumber": 19,
+      "name": "Сезон 19",
+      "overview": "",
+      "posterUrl": "https://image.tmdb.org/t/p/w342/2EcTKYF3gJBLNkw9WDoWd8G8G19.jpg",
+      "episodeCount": 365,
+      "airDate": "1970-01-01"
+    },
+    {
+      "id": "170295",
+      "seasonNumber": 20,
+      "name": "Сезон 20",
+      "overview": "",
+      "posterUrl": "https://image.tmdb.org/t/p/w342/9xb0D64IJ2wBfRiuJVbV1UOAUki.jpg",
+      "episodeCount": 365,
+      "airDate": "1971-01-01"
+    },
+    {
+      "id": "170296",
+      "seasonNumber": 21,
+      "name": "Сезон 21",
+      "overview": "",
+      "posterUrl": "https://image.tmdb.org/t/p/w342/vK8Q2G8O7UBQkixUboAr4jpgx0T.jpg",
+      "episodeCount": 366,
+      "airDate": "1972-01-01"
+    },
+    {
+      "id": "170297",
+      "seasonNumber": 22,
+      "name": "Сезон 22",
+      "overview": "",
+      "posterUrl": "https://image.tmdb.org/t/p/w342/zNaXZquXXCTuH5xFnuP25Z1oeBq.jpg",
+      "episodeCount": 365,
+      "airDate": "1973-01-01"
+    },
+    {
+      "id": "170298",
+      "seasonNumber": 23,
+      "name": "Сезон 23",
+      "overview": "",
+      "posterUrl": "https://image.tmdb.org/t/p/w342/z4HZVlRkttSqvqaT0Yrbw6u3Lgv.jpg",
+      "episodeCount": 365,
+      "airDate": "1974-01-01"
+    },
+    {
+      "id": "170299",
+      "seasonNumber": 24,
+      "name": "Сезон 24",
+      "overview": "",
+      "posterUrl": "https://image.tmdb.org/t/p/w342/5Q3etzc9zNcIoNlJfypw5JkrbeE.jpg",
+      "episodeCount": 365,
+      "airDate": "1975-01-01"
+    },
+    {
+      "id": "170300",
+      "seasonNumber": 25,
+      "name": "Сезон 25",
+      "overview": "",
+      "posterUrl": "https://image.tmdb.org/t/p/w342/mWc6kgXPVhktOh10piIgtupMzpE.jpg",
+      "episodeCount": 366,
+      "airDate": "1976-01-01"
+    },
+    {
+      "id": "170301",
+      "seasonNumber": 26,
+      "name": "Сезон 26",
+      "overview": "",
+      "posterUrl": "https://image.tmdb.org/t/p/w342/3bEcwyhLm4XXzMa7mtRdnx0aRK7.jpg",
+      "episodeCount": 365,
+      "airDate": "1977-01-01"
+    },
+    {
+      "id": "170302",
+      "seasonNumber": 27,
+      "name": "Сезон 27",
+      "overview": "",
+      "posterUrl": "https://image.tmdb.org/t/p/w342/fjS4j2C8XcLsWX7RjvNLXPcC5q6.jpg",
+      "episodeCount": 365,
+      "airDate": "1978-01-01"
+    },
+    {
+      "id": "170303",
+      "seasonNumber": 28,
+      "name": "Сезон 28",
+      "overview": "",
+      "posterUrl": "https://image.tmdb.org/t/p/w342/aQECejNWupivGSks0sY39E79APg.jpg",
+      "episodeCount": 365,
+      "airDate": "1979-01-01"
+    },
+    {
+      "id": "170304",
+      "seasonNumber": 29,
+      "name": "Сезон 29",
+      "overview": "",
+      "posterUrl": "https://image.tmdb.org/t/p/w342/1Prmqai0IHTESy0287PFhS43iHU.jpg",
+      "episodeCount": 366,
+      "airDate": "1980-01-01"
+    },
+    {
+      "id": "170305",
+      "seasonNumber": 30,
+      "name": "Сезон 30",
+      "overview": "",
+      "posterUrl": "https://image.tmdb.org/t/p/w342/L8aq3NI5LqpmYUcBLZjVokIdex.jpg",
+      "episodeCount": 365,
+      "airDate": "1981-01-01"
+    },
+    {
+      "id": "170306",
+      "seasonNumber": 31,
+      "name": "Сезон 31",
+      "overview": "",
+      "posterUrl": "https://image.tmdb.org/t/p/w342/sV0Ajdw80UwoCTaUvUU0rB0Ctaf.jpg",
+      "episodeCount": 365,
+      "airDate": "1982-01-01"
+    },
+    {
+      "id": "170307",
+      "seasonNumber": 32,
+      "name": "Сезон 32",
+      "overview": "",
+      "posterUrl": "https://image.tmdb.org/t/p/w342/1DKgb0bPmaYk9q3ZNCQlvuL7N6k.jpg",
+      "episodeCount": 365,
+      "airDate": "1983-01-01"
+    },
+    {
+      "id": "170308",
+      "seasonNumber": 33,
+      "name": "Сезон 33",
+      "overview": "",
+      "posterUrl": "https://image.tmdb.org/t/p/w342/b8DGfCh3hivg0TyJPGScUgAGL5d.jpg",
+      "episodeCount": 366,
+      "airDate": "1984-01-01"
+    },
+    {
+      "id": "170309",
+      "seasonNumber": 34,
+      "name": "Сезон 34",
+      "overview": "",
+      "posterUrl": "https://image.tmdb.org/t/p/w342/hntwDFaqNPdIr1qcntas7lN0jQP.jpg",
+      "episodeCount": 365,
+      "airDate": "1985-01-01"
+    },
+    {
+      "id": "170310",
+      "seasonNumber": 35,
+      "name": "Сезон 35",
+      "overview": "",
+      "posterUrl": "https://image.tmdb.org/t/p/w342/wcuXSYQNa1j79FR7OUBGul03NmK.jpg",
+      "episodeCount": 365,
+      "airDate": "1986-01-01"
+    },
+    {
+      "id": "170311",
+      "seasonNumber": 36,
+      "name": "Сезон 36",
+      "overview": "",
+      "posterUrl": "https://image.tmdb.org/t/p/w342/nnIr3mJNvDd25QYNgS639mjzDva.jpg",
+      "episodeCount": 365,
+      "airDate": "1987-01-01"
+    },
+    {
+      "id": "170312",
+      "seasonNumber": 37,
+      "name": "Сезон 37",
+      "overview": "",
+      "posterUrl": "https://image.tmdb.org/t/p/w342/aVWVbZkO1MEE9lgnZCap83JtAD0.jpg",
+      "episodeCount": 366,
+      "airDate": "1988-01-01"
+    },
+    {
+      "id": "170313",
+      "seasonNumber": 38,
+      "name": "Сезон 38",
+      "overview": "",
+      "posterUrl": "https://image.tmdb.org/t/p/w342/rUrwedb18bv15C82YxXWkVDpC0E.jpg",
+      "episodeCount": 365,
+      "airDate": "1989-01-01"
+    },
+    {
+      "id": "170314",
+      "seasonNumber": 39,
+      "name": "Сезон 39",
+      "overview": "",
+      "posterUrl": "https://image.tmdb.org/t/p/w342/kLF3KAbDhkFO4Mc1SFWMAU8dT7d.jpg",
+      "episodeCount": 365,
+      "airDate": "1990-01-01"
+    },
+    {
+      "id": "170315",
+      "seasonNumber": 40,
+      "name": "Сезон 40",
+      "overview": "",
+      "posterUrl": "https://image.tmdb.org/t/p/w342/mf3iRRLUEJrwsM5bU6Px2rN2WdV.jpg",
+      "episodeCount": 365,
+      "airDate": "1991-01-01"
+    },
+    {
+      "id": "170316",
+      "seasonNumber": 41,
+      "name": "Сезон 41",
+      "overview": "",
+      "posterUrl": "https://image.tmdb.org/t/p/w342/7dAkMFUI7D0GvP6LA9aOHXM3qIl.jpg",
+      "episodeCount": 366,
+      "airDate": "1992-01-01"
+    },
+    {
+      "id": "170317",
+      "seasonNumber": 42,
+      "name": "Сезон 42",
+      "overview": "",
+      "posterUrl": "https://image.tmdb.org/t/p/w342/AvLRNvuLFfD13KlCH6mhFtSZu5A.jpg",
+      "episodeCount": 365,
+      "airDate": "1993-01-01"
+    },
+    {
+      "id": "170318",
+      "seasonNumber": 43,
+      "name": "Сезон 43",
+      "overview": "",
+      "posterUrl": "https://image.tmdb.org/t/p/w342/gWT0DUce5tH6PBXYPXLd9gT5Trn.jpg",
+      "episodeCount": 365,
+      "airDate": "1994-01-01"
+    },
+    {
+      "id": "170319",
+      "seasonNumber": 44,
+      "name": "Сезон 44",
+      "overview": "",
+      "posterUrl": "https://image.tmdb.org/t/p/w342/ulNoJxJLobvyHEStNb1mfTA6t2d.jpg",
+      "episodeCount": 365,
+      "airDate": "1995-01-01"
+    },
+    {
+      "id": "170320",
+      "seasonNumber": 45,
+      "name": "Сезон 45",
+      "overview": "",
+      "posterUrl": "https://image.tmdb.org/t/p/w342/yuOFRDtKlbirc19u4fuTKFaVTX.jpg",
+      "episodeCount": 366,
+      "airDate": "1996-01-01"
+    },
+    {
+      "id": "170321",
+      "seasonNumber": 46,
+      "name": "Сезон 46",
+      "overview": "",
+      "posterUrl": "https://image.tmdb.org/t/p/w342/xnnusmryTKLwrPv4L13PbAvQW8a.jpg",
+      "episodeCount": 365,
+      "airDate": "1997-01-01"
+    },
+    {
+      "id": "170322",
+      "seasonNumber": 47,
+      "name": "Сезон 47",
+      "overview": "",
+      "posterUrl": "https://image.tmdb.org/t/p/w342/P1tgezvaWD7XRSuvBXof8VBOqe.jpg",
+      "episodeCount": 365,
+      "airDate": "1998-01-01"
+    },
+    {
+      "id": "170323",
+      "seasonNumber": 48,
+      "name": "Сезон 48",
+      "overview": "",
+      "posterUrl": "https://image.tmdb.org/t/p/w342/mgwzR0kh5gESF735L1RnFI4LBCQ.jpg",
+      "episodeCount": 365,
+      "airDate": "1999-01-01"
+    },
+    {
+      "id": "170324",
+      "seasonNumber": 49,
+      "name": "Сезон 49",
+      "overview": "",
+      "posterUrl": "https://image.tmdb.org/t/p/w342/cGdW1nIGpGxKqWpStk6jdHcVxBl.jpg",
+      "episodeCount": 366,
+      "airDate": "2000-01-01"
+    },
+    {
+      "id": "170325",
+      "seasonNumber": 50,
+      "name": "Сезон 50",
+      "overview": "",
+      "posterUrl": "https://image.tmdb.org/t/p/w342/tSsU3MBeHDIc2eBJXGpj55h9Cb9.jpg",
+      "episodeCount": 365,
+      "airDate": "2001-01-01"
+    },
+    {
+      "id": "170326",
+      "seasonNumber": 51,
+      "name": "Сезон 51",
+      "overview": "",
+      "posterUrl": "https://image.tmdb.org/t/p/w342/pqPI01dhU1sBuS9AaQV2j51gQmY.jpg",
+      "episodeCount": 365,
+      "airDate": "2002-01-01"
+    },
+    {
+      "id": "170327",
+      "seasonNumber": 52,
+      "name": "Сезон 52",
+      "overview": "",
+      "posterUrl": "https://image.tmdb.org/t/p/w342/vKnO8vuXtOwk5woCB7xNLUAyiNa.jpg",
+      "episodeCount": 365,
+      "airDate": "2003-01-01"
+    },
+    {
+      "id": "170328",
+      "seasonNumber": 53,
+      "name": "Сезон 53",
+      "overview": "",
+      "posterUrl": "https://image.tmdb.org/t/p/w342/963AZmFZ2O6XgEe6pAhPb6MtcIL.jpg",
+      "episodeCount": 366,
+      "airDate": "2004-01-01"
+    },
+    {
+      "id": "170329",
+      "seasonNumber": 54,
+      "name": "Сезон 54",
+      "overview": "",
+      "posterUrl": "https://image.tmdb.org/t/p/w342/zm7cevbKSwgB1QZTTR9OJMmuQoC.jpg",
+      "episodeCount": 365,
+      "airDate": "2005-01-01"
+    },
+    {
+      "id": "170330",
+      "seasonNumber": 55,
+      "name": "Сезон 55",
+      "overview": "",
+      "posterUrl": "https://image.tmdb.org/t/p/w342/ssLsnZCrhfHdUAMOhlJePgUudgq.jpg",
+      "episodeCount": 365,
+      "airDate": "2006-01-01"
+    },
+    {
+      "id": "170331",
+      "seasonNumber": 56,
+      "name": "Сезон 56",
+      "overview": "",
+      "posterUrl": "https://image.tmdb.org/t/p/w342/paXDiaj53sFZZ2qatzus5UkuwMa.jpg",
+      "episodeCount": 365,
+      "airDate": "2007-01-01"
+    },
+    {
+      "id": "170332",
+      "seasonNumber": 57,
+      "name": "Сезон 57",
+      "overview": "",
+      "posterUrl": "https://image.tmdb.org/t/p/w342/q7d9AFjCxcufTcVHW1zSOHGkQWl.jpg",
+      "episodeCount": 366,
+      "airDate": "2008-01-01"
+    },
+    {
+      "id": "170333",
+      "seasonNumber": 58,
+      "name": "Сезон 58",
+      "overview": "",
+      "posterUrl": "https://image.tmdb.org/t/p/w342/a4AGwp7UfzlC6P6i6zwWNfvRDcb.jpg",
+      "episodeCount": 365,
+      "airDate": "2009-01-01"
+    },
+    {
+      "id": "170334",
+      "seasonNumber": 59,
+      "name": "Сезон 59",
+      "overview": "",
+      "posterUrl": "https://image.tmdb.org/t/p/w342/aKMkj0hjVp65Pn47zgdD28HXd6Z.jpg",
+      "episodeCount": 365,
+      "airDate": "2010-01-01"
+    },
+    {
+      "id": "170335",
+      "seasonNumber": 60,
+      "name": "Сезон 60",
+      "overview": "",
+      "posterUrl": "https://image.tmdb.org/t/p/w342/zcV7amrmdowNxad0OtuPNgK58LK.jpg",
+      "episodeCount": 365,
+      "airDate": "2011-01-01"
+    },
+    {
+      "id": "170336",
+      "seasonNumber": 61,
+      "name": "Сезон 61",
+      "overview": "",
+      "posterUrl": "https://image.tmdb.org/t/p/w342/fdUEY5ZG65uyPUI7NZfWKUMkA5E.jpg",
+      "episodeCount": 366,
+      "airDate": "2012-01-01"
+    },
+    {
+      "id": "170337",
+      "seasonNumber": 62,
+      "name": "Сезон 62",
+      "overview": "",
+      "posterUrl": "https://image.tmdb.org/t/p/w342/cEqDDPZy8ixeC2xGKSAsdnXItia.jpg",
+      "episodeCount": 365,
+      "airDate": "2013-01-01"
+    },
+    {
+      "id": "170338",
+      "seasonNumber": 63,
+      "name": "Сезон 63",
+      "overview": "",
+      "posterUrl": "https://image.tmdb.org/t/p/w342/jPYS4475MKauMDGFMmzpPUm6mIt.jpg",
+      "episodeCount": 365,
+      "airDate": "2014-01-01"
+    },
+    {
+      "id": "170339",
+      "seasonNumber": 64,
+      "name": "Сезон 64",
+      "overview": "",
+      "posterUrl": "https://image.tmdb.org/t/p/w342/kChxTruYOX76zmRP8mrANbq30yC.jpg",
+      "episodeCount": 365,
+      "airDate": "2015-01-01"
+    },
+    {
+      "id": "170340",
+      "seasonNumber": 65,
+      "name": "Сезон 65",
+      "overview": "",
+      "posterUrl": "https://image.tmdb.org/t/p/w342/fYUES0AeaN5Kw88ZRGlIpqGYlW8.jpg",
+      "episodeCount": 366,
+      "airDate": "2016-01-01"
+    },
+    {
+      "id": "170341",
+      "seasonNumber": 66,
+      "name": "Сезон 66",
+      "overview": "",
+      "posterUrl": "https://image.tmdb.org/t/p/w342/tceLH5bcBXVEXUZzdjGkDJJoo9b.jpg",
+      "episodeCount": 365,
+      "airDate": "2017-01-01"
+    },
+    {
+      "id": "170342",
+      "seasonNumber": 67,
+      "name": "Сезон 67",
+      "overview": "",
+      "posterUrl": "https://image.tmdb.org/t/p/w342/w4GgThRplEFX8L3unETiZb8wgRw.jpg",
+      "episodeCount": 365,
+      "airDate": "2018-01-01"
+    },
+    {
+      "id": "170343",
+      "seasonNumber": 68,
+      "name": "Сезон 68",
+      "overview": "",
+      "posterUrl": "https://image.tmdb.org/t/p/w342/v7q2U0vxMxUkjMXQExiIIZGqTBY.jpg",
+      "episodeCount": 365,
+      "airDate": "2019-01-01"
+    },
+    {
+      "id": "170344",
+      "seasonNumber": 69,
+      "name": "Сезон 69",
+      "overview": "",
+      "posterUrl": "https://image.tmdb.org/t/p/w342/ooAAgXmRyVvCotda2fmwBjqEfA6.jpg",
+      "episodeCount": 366,
+      "airDate": "2020-01-01"
+    },
+    {
+      "id": "174386",
+      "seasonNumber": 70,
+      "name": "Сезон 70",
+      "overview": "",
+      "posterUrl": "https://image.tmdb.org/t/p/w342/ryQwRK3f6K06UJuMK9oVH1WhZdA.jpg",
+      "episodeCount": 365,
+      "airDate": "2021-01-01"
+    },
+    {
+      "id": "345700",
+      "seasonNumber": 71,
+      "name": "Сезон 71",
+      "overview": "",
+      "episodeCount": 365,
+      "airDate": "2022-01-01"
+    },
+    {
+      "id": "345701",
+      "seasonNumber": 72,
+      "name": "Сезон 72",
+      "overview": "",
+      "episodeCount": 365,
+      "airDate": "2023-01-01"
+    },
+    {
+      "id": "374259",
+      "seasonNumber": 73,
+      "name": "Сезон 73",
+      "overview": "",
+      "episodeCount": 366,
+      "airDate": "2024-01-01"
+    },
+    {
+      "id": "445079",
+      "seasonNumber": 74,
+      "name": "Сезон 74",
+      "overview": "",
+      "episodeCount": 128,
+      "airDate": "2025-01-01"
+    },
+    {
+      "id": "496917",
+      "seasonNumber": 75,
+      "name": "Сезон 75",
+      "overview": "",
+      "episodeCount": 19,
+      "airDate": "2026-01-01"
+    }
+  ]
+}

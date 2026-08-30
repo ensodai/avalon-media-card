@@ -1,0 +1,115 @@
+{
+  "title": "सीआईडी",
+  "originalTitle": "सीआईडी",
+  "subtitle": "सीआईडी",
+  "description": "",
+  "posterUrl": "https://image.tmdb.org/t/p/w342/zNCpkoHN3LSK9yi1C2M0Z1rOv6J.jpg",
+  "backgroundUrl": "https://image.tmdb.org/t/p/w1280/1gZrOa2E9DOohEvSLLBJqus2zGu.jpg",
+  "rating": "5,7",
+  "genres": [
+    {
+      "id": 10759,
+      "name": "Боевик и Приключения"
+    },
+    {
+      "id": 80,
+      "name": "криминал"
+    },
+    {
+      "id": 18,
+      "name": "драма"
+    },
+    {
+      "id": 9648,
+      "name": "детектив"
+    }
+  ],
+  "productionCompanies": [
+    {
+      "id": 204350,
+      "name": "Fireworks Production"
+    }
+  ],
+  "releaseDate": "1998-01-21",
+  "tagline": "",
+  "cast": [
+    {
+      "name": "Shivaji Satham",
+      "character": "ACP Pradyuman",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/8C0lfz5T80BdWD99rCQmtB3iofF.jpg",
+      "id": "86865"
+    },
+    {
+      "name": "Aditya Srivastava",
+      "character": "Sr. Inspector Abhijeet",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/nGj7ktEVQwPd8WXoN0FYZe9EgQd.jpg",
+      "id": "101822"
+    },
+    {
+      "name": "Dayanand Shetty",
+      "character": "Sr. Inspector Daya",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/3wVmr5BpnoQdb5D2adV7be4SB5l.jpg",
+      "id": "85658"
+    },
+    {
+      "name": "Narendra Gupta",
+      "character": "Dr. R. P. Salunkhe",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/99xyC002SnPisIMkhpITSWWoFMk.jpg",
+      "id": "1245699"
+    },
+    {
+      "name": "Parul Rai",
+      "character": "Dr. Gargi",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/7HHcJ8rCUCJ9ie3Nmh8r1U82ItI.jpg",
+      "id": "3341682"
+    },
+    {
+      "name": "Saumya Saraswat Lol",
+      "character": "Sub-Inspector Avni",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/3LUSzwCxMB8Ql66hcbmbrmDu5In.jpg",
+      "id": "5431203"
+    },
+    {
+      "name": "Ansha Sayed",
+      "character": "Inspector Purvi",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/yJJ7fB2Mr2vQujTVoojC1Y5DUsY.jpg",
+      "id": "4328313"
+    },
+    {
+      "name": "Hrishikesh Pandey",
+      "character": "Inspector Sachin",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/9p10UMsxnXkUVjofVnOqw0D15TH.jpg",
+      "id": "1245700"
+    },
+    {
+      "name": "Ajay Nagrath",
+      "character": "Sub-Inspector Pankaj",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/9WTV69QJJeFk0pDX8SVd1Ytmd70.jpg",
+      "id": "1775259"
+    }
+  ],
+  "numberOfSeasons": 2,
+  "numberOfEpisodes": 1651,
+  "status": "Идет",
+  "network": "Netflix",
+  "seasons": [
+    {
+      "id": "167110",
+      "seasonNumber": 1,
+      "name": "Сезон 1",
+      "overview": "",
+      "posterUrl": "https://image.tmdb.org/t/p/w342/iqpp7hQpaa4iLRZpeJ5lZRSVuzd.jpg",
+      "episodeCount": 1547,
+      "airDate": "1998-01-21"
+    },
+    {
+      "id": "402150",
+      "seasonNumber": 2,
+      "name": "Сезон 2",
+      "overview": "",
+      "posterUrl": "https://image.tmdb.org/t/p/w342/26uEr3docGiJVEDlqepAjf99Vlq.jpg",
+      "episodeCount": 104,
+      "airDate": "2024-12-21"
+    }
+  ]
+}

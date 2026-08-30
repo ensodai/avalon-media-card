@@ -1,0 +1,165 @@
+{
+  "title": "Форма голоса",
+  "originalTitle": "A Silent Voice: The Movie",
+  "description": "Молодой человек Сёя Исида внезапно осознаёт, что в школе умудрился превратить жизнь одноклассницы Сёко в ад только потому, что та была глухая. И теперь, хоть и запоздало, парень понимает — чтобы сказать нечто важное тому, кто не может тебя услышать, вовсе не обязательно использовать голос.",
+  "posterUrl": "https://image.tmdb.org/t/p/w342/c0Gv8xTSEmIcQPxbhINKvkbJO8s.jpg",
+  "backgroundUrl": "https://image.tmdb.org/t/p/w1280/5lAMQMWpXMsirvtLLvW7cJgEPkU.jpg",
+  "genres": [
+    {
+      "id": 16,
+      "name": "мультфильм"
+    },
+    {
+      "id": 18,
+      "name": "драма"
+    },
+    {
+      "id": 10749,
+      "name": "мелодрама"
+    }
+  ],
+  "keywords": [
+    {
+      "id": 236,
+      "name": "suicide"
+    },
+    {
+      "id": 1252,
+      "name": "suicide attempt"
+    },
+    {
+      "id": 1643,
+      "name": "deaf"
+    },
+    {
+      "id": 6054,
+      "name": "friendship"
+    },
+    {
+      "id": 6270,
+      "name": "high school"
+    },
+    {
+      "id": 6733,
+      "name": "bullying"
+    },
+    {
+      "id": 10683,
+      "name": "coming of age"
+    },
+    {
+      "id": 10873,
+      "name": "school"
+    },
+    {
+      "id": 13141,
+      "name": "based on manga"
+    },
+    {
+      "id": 161919,
+      "name": "adult animation"
+    },
+    {
+      "id": 171411,
+      "name": "teen suicide"
+    },
+    {
+      "id": 187056,
+      "name": "woman director"
+    },
+    {
+      "id": 188953,
+      "name": "sign languages"
+    },
+    {
+      "id": 207826,
+      "name": "shounen"
+    },
+    {
+      "id": 210024,
+      "name": "anime"
+    },
+    {
+      "id": 232877,
+      "name": "social anxiety"
+    },
+    {
+      "id": 235790,
+      "name": "japanese high school"
+    },
+    {
+      "id": 268784,
+      "name": "japanese school"
+    },
+    {
+      "id": 325769,
+      "name": "appreciative"
+    }
+  ],
+  "releaseDate": "2016",
+  "director": "Наоко Ямада",
+  "directorImageUrl": "https://image.tmdb.org/t/p/w185/esksK3sGJN1gWwj8HhMJN6s27UG.jpg",
+  "directorId": "1072778",
+  "cast": [
+    {
+      "name": "Мию Ирино",
+      "character": "Shouya Ishida (voice)",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/8qEEhHUObNvGQr4e6eqLu5z4qTz.jpg",
+      "id": "19588"
+    },
+    {
+      "name": "Саори Хаями",
+      "character": "Shouko Nishimiya (voice)",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/gLv9lO7dlUbIsmyJUvgegqAAXki.jpg",
+      "id": "221773"
+    },
+    {
+      "name": "Аой Юки",
+      "character": "Yuzuru Nishimiya (voice)",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/a5Mkd66GV1l3c9bZZtnvjUf33T2.jpg",
+      "id": "936275"
+    },
+    {
+      "name": "Кэнсё Оно",
+      "character": "Tomohiro Nagatsuka (voice)",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/wUYJ3HIeygHfh4rAqupE4RPoG3W.jpg",
+      "id": "1065297"
+    },
+    {
+      "name": "Юки Канэко",
+      "character": "Naoka Ueno (voice)",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/pqbqe4CxC6t94ptUW2tJfK5j2J2.jpg",
+      "id": "1258549"
+    },
+    {
+      "name": "Юи Исикава",
+      "character": "Miyoko Sahara (voice)",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/2y1y1W4q8UIR0Vbs4NNvc7722XT.jpg",
+      "id": "1224288"
+    },
+    {
+      "name": "Мэгуми Хан",
+      "character": "Miki Kawai (voice)",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/cwnwrPg1YvB19TbfouC4ShGPmbQ.jpg",
+      "id": "1164931"
+    },
+    {
+      "name": "Тошиюки Тоёнага",
+      "character": "Satoshi Mashiba (voice)",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/duhxGjWjgo6WagvGgKu529ztz7u.jpg",
+      "id": "1014991"
+    },
+    {
+      "name": "Майю Мацуока",
+      "character": "Shouya Ishida as an Elementary School Boy (voice)",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/f7Pn68PjbhbsgwdAcQ7mxpkAYPJ.jpg",
+      "id": "1130611"
+    },
+    {
+      "name": "Сатико Кодзима",
+      "character": "Kazuki Shimada as an Elementary School Boy (voice)",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/1WsHUDLy7Jvi5I1VY6uAT4ARnpM.jpg",
+      "id": "1149055"
+    }
+  ]
+}

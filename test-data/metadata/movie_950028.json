@@ -1,0 +1,67 @@
+{
+  "title": "Приглашение",
+  "originalTitle": "The Invite",
+  "subtitle": "The Invite",
+  "description": "Отношения Джо и Анджелы уже не так искрят, как раньше. Желая получить яркие впечатления, Анджела приглашает в гости соседей — эффектную пару, отношения которых, наоборот, полны страсти, судя по громким стонам из их квартиры. Но вечер идёт не по плану — светская беседа очень быстро меняет направление, ведь дерзкие соседи выступают с весьма необычным предложением.",
+  "posterUrl": "https://image.tmdb.org/t/p/w342/7CrrtqCpZmJsosektfOsakY2fMz.jpg",
+  "backgroundUrl": "https://image.tmdb.org/t/p/w1280/kLA1GqiOEyVgXxgNqLoCr7bYcqu.jpg",
+  "rating": "7,6",
+  "runtime": 107,
+  "genres": [
+    {
+      "id": 18,
+      "name": "драма"
+    },
+    {
+      "id": 35,
+      "name": "комедия"
+    }
+  ],
+  "productionCompanies": [
+    {
+      "id": 13184,
+      "name": "Annapurna Pictures",
+      "logoUrl": "https://image.tmdb.org/t/p/w200/pfUB1a62jSMIqp4Xmaq6z2cgW0B.png"
+    },
+    {
+      "id": 7493,
+      "name": "FilmNation Entertainment",
+      "logoUrl": "https://image.tmdb.org/t/p/w200/fHitYiGUCkRafgt6VPYQlXWLkdp.png"
+    },
+    {
+      "id": 455,
+      "name": "Permut Presentations"
+    }
+  ],
+  "releaseDate": "2026-06-25",
+  "tagline": "«Будет весело»",
+  "director": "Оливия Уайлд",
+  "directorImageUrl": "https://image.tmdb.org/t/p/w185/eODi1QKamyVa41eSK2SjU20VAZS.jpg",
+  "directorId": "59315",
+  "cast": [
+    {
+      "name": "Сет Роген",
+      "character": "Joe",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/nYl9bvQzaPQLzlf0wf75clLN6Hi.jpg",
+      "id": "19274"
+    },
+    {
+      "name": "Оливия Уайлд",
+      "character": "Angela",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/eODi1QKamyVa41eSK2SjU20VAZS.jpg",
+      "id": "59315"
+    },
+    {
+      "name": "Пенелопа Крус",
+      "character": "Pina",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/j5iHd2ctzlcQ3gJ3CyEq4GYlY7V.jpg",
+      "id": "955"
+    },
+    {
+      "name": "Эдвард Нортон",
+      "character": "Hawk",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/8nytsqL59SFJTVYVrN72k6qkGgJ.jpg",
+      "id": "819"
+    }
+  ]
+}

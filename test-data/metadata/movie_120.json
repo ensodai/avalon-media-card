@@ -1,0 +1,108 @@
+{
+  "title": "Властелин колец: Братство кольца",
+  "originalTitle": "The Lord of the Rings: The Fellowship of the Ring",
+  "subtitle": "The Lord of the Rings: The Fellowship of the Ring",
+  "description": "Сказания о Средиземье — это хроника Великой войны за Кольцо, длившейся не одну тысячу лет. Тот, кто владел Кольцом, получал неограниченную власть, но был обязан служить злу. Тихая деревня, где живут хоббиты. Придя на 111-й день рождения к своему старому другу Бильбо Бэггинсу, волшебник Гэндальф начинает вести разговор о кольце, которое Бильбо нашел много лет назад. Это кольцо принадлежало когда-то темному властителю Средиземья Саурону, и оно дает большую власть своему обладателю. Теперь Саурон хочет вернуть себе власть над Средиземьем. Бильбо отдает Кольцо племяннику Фродо, чтобы тот отнёс его к Роковой Горе и уничтожил.",
+  "posterUrl": "https://image.tmdb.org/t/p/w342/5CrZYYasUUxo71m0JXxTTDTsSpV.jpg",
+  "backgroundUrl": "https://image.tmdb.org/t/p/w1280/mWDdRXTivGE7aaY2vo1Ie0PfCX5.jpg",
+  "rating": "8,4",
+  "runtime": 179,
+  "genres": [
+    {
+      "id": 12,
+      "name": "приключения"
+    },
+    {
+      "id": 14,
+      "name": "фэнтези"
+    },
+    {
+      "id": 28,
+      "name": "боевик"
+    }
+  ],
+  "productionCompanies": [
+    {
+      "id": 12,
+      "name": "New Line Cinema",
+      "logoUrl": "https://image.tmdb.org/t/p/w200/2ycs64eqV5rqKYHyQK0GVoKGvfX.png"
+    },
+    {
+      "id": 11,
+      "name": "WingNut Films",
+      "logoUrl": "https://image.tmdb.org/t/p/w200/6FAuASQHybRkZUk08p9PzSs9ezM.png"
+    },
+    {
+      "id": 5237,
+      "name": "The Saul Zaentz Company",
+      "logoUrl": "https://image.tmdb.org/t/p/w200/mlnr7vsBHvLye8oEb5A76C0t8x9.png"
+    }
+  ],
+  "releaseDate": "2001-12-18",
+  "tagline": "«Власть может заключаться в самых незначительных вещах...»",
+  "director": "Питер Джексон",
+  "directorImageUrl": "https://image.tmdb.org/t/p/w185/bNc908d59Ba8VDNr4eCcm4G1cR.jpg",
+  "directorId": "108",
+  "cast": [
+    {
+      "name": "Элайджа Вуд",
+      "character": "Frodo",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/7UKRbJBNG7mxBl2QQc5XsAh6F8B.jpg",
+      "id": "109"
+    },
+    {
+      "name": "Иэн МакКеллен",
+      "character": "Gandalf",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/5cnnnpnJG6TiYUSS7qgJheUZgnv.jpg",
+      "id": "1327"
+    },
+    {
+      "name": "Вигго Мортенсен",
+      "character": "Aragorn",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/vH5gVSpHAMhDaFWfh0Q7BG61O1y.jpg",
+      "id": "110"
+    },
+    {
+      "name": "Шон Эстин",
+      "character": "Sam",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/As3ctGUtBYmG4zj4Ifyrcqd71HP.jpg",
+      "id": "1328"
+    },
+    {
+      "name": "Иэн Холм",
+      "character": "Bilbo",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/cOJDgvgj4nMec6Inzj1H5nugTO5.jpg",
+      "id": "65"
+    },
+    {
+      "name": "Лив Тайлер",
+      "character": "Arwen",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/hXFKqlOPVjtfBSPlmQwFnJvhvmU.jpg",
+      "id": "882"
+    },
+    {
+      "name": "Кристофер Ли",
+      "character": "Saruman",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/dA26fBr3t7mKqjn3OYW6kbD1LXM.jpg",
+      "id": "113"
+    },
+    {
+      "name": "Шон Бин",
+      "character": "Boromir",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/kTjiABk3TJ3yI0Cto5RsvyT6V3o.jpg",
+      "id": "48"
+    },
+    {
+      "name": "Билли Бойд",
+      "character": "Pippin",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/jluumxuDr7rm2f97NFf9LydBdaZ.jpg",
+      "id": "1329"
+    },
+    {
+      "name": "Доминик Монаган",
+      "character": "Merry",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/h3VEhi6cMaEdmmvoH3keWTv4vEb.jpg",
+      "id": "1330"
+    }
+  ]
+}

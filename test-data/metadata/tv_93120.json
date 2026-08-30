@@ -1,0 +1,199 @@
+{
+  "title": "凤凰大视野",
+  "originalTitle": "凤凰大视野",
+  "subtitle": "凤凰大视野",
+  "description": "",
+  "posterUrl": "https://image.tmdb.org/t/p/w342/xKhGbQg0pjgrsLE8octAdB31026.jpg",
+  "rating": "10,0",
+  "genres": [
+    {
+      "id": 10763,
+      "name": "Новости"
+    }
+  ],
+  "productionCompanies": [
+    {
+      "id": 122544,
+      "name": "Phoenix Television",
+      "logoUrl": "https://image.tmdb.org/t/p/w200/ynP0GOiC6YpmSkZfllb08RM538K.png"
+    }
+  ],
+  "releaseDate": "2004-01-02",
+  "tagline": "",
+  "cast": [
+    {
+      "name": "陈晓楠",
+      "character": "Self - Host",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/125UPNggjcK4WmUhCRymOgWiosr.jpg",
+      "id": "2400996"
+    }
+  ],
+  "numberOfSeasons": 18,
+  "numberOfEpisodes": 4626,
+  "status": "Идет",
+  "network": "Phoenix Television",
+  "seasons": [
+    {
+      "id": "131422",
+      "seasonNumber": 1,
+      "name": "Сезон 1",
+      "overview": "",
+      "posterUrl": "https://image.tmdb.org/t/p/w342/ucbj0iRPZ2ROCST7rLB9FVukiA4.jpg",
+      "episodeCount": 250,
+      "airDate": "2004-01-02"
+    },
+    {
+      "id": "208927",
+      "seasonNumber": 2,
+      "name": "Сезон 2",
+      "overview": "",
+      "posterUrl": "https://image.tmdb.org/t/p/w342/lzdtE5QDMLFJgq89O6XCnSm1S6z.jpg",
+      "episodeCount": 243,
+      "airDate": "2005-01-03"
+    },
+    {
+      "id": "208928",
+      "seasonNumber": 3,
+      "name": "Сезон 3",
+      "overview": "",
+      "posterUrl": "https://image.tmdb.org/t/p/w342/l11xT1BUOvVf4RV47VYoALjyOQ1.jpg",
+      "episodeCount": 249,
+      "airDate": "2006-01-02"
+    },
+    {
+      "id": "208929",
+      "seasonNumber": 4,
+      "name": "Сезон 4",
+      "overview": "",
+      "posterUrl": "https://image.tmdb.org/t/p/w342/d0q6RU9jK6qAIkgYSWGqDfRuEqw.jpg",
+      "episodeCount": 247,
+      "airDate": "2007-01-01"
+    },
+    {
+      "id": "208930",
+      "seasonNumber": 5,
+      "name": "Сезон 5",
+      "overview": "",
+      "posterUrl": "https://image.tmdb.org/t/p/w342/1xCQJNCStrE0Ok6Hkto6Nfdy7P6.jpg",
+      "episodeCount": 251,
+      "airDate": "2007-12-31"
+    },
+    {
+      "id": "208931",
+      "seasonNumber": 6,
+      "name": "Сезон 6",
+      "overview": "",
+      "posterUrl": "https://image.tmdb.org/t/p/w342/fPQJXk85fWUn4bRpWkDnI1PzqrI.jpg",
+      "episodeCount": 256,
+      "airDate": "2008-12-29"
+    },
+    {
+      "id": "208932",
+      "seasonNumber": 7,
+      "name": "Сезон 7",
+      "overview": "",
+      "posterUrl": "https://image.tmdb.org/t/p/w342/oFmv5quFufYnB4IA6n6qwezG5ge.jpg",
+      "episodeCount": 260,
+      "airDate": "2009-12-28"
+    },
+    {
+      "id": "208933",
+      "seasonNumber": 8,
+      "name": "Сезон 8",
+      "overview": "",
+      "posterUrl": "https://image.tmdb.org/t/p/w342/jeHFGAxKzk3c1rM51a3mciuOkYk.jpg",
+      "episodeCount": 260,
+      "airDate": "2011-01-03"
+    },
+    {
+      "id": "208935",
+      "seasonNumber": 9,
+      "name": "Сезон 9",
+      "overview": "",
+      "posterUrl": "https://image.tmdb.org/t/p/w342/anpz8sqcJ204EGh0fPVbLnHdJ88.jpg",
+      "episodeCount": 260,
+      "airDate": "2012-01-02"
+    },
+    {
+      "id": "208936",
+      "seasonNumber": 10,
+      "name": "Сезон 10",
+      "overview": "",
+      "posterUrl": "https://image.tmdb.org/t/p/w342/ltkUfTUggpTG9EpbcWlEvMU8bZW.jpg",
+      "episodeCount": 260,
+      "airDate": "2012-12-31"
+    },
+    {
+      "id": "208937",
+      "seasonNumber": 11,
+      "name": "Сезон 11",
+      "overview": "",
+      "posterUrl": "https://image.tmdb.org/t/p/w342/mySydlfMek7q37LnGAPTHb9PhLu.jpg",
+      "episodeCount": 260,
+      "airDate": "2013-12-30"
+    },
+    {
+      "id": "208938",
+      "seasonNumber": 12,
+      "name": "Сезон 12",
+      "overview": "",
+      "posterUrl": "https://image.tmdb.org/t/p/w342/81FOffZQq0pe2iNYVk7IxGdQpX4.jpg",
+      "episodeCount": 265,
+      "airDate": "2014-12-29"
+    },
+    {
+      "id": "208939",
+      "seasonNumber": 13,
+      "name": "Сезон 13",
+      "overview": "",
+      "posterUrl": "https://image.tmdb.org/t/p/w342/zvhcydpMOQ35GdIY4LcyGFAD1fA.jpg",
+      "episodeCount": 260,
+      "airDate": "2016-01-04"
+    },
+    {
+      "id": "208940",
+      "seasonNumber": 14,
+      "name": "Сезон 14",
+      "overview": "",
+      "posterUrl": "https://image.tmdb.org/t/p/w342/OmhNzjcYpdFVvgjx3459ivGHvu.jpg",
+      "episodeCount": 260,
+      "airDate": "2017-01-02"
+    },
+    {
+      "id": "208941",
+      "seasonNumber": 15,
+      "name": "Сезон 15",
+      "overview": "",
+      "posterUrl": "https://image.tmdb.org/t/p/w342/e7cZ9PHzxhbcmGWZNqrKSaNLwPY.jpg",
+      "episodeCount": 260,
+      "airDate": "2018-01-01"
+    },
+    {
+      "id": "208942",
+      "seasonNumber": 16,
+      "name": "Сезон 16",
+      "overview": "",
+      "posterUrl": "https://image.tmdb.org/t/p/w342/gx4sSHhzyNHL59AT6guIAAK0xge.jpg",
+      "episodeCount": 265,
+      "airDate": "2018-12-31"
+    },
+    {
+      "id": "208943",
+      "seasonNumber": 17,
+      "name": "Сезон 17",
+      "overview": "",
+      "posterUrl": "https://image.tmdb.org/t/p/w342/539YUTt1N3zvV7S7gCluHnWP0yT.jpg",
+      "episodeCount": 260,
+      "airDate": "2020-01-06"
+    },
+    {
+      "id": "359397",
+      "seasonNumber": 18,
+      "name": "Сезон 18",
+      "overview": "",
+      "posterUrl": "https://image.tmdb.org/t/p/w342/fbsRDKEMMnVbMARpyd4jHfxQRik.jpg",
+      "episodeCount": 260,
+      "airDate": "2021-01-01"
+    }
+  ]
+}

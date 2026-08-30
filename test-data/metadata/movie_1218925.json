@@ -1,0 +1,102 @@
+{
+  "title": "Человек-бензопила. Фильм: История Резе",
+  "originalTitle": "劇場版 チェンソーマン レゼ篇",
+  "subtitle": "劇場版 チェンソーマン レゼ篇",
+  "description": "Молодой охотник на демонов Дэндзи, который ждал свидания со своей возлюбленной Макимой, попадает под ливень. Укрывшись от дождя, он случайно встречает девушку по имени Резе, работающую в соседнем кафе. Та добродушно ему улыбается, и разговор становится более непринужденным. После этой встречи повседневная жизнь Дэндзи начинает меняться.",
+  "posterUrl": "https://image.tmdb.org/t/p/w342/f4Bv4JWv85zHSisuq7SD2WeuJGr.jpg",
+  "backgroundUrl": "https://image.tmdb.org/t/p/w1280/qX5zlO7tskYFs7sSuFgALW5pFy5.jpg",
+  "rating": "8,5",
+  "runtime": 100,
+  "genres": [
+    {
+      "id": 16,
+      "name": "мультфильм"
+    },
+    {
+      "id": 28,
+      "name": "боевик"
+    },
+    {
+      "id": 10749,
+      "name": "мелодрама"
+    },
+    {
+      "id": 14,
+      "name": "фэнтези"
+    }
+  ],
+  "productionCompanies": [
+    {
+      "id": 21444,
+      "name": "MAPPA",
+      "logoUrl": "https://image.tmdb.org/t/p/w200/wSejGn3lAZdQ5muByxvzigwyDY6.png"
+    }
+  ],
+  "releaseDate": "2025-09-19",
+  "tagline": "",
+  "director": "Тацуя Ёсихара",
+  "directorImageUrl": "https://image.tmdb.org/t/p/w185/8vCTM5LoMueuEEWat9qlx0EXg8p.jpg",
+  "directorId": "1286723",
+  "cast": [
+    {
+      "name": "Кикуносукэ Тоя",
+      "character": "Denji (voice)",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/tSAHe7tjN7luUD1Tx5yPSCuCnuD.jpg",
+      "id": "3651176"
+    },
+    {
+      "name": "Томори Кусуноки",
+      "character": "Makima (voice)",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/iiGJPsLAnOoqmkNjLWCvbbDJw50.jpg",
+      "id": "2004086"
+    },
+    {
+      "name": "Рэина Уэда",
+      "character": "Reze (voice)",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/2WV61uVU7y6XGYqNHLMpP0sApdu.jpg",
+      "id": "1452028"
+    },
+    {
+      "name": "Сёго Саката",
+      "character": "Aki (voice)",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/fRRPNBz3OCNRdmLdUTdpq7dGqxM.jpg",
+      "id": "2812912"
+    },
+    {
+      "name": "Карин Такахаси",
+      "character": "Kobeni (voice)",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/40eynav2SoYcfd0McfiF46Hu16o.jpg",
+      "id": "1783522"
+    },
+    {
+      "name": "Файруз Ай",
+      "character": "Power (voice)",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/coFu6WOVBZvqd1fw89vbHkiC0zB.jpg",
+      "id": "2359492"
+    },
+    {
+      "name": "Нацуки Ханаэ",
+      "character": "Beam (voice)",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/alTb0DlcPIbcwM08WSmxFai58sd.jpg",
+      "id": "1256603"
+    },
+    {
+      "name": "Маая Утида",
+      "character": "Angel Devil (voice)",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/lrcxZXkIgHU55dMs8C4DKkUohqJ.jpg",
+      "id": "1296667"
+    },
+    {
+      "name": "Юя Утида",
+      "character": "The Violence Fiend (voice)",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/4xLLQGEDWtmLWUapo0UnfvCdsXp.jpg",
+      "id": "1252998"
+    },
+    {
+      "name": "Сиори Идзава",
+      "character": "Pochita (voice)",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/f9V38OeDvRGevWuKc4dN6LB62TH.jpg",
+      "id": "1647448"
+    }
+  ]
+}

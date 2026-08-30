@@ -1,0 +1,9 @@
+{
+  "rutube.channel_fmt": "Канал «%s»",
+  "rutube.channel_quality_fmt": "Канал «%1$s» • %2$s",
+  "rutube.all_episodes_quality_fmt": "Все серии • %s",
+  "rutube.season_title_fmt": "%1$s • Сезон %2$d (%3$s)",
+  "rutube.composite_release_fmt": "Rutube (Сводный релиз) • %s",
+  "rutube.season_filter_fmt": "%d сезон",
+  "rutube.episode_title_fmt": "Серия %d"
+}

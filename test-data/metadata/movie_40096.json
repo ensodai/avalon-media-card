@@ -1,0 +1,111 @@
+{
+  "title": "Сам о сострадании",
+  "originalTitle": "O Auto da Compadecida",
+  "subtitle": "O Auto da Compadecida",
+  "description": "Бойкий Жоао Грило и хитрый Чико - бедные парни, живущие в центральном районе, которые обманывают группу людей в небольшом северо-восточном бразильском городке. Но когда они умирают, им предстоит быть осуждеными Христом, Дьяволом и Девой Марией, прежде чем их допустят в рай.",
+  "posterUrl": "https://image.tmdb.org/t/p/w342/imcOp1kJsCsAFCoOtY5OnPrFbAf.jpg",
+  "backgroundUrl": "https://image.tmdb.org/t/p/w1280/alQqTpmEkxSLgajfEYTsTH6nAKB.jpg",
+  "rating": "8,4",
+  "runtime": 104,
+  "genres": [
+    {
+      "id": 35,
+      "name": "комедия"
+    },
+    {
+      "id": 18,
+      "name": "драма"
+    },
+    {
+      "id": 14,
+      "name": "фэнтези"
+    },
+    {
+      "id": 10749,
+      "name": "мелодрама"
+    }
+  ],
+  "productionCompanies": [
+    {
+      "id": 11446,
+      "name": "Lereby Produções"
+    },
+    {
+      "id": 13969,
+      "name": "Globo Filmes",
+      "logoUrl": "https://image.tmdb.org/t/p/w200/pFh6R6D4wpztG5aSblu14TtrR57.png"
+    },
+    {
+      "id": 46430,
+      "name": "Estúdios Globo",
+      "logoUrl": "https://image.tmdb.org/t/p/w200/tQZIt59BLw3b0b6rHJRqv4Dvrpd.png"
+    }
+  ],
+  "releaseDate": "2000-09-15",
+  "tagline": "",
+  "director": "Guel Arraes",
+  "directorImageUrl": "https://image.tmdb.org/t/p/w185/xB9855ExMtZdiguOFaXKI1Bx0LK.jpg",
+  "directorId": "102560",
+  "cast": [
+    {
+      "name": "Matheus Nachtergaele",
+      "character": "João Grilo",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/zgTT5AP7NYa2hN0jUqHIHkNyp2v.jpg",
+      "id": "8600"
+    },
+    {
+      "name": "Селтон Мелу",
+      "character": "Chicó",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/sBVDTAAEDJuVBTKzVGA0PrqeD17.jpg",
+      "id": "87341"
+    },
+    {
+      "name": "Фернанда Монтенегру",
+      "character": "Compadecida",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/bja0rn1BjAnA5Z5VbEvL2apvMT5.jpg",
+      "id": "10055"
+    },
+    {
+      "name": "Rogério Cardoso",
+      "character": "Padre João",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/ertp7Yo3BhAA9FXaXJo4LDK9Out.jpg",
+      "id": "123757"
+    },
+    {
+      "name": "Denise Fraga",
+      "character": "Dora",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/8GC3u2R3yVMH2WYm5z8CpL4hHOc.jpg",
+      "id": "123758"
+    },
+    {
+      "name": "Diogo Vilela",
+      "character": "Eurico",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/hsAky8EzEgWMlbCr9YgJJ69B5lt.jpg",
+      "id": "102551"
+    },
+    {
+      "name": "Luís Melo",
+      "character": "Diabo",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/xxX3MSbxi0RhODIbOZCP6bvtLdc.jpg",
+      "id": "90219"
+    },
+    {
+      "name": "Virginia Cavendish",
+      "character": "Rosinha",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/kMol9CsRBTiQ1RPFL2IrTPBHXlC.jpg",
+      "id": "123759"
+    },
+    {
+      "name": "Bruno Garcia",
+      "character": "Vicentão",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/k1qfsIEsXJT9Ml6NKasUoKh96Dp.jpg",
+      "id": "123760"
+    },
+    {
+      "name": "Enrique Díaz",
+      "character": "Joaquim Brejeiro",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/bGdE9lqldBpiFISHLFrETNQhQh5.jpg",
+      "id": "1126875"
+    }
+  ]
+}

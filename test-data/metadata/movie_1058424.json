@@ -1,0 +1,108 @@
+{
+  "title": "Надежда",
+  "originalTitle": "호프",
+  "subtitle": "호프",
+  "description": "Таинственное открытие совершается на окраине отдалённого портового городка. Жители оказываются в отчаянной борьбе за выживание против того, с чем они никогда раньше не сталкивались.",
+  "posterUrl": "https://image.tmdb.org/t/p/w342/f7nlJfSBuev6yhgJWBKBrQDRZpP.jpg",
+  "backgroundUrl": "https://image.tmdb.org/t/p/w1280/qv2gffpbllYE1Pxz5nhYQmYuht5.jpg",
+  "rating": "8,2",
+  "runtime": 157,
+  "genres": [
+    {
+      "id": 878,
+      "name": "фантастика"
+    },
+    {
+      "id": 9648,
+      "name": "детектив"
+    },
+    {
+      "id": 28,
+      "name": "боевик"
+    }
+  ],
+  "productionCompanies": [
+    {
+      "id": 196800,
+      "name": "Forged Films",
+      "logoUrl": "https://image.tmdb.org/t/p/w200/gmh5oiXNSKI2WoEnyz8dqV9ikwr.png"
+    },
+    {
+      "id": 91505,
+      "name": "Plus M Entertainment",
+      "logoUrl": "https://image.tmdb.org/t/p/w200/c6ggS6OO4tyEcgBQ7sHs67LDfES.png"
+    },
+    {
+      "id": 168283,
+      "name": "Westworld Story",
+      "logoUrl": "https://image.tmdb.org/t/p/w200/tkoix7ykf4WORjI3PNo5P4an67B.png"
+    }
+  ],
+  "releaseDate": "2026-07-15",
+  "tagline": "",
+  "director": "На Хон-джин",
+  "directorImageUrl": "https://image.tmdb.org/t/p/w185/hgOX3rbIDfE2JOFlWzrAMsNzWke.jpg",
+  "directorId": "75915",
+  "cast": [
+    {
+      "name": "Хван Джон-мин",
+      "character": "Go Bum-seok",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/8WMT3zV5DBPgbMFm8vbCNcLTXvb.jpg",
+      "id": "68903"
+    },
+    {
+      "name": "Чо Ин-сон",
+      "character": "Go Sung-ki",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/69gbyFI0ET0l0dyjKChlx1Zx269.jpg",
+      "id": "127564"
+    },
+    {
+      "name": "Чон Хо-ён",
+      "character": "Lim Sung-ae",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/bWMOv8dzwIp5POkDYGgl0v2LoWv.jpg",
+      "id": "3194501"
+    },
+    {
+      "name": "Алисия Викандер",
+      "character": "J'aur",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/lZu8qiTwiQIN96cuptgqMCCaUtg.jpg",
+      "id": "227454"
+    },
+    {
+      "name": "Майкл Фассбендер",
+      "character": "Ma'veyyo",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/xvbnUiB2ZBR3QIt595OzNy657Vw.jpg",
+      "id": "17288"
+    },
+    {
+      "name": "Тейлор Расселл",
+      "character": "Ai'dovor",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/wxY9vztrc69MolSJ1LDNg7sEADU.jpg",
+      "id": "1353827"
+    },
+    {
+      "name": "Кэмерон Бриттон",
+      "character": "Va'migere",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/9HFxi8ZnBiby3AQ7tBOPDxXFkCT.jpg",
+      "id": "1286537"
+    },
+    {
+      "name": "Ли Сан-хи",
+      "character": "Nak-yeon",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/wOYFSg20yGe48VFALqGAlrLjFHV.jpg",
+      "id": "564847"
+    },
+    {
+      "name": "Ым Мун-шек",
+      "character": "Yang-bae",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/niV5OXu1cgKnlIU1Iamp1BVeCdT.jpg",
+      "id": "2370779"
+    },
+    {
+      "name": "임현식",
+      "character": "Hae-Sul",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/syQMfT7qchOwKDMXc3vQB57v1ZL.jpg",
+      "id": "1305674"
+    }
+  ]
+}

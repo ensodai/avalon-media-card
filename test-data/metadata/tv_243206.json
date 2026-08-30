@@ -1,0 +1,73 @@
+{
+  "title": "Притам и Педро",
+  "originalTitle": "Pritam and Pedro",
+  "description": "Когда технически неграмотного полицейского из Гоа понижают в должности и переводят в отдел киберпреступлений, ему приходится объединиться с эксцентричным хакером, чтобы разыскать похищенного сына министра и вернуть себе прежнюю работу.",
+  "posterUrl": "https://image.tmdb.org/t/p/w342/lC0MtWrnC0SZICFHazagIfVKy0x.jpg",
+  "backgroundUrl": "https://image.tmdb.org/t/p/w1280/eAXSlqAJwpdsZ59G10lao9OJ4SG.jpg",
+  "genres": [
+    {
+      "id": 80,
+      "name": "криминал"
+    },
+    {
+      "id": 18,
+      "name": "драма"
+    },
+    {
+      "id": 9648,
+      "name": "детектив"
+    },
+    {
+      "id": 35,
+      "name": "комедия"
+    }
+  ],
+  "releaseDate": "2026",
+  "director": "Avinash Arun",
+  "directorImageUrl": "https://image.tmdb.org/t/p/w185/6TGQK6AQ6ufRB8xNWXkB8ZSXbQS.jpg",
+  "directorId": "1348503",
+  "cast": [
+    {
+      "name": "Arshad Warsi",
+      "character": "Pedro",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/iXSA1C7B5mtoUrfDZ2sULE28bww.jpg",
+      "id": "85889"
+    },
+    {
+      "name": "Vir Hirani",
+      "character": "Pritam/Kabir",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/sVhQyG9dMFtnPNJBv0kbVsnso8g.jpg",
+      "id": "5178379"
+    },
+    {
+      "name": "Викрант Мэсси",
+      "character": "Martin",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/zvpP52P7CtVXYONmvWrH1aOcRTx.jpg",
+      "id": "1208682"
+    },
+    {
+      "name": "Shruti Marathe",
+      "character": "Shraddha",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/zv7Fs6VMzckhHlcF27x9Z3WpG7k.jpg",
+      "id": "3012621"
+    },
+    {
+      "name": "Satyadeep Misra",
+      "character": "D N Sardesai",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/413i5i1XUaRcoNzxCsJQIN0PhQ8.jpg",
+      "id": "229952"
+    }
+  ],
+  "status": "Идет",
+  "seasons": [
+    {
+      "id": "51bb4b17-863d-4008-88d4-32bfea36a743",
+      "seasonNumber": 1,
+      "name": "Сезон 1",
+      "overview": "",
+      "posterUrl": "https://image.tmdb.org/t/p/w342/bWMkcgByoydhTwx3nCXXcmLVhVV.jpg",
+      "episodeCount": 6,
+      "airDate": "2026-07-03"
+    }
+  ]
+}

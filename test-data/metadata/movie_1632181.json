@@ -1,0 +1,82 @@
+{
+  "title": "Socias por accidente",
+  "originalTitle": "Socias por accidente",
+  "description": "",
+  "posterUrl": "https://image.tmdb.org/t/p/w342/sr1Yoj6XLPTWYcbDoBy67xivW4I.jpg",
+  "backgroundUrl": "https://image.tmdb.org/t/p/w1280/tdY46jlxbcvgMHKlJhSCebahhBh.jpg",
+  "genres": [
+    {
+      "id": 35,
+      "name": "комедия"
+    },
+    {
+      "id": 10749,
+      "name": "мелодрама"
+    }
+  ],
+  "releaseDate": "2026",
+  "director": "Ihtzi Hurtado",
+  "directorImageUrl": "https://image.tmdb.org/t/p/w185/iZ4I41zQfLr6zP2hLWQkawHUhbM.jpg",
+  "directorId": "3009489",
+  "cast": [
+    {
+      "name": "Angelique Boyer",
+      "character": "Alexa Hernández",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/c73CU85L1sHganTpVUHnjw3gbba.jpg",
+      "id": "1244197"
+    },
+    {
+      "name": "Барбара де Рехиль",
+      "character": "Regina",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/2Oy7SFBIUtj4Qe2O6Ys9Bf8LJ86.jpg",
+      "id": "1310902"
+    },
+    {
+      "name": "Diego Klein",
+      "character": "Roy / Sebastián Benavides / Erick López",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/zUSgyUwiQVMqX5iuVrqXCtbdC7F.jpg",
+      "id": "2990871"
+    },
+    {
+      "name": "Lucía Uribe",
+      "character": "Claudia",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/zyuMAnbyG2a48B4602eoFI094pT.jpg",
+      "id": "1301500"
+    },
+    {
+      "name": "Isabella Camil",
+      "character": "Leticia Letram",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/jpRcrulEFlsy1ZMb1U9SY5ZPv0w.jpg",
+      "id": "1415550"
+    },
+    {
+      "name": "Gabriela Platas",
+      "character": "Majo",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/kU9Qpq7uLHsEQR4ECZsl3D0KsXD.jpg",
+      "id": "942853"
+    },
+    {
+      "name": "Laura Flores",
+      "character": "Paty",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/rJqyCEBqB4ua2SjQ7PlDvzjlsby.jpg",
+      "id": "941028"
+    },
+    {
+      "name": "Elena Pérez",
+      "character": "Nadia Letram",
+      "id": "6220742"
+    },
+    {
+      "name": "César Rodríguez",
+      "character": "Moncho",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/jDClj2dOXVaMNl1ky8FO8K3bsg8.jpg",
+      "id": "1472484"
+    },
+    {
+      "name": "Rolando Breme",
+      "character": "Ratero",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/iCGyKDH0ogBxf7Ha5VBDwlbIn36.jpg",
+      "id": "1869532"
+    }
+  ]
+}

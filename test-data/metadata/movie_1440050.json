@@ -1,0 +1,112 @@
+{
+  "title": "The Breadwinner",
+  "originalTitle": "The Breadwinner",
+  "subtitle": "The Breadwinner",
+  "description": "",
+  "posterUrl": "https://image.tmdb.org/t/p/w342/4apG9Xk6HQvV48JKEjSUeiebju7.jpg",
+  "backgroundUrl": "https://image.tmdb.org/t/p/w1280/dgqBcgTzaUiSLvKJPDF9AbdFEMO.jpg",
+  "rating": "7,3",
+  "runtime": 100,
+  "genres": [
+    {
+      "id": 35,
+      "name": "комедия"
+    },
+    {
+      "id": 10751,
+      "name": "семейный"
+    }
+  ],
+  "productionCompanies": [
+    {
+      "id": 218666,
+      "name": "Wonder Project",
+      "logoUrl": "https://image.tmdb.org/t/p/w200/1FyQYjUUIijNZEJBUPqrpDxCZz3.png"
+    },
+    {
+      "id": 559,
+      "name": "TriStar Pictures",
+      "logoUrl": "https://image.tmdb.org/t/p/w200/eC0bWHVjnjUducyA6YFoEFqnPMC.png"
+    },
+    {
+      "id": 211824,
+      "name": "The Nateland Company"
+    },
+    {
+      "id": 243125,
+      "name": "One Man Canoe"
+    },
+    {
+      "id": 22213,
+      "name": "TSG Entertainment",
+      "logoUrl": "https://image.tmdb.org/t/p/w200/qx9K6bFWJupwde0xQDwOvXkOaL8.png"
+    }
+  ],
+  "releaseDate": "2026-05-29",
+  "tagline": "",
+  "director": "Eric Appel",
+  "directorImageUrl": "https://image.tmdb.org/t/p/w185/vRbnqV3te2xSsz3VPXZi8rKTBti.jpg",
+  "directorId": "1113994",
+  "cast": [
+    {
+      "name": "Nate Bargatze",
+      "character": "Nate Wilcox",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/60KdELrwXRuNAKJveTaZIpHyDUU.jpg",
+      "id": "1337794"
+    },
+    {
+      "name": "Мэнди Мур",
+      "character": "Katie Wilcox",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/2n0rqUGojRNEHrmtPeCEptHREEY.jpg",
+      "id": "16855"
+    },
+    {
+      "name": "Стелла Грэйс Фицджералд",
+      "character": "Gracie Wilcox",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/xiSvi4zwTIUlSFm34ovk3JJBqYO.jpg",
+      "id": "3048964"
+    },
+    {
+      "name": "Берди Борриа",
+      "character": "Hadley Wilcox",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/1e8iouPs7g0kXuvWoSu6S4nqdIo.jpg",
+      "id": "3690410"
+    },
+    {
+      "name": "Шарлотт Энн Такер",
+      "character": "Sam Wilcox",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/56fIr7bqvuJsZkhoG8nBoo40TzK.jpg",
+      "id": "3227013"
+    },
+    {
+      "name": "Колин Джост",
+      "character": "Conor Ashford",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/cuNRnDX02digyoqYVyFGkwd78fn.jpg",
+      "id": "1226277"
+    },
+    {
+      "name": "Уилл Форте",
+      "character": "Keegan",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/4VEzbkL3HwHTUZAPA5PyypFG2U.jpg",
+      "id": "62831"
+    },
+    {
+      "name": "Мартин Херлихи",
+      "character": "Peter",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/3SxAueQPPc27P7zJoUmj0QMYdOK.jpg",
+      "id": "2807375"
+    },
+    {
+      "name": "Зак Черри",
+      "character": "Dan",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/fT3Wv8ef0Vn0daHWAObCp2Bd4Y.jpg",
+      "id": "1838225"
+    },
+    {
+      "name": "Кумэйл Нанджиани",
+      "character": "Peyton",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/9EyrK1Cv7ey1h1GgmsVAOn45w6G.jpg",
+      "id": "466505"
+    }
+  ]
+}

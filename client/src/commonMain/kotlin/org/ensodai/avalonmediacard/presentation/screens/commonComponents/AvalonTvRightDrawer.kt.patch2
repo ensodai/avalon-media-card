@@ -1,0 +1,31 @@
+--- /home/esoda/dev/avalon_media_card/avalon-media-card/client/src/commonMain/kotlin/org/ensodai/avalonmediacard/presentation/screens/commonComponents/AvalonTvRightDrawer.kt
++++ /home/esoda/dev/avalon_media_card/avalon-media-card/client/src/commonMain/kotlin/org/ensodai/avalonmediacard/presentation/screens/commonComponents/AvalonTvRightDrawer.kt
+@@ -115,10 +115,14 @@
+                 val saveableStateHolder = rememberSaveableStateHolder()
+                 state.entries.forEach { screen ->
+                     val isActive = screen == state.current
+-                    saveableStateHolder.SaveableStateProvider(key = screen.id) {
+-                        Column(modifier = Modifier.fillMaxSize().focusRestorer()) {
++                    AnimatedVisibility(
++                        visible = isActive,
++                        enter = slideInHorizontally { width -> width / 2 } + fadeIn(),
++                        exit = slideOutHorizontally { width -> -width / 2 } + fadeOut(),
++                    ) {
++                        saveableStateHolder.SaveableStateProvider(key = screen.id) {
++                            Column(modifier = Modifier.fillMaxSize().focusRestorer()) {
+                             // Header шторки
+                             Row(
+                                 modifier = Modifier
+@@ -166,11 +170,10 @@
+ 
+                             // Содержимое шторки
+                             Box(modifier = Modifier.weight(1f)) {
+-                                if (isActive) {
+-                                    screen.content()
+-                                }
++                                screen.content()
+                             }
++                            }
+                         }
+                     }
+                 }

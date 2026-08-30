@@ -1,0 +1,165 @@
+{
+  "title": "Зелёная миля",
+  "originalTitle": "The Green Mile",
+  "description": "Пол Эджкомб — начальник блока смертников в тюрьме «Холодная гора», каждый из узников которого однажды проходит «зеленую милю» по пути к месту казни. Пол повидал много заключённых и надзирателей за время работы. Однако гигант Джон Коффи, обвинённый в страшном преступлении, стал одним из самых необычных обитателей блока.",
+  "posterUrl": "https://image.tmdb.org/t/p/w342/lHxe8t4B0CKv4DO0C0B4rsuiG95.jpg",
+  "backgroundUrl": "https://image.tmdb.org/t/p/w1280/b6HWTOxn1xevvyHU2K9ICvaRU6g.jpg",
+  "genres": [
+    {
+      "id": 14,
+      "name": "фэнтези"
+    },
+    {
+      "id": 18,
+      "name": "драма"
+    },
+    {
+      "id": 80,
+      "name": "криминал"
+    }
+  ],
+  "keywords": [
+    {
+      "id": 531,
+      "name": "southern usa"
+    },
+    {
+      "id": 791,
+      "name": "mentally disabled"
+    },
+    {
+      "id": 818,
+      "name": "based on novel or book"
+    },
+    {
+      "id": 2122,
+      "name": "death penalty"
+    },
+    {
+      "id": 2501,
+      "name": "death row"
+    },
+    {
+      "id": 2881,
+      "name": "jail guard"
+    },
+    {
+      "id": 5571,
+      "name": "great depression"
+    },
+    {
+      "id": 6152,
+      "name": "supernatural"
+    },
+    {
+      "id": 6259,
+      "name": "psychopath"
+    },
+    {
+      "id": 9774,
+      "name": "prison guard"
+    },
+    {
+      "id": 9890,
+      "name": "jail"
+    },
+    {
+      "id": 11263,
+      "name": "electric chair"
+    },
+    {
+      "id": 11523,
+      "name": "capital punishment"
+    },
+    {
+      "id": 13006,
+      "name": "torture"
+    },
+    {
+      "id": 156597,
+      "name": "magic realism"
+    },
+    {
+      "id": 167696,
+      "name": "healing"
+    },
+    {
+      "id": 214548,
+      "name": "1930s"
+    },
+    {
+      "id": 239910,
+      "name": "abuse of power"
+    },
+    {
+      "id": 355148,
+      "name": "prison drama"
+    }
+  ],
+  "releaseDate": "1999",
+  "director": "Фрэнк Дарабонт",
+  "directorImageUrl": "https://image.tmdb.org/t/p/w185/vZ50guP86otYTiBSGfi35GNHWVf.jpg",
+  "directorId": "4027",
+  "cast": [
+    {
+      "name": "Том Хэнкс",
+      "character": "Paul Edgecomb",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/oFvZoKI6lvU03n4YoNGAll9rkas.jpg",
+      "id": "31"
+    },
+    {
+      "name": "Дэвид Морс",
+      "character": "Brutus 'Brutal' Howell",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/A6zGbkFjM3uajIakgsSeNTmSKqY.jpg",
+      "id": "52"
+    },
+    {
+      "name": "Бонни Хант",
+      "character": "Jan Edgecomb",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/tT9C6uLztgN8OxJULq6F9iEzqlA.jpg",
+      "id": "5149"
+    },
+    {
+      "name": "Майкл Кларк Дункан",
+      "character": "John Coffey",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/3RX8OBqt3gbvFwKYZqiom4O3Ta6.jpg",
+      "id": "61981"
+    },
+    {
+      "name": "Джеймс Кромвелл",
+      "character": "Warden Hal Moores",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/vpNQQbM5PtxsYmVm4oh79SGFyUK.jpg",
+      "id": "2505"
+    },
+    {
+      "name": "Майкл Джитер",
+      "character": "Eduard Delacroix",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/pNBf8X56wCOHH7cArsMYJuke4fO.jpg",
+      "id": "2169"
+    },
+    {
+      "name": "Грэм Грин",
+      "character": "Arlen Bitterbuck",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/ubX9pwrzQqnR41gAGyY1GoSZr1G.jpg",
+      "id": "6804"
+    },
+    {
+      "name": "Даг Хатчисон",
+      "character": "Percy Wetmore",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/a32hLANC5LIqT0Pk2nyV7dGdh23.jpg",
+      "id": "6806"
+    },
+    {
+      "name": "Сэм Рокуэлл",
+      "character": "'Wild Bill' Wharton",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/afYhNpLwpa65Yy0Q0g00FNFhzx5.jpg",
+      "id": "6807"
+    },
+    {
+      "name": "Барри Пеппер",
+      "character": "Dean Stanton",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/xBvW4dMoz496rItLQU6TGteYCEP.jpg",
+      "id": "12834"
+    }
+  ]
+}

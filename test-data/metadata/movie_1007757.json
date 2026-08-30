@@ -1,0 +1,129 @@
+{
+  "title": "В чужой шкуре",
+  "originalTitle": "Swapped",
+  "description": "Крошечное лесное существо и величественная птица внезапно поменялись телами, и теперь им предстоит вместе пережить самое безумное приключение в своей жизни.",
+  "posterUrl": "https://image.tmdb.org/t/p/w342/gl112Rnih0fHcWBIKpVzeW84xov.jpg",
+  "backgroundUrl": "https://image.tmdb.org/t/p/w1280/zMwhWailP1WY7sb6AoE6b8ugoy.jpg",
+  "genres": [
+    {
+      "id": 12,
+      "name": "приключения"
+    },
+    {
+      "id": 16,
+      "name": "мультфильм"
+    },
+    {
+      "id": 10751,
+      "name": "семейный"
+    },
+    {
+      "id": 14,
+      "name": "фэнтези"
+    }
+  ],
+  "keywords": [
+    {
+      "id": 1994,
+      "name": "wolf"
+    },
+    {
+      "id": 15214,
+      "name": "buddy"
+    },
+    {
+      "id": 33721,
+      "name": "body-swap"
+    },
+    {
+      "id": 191404,
+      "name": "forest fire"
+    },
+    {
+      "id": 224071,
+      "name": "woodlands"
+    },
+    {
+      "id": 263551,
+      "name": "forest lore"
+    },
+    {
+      "id": 277462,
+      "name": "bird"
+    },
+    {
+      "id": 278823,
+      "name": "3d animation"
+    },
+    {
+      "id": 374382,
+      "name": "animal adventure"
+    }
+  ],
+  "releaseDate": "2026",
+  "director": "Нэйтан Грено",
+  "directorImageUrl": "https://image.tmdb.org/t/p/w185/eFE9odW9uzWAGomGFmmusxJT1Ee.jpg",
+  "directorId": "121830",
+  "cast": [
+    {
+      "name": "Майкл Б. Джордан",
+      "character": "Ollie (voice)",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/sMBpav8cK7t7Nk0yf4tuNOqNUyW.jpg",
+      "id": "135651"
+    },
+    {
+      "name": "Джуно Темпл",
+      "character": "Ivy (voice)",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/jSgU83TekKFnzrSqe7HVFcStUaq.jpg",
+      "id": "36594"
+    },
+    {
+      "name": "Трейси Морган",
+      "character": "Boogle / Firewolf (voice)",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/ec0OJVbs6NZKMbS1yiCAJKjeoJf.jpg",
+      "id": "56903"
+    },
+    {
+      "name": "Седрик 'Развлекатель' Кайлс",
+      "character": "Caloo (voice)",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/s6UrY5uofyxXsU5PydWBoLFReK0.jpg",
+      "id": "5726"
+    },
+    {
+      "name": "Жустина Мачадо",
+      "character": "Calli (voice)",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/j5FaJXoyhMHlqv1l6TBdt1CH1oO.jpg",
+      "id": "95517"
+    },
+    {
+      "name": "Нэйт Торренс",
+      "character": "Lodd (voice)",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/yT9o149xPygdY0NsF9sNgiQwuru.jpg",
+      "id": "41565"
+    },
+    {
+      "name": "Камден Брукс",
+      "character": "Young Ollie (voice)",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/ge9FgIjRERhyylebW2Np9YwkqqR.jpg",
+      "id": "4663666"
+    },
+    {
+      "name": "Тата Вега",
+      "character": "Grandma / Mrs. Dung Beetle (voice)",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/9SdaK2vly0Gx5yvI5rrTszh31vt.jpg",
+      "id": "1934645"
+    },
+    {
+      "name": "Амбика Мод",
+      "character": "Violet (voice)",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/jN9HhFYPNMYIupFt6GzGnHAW88c.jpg",
+      "id": "3411764"
+    },
+    {
+      "name": "Лолли Адефоп",
+      "character": "Lily (voice)",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/qPS57Mw1vjydSSfSYoMw8u81waI.jpg",
+      "id": "1627501"
+    }
+  ]
+}

@@ -1,0 +1,169 @@
+{
+  "title": "12 разгневанных мужчин",
+  "originalTitle": "12 Angry Men",
+  "description": "Юношу обвиняют в убийстве собственного отца, ему грозит электрический стул. Двенадцать присяжных собираются чтобы вынести вердикт: виновен или нет.С начала заседания почти все склонились к тому, что виновен, и лишь только один из двенадцати позволил себе усомниться. Счет голосов присяжных по принципу «виновен — невиновен» был 11:1. К концу собрания мнения судей кардинально изменились…",
+  "posterUrl": "https://image.tmdb.org/t/p/w342/uDFEvhvKrH61KuGWWozRtbw2Rjv.jpg",
+  "backgroundUrl": "https://image.tmdb.org/t/p/w1280/qqHQsStV6exghCM7zbObuYBiYxw.jpg",
+  "genres": [
+    {
+      "id": 18,
+      "name": "драма"
+    }
+  ],
+  "keywords": [
+    {
+      "id": 934,
+      "name": "judge"
+    },
+    {
+      "id": 1417,
+      "name": "jurors"
+    },
+    {
+      "id": 2122,
+      "name": "death penalty"
+    },
+    {
+      "id": 2142,
+      "name": "anonymity"
+    },
+    {
+      "id": 3012,
+      "name": "court case"
+    },
+    {
+      "id": 3581,
+      "name": "witness"
+    },
+    {
+      "id": 4728,
+      "name": "knife"
+    },
+    {
+      "id": 5144,
+      "name": "matter of life and death"
+    },
+    {
+      "id": 6139,
+      "name": "innocence"
+    },
+    {
+      "id": 9826,
+      "name": "murder"
+    },
+    {
+      "id": 10181,
+      "name": "based on play or musical"
+    },
+    {
+      "id": 11038,
+      "name": "trial"
+    },
+    {
+      "id": 11141,
+      "name": "debate"
+    },
+    {
+      "id": 11523,
+      "name": "capital punishment"
+    },
+    {
+      "id": 12999,
+      "name": "black and white"
+    },
+    {
+      "id": 33519,
+      "name": "courtroom"
+    },
+    {
+      "id": 200918,
+      "name": "angry"
+    },
+    {
+      "id": 214780,
+      "name": "courtroom drama"
+    },
+    {
+      "id": 290670,
+      "name": "huis clos"
+    },
+    {
+      "id": 325776,
+      "name": "baffled"
+    },
+    {
+      "id": 325793,
+      "name": "derisive"
+    },
+    {
+      "id": 325817,
+      "name": "foreboding"
+    }
+  ],
+  "releaseDate": "1957",
+  "director": "Сидни Люмет",
+  "directorImageUrl": "https://image.tmdb.org/t/p/w185/hjj3V2DkPJ46zo5uz9bsZQzAk6R.jpg",
+  "directorId": "39996",
+  "cast": [
+    {
+      "name": "Мартин Болсам",
+      "character": "Juror 1",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/2q7xs6j6vGll3pc9Mm6TUEvvwBf.jpg",
+      "id": "1936"
+    },
+    {
+      "name": "Джон Фидлер",
+      "character": "Juror 2",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/27sXisLWQJQ49PD40j89miNhL73.jpg",
+      "id": "5247"
+    },
+    {
+      "name": "Ли Джей Кобб",
+      "character": "Juror 3",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/yxMxBvM0PZwu7YXQamG0kFwt9DZ.jpg",
+      "id": "5248"
+    },
+    {
+      "name": "Э. Г. Маршалл",
+      "character": "Juror 4",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/psimeVoRk64DV7UNm4cLQylRFy2.jpg",
+      "id": "5249"
+    },
+    {
+      "name": "Jack Klugman",
+      "character": "Juror 5",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/oJxveOxlunD8C9OczqKeryU0k6D.jpg",
+      "id": "5250"
+    },
+    {
+      "name": "Edward Binns",
+      "character": "Juror 6",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/s3fk0d0fwuj6bDVP9AcPUXFsGmK.jpg",
+      "id": "2651"
+    },
+    {
+      "name": "Джек Уорден",
+      "character": "Juror 7",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/hSShXiYMfRpMByaB5euZ59qCKN.jpg",
+      "id": "5251"
+    },
+    {
+      "name": "Генри Фонда",
+      "character": "Juror 8",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/6wXWsqSXF3wCsGcwVqiszy6RX9X.jpg",
+      "id": "4958"
+    },
+    {
+      "name": "Joseph Sweeney",
+      "character": "Juror 9",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/yUDYdj0yk9dvDAR4dKHvK9zRpDv.jpg",
+      "id": "5252"
+    },
+    {
+      "name": "Ed Begley",
+      "character": "Juror 10",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/AuPwjGgPphtfQOShb8pTtp5W7Ft.jpg",
+      "id": "39816"
+    }
+  ]
+}

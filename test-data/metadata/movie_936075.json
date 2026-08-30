@@ -1,0 +1,157 @@
+{
+  "title": "Майкл",
+  "originalTitle": "Michael",
+  "description": "Майкл Джексон – один из самых успешных артистов всех времён, а его песни изменили мир навсегда. Но до того, как стать королем поп-музыки, собирающим стадионы поклонников, он был просто... Майклом. И легендарнее его музыки лишь его жизнь – полная взлётов и падений на пути к головокружительной славе.",
+  "posterUrl": "https://image.tmdb.org/t/p/w342/AsPFMI3PhgCsraMq7RmMJwFQh2b.jpg",
+  "backgroundUrl": "https://image.tmdb.org/t/p/w1280/xBT0oNq6rsTFv4SxG5uGRIEOrq6.jpg",
+  "genres": [
+    {
+      "id": 10402,
+      "name": "музыка"
+    },
+    {
+      "id": 18,
+      "name": "драма"
+    }
+  ],
+  "keywords": [
+    {
+      "id": 380,
+      "name": "sibling relationship"
+    },
+    {
+      "id": 516,
+      "name": "child abuse"
+    },
+    {
+      "id": 1228,
+      "name": "1970s"
+    },
+    {
+      "id": 2299,
+      "name": "abusive father"
+    },
+    {
+      "id": 3734,
+      "name": "ambition"
+    },
+    {
+      "id": 5565,
+      "name": "biography"
+    },
+    {
+      "id": 10229,
+      "name": "singer"
+    },
+    {
+      "id": 15060,
+      "name": "period drama"
+    },
+    {
+      "id": 156137,
+      "name": "music history"
+    },
+    {
+      "id": 156306,
+      "name": "price of fame"
+    },
+    {
+      "id": 163133,
+      "name": "singer-songwriter"
+    },
+    {
+      "id": 191458,
+      "name": "rise to fame"
+    },
+    {
+      "id": 208289,
+      "name": "1980s"
+    },
+    {
+      "id": 208992,
+      "name": "1960s"
+    },
+    {
+      "id": 283297,
+      "name": "music"
+    },
+    {
+      "id": 340972,
+      "name": "biographical drama"
+    },
+    {
+      "id": 345509,
+      "name": "music drama"
+    },
+    {
+      "id": 360939,
+      "name": "biopic"
+    }
+  ],
+  "releaseDate": "2026",
+  "director": "Антуан Фукуа",
+  "directorImageUrl": "https://image.tmdb.org/t/p/w185/h58HRBCQOtWIR8zMqOIVgkHjssU.jpg",
+  "directorId": "20907",
+  "cast": [
+    {
+      "name": "Джаафар Джексон",
+      "character": "Michael",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/tVSzFjQxOrLOcvnzFto0772Q9Bw.jpg",
+      "id": "3898497"
+    },
+    {
+      "name": "Колман Доминго",
+      "character": "Joseph Jackson",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/t0cgfvtA7Thxnrtj5baRi656zlc.jpg",
+      "id": "91671"
+    },
+    {
+      "name": "Ниа Лонг",
+      "character": "Katherine Jackson",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/heVQkCGKUuKKRjRJaZIBrEKGhYA.jpg",
+      "id": "9781"
+    },
+    {
+      "name": "Жулиано Вальди",
+      "character": "Young Michael",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/1rQYmcxdPD1IwHpa78DcfVEu1EN.jpg",
+      "id": "4487890"
+    },
+    {
+      "name": "Кейлин Даррел Джонс",
+      "character": "Bill Bray",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/4wDO3Zt9KJg9CARCEgjuVdhWa8x.jpg",
+      "id": "1990676"
+    },
+    {
+      "name": "Майлз Теллер",
+      "character": "John Branca",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/kDf3sW3USjEBDQ3Ua7lbwOfwty6.jpg",
+      "id": "996701"
+    },
+    {
+      "name": "Лоренц Тейт",
+      "character": "Berry Gordy",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/6BWajF1sbuwsvXHmdQDxP5MfZ5R.jpg",
+      "id": "18291"
+    },
+    {
+      "name": "Лора Хэрриер",
+      "character": "Suzanne de Passe",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/hYS8z1DxP6jvsBNXMRALiSI3nhw.jpg",
+      "id": "1606394"
+    },
+    {
+      "name": "Майк Майерс",
+      "character": "Walter Yetnikoff",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/gjfDl52Kk02MPgUYFjs9bOy33OY.jpg",
+      "id": "12073"
+    },
+    {
+      "name": "Кендрик Сэмпсон",
+      "character": "Quincy Jones",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/AoZGTujNZEfabaXR5kUwmDUmxfe.jpg",
+      "id": "1446825"
+    }
+  ]
+}

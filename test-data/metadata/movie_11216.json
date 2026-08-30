@@ -1,0 +1,111 @@
+{
+  "title": "Новый кинотеатр «Парадизо»",
+  "originalTitle": "Nuovo Cinema Paradiso",
+  "subtitle": "Nuovo Cinema Paradiso",
+  "description": "Это рассказ о счастливых днях, когда итальянское кино ещё не знало о том, что такое «кризис итальянского кинематографа». В центре разделённой как бы на три части картины — сицилийский мальчишка Сальваторе.",
+  "posterUrl": "https://image.tmdb.org/t/p/w342/vm0Ily4MkZTQCvoMeVnztFjdldG.jpg",
+  "backgroundUrl": "https://image.tmdb.org/t/p/w1280/zoVeIgKzGJzpdG6Gwnr7iOYfIMU.jpg",
+  "rating": "8,4",
+  "runtime": 124,
+  "genres": [
+    {
+      "id": 18,
+      "name": "драма"
+    },
+    {
+      "id": 10749,
+      "name": "мелодрама"
+    }
+  ],
+  "productionCompanies": [
+    {
+      "id": 45693,
+      "name": "Cristaldifilm"
+    },
+    {
+      "id": 7110,
+      "name": "Les Films Ariane"
+    },
+    {
+      "id": 155418,
+      "name": "Rai 3",
+      "logoUrl": "https://image.tmdb.org/t/p/w200/heXoK24E57zJiXZvp76Ous4C5cR.png"
+    },
+    {
+      "id": 356,
+      "name": "TF1 Films Production",
+      "logoUrl": "https://image.tmdb.org/t/p/w200/9tW5wZEGotn1Ei5pErA88m47XiD.png"
+    },
+    {
+      "id": 185850,
+      "name": "Forum Picture"
+    }
+  ],
+  "releaseDate": "1988-11-17",
+  "tagline": "«Праздник молодости, дружбы и вечной магии кино»",
+  "director": "Джузеппе Торнаторе",
+  "directorImageUrl": "https://image.tmdb.org/t/p/w185/t5PurTT9QuvV5Xs9Q2JzVui5oqF.jpg",
+  "directorId": "65314",
+  "cast": [
+    {
+      "name": "Philippe Noiret",
+      "character": "Alfredo",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/mWPa6A0JK3tfVRQDIzCQGEao19B.jpg",
+      "id": "24366"
+    },
+    {
+      "name": "Жак Перрен",
+      "character": "Salvatore 'Totò' Di Vita (adult)",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/lGbDfSdDgFg3QHgungWIDsV9uh7.jpg",
+      "id": "20030"
+    },
+    {
+      "name": "Marco Leonardi",
+      "character": "Salvatore 'Totò' Di Vita (teen)",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/5VVhO9rPvRgKsZME2gZKtG9WgWD.jpg",
+      "id": "27643"
+    },
+    {
+      "name": "Salvatore Cascio",
+      "character": "Salvatore 'Totò' Di Vita (child)",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/7t59ZGfLUv30DBgoUcqXXhK0t6Y.jpg",
+      "id": "68635"
+    },
+    {
+      "name": "Agnese Nano",
+      "character": "Elena Mendola (teen) / Elena's daughter (in Director's cut)",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/gUbvX3dm8rIq58phY8jSl3oPgUe.jpg",
+      "id": "120152"
+    },
+    {
+      "name": "Antonella Attili",
+      "character": "Maria Di Vita (young)",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/hoLib8DJzJ7fPQhtUjmo5n4ntu0.jpg",
+      "id": "70083"
+    },
+    {
+      "name": "Pupella Maggio",
+      "character": "Maria Di Vita (aged)",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/p6ah7IoZ2yFEWp9UMjAHtsT2t3O.jpg",
+      "id": "25780"
+    },
+    {
+      "name": "Brigitte Fossey",
+      "character": "Elena Mendola (adult)",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/ann78L7w5YBJDG4NzCifq4mzakK.jpg",
+      "id": "1959"
+    },
+    {
+      "name": "Enzo Cannavale",
+      "character": "Spaccafico",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/qKTBcs4UEwBhZIeYBpVcDjZVJKg.jpg",
+      "id": "52657"
+    },
+    {
+      "name": "Isa Danieli",
+      "character": "Anna",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/xUETwTcqaEdc4jEO5JzZBxbrGsA.jpg",
+      "id": "1014911"
+    }
+  ]
+}

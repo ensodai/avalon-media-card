@@ -1,0 +1,212 @@
+{
+  "title": "Форрест Гамп",
+  "originalTitle": "Forrest Gump",
+  "description": "Сидя на автобусной остановке, Форрест Гамп — не очень умный, но добрый и открытый парень — рассказывает случайным встречным историю своей необыкновенной жизни. С самого малолетства парень страдал от заболевания ног, соседские мальчишки дразнили его, но в один прекрасный день Форрест открыл в себе невероятные способности к бегу. Подруга детства Дженни всегда его поддерживала и защищала, но вскоре дороги их разошлись.",
+  "posterUrl": "https://image.tmdb.org/t/p/w342/ejDjdjHHE1T0T7Bo8Ghj2y8gR02.jpg",
+  "backgroundUrl": "https://image.tmdb.org/t/p/w1280/66Kn4XWhkuPkJxOJyPEx4U2CUfN.jpg",
+  "genres": [
+    {
+      "id": 35,
+      "name": "комедия"
+    },
+    {
+      "id": 18,
+      "name": "драма"
+    },
+    {
+      "id": 10749,
+      "name": "мелодрама"
+    }
+  ],
+  "keywords": [
+    {
+      "id": 422,
+      "name": "vietnam veteran"
+    },
+    {
+      "id": 447,
+      "name": "post-traumatic stress disorder (ptsd)"
+    },
+    {
+      "id": 458,
+      "name": "hippie"
+    },
+    {
+      "id": 521,
+      "name": "washington dc, usa"
+    },
+    {
+      "id": 613,
+      "name": "new year's eve"
+    },
+    {
+      "id": 641,
+      "name": "single parent"
+    },
+    {
+      "id": 791,
+      "name": "mentally disabled"
+    },
+    {
+      "id": 818,
+      "name": "based on novel or book"
+    },
+    {
+      "id": 828,
+      "name": "waitress"
+    },
+    {
+      "id": 840,
+      "name": "usa president"
+    },
+    {
+      "id": 895,
+      "name": "optimism"
+    },
+    {
+      "id": 970,
+      "name": "parent child relationship"
+    },
+    {
+      "id": 1228,
+      "name": "1970s"
+    },
+    {
+      "id": 1646,
+      "name": "autism"
+    },
+    {
+      "id": 1803,
+      "name": "drug addiction"
+    },
+    {
+      "id": 2075,
+      "name": "alabama"
+    },
+    {
+      "id": 2957,
+      "name": "vietnam war"
+    },
+    {
+      "id": 4243,
+      "name": "black panther party"
+    },
+    {
+      "id": 5709,
+      "name": "bus stop"
+    },
+    {
+      "id": 6054,
+      "name": "friendship"
+    },
+    {
+      "id": 10235,
+      "name": "family relationships"
+    },
+    {
+      "id": 14569,
+      "name": "chameleon"
+    },
+    {
+      "id": 14768,
+      "name": "single mother"
+    },
+    {
+      "id": 162365,
+      "name": "military"
+    },
+    {
+      "id": 181557,
+      "name": "anti war protest"
+    },
+    {
+      "id": 208992,
+      "name": "1960s"
+    },
+    {
+      "id": 230588,
+      "name": "simpleton"
+    },
+    {
+      "id": 231401,
+      "name": "college american football"
+    },
+    {
+      "id": 240237,
+      "name": "mother son relationship"
+    },
+    {
+      "id": 260872,
+      "name": "america"
+    },
+    {
+      "id": 329716,
+      "name": "feel-good"
+    }
+  ],
+  "releaseDate": "1994",
+  "director": "Роберт Земекис",
+  "directorImageUrl": "https://image.tmdb.org/t/p/w185/lPYDQ5LYNJ12rJZENtyASmVZ1Ql.jpg",
+  "directorId": "24",
+  "cast": [
+    {
+      "name": "Том Хэнкс",
+      "character": "Forrest Gump",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/oFvZoKI6lvU03n4YoNGAll9rkas.jpg",
+      "id": "31"
+    },
+    {
+      "name": "Робин Райт",
+      "character": "Jenny Curran",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/d3rIv0y2p0jMsQ7ViR7O1606NZa.jpg",
+      "id": "32"
+    },
+    {
+      "name": "Гэри Синиз",
+      "character": "Lieutenant Dan Taylor",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/olRjiV8ZhBixQiTvrGwXhpVXxsV.jpg",
+      "id": "33"
+    },
+    {
+      "name": "Салли Филд",
+      "character": "Mrs. Gump",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/iMeq1j9Xwvaf6PbTJ0FQz69fpuA.jpg",
+      "id": "35"
+    },
+    {
+      "name": "Майкелти Уильямсон",
+      "character": "Bubba Blue",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/dR16zD9AjnHWbeN5OVmJWE0vSax.jpg",
+      "id": "34"
+    },
+    {
+      "name": "Michael Conner Humphreys",
+      "character": "Young Forrest Gump",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/irYRs3COggVHg91jL3CrlCIWmnx.jpg",
+      "id": "37821"
+    },
+    {
+      "name": "Hanna Hall",
+      "character": "Young Jenny Curran",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/xkZ2Hwz1QLXvQCgGlWgVgx00Rtd.jpg",
+      "id": "204997"
+    },
+    {
+      "name": "Хейли Джоэл Осмент",
+      "character": "Forrest Junior",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/2rnMTQB9Q3vLtmRyyUaenVwSgfY.jpg",
+      "id": "9640"
+    },
+    {
+      "name": "Шиван Фэллон Хоган",
+      "character": "School Bus Driver",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/5OExagnRsUcOYLMPTSrv4x2G95R.jpg",
+      "id": "6751"
+    },
+    {
+      "name": "Rebecca Williams",
+      "character": "Nurse at Park Bench",
+      "id": "3817610"
+    }
+  ]
+}

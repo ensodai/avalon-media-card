@@ -1,0 +1,181 @@
+{
+  "title": "Список Шиндлера",
+  "originalTitle": "Schindler's List",
+  "description": "Оскар Шиндлер, член национал-социалистической немецкой рабочей партии и преуспевающий промышленник, во время Второй мировой войны спасает евреев от ужасной смерти в концлагерях.",
+  "posterUrl": "https://image.tmdb.org/t/p/w342/dB7edCQIuExWErWXFVqR7ORnZRS.jpg",
+  "backgroundUrl": "https://image.tmdb.org/t/p/w1280/zb6fM1CX41D9rF9hdgclu0peUmy.jpg",
+  "genres": [
+    {
+      "id": 18,
+      "name": "драма"
+    },
+    {
+      "id": 36,
+      "name": "история"
+    },
+    {
+      "id": 10752,
+      "name": "военный"
+    }
+  ],
+  "keywords": [
+    {
+      "id": 1382,
+      "name": "factory"
+    },
+    {
+      "id": 1631,
+      "name": "concentration camp"
+    },
+    {
+      "id": 1701,
+      "name": "hero"
+    },
+    {
+      "id": 1739,
+      "name": "holocaust (shoah)"
+    },
+    {
+      "id": 1799,
+      "name": "ss (nazi schutzstaffel)"
+    },
+    {
+      "id": 1956,
+      "name": "world war ii"
+    },
+    {
+      "id": 2394,
+      "name": "ghetto"
+    },
+    {
+      "id": 2433,
+      "name": "jew persecution"
+    },
+    {
+      "id": 2446,
+      "name": "kraków, poland"
+    },
+    {
+      "id": 2450,
+      "name": "auschwitz-birkenau concentration camp"
+    },
+    {
+      "id": 2456,
+      "name": "industrialist"
+    },
+    {
+      "id": 2652,
+      "name": "nazi"
+    },
+    {
+      "id": 3599,
+      "name": "defense industry"
+    },
+    {
+      "id": 5565,
+      "name": "biography"
+    },
+    {
+      "id": 9672,
+      "name": "based on true story"
+    },
+    {
+      "id": 12995,
+      "name": "historical fiction"
+    },
+    {
+      "id": 12999,
+      "name": "black and white"
+    },
+    {
+      "id": 13008,
+      "name": "train"
+    },
+    {
+      "id": 15060,
+      "name": "period drama"
+    },
+    {
+      "id": 21747,
+      "name": "poland"
+    },
+    {
+      "id": 156075,
+      "name": "evil"
+    },
+    {
+      "id": 192772,
+      "name": "historical drama"
+    },
+    {
+      "id": 325799,
+      "name": "disheartening"
+    }
+  ],
+  "releaseDate": "1993",
+  "director": "Стивен Спилберг",
+  "directorImageUrl": "https://image.tmdb.org/t/p/w185/tZxcg19YQ3e8fJ0pOs7hjlnmmr6.jpg",
+  "directorId": "488",
+  "cast": [
+    {
+      "name": "Лиам Нисон",
+      "character": "Oskar Schindler",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/sRLev3wJioBgun3ZoeAUFpkLy0D.jpg",
+      "id": "3896"
+    },
+    {
+      "name": "Бен Кингсли",
+      "character": "Itzhak Stern",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/k3Dmu49B2akwDvgqy52MOxznI59.jpg",
+      "id": "2282"
+    },
+    {
+      "name": "Рэйф Файнс",
+      "character": "Amon Goeth",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/tJr9GcmGNHhLVVEH3i7QYbj6hBi.jpg",
+      "id": "5469"
+    },
+    {
+      "name": "Кэролайн Гудолл",
+      "character": "Emilie Schindler",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/4cagGtMqACvkuw6Llq8Li8UJ1AR.jpg",
+      "id": "6692"
+    },
+    {
+      "name": "Джонатан Сегал",
+      "character": "Poldek Pfefferberg",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/waxNDsgfw7CXXO3LH8EdKi8z7VV.jpg",
+      "id": "6693"
+    },
+    {
+      "name": "Эмбет Дэвидц",
+      "character": "Helen Hirsch",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/nwsdu9lOsKJ5v9RwOCc7kAiuxSO.jpg",
+      "id": "6368"
+    },
+    {
+      "name": "Малгожата Гебел",
+      "character": "Viktoria Klonowska",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/7MYoXZKIuCAfMzTs1HBkaLB03z8.jpg",
+      "id": "6694"
+    },
+    {
+      "name": "Шмуэль Леви",
+      "character": "Wilek Chilowicz",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/eZDmJaS0Z0Fj2377wBul9xmm27S.jpg",
+      "id": "6695"
+    },
+    {
+      "name": "Марк Иванир",
+      "character": "Marcel Goldberg",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/1kxGAsP4YRiR7LgmlM9KgtekMLk.jpg",
+      "id": "6696"
+    },
+    {
+      "name": "Béatrice Macola",
+      "character": "Ingrid",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/dXdt4Ti4mbJilnsm0wtvwb13eny.jpg",
+      "id": "6697"
+    }
+  ]
+}

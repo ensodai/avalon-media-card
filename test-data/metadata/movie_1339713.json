@@ -1,0 +1,141 @@
+{
+  "title": "Обсессия",
+  "originalTitle": "Obsession",
+  "description": "Безнадёжный романтик Беар давно и безответно влюблён в красавицу Ники. Однажды в магазине эзотерики он находит странную безделушку — волшебную палочку. Если её сломать, исполнится твоё заветное желание. Беар загадывает, чтобы Ники любила его больше всех на свете. И девушка правда в него влюбляется. Однако его счастью быстро приходит конец. Парень замечает, что Ники буквально им одержима, а её знаки внимания становятся всё более пугающими. Оказывается, желание парня исполнилось, но совсем не так, как он мечтал.",
+  "posterUrl": "https://image.tmdb.org/t/p/w342/cdRHtfzxbpjxD5yOyFrRummb0yO.jpg",
+  "backgroundUrl": "https://image.tmdb.org/t/p/w1280/r013C8Me2bZ0pUi0OWJRh0h7MzT.jpg",
+  "genres": [
+    {
+      "id": 27,
+      "name": "ужасы"
+    },
+    {
+      "id": 53,
+      "name": "триллер"
+    }
+  ],
+  "keywords": [
+    {
+      "id": 1523,
+      "name": "obsession"
+    },
+    {
+      "id": 4896,
+      "name": "wish"
+    },
+    {
+      "id": 6152,
+      "name": "supernatural"
+    },
+    {
+      "id": 9712,
+      "name": "possession"
+    },
+    {
+      "id": 10048,
+      "name": "unrequited love"
+    },
+    {
+      "id": 33494,
+      "name": "couple"
+    },
+    {
+      "id": 214655,
+      "name": "absurdism"
+    },
+    {
+      "id": 233130,
+      "name": "self-harm"
+    },
+    {
+      "id": 256183,
+      "name": "supernatural horror"
+    },
+    {
+      "id": 272553,
+      "name": "psychological"
+    },
+    {
+      "id": 281237,
+      "name": "independent film"
+    },
+    {
+      "id": 295907,
+      "name": "psychological horror"
+    },
+    {
+      "id": 304115,
+      "name": "cursed object"
+    },
+    {
+      "id": 325786,
+      "name": "compassionate"
+    }
+  ],
+  "releaseDate": "2026",
+  "director": "Карри Баркер",
+  "directorImageUrl": "https://image.tmdb.org/t/p/w185/A16CxGKlkQYryoxGpxzKj4Wxk83.jpg",
+  "directorId": "2381985",
+  "cast": [
+    {
+      "name": "Майкл Джонстон",
+      "character": "Bear",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/fbpcCkBzu43kMdlXxEAMuLhseL8.jpg",
+      "id": "1561370"
+    },
+    {
+      "name": "Инде Наварретт",
+      "character": "Nikki",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/8mYBaOximzwBgXOYRzbS6eUnoMX.jpg",
+      "id": "2638587"
+    },
+    {
+      "name": "Купер Томлинсон",
+      "character": "Ian",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/vBMQbYT1DyWPCUp11dIiqZR9zhd.jpg",
+      "id": "2823609"
+    },
+    {
+      "name": "Меган Лоулесс",
+      "character": "Sarah",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/6qW63YEgB1qro01sM7T2HvhtFkh.jpg",
+      "id": "1519711"
+    },
+    {
+      "name": "Энди Рихтер",
+      "character": "Carter",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/5Qr7N6TzC8cI0ULxDm6EC5GpZ4C.jpg",
+      "id": "28637"
+    },
+    {
+      "name": "Хейли Фицджеральд",
+      "character": "Viola",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/xbKqZ5Epz0IaSCPLXDnByDACw2X.jpg",
+      "id": "3095494"
+    },
+    {
+      "name": "Дэрин Тондер",
+      "character": "Harry",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/bD7Y9T7Y6XwDXjGJ8Suabyt1ZGo.jpg",
+      "id": "1352948"
+    },
+    {
+      "name": "Энтони Павоне",
+      "character": "Reggie",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/hxiqY9gHgwXGYnXSD11Wacm5Nmi.jpg",
+      "id": "4030428"
+    },
+    {
+      "name": "Justice",
+      "character": "Joe",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/YFxKf2HHJvyavQf54NO5wXFOJX.jpg",
+      "id": "3592074"
+    },
+    {
+      "name": "Anthony Casabianca",
+      "character": "Chris",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/xNJUKqKQhMeyZ74erQvETr3AqV0.jpg",
+      "id": "5618033"
+    }
+  ]
+}

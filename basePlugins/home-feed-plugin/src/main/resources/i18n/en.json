@@ -1,0 +1,14 @@
+{
+  "sidebar.home": "Home",
+  "sidebar.movies": "Movies",
+  "sidebar.tv_shows": "TV Shows",
+  "sidebar.trends": "Trending",
+  "sidebar.search": "Search",
+  "search.placeholder": "Start typing a title...",
+  "search.results": "Search Results",
+  "search.error": "Search error",
+  "media.tv": "TV Show",
+  "media.movie": "Movie",
+  "media.media": "Media",
+  "feed.error_loading": "Loading error"
+}

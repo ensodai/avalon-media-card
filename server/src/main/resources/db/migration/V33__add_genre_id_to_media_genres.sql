@@ -1,0 +1,2 @@
+ALTER TABLE media_genres
+    ADD COLUMN genre_id INTEGER NOT NULL DEFAULT 0;

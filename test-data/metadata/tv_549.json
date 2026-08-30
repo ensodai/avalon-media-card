@@ -1,0 +1,319 @@
+{
+  "title": "Закон и порядок",
+  "originalTitle": "Law & Order",
+  "subtitle": "Law & Order",
+  "description": "В системе уголовного судопроизводства обвинение представляют две независимые, равные по значению инстанции — полиция, расследующая преступления, и прокурор, представляющий дело в суде.",
+  "posterUrl": "https://image.tmdb.org/t/p/w342/6IfLWdBXDuktBo8oVjiWxodSHCV.jpg",
+  "backgroundUrl": "https://image.tmdb.org/t/p/w1280/tc7canPSAn2X14hYi6Rl3gZm1o4.jpg",
+  "rating": "7,3",
+  "genres": [
+    {
+      "id": 80,
+      "name": "криминал"
+    },
+    {
+      "id": 18,
+      "name": "драма"
+    }
+  ],
+  "productionCompanies": [
+    {
+      "id": 25545,
+      "name": "Wolf Entertainment",
+      "logoUrl": "https://image.tmdb.org/t/p/w200/8Lqf0okunSPAwBBL08Ua1IRe1xi.png"
+    },
+    {
+      "id": 26727,
+      "name": "Universal Television",
+      "logoUrl": "https://image.tmdb.org/t/p/w200/jeTxdjXhzgKZyLr3l9MllkTn3fy.png"
+    },
+    {
+      "id": 8301,
+      "name": "Universal Media Studios",
+      "logoUrl": "https://image.tmdb.org/t/p/w200/zrcVDabl14MNfPwxL8DC2IyR12t.png"
+    }
+  ],
+  "releaseDate": "1990-09-13",
+  "tagline": "",
+  "director": "Питер Янковски",
+  "directorId": "1218298",
+  "cast": [
+    {
+      "name": "Рид Скотт",
+      "character": "Vincent Riley",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/kBAeDUDA7XJRXFLGNALlpE5d3lA.jpg",
+      "id": "81316"
+    },
+    {
+      "name": "Мора Тирни",
+      "character": "Jessica Brady",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/4BCrwdHdC4iRSDimvkoYaXg2qki.jpg",
+      "id": "16307"
+    },
+    {
+      "name": "Тони Голдуин",
+      "character": "Nicholas Baxter",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/A3hXimbzDtFxQ1PXNo8gG7RZeN4.jpg",
+      "id": "3417"
+    },
+    {
+      "name": "Хью Дэнси",
+      "character": "Nolan Price",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/6UIiS3nxdNTbIo0G2kFNXpcDKhE.jpg",
+      "id": "12791"
+    },
+    {
+      "name": "Оделя Алеви",
+      "character": "Samantha Maroun",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/26jv3dcS5Us8Ut13Tu9PmvT7uPh.jpg",
+      "id": "1639904"
+    }
+  ],
+  "numberOfSeasons": 26,
+  "numberOfEpisodes": 545,
+  "status": "Идет",
+  "network": "NBC",
+  "seasons": [
+    {
+      "id": "1684",
+      "seasonNumber": 0,
+      "name": "Спецматериалы",
+      "overview": "",
+      "posterUrl": "https://image.tmdb.org/t/p/w342/vVUVEqs0KwplqHvv2GyCj2tpMSr.jpg",
+      "episodeCount": 7
+    },
+    {
+      "id": "1664",
+      "seasonNumber": 1,
+      "name": "Сезон 1",
+      "overview": "",
+      "posterUrl": "https://image.tmdb.org/t/p/w342/hGrkBU5p60zZj9bMByo9cegZfhl.jpg",
+      "episodeCount": 22,
+      "airDate": "1990-09-13"
+    },
+    {
+      "id": "1665",
+      "seasonNumber": 2,
+      "name": "Сезон 2",
+      "overview": "",
+      "posterUrl": "https://image.tmdb.org/t/p/w342/nykyEGoMsVPnyrnoUL0g93YJPQZ.jpg",
+      "episodeCount": 22,
+      "airDate": "1991-09-17"
+    },
+    {
+      "id": "1666",
+      "seasonNumber": 3,
+      "name": "Сезон 3",
+      "overview": "",
+      "posterUrl": "https://image.tmdb.org/t/p/w342/emKji2D1tLAJsFad84ENA4PufI5.jpg",
+      "episodeCount": 22,
+      "airDate": "1992-09-23"
+    },
+    {
+      "id": "1667",
+      "seasonNumber": 4,
+      "name": "Сезон 4",
+      "overview": "",
+      "posterUrl": "https://image.tmdb.org/t/p/w342/fiSP98l9G7zjC0sBWwQ02Nmhpub.jpg",
+      "episodeCount": 22,
+      "airDate": "1993-09-15"
+    },
+    {
+      "id": "1668",
+      "seasonNumber": 5,
+      "name": "Сезон 5",
+      "overview": "",
+      "posterUrl": "https://image.tmdb.org/t/p/w342/v8yqfobOp6jSDomgcOnotfsGM2i.jpg",
+      "episodeCount": 23,
+      "airDate": "1994-09-21"
+    },
+    {
+      "id": "1669",
+      "seasonNumber": 6,
+      "name": "Сезон 6",
+      "overview": "",
+      "posterUrl": "https://image.tmdb.org/t/p/w342/5GaJYO3BXCUaHKXr9e7wC1IARwo.jpg",
+      "episodeCount": 23,
+      "airDate": "1995-09-20"
+    },
+    {
+      "id": "1671",
+      "seasonNumber": 7,
+      "name": "Сезон 7",
+      "overview": "",
+      "posterUrl": "https://image.tmdb.org/t/p/w342/mEGBAiPkZcp4GgPv7CQmFhOEWrK.jpg",
+      "episodeCount": 23,
+      "airDate": "1996-09-18"
+    },
+    {
+      "id": "1670",
+      "seasonNumber": 8,
+      "name": "Сезон 8",
+      "overview": "",
+      "posterUrl": "https://image.tmdb.org/t/p/w342/caieRmySO32CyyoPydhxGh7iN33.jpg",
+      "episodeCount": 24,
+      "airDate": "1997-09-24"
+    },
+    {
+      "id": "1672",
+      "seasonNumber": 9,
+      "name": "Сезон 9",
+      "overview": "",
+      "posterUrl": "https://image.tmdb.org/t/p/w342/OuntFFHJqftivArTHjnFu1jSPM.jpg",
+      "episodeCount": 24,
+      "airDate": "1998-09-23"
+    },
+    {
+      "id": "1673",
+      "seasonNumber": 10,
+      "name": "Сезон 10",
+      "overview": "",
+      "posterUrl": "https://image.tmdb.org/t/p/w342/fnYm6dcs1bmYvl3afnGxofsVgyw.jpg",
+      "episodeCount": 24,
+      "airDate": "1999-09-22"
+    },
+    {
+      "id": "1675",
+      "seasonNumber": 11,
+      "name": "Сезон 11",
+      "overview": "",
+      "posterUrl": "https://image.tmdb.org/t/p/w342/u5MyTy53EWtnsMQewECGfNDywme.jpg",
+      "episodeCount": 24,
+      "airDate": "2000-10-18"
+    },
+    {
+      "id": "1674",
+      "seasonNumber": 12,
+      "name": "Сезон 12",
+      "overview": "",
+      "posterUrl": "https://image.tmdb.org/t/p/w342/xAazzYBfFquWWqes5dozpQ0x4jW.jpg",
+      "episodeCount": 24,
+      "airDate": "2001-09-26"
+    },
+    {
+      "id": "1676",
+      "seasonNumber": 13,
+      "name": "Сезон 13",
+      "overview": "",
+      "posterUrl": "https://image.tmdb.org/t/p/w342/2DzgIJzKVY9OfYxRMJjJLIZRhfi.jpg",
+      "episodeCount": 24,
+      "airDate": "2002-10-02"
+    },
+    {
+      "id": "1677",
+      "seasonNumber": 14,
+      "name": "Сезон 14",
+      "overview": "",
+      "posterUrl": "https://image.tmdb.org/t/p/w342/26ByCQKroHuBs7ZgbkwHTsHvU77.jpg",
+      "episodeCount": 24,
+      "airDate": "2003-09-24"
+    },
+    {
+      "id": "1678",
+      "seasonNumber": 15,
+      "name": "Сезон 15",
+      "overview": "",
+      "posterUrl": "https://image.tmdb.org/t/p/w342/z07aBZ5euhdhl0hyzWhwU1mGsrN.jpg",
+      "episodeCount": 24,
+      "airDate": "2004-09-22"
+    },
+    {
+      "id": "1680",
+      "seasonNumber": 16,
+      "name": "Сезон 16",
+      "overview": "",
+      "posterUrl": "https://image.tmdb.org/t/p/w342/vo1hHZ1Bpt7XOYDqab7rqw5VTZL.jpg",
+      "episodeCount": 22,
+      "airDate": "2005-09-21"
+    },
+    {
+      "id": "1679",
+      "seasonNumber": 17,
+      "name": "Сезон 17",
+      "overview": "",
+      "posterUrl": "https://image.tmdb.org/t/p/w342/zjSZrjqz9f3n6XoPYpaIgzwDQT3.jpg",
+      "episodeCount": 22,
+      "airDate": "2006-09-22"
+    },
+    {
+      "id": "1682",
+      "seasonNumber": 18,
+      "name": "Сезон 18",
+      "overview": "",
+      "posterUrl": "https://image.tmdb.org/t/p/w342/q0nVi8xzk7DHpeFnQ678f8asYxC.jpg",
+      "episodeCount": 18,
+      "airDate": "2008-01-02"
+    },
+    {
+      "id": "1681",
+      "seasonNumber": 19,
+      "name": "Сезон 19",
+      "overview": "",
+      "posterUrl": "https://image.tmdb.org/t/p/w342/fIIoj3EzsHcgF9Yd0ISWKinmLX8.jpg",
+      "episodeCount": 22,
+      "airDate": "2008-11-05"
+    },
+    {
+      "id": "1683",
+      "seasonNumber": 20,
+      "name": "Сезон 20",
+      "overview": "",
+      "posterUrl": "https://image.tmdb.org/t/p/w342/yoISWagCsb16Hnoi16Ot1nur2FV.jpg",
+      "episodeCount": 23,
+      "airDate": "2009-09-25"
+    },
+    {
+      "id": "219379",
+      "seasonNumber": 21,
+      "name": "Сезон 21",
+      "overview": "",
+      "posterUrl": "https://image.tmdb.org/t/p/w342/l7qr5Q5iJXeja9iDmdXagoUZ0Vm.jpg",
+      "episodeCount": 10,
+      "airDate": "2022-02-24"
+    },
+    {
+      "id": "299108",
+      "seasonNumber": 22,
+      "name": "Сезон 22",
+      "overview": "",
+      "posterUrl": "https://image.tmdb.org/t/p/w342/77OPlbsvX3pzoFbyfpcE3GXMCod.jpg",
+      "episodeCount": 22,
+      "airDate": "2022-09-22"
+    },
+    {
+      "id": "366617",
+      "seasonNumber": 23,
+      "name": "Сезон 23",
+      "overview": "",
+      "posterUrl": "https://image.tmdb.org/t/p/w342/m9zTQr4TYS98UFSiA1k0mMfECPe.jpg",
+      "episodeCount": 13,
+      "airDate": "2024-01-18"
+    },
+    {
+      "id": "401571",
+      "seasonNumber": 24,
+      "name": "Сезон 24",
+      "overview": "",
+      "posterUrl": "https://image.tmdb.org/t/p/w342/6vFL8S6Cci8s7SHWXz60xOisGBC.jpg",
+      "episodeCount": 22,
+      "airDate": "2024-10-03"
+    },
+    {
+      "id": "467359",
+      "seasonNumber": 25,
+      "name": "Сезон 25",
+      "overview": "",
+      "posterUrl": "https://image.tmdb.org/t/p/w342/haJ9eHytVO3H3JooMJG1DiWwDNm.jpg",
+      "episodeCount": 21,
+      "airDate": "2025-09-25"
+    },
+    {
+      "id": "524281",
+      "seasonNumber": 26,
+      "name": "Сезон 26",
+      "overview": "",
+      "episodeCount": 1,
+      "airDate": "2026-10-08"
+    }
+  ]
+}

@@ -1,0 +1,3 @@
+ALTER TABLE user_settings ADD COLUMN poster_language VARCHAR(20) DEFAULT NULL;
+ALTER TABLE user_settings ADD COLUMN title_mode VARCHAR(20) DEFAULT 'LOCALIZED' NOT NULL;
+ALTER TABLE user_settings ADD COLUMN overview_language VARCHAR(20) DEFAULT NULL;

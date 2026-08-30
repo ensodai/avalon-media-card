@@ -1,0 +1,97 @@
+{
+  "title": "Психо",
+  "originalTitle": "Psycho",
+  "subtitle": "Psycho",
+  "description": "Мэрион Крэйн недовольна романом с разведённым мужчиной, который уделяет ей внимание только наездами. Поэтому девушка крадёт на работе крупную сумму и в спешке бежит из города. В мотеле, где она остановилась на ночь, ей приходится столкнуться с его молодым владельцем  — очень странным молодым человеком.",
+  "posterUrl": "https://image.tmdb.org/t/p/w342/9EyfrnAmZg9qru4RaEFqaeEVRWG.jpg",
+  "backgroundUrl": "https://image.tmdb.org/t/p/w1280/mufF1aYvwdpKerhq5R1YrVcbJLY.jpg",
+  "rating": "8,4",
+  "runtime": 109,
+  "genres": [
+    {
+      "id": 27,
+      "name": "ужасы"
+    },
+    {
+      "id": 53,
+      "name": "триллер"
+    },
+    {
+      "id": 9648,
+      "name": "детектив"
+    }
+  ],
+  "productionCompanies": [
+    {
+      "id": 10717,
+      "name": "Shamley Productions"
+    }
+  ],
+  "releaseDate": "1960-06-22",
+  "tagline": "«Фильм, который изменил кино навсегда»",
+  "director": "Альфред Хичкок",
+  "directorImageUrl": "https://image.tmdb.org/t/p/w185/108fiNM6poRieMg7RIqLJRxdAwG.jpg",
+  "directorId": "2636",
+  "cast": [
+    {
+      "name": "Энтони Перкинс",
+      "character": "Norman Bates",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/7FipKwmg2woHNvt5ATeXLBirHXs.jpg",
+      "id": "7301"
+    },
+    {
+      "name": "Джанет Ли",
+      "character": "Marion Crane",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/2dv9IqJEx31RSoH7xAHlJZXF5uB.jpg",
+      "id": "7302"
+    },
+    {
+      "name": "Vera Miles",
+      "character": "Lila Crane",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/9PDTsJnBfrAlvVPOBBFS3ehN8lD.jpg",
+      "id": "7303"
+    },
+    {
+      "name": "John Gavin",
+      "character": "Sam Loomis",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/n8vlG1PRtNzv6vlwjTNK7UnoKr0.jpg",
+      "id": "7304"
+    },
+    {
+      "name": "Мартин Болсам",
+      "character": "Milton Arbogast",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/2q7xs6j6vGll3pc9Mm6TUEvvwBf.jpg",
+      "id": "1936"
+    },
+    {
+      "name": "John McIntire",
+      "character": "Al Chambers",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/6t1VIejDVkfyspgrwlvgyrbDwWk.jpg",
+      "id": "53010"
+    },
+    {
+      "name": "Simon Oakland",
+      "character": "Fred Richman",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/wDytzjcJNp1P39mZ1hcRb8mcvvl.jpg",
+      "id": "14063"
+    },
+    {
+      "name": "Frank Albertson",
+      "character": "Tom Cassidy",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/sT9JZ8GgHgunZS4PWIDX6wMoIS7.jpg",
+      "id": "78902"
+    },
+    {
+      "name": "Patricia Hitchcock",
+      "character": "Caroline",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/bgMYy4SJLFcFex91an1D593pBY9.jpg",
+      "id": "12500"
+    },
+    {
+      "name": "Vaughn Taylor",
+      "character": "George Lowery",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/qX7jGnLyveGDBRy9nRgzBJFMqTH.jpg",
+      "id": "3641"
+    }
+  ]
+}

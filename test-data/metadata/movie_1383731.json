@@ -1,0 +1,105 @@
+{
+  "title": "Мститель",
+  "originalTitle": "Protector",
+  "description": "Спецагент Никки пробуждается на заброшенном заводе. Её дочь похищена, под ребром торчит нож, а выход преграждают лучшие головорезы огромного криминального синдиката. Её путь мести начинается здесь, и она не остановится, пока девочка не будет спасена.",
+  "posterUrl": "https://image.tmdb.org/t/p/w342/A2x5A6weMyB75Dua5BQCXT3lqkg.jpg",
+  "backgroundUrl": "https://image.tmdb.org/t/p/w1280/vpuPY4UziUCxv7gYYoaZQ3LX7to.jpg",
+  "genres": [
+    {
+      "id": 28,
+      "name": "боевик"
+    },
+    {
+      "id": 53,
+      "name": "триллер"
+    }
+  ],
+  "keywords": [
+    {
+      "id": 1930,
+      "name": "kidnapping"
+    },
+    {
+      "id": 11107,
+      "name": "rescue mission"
+    },
+    {
+      "id": 33482,
+      "name": "war hero"
+    },
+    {
+      "id": 298636,
+      "name": "underworld"
+    },
+    {
+      "id": 322496,
+      "name": "action"
+    }
+  ],
+  "releaseDate": "2026",
+  "director": "Adrian Grünberg",
+  "directorImageUrl": "https://image.tmdb.org/t/p/w185/ubhQE5F4orGeAuQYN1PoY8ZJc3n.jpg",
+  "directorId": "589402",
+  "cast": [
+    {
+      "name": "Милла Йовович",
+      "character": "Nikki Halstead",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/usWnHCzbADijULREZYSJ0qfM00y.jpg",
+      "id": "63"
+    },
+    {
+      "name": "Мэттью Модайн",
+      "character": "Colonel Joseph Lavelle",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/z974QEHL12qUvLyk6hlWGAmDgom.jpg",
+      "id": "8654"
+    },
+    {
+      "name": "Изабель Майерс",
+      "character": "Chloe Halstead",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/z2HXGhtvnlyrqb0gf77v8bBaS2U.jpg",
+      "id": "1485076"
+    },
+    {
+      "name": "Д.Б. Суини",
+      "character": "Captain Michaels",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/enY28APVRWfyHjGAkh6VCkYCWOA.jpg",
+      "id": "61962"
+    },
+    {
+      "name": "Дон Харви",
+      "character": "Sullivan",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/dc10W0hRNxrO0IcwgKOcsUajtOG.jpg",
+      "id": "1280"
+    },
+    {
+      "name": "Майкл Шталь-Дэвид",
+      "character": "Detective John Blake",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/97a0cwKFuAHXh8X0NlxSGDvBvxn.jpg",
+      "id": "51991"
+    },
+    {
+      "name": "Lydia Hull",
+      "character": "Detective Alexa Jane",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/w71z6hZrwLi0hBkPFxiUe60bgOI.jpg",
+      "id": "1042684"
+    },
+    {
+      "name": "Chase Kim",
+      "character": "Detective Jin Woo",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/qBCL3znRI2OMwfhDEAzU9InKzAx.jpg",
+      "id": "945041"
+    },
+    {
+      "name": "Бруклин Судано",
+      "character": "Detective Keyes",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/o2PF0n6rErXN3td33SDUKTwwoOr.jpg",
+      "id": "101091"
+    },
+    {
+      "name": "Гэбриэл Слойер",
+      "character": "The Chairman",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/hbAylhJM8jIQPxIfYSKmatOZwcB.jpg",
+      "id": "1745261"
+    }
+  ]
+}

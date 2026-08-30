@@ -1,0 +1,40 @@
+package org.ensodai.avalonmediacard.database
+
+import org.jetbrains.exposed.v1.core.Table
+
+val AllDatabaseTables: Array<Table> = arrayOf(
+    MediaCreditTable,
+    MediaCreditTranslationTable,
+    MediaDiscoverCacheTable,
+    MediaEpisodeTable,
+    MediaEpisodeTranslationTable,
+    MediaExternalIdTable,
+    MediaGenreDictionaryTable,
+    MediaGenreTable,
+    MediaImageTable,
+    MediaKeywordTable,
+    MediaTable,
+    MediaTranslationTable,
+    MediaPersonTable,
+    MediaPersonTranslationTable,
+    MediaSeasonTable,
+    MediaSeasonTranslationTable,
+    SystemSettingsTable,
+    SourceMappingTable,
+    UserAffinityVectorTable,
+    UserClickstreamTable,
+    UserCustomListItemTable,
+    UserCustomListTable,
+    UserEpisodeTable,
+    UserExternalAuthTable,
+    UserFeedSectionCacheTable,
+    UserIntegrationSettingsTable,
+    UserMediaBindingTable,
+    UserMediaSyncQueueTable,
+    UserMediaSyncStatusTable,
+    UserMovieTable,
+    UserShowProgressTable,
+    UserSettingsTable,
+    UserTable,
+    WidgetSettingsTable
+)

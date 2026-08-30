@@ -1,0 +1,5 @@
+{
+  "episodes.all_fmt": "%d серий (все)",
+  "episodes.count_of_total_fmt": "%1$d из %2$d серий",
+  "episode.ordinal_fmt": "Серия %d"
+}

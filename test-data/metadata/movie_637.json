@@ -1,0 +1,98 @@
+{
+  "title": "Жизнь прекрасна",
+  "originalTitle": "La vita è bella",
+  "subtitle": "La vita è bella",
+  "description": "Во время Второй мировой войны из Италии в концлагерь были отправлены евреи - отец с маленьким сыном. Жена-итальянка добровольно последовала за ними. В лагере отец сказал мальчику, что всё происходящее вокруг является большой интересной игрой за приз в виде настоящего танка. И этот классный приз достанется тому мальчику, который сможет не попасться на глаза надзирателям.",
+  "posterUrl": "https://image.tmdb.org/t/p/w342/seSip2zebLmHzDHfLstRF6yyqqq.jpg",
+  "backgroundUrl": "https://image.tmdb.org/t/p/w1280/6aNKD81RHR1DqUUa8kOZ1TBY1Lp.jpg",
+  "rating": "8,4",
+  "runtime": 116,
+  "genres": [
+    {
+      "id": 35,
+      "name": "комедия"
+    },
+    {
+      "id": 18,
+      "name": "драма"
+    }
+  ],
+  "productionCompanies": [
+    {
+      "id": 22117,
+      "name": "Mario e Vittorio Cecchi Gori - C.E.I.A.D.",
+      "logoUrl": "https://image.tmdb.org/t/p/w200/dF264wYYLmCwqawuTXor5xsEcCc.png"
+    },
+    {
+      "id": 370,
+      "name": "Melampo Cinematografica"
+    }
+  ],
+  "releaseDate": "1997-12-20",
+  "tagline": "«Незабываемая сказка, которая доказывает, что любовь, семья и воображение побеждают все»",
+  "director": "Roberto Benigni",
+  "directorImageUrl": "https://image.tmdb.org/t/p/w185/ba1Sg02XxCphu6E1dWDMAH1GzeE.jpg",
+  "directorId": "4818",
+  "cast": [
+    {
+      "name": "Roberto Benigni",
+      "character": "Guido",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/ba1Sg02XxCphu6E1dWDMAH1GzeE.jpg",
+      "id": "4818"
+    },
+    {
+      "name": "Nicoletta Braschi",
+      "character": "Dora",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/9IeE3Iz9HXZVTrvhjSCKlR4FLxB.jpg",
+      "id": "9235"
+    },
+    {
+      "name": "Джорджо Кантарини",
+      "character": "Giosué",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/1tKZHpVTYcw8EP3naVTZFlrOkhQ.jpg",
+      "id": "9236"
+    },
+    {
+      "name": "Giustino Durano",
+      "character": "Zio",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/5VbG50qZNUnpx6UW7594RUlX7SZ.jpg",
+      "id": "9237"
+    },
+    {
+      "name": "Sergio Bini Bustric",
+      "character": "Ferruccio",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/crnlLn1SxP2LqbsXNr8CQrvaiNc.jpg",
+      "id": "9239"
+    },
+    {
+      "name": "Marisa Paredes",
+      "character": "Dora's Mother",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/71esuRUCyeSyib35mTFPkR24zH7.jpg",
+      "id": "954"
+    },
+    {
+      "name": "Хорст Буххольц",
+      "character": "Doctor Lessing",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/9V38Di9T0qsjKBl2dR7sZMN1N0i.jpg",
+      "id": "5789"
+    },
+    {
+      "name": "Lidia Alfonsi",
+      "character": "Mrs. Guicciardini",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/85BrcBOeIcfV9XkV523wN0VGNRR.jpg",
+      "id": "9240"
+    },
+    {
+      "name": "Giuliana Lojodice",
+      "character": "School Principal",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/cACsY8JyWaR3WeX7w1D09YssXbq.jpg",
+      "id": "9242"
+    },
+    {
+      "name": "Amerigo Fontani",
+      "character": "Rodolfo",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/uRQn3gGNPGQzG6XNli1b1TiEu6G.jpg",
+      "id": "9238"
+    }
+  ]
+}

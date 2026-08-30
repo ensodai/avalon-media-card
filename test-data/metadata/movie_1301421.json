@@ -1,0 +1,107 @@
+{
+  "title": "Следствие ведут овечки",
+  "originalTitle": "The Sheep Detectives",
+  "subtitle": "The Sheep Detectives",
+  "description": "Каждый вечер пастух Джордж Харди собирает своё стадо и читает им детективные истории в уверенности, что овцы не понимают ни слова. Но однажды утром Джорджа находят мёртвым, и тогда стадо, проникшееся детективными сюжетами, решает взять расследование в свои копыта.",
+  "posterUrl": "https://image.tmdb.org/t/p/w342/cArYRS41NKc8kEJXrGZBWCmUmBG.jpg",
+  "backgroundUrl": "https://image.tmdb.org/t/p/w1280/a8uQvrplTkhGJQog6GZ6CqF8An6.jpg",
+  "rating": "7,9",
+  "runtime": 109,
+  "genres": [
+    {
+      "id": 35,
+      "name": "комедия"
+    },
+    {
+      "id": 10751,
+      "name": "семейный"
+    },
+    {
+      "id": 9648,
+      "name": "детектив"
+    }
+  ],
+  "productionCompanies": [
+    {
+      "id": 10163,
+      "name": "Working Title Films",
+      "logoUrl": "https://image.tmdb.org/t/p/w200/16KWBMmfPX0aJzDExDrPxSLj0Pg.png"
+    },
+    {
+      "id": 1973,
+      "name": "Three Strange Angels"
+    },
+    {
+      "id": 210099,
+      "name": "Amazon MGM Studios",
+      "logoUrl": "https://image.tmdb.org/t/p/w200/g5oRCNCi8kNVb8gEoSoIcqkhjmR.png"
+    }
+  ],
+  "releaseDate": "2026-04-30",
+  "tagline": "«Загадка для всего стада»",
+  "director": "Кайл Балда",
+  "directorImageUrl": "https://image.tmdb.org/t/p/w185/kjf5Thaf8s5vImSN7JUJkW6jKG8.jpg",
+  "directorId": "8023",
+  "cast": [
+    {
+      "name": "Хью Джекман",
+      "character": "George Hardy",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/4Xujtewxqt6aU0Y81tsS9gkjizk.jpg",
+      "id": "6968"
+    },
+    {
+      "name": "Николас Браун",
+      "character": "Officer Tim Derry",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/b2I6bZptuld3pjlVkYIy4DtMKGg.jpg",
+      "id": "85139"
+    },
+    {
+      "name": "Николас Галицин",
+      "character": "Elliot Matthews",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/hG4rH7eBMs117746bBOd8fUa4PA.jpg",
+      "id": "1425934"
+    },
+    {
+      "name": "Молли Гордон",
+      "character": "Rebecca Hampstead",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/5sMIadZ0CIL7IUCJHnqO4ZFsdEM.jpg",
+      "id": "1782117"
+    },
+    {
+      "name": "Джулия Луи-Дрейфус",
+      "character": "Lily (voice)",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/iEfHQNrVbVFesDPjdySom9nqsFg.jpg",
+      "id": "15886"
+    },
+    {
+      "name": "Брайан Крэнстон",
+      "character": "Sebastian (voice)",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/npIIZJGSrcJIJ6yHdmbqO6Jzo5I.jpg",
+      "id": "17419"
+    },
+    {
+      "name": "Крис О’Дауд",
+      "character": "Mopple (voice)",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/xhfgliN8DInDVBliPq7JDeKNCvz.jpg",
+      "id": "40477"
+    },
+    {
+      "name": "Реджина Холл",
+      "character": "Cloud (voice)",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/jiFZ4xNrvUUZLBHnJu71CvdN4kj.jpg",
+      "id": "35705"
+    },
+    {
+      "name": "Патрик Стюарт",
+      "character": "Sir Ritchfield (voice)",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/ufqtnLh3JJjPbEgxEag3MM5nZyv.jpg",
+      "id": "2387"
+    },
+    {
+      "name": "Белла Рамзи",
+      "character": "Zora (voice)",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/vDbgxc7RYawpB1wK7JDEj62j06H.jpg",
+      "id": "1668004"
+    }
+  ]
+}

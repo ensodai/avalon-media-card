@@ -1,0 +1,5 @@
+{
+  "plugin_name": "Lampac Adapter",
+  "plugin_description": "Gateway integration for Lampac NextGen (70+ balancers, JacRed torrents and HLS proxy)",
+  "lampac.provider_title": "Lampac (Online)"
+}

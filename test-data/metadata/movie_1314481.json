@@ -1,0 +1,121 @@
+{
+  "title": "Дьявол носит Prada 2",
+  "originalTitle": "The Devil Wears Prada 2",
+  "description": "Редактор модного журнала Миранда Пристли борется со своей бывшей помощницей Эмили Чарлтон, ныне руководительницей конкурирующего издания, за рекламные контракты. Пока печатные СМИ переживают кризис, Миранда готовится уйти на пенсию.",
+  "posterUrl": "https://image.tmdb.org/t/p/w342/rszWffz3SMz42OLvA6ks1pizRRY.jpg",
+  "backgroundUrl": "https://image.tmdb.org/t/p/w1280/Af907x5h9W1wVis8XrSd7ynTWuy.jpg",
+  "genres": [
+    {
+      "id": 35,
+      "name": "комедия"
+    },
+    {
+      "id": 18,
+      "name": "драма"
+    }
+  ],
+  "keywords": [
+    {
+      "id": 242,
+      "name": "new york city"
+    },
+    {
+      "id": 818,
+      "name": "based on novel or book"
+    },
+    {
+      "id": 9663,
+      "name": "sequel"
+    },
+    {
+      "id": 15479,
+      "name": "fashion"
+    },
+    {
+      "id": 176876,
+      "name": "fashion magazine"
+    },
+    {
+      "id": 203322,
+      "name": "dramedy"
+    },
+    {
+      "id": 207078,
+      "name": "magazine editor"
+    },
+    {
+      "id": 236197,
+      "name": "fashion industry"
+    },
+    {
+      "id": 301427,
+      "name": "fashionista"
+    }
+  ],
+  "releaseDate": "2026",
+  "director": "Дэвид Фрэнкел",
+  "directorImageUrl": "https://image.tmdb.org/t/p/w185/hfIjLMo8Upl6MXhn1YcoDoXeeZn.jpg",
+  "directorId": "5065",
+  "cast": [
+    {
+      "name": "Мэрил Стрип",
+      "character": "Miranda Priestly",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/g5cVxQBAQ3AXt3LhdBXtbbN47Uc.jpg",
+      "id": "5064"
+    },
+    {
+      "name": "Энн Хэтэуэй",
+      "character": "Andy Sachs",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/nbccV2pMoyLTCeg5DQip24Eq0Jp.jpg",
+      "id": "1813"
+    },
+    {
+      "name": "Эмили Блант",
+      "character": "Emily",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/5nCSG5TL1bP1geD8aaBfaLnLLCD.jpg",
+      "id": "5081"
+    },
+    {
+      "name": "Стэнли Туччи",
+      "character": "Nigel",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/q4TanMDI5Rgsvw4SfyNbPBh4URr.jpg",
+      "id": "2283"
+    },
+    {
+      "name": "Кеннет Брана",
+      "character": "Stuart",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/AbCqqFxNi5w3nDUFdQt0DGMFh5H.jpg",
+      "id": "11181"
+    },
+    {
+      "name": "Джастин Теру",
+      "character": "Benji Barnes",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/vnI9L0rXBAw1HeC0Q8hJGeJMGAW.jpg",
+      "id": "15009"
+    },
+    {
+      "name": "Люси Лью",
+      "character": "Sasha Barnes",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/9nbtjqsx3De7hO2XDtrBQ7M9VCH.jpg",
+      "id": "140"
+    },
+    {
+      "name": "Трейси Томс",
+      "character": "Lily",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/9PKUJJtqFRbZDhme6uDzIu0mRIE.jpg",
+      "id": "10580"
+    },
+    {
+      "name": "Тибор Фельдман",
+      "character": "Irv Ravitz",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/b6tVKhCkNWltObwyHpGfBLuaPt6.jpg",
+      "id": "1192389"
+    },
+    {
+      "name": "Б. Дж. Новак",
+      "character": "Jay Ravitz",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/o8Xf1khxhKGTz3QAplXD35opRA8.jpg",
+      "id": "107770"
+    }
+  ]
+}

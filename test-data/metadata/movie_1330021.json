@@ -1,0 +1,121 @@
+{
+  "title": "Необычайно умные создания",
+  "originalTitle": "Remarkably Bright Creatures",
+  "description": "В этой трогательной драме по мотивам бестселлера вдова сближается с умным осьминогом и потерянным молодым мужчиной, работая по ночам в океанариуме.",
+  "posterUrl": "https://image.tmdb.org/t/p/w342/3odwuuWv6v7RQpI4GtJdxDVlice.jpg",
+  "backgroundUrl": "https://image.tmdb.org/t/p/w1280/bVGHSe47W6oCQL1Q88pvRAet51A.jpg",
+  "genres": [
+    {
+      "id": 18,
+      "name": "драма"
+    },
+    {
+      "id": 9648,
+      "name": "детектив"
+    }
+  ],
+  "keywords": [
+    {
+      "id": 2269,
+      "name": "aquarium"
+    },
+    {
+      "id": 2771,
+      "name": "octopus"
+    },
+    {
+      "id": 215522,
+      "name": "british columbia"
+    },
+    {
+      "id": 239797,
+      "name": "complex"
+    },
+    {
+      "id": 240834,
+      "name": "washington"
+    },
+    {
+      "id": 241737,
+      "name": "loss of child"
+    },
+    {
+      "id": 246466,
+      "name": "based on young adult novel"
+    },
+    {
+      "id": 325762,
+      "name": "adoring"
+    },
+    {
+      "id": 340468,
+      "name": "fictional town"
+    }
+  ],
+  "releaseDate": "2026",
+  "director": "Оливия Ньюман",
+  "directorImageUrl": "https://image.tmdb.org/t/p/w185/eFu1rsc2QWnBuWgvyTKiG2fPWI7.jpg",
+  "directorId": "1668008",
+  "cast": [
+    {
+      "name": "Салли Филд",
+      "character": "Tova Sullivan",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/iMeq1j9Xwvaf6PbTJ0FQz69fpuA.jpg",
+      "id": "35"
+    },
+    {
+      "name": "Льюис Пуллман",
+      "character": "Cameron Cassmore",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/i2wJQ2eaVuTPaA84jzxNtxs54mO.jpg",
+      "id": "1700685"
+    },
+    {
+      "name": "Колм Мини",
+      "character": "Ethan Mack",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/guL6RJdlRMtOJN3LoaY3G8hG4Rd.jpg",
+      "id": "17782"
+    },
+    {
+      "name": "Альфред Молина",
+      "character": "Marcellus (voice)",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/nJo91Czesn6z0d0pkfbDoVZY3sg.jpg",
+      "id": "658"
+    },
+    {
+      "name": "Джоан Чэнь",
+      "character": "Janice Kim",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/jTu4mVKj8sQpgYnuaKchslor585.jpg",
+      "id": "6720"
+    },
+    {
+      "name": "Кэти Бейкер",
+      "character": "Mary Ann Minetti",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/34zuI0qWTD5jdqmJRtPwaW70JcQ.jpg",
+      "id": "1907"
+    },
+    {
+      "name": "Бет Грант",
+      "character": "Barb Vanderhoof",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/6THLoPYhIu422TqUmQDgnQRfYxA.jpg",
+      "id": "5151"
+    },
+    {
+      "name": "София Блэк-Д’Элиа",
+      "character": "Avery",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/pkuqNG8uWAzWH8bSmRYBO5jdiUg.jpg",
+      "id": "515628"
+    },
+    {
+      "name": "Брэндон МакЭван",
+      "character": "Teenage Erik",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/is6xbjlH14ritEVgiogRrcP27WI.jpg",
+      "id": "3800854"
+    },
+    {
+      "name": "Дональд Сэйлс",
+      "character": "Terry",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/kVovZo0ApNC8SRGkbghGNMpWbys.jpg",
+      "id": "1882899"
+    }
+  ]
+}

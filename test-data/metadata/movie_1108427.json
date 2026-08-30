@@ -1,0 +1,164 @@
+{
+  "title": "Моана",
+  "originalTitle": "Moana",
+  "description": "Моана откликается на зов океана. Впервые в жизни она отправляется за риф своего острова Мотунуи вместе с прославленным полубогом Мауи. Их ждёт незабываемое путешествие, которое должно вернуть процветание её народу.",
+  "posterUrl": "https://image.tmdb.org/t/p/w342/s7o0gbvgpjwb8S0Uc5QaEdwJntb.jpg",
+  "backgroundUrl": "https://image.tmdb.org/t/p/w1280/mMkJq4dkQwfDieB9wRC9yPxDWv9.jpg",
+  "genres": [
+    {
+      "id": 10751,
+      "name": "семейный"
+    },
+    {
+      "id": 14,
+      "name": "фэнтези"
+    },
+    {
+      "id": 35,
+      "name": "комедия"
+    },
+    {
+      "id": 12,
+      "name": "приключения"
+    }
+  ],
+  "keywords": [
+    {
+      "id": 270,
+      "name": "ocean"
+    },
+    {
+      "id": 544,
+      "name": "sailboat"
+    },
+    {
+      "id": 658,
+      "name": "sea"
+    },
+    {
+      "id": 2982,
+      "name": "leaving one's family"
+    },
+    {
+      "id": 4344,
+      "name": "musical"
+    },
+    {
+      "id": 6054,
+      "name": "friendship"
+    },
+    {
+      "id": 9714,
+      "name": "remake"
+    },
+    {
+      "id": 10541,
+      "name": "curse"
+    },
+    {
+      "id": 157155,
+      "name": "explorer"
+    },
+    {
+      "id": 165317,
+      "name": "based on movie"
+    },
+    {
+      "id": 180548,
+      "name": "demigod"
+    },
+    {
+      "id": 180803,
+      "name": "polynesia"
+    },
+    {
+      "id": 208649,
+      "name": "sea adventure"
+    },
+    {
+      "id": 223089,
+      "name": "giant crab"
+    },
+    {
+      "id": 234183,
+      "name": "animal sidekick"
+    },
+    {
+      "id": 236465,
+      "name": "seafarer"
+    },
+    {
+      "id": 245230,
+      "name": "live action remake"
+    },
+    {
+      "id": 281585,
+      "name": "inspirational"
+    },
+    {
+      "id": 325776,
+      "name": "baffled"
+    },
+    {
+      "id": 347753,
+      "name": "female explorer"
+    }
+  ],
+  "releaseDate": "2026",
+  "director": "Томас Каил",
+  "directorImageUrl": "https://image.tmdb.org/t/p/w185/eZx5j2AARIZcrSVpTFyD5fAJWsn.jpg",
+  "directorId": "1485823",
+  "cast": [
+    {
+      "name": "Кэтрин Лагааиа",
+      "character": "Moana",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/2KRIRDwy1CtY7Bge3aqVZrORelc.jpg",
+      "id": "4247263"
+    },
+    {
+      "name": "Дуэйн 'Скала' Джонсон",
+      "character": "Maui",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/5QApZVV8FUFlVxQpIK3Ew6cqotq.jpg",
+      "id": "18918"
+    },
+    {
+      "name": "Джон Туи",
+      "character": "Chief Tui",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/2jIc9M5kl2GmK8fZtbtUr2s1jkS.jpg",
+      "id": "205406"
+    },
+    {
+      "name": "Фрэнки Адамс",
+      "character": "Sina",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/aAUHUSf0lh3OBRoaiCRL9ep8lfL.jpg",
+      "id": "1753341"
+    },
+    {
+      "name": "Рина Оуэн",
+      "character": "Gramma Tala",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/648ZdDBmlx6OFDFRmgAbh6q5LBo.jpg",
+      "id": "7241"
+    },
+    {
+      "name": "Джемейн Клемент",
+      "character": "Tamatoa (voice)",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/6eiNbeurpHb2fxIeT0RrJ0wRI25.jpg",
+      "id": "55936"
+    },
+    {
+      "name": "Amaya Masoli",
+      "character": "Moana (8 years old)",
+      "id": "6337288"
+    },
+    {
+      "name": "Emma Puahi-Shapazian",
+      "character": "Moana (4 years old)",
+      "id": "6337289"
+    },
+    {
+      "name": "Tealoha Hokulani Carrera",
+      "character": "Village Kid",
+      "id": "6337290"
+    }
+  ]
+}

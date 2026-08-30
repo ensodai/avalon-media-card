@@ -1,0 +1,105 @@
+{
+  "title": "Невозможное",
+  "originalTitle": "Cosas imposibles",
+  "subtitle": "Cosas imposibles",
+  "description": "После смерти своего жестокого мужа Матильда находит нового лучшего друга в лице Мигеля, своего молодого, неуверенного в себе и растерянного соседа.",
+  "posterUrl": "https://image.tmdb.org/t/p/w342/yHeEKtVZFinHMMuj9zEOeSYosoS.jpg",
+  "backgroundUrl": "https://image.tmdb.org/t/p/w1280/bxSBOAD8AuMHYMdW3jso9npAkgt.jpg",
+  "rating": "8,4",
+  "runtime": 88,
+  "genres": [
+    {
+      "id": 10751,
+      "name": "семейный"
+    },
+    {
+      "id": 18,
+      "name": "драма"
+    }
+  ],
+  "productionCompanies": [
+    {
+      "id": 96929,
+      "name": "Agencia SHA"
+    },
+    {
+      "id": 12487,
+      "name": "Alebrije Producciones",
+      "logoUrl": "https://image.tmdb.org/t/p/w200/wUKVwhE1CWpgwNcL5x88zcWjJMI.png"
+    },
+    {
+      "id": 7570,
+      "name": "Videocine",
+      "logoUrl": "https://image.tmdb.org/t/p/w200/gW8dfVtl1JsGIiLnvglea1OHHVr.png"
+    },
+    {
+      "id": 5153,
+      "name": "Estudios Churubusco Azteca",
+      "logoUrl": "https://image.tmdb.org/t/p/w200/d4BySWBlcGBBY58FG78DWMi9nrs.png"
+    }
+  ],
+  "releaseDate": "2021-06-17",
+  "tagline": "Есть встречи, способные изменить твою жизнь",
+  "director": "Ernesto Contreras",
+  "directorImageUrl": "https://image.tmdb.org/t/p/w185/57RDgBYP5qkQ5LHUdFJdABpq5yw.jpg",
+  "directorId": "1205254",
+  "cast": [
+    {
+      "name": "Nora Velázquez",
+      "character": "Matilde",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/lh3fpLrabTkEuJ6rDGaighy1N1C.jpg",
+      "id": "1508206"
+    },
+    {
+      "name": "Benny Emmanuel",
+      "character": "Miguel",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/rSqiumttAOg08Auypm5Z7FpdvMS.jpg",
+      "id": "1379379"
+    },
+    {
+      "name": "Luisa Huertas",
+      "character": "Eugenia",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/pk2t0f2EcRGxg55xG9gkbyk2xkH.jpg",
+      "id": "224508"
+    },
+    {
+      "name": "Salvador Garcini",
+      "character": "Porfirio",
+      "id": "941366"
+    },
+    {
+      "name": "Andrés Delgado",
+      "character": "Lalo",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/gq7nwfzsF9R81qGCc2tlzgO2FI7.jpg",
+      "id": "1549908"
+    },
+    {
+      "name": "Gabriela Cartol",
+      "character": "Laura",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/7ebowmrD1V6eM26db5fXxvEWN7H.jpg",
+      "id": "1304427"
+    },
+    {
+      "name": "Juan Carlos Medellin",
+      "character": "Manuel Chang",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/c4L9Pw93DQ88AllQG6oaKHc8Jkq.jpg",
+      "id": "1309461"
+    },
+    {
+      "name": "Ari Gallegos",
+      "character": "The singer",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/j1oSaS0od2hwVkTfWSU42in9iJU.jpg",
+      "id": "1017157"
+    },
+    {
+      "name": "Pablo Marín",
+      "character": "Policeman",
+      "id": "3242962"
+    },
+    {
+      "name": "Héctor Holten",
+      "character": "Nestor",
+      "id": "1413381"
+    }
+  ]
+}

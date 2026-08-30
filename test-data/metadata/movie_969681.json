@@ -1,0 +1,137 @@
+{
+  "title": "Человек-паук: Новый день",
+  "originalTitle": "Spider-Man: Brand New Day",
+  "description": "Одинокий и повзрослевший Питер Паркер полностью посвящает себя борьбе с преступностью в Нью-Йорке, поскольку 4 года назад после заклинания Доктора Стренджа мир и все близкие забыли его. Но с ростом угроз и нагрузки на Человека-паука его способности претерпевают странные изменения, способные поставить под угрозу его существование. Тем временем в городе случается новая цепочка преступлений, которая приводит к появлению одного из самых опасных противников в жизни Питера.",
+  "posterUrl": "https://image.tmdb.org/t/p/w342/tTsIF6VllGMZ19oNMWQsPcMHN7Z.jpg",
+  "backgroundUrl": "https://image.tmdb.org/t/p/w1280/vjMvFSmGUxEtqVdaZgvFee9XkZl.jpg",
+  "genres": [
+    {
+      "id": 878,
+      "name": "фантастика"
+    },
+    {
+      "id": 28,
+      "name": "боевик"
+    },
+    {
+      "id": 12,
+      "name": "приключения"
+    }
+  ],
+  "keywords": [
+    {
+      "id": 242,
+      "name": "new york city"
+    },
+    {
+      "id": 2766,
+      "name": "mutation"
+    },
+    {
+      "id": 3986,
+      "name": "spider"
+    },
+    {
+      "id": 9663,
+      "name": "sequel"
+    },
+    {
+      "id": 9678,
+      "name": "mind control"
+    },
+    {
+      "id": 9715,
+      "name": "superhero"
+    },
+    {
+      "id": 9717,
+      "name": "based on comic"
+    },
+    {
+      "id": 10278,
+      "name": "ninja"
+    },
+    {
+      "id": 33637,
+      "name": "super power"
+    },
+    {
+      "id": 158456,
+      "name": "masked vigilante"
+    },
+    {
+      "id": 180547,
+      "name": "marvel cinematic universe (mcu)"
+    },
+    {
+      "id": 180734,
+      "name": "masked superhero"
+    }
+  ],
+  "releaseDate": "2026",
+  "director": "Дестин Дэниел Креттон",
+  "directorImageUrl": "https://image.tmdb.org/t/p/w185/s8uAUG9egZlRIU0PKNkTkIz9E6g.jpg",
+  "directorId": "1144604",
+  "cast": [
+    {
+      "name": "Том Холланд",
+      "character": "Peter Parker / Spider-Man",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/xKBAaPIa1c7tzZD3Y0MhBLv4hPE.jpg",
+      "id": "1136406"
+    },
+    {
+      "name": "Зендея",
+      "character": "MJ",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/1qup8tSt95HLbcy2c2xrx4iJNxv.jpg",
+      "id": "505710"
+    },
+    {
+      "name": "Сэди Синк",
+      "character": "",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/m9OyHAyOx56Pm3JruEBqh4p9XeX.jpg",
+      "id": "1590797"
+    },
+    {
+      "name": "Джейкоб Баталон",
+      "character": "Ned Leeds",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/53YhaL4xw4Sb1ssoHkeSSBaO29c.jpg",
+      "id": "1649152"
+    },
+    {
+      "name": "Джон Бернтал",
+      "character": "Frank Castle / Punisher",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/o0t6EVkJOrFAjESDilZUlf46IbQ.jpg",
+      "id": "19498"
+    },
+    {
+      "name": "Трамелл Тиллман",
+      "character": "Bill Metzger",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/bEA15zMnkcXlRroYjKrFUWiiK7y.jpg",
+      "id": "2028037"
+    },
+    {
+      "name": "Майкл Мэндо",
+      "character": "Mac Gargan",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/gvM2wG66bjEpiirdeQdyG9EzUfv.jpg",
+      "id": "829372"
+    },
+    {
+      "name": "Марк Руффало",
+      "character": "Bruce Banner / Hulk",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/5GilHMOt5PAQh6rlUKZzGmaKEI7.jpg",
+      "id": "103"
+    },
+    {
+      "name": "Лиза Колон-Зайас",
+      "character": "Detective Jean DeWolff",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/q2gHcef0wckji0AS8ZEO6cYx065.jpg",
+      "id": "59693"
+    },
+    {
+      "name": "Марвин Джонс III",
+      "character": "Lonnie Lincoln / Tombstone",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/nS4X8TP3idFsxDdV9UqTRbz585g.jpg",
+      "id": "1962692"
+    }
+  ]
+}

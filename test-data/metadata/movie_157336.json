@@ -1,0 +1,209 @@
+{
+  "title": "Интерстеллар",
+  "originalTitle": "Interstellar",
+  "description": "Когда засуха, пыльные бури и вымирание растений приводят человечество к продовольственному кризису, коллектив исследователей и учёных отправляется сквозь червоточину в путешествие, чтобы превзойти прежние ограничения для космических путешествий человека и найти планету с подходящими для человечества условиями.",
+  "posterUrl": "https://image.tmdb.org/t/p/w342/vReLRjDV9XPhiOSEW7QWow4DXwf.jpg",
+  "backgroundUrl": "https://image.tmdb.org/t/p/w1280/2ssWTSVklAEc98frZUQhgtGHx7s.jpg",
+  "genres": [
+    {
+      "id": 12,
+      "name": "приключения"
+    },
+    {
+      "id": 18,
+      "name": "драма"
+    },
+    {
+      "id": 878,
+      "name": "фантастика"
+    }
+  ],
+  "keywords": [
+    {
+      "id": 310,
+      "name": "artificial intelligence (a.i.)"
+    },
+    {
+      "id": 1432,
+      "name": "nasa"
+    },
+    {
+      "id": 1521,
+      "name": "time warp"
+    },
+    {
+      "id": 1612,
+      "name": "spacecraft"
+    },
+    {
+      "id": 1963,
+      "name": "expedition"
+    },
+    {
+      "id": 3417,
+      "name": "wormhole"
+    },
+    {
+      "id": 3801,
+      "name": "space travel"
+    },
+    {
+      "id": 4337,
+      "name": "famine"
+    },
+    {
+      "id": 4379,
+      "name": "time travel"
+    },
+    {
+      "id": 4380,
+      "name": "black hole"
+    },
+    {
+      "id": 4565,
+      "name": "dystopia"
+    },
+    {
+      "id": 4776,
+      "name": "race against time"
+    },
+    {
+      "id": 6567,
+      "name": "hibernation"
+    },
+    {
+      "id": 8056,
+      "name": "quantum mechanics"
+    },
+    {
+      "id": 9882,
+      "name": "space"
+    },
+    {
+      "id": 10235,
+      "name": "family relationships"
+    },
+    {
+      "id": 13194,
+      "name": "planet"
+    },
+    {
+      "id": 14626,
+      "name": "astronaut"
+    },
+    {
+      "id": 14760,
+      "name": "scientist"
+    },
+    {
+      "id": 33479,
+      "name": "single father"
+    },
+    {
+      "id": 156039,
+      "name": "space station"
+    },
+    {
+      "id": 180466,
+      "name": "gravity"
+    },
+    {
+      "id": 195114,
+      "name": "space adventure"
+    },
+    {
+      "id": 220800,
+      "name": "time-manipulation"
+    },
+    {
+      "id": 233155,
+      "name": "cryonics"
+    },
+    {
+      "id": 240303,
+      "name": "father daughter relationship"
+    },
+    {
+      "id": 270088,
+      "name": "2060s"
+    },
+    {
+      "id": 325773,
+      "name": "audacious"
+    },
+    {
+      "id": 325809,
+      "name": "enthusiastic"
+    },
+    {
+      "id": 375249,
+      "name": "epic sci-fi"
+    }
+  ],
+  "releaseDate": "2014",
+  "director": "Кристофер Нолан",
+  "directorImageUrl": "https://image.tmdb.org/t/p/w185/xuAIuYSmsUzKlUMBFGVZaWsY3DZ.jpg",
+  "directorId": "525",
+  "cast": [
+    {
+      "name": "Мэттью Макконахи",
+      "character": "Cooper",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/lCySuYjhXix3FzQdS4oceDDrXKI.jpg",
+      "id": "10297"
+    },
+    {
+      "name": "Энн Хэтэуэй",
+      "character": "Brand",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/nbccV2pMoyLTCeg5DQip24Eq0Jp.jpg",
+      "id": "1813"
+    },
+    {
+      "name": "Майкл Кейн",
+      "character": "Professor Brand",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/bVZRMlpjTAO2pJK6v90buFgVbSW.jpg",
+      "id": "3895"
+    },
+    {
+      "name": "Джессика Честейн",
+      "character": "Murph",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/eQKnihReJeB9vQEa5gySzAlKfZt.jpg",
+      "id": "83002"
+    },
+    {
+      "name": "Кейси Аффлек",
+      "character": "Tom",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/304ilSygaCRWykoBWAL67TOw8g9.jpg",
+      "id": "1893"
+    },
+    {
+      "name": "Уэс Бентли",
+      "character": "Doyle",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/voD93lzFZrr9xfAggwFcPRBi84i.jpg",
+      "id": "8210"
+    },
+    {
+      "name": "Тофер Грейс",
+      "character": "Getty",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/oJQxl4DG0KSCtOGrpWNhYz9gUZA.jpg",
+      "id": "17052"
+    },
+    {
+      "name": "Маккензи Фой",
+      "character": "Murph (10 Yrs.)",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/wzH60SrqWp2XMkBfLgdBhx5EJ82.jpg",
+      "id": "851784"
+    },
+    {
+      "name": "Эллен Бёрстин",
+      "character": "Murph (older)",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/zGihSIVRzwmCqilnA4PmNM4C2RT.jpg",
+      "id": "9560"
+    },
+    {
+      "name": "Джон Литгоу",
+      "character": "Donald",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/ajfuBSm1HuVqFJlbTmAlza62Xxr.jpg",
+      "id": "12074"
+    }
+  ]
+}

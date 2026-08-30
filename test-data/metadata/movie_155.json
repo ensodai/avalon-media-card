@@ -1,0 +1,161 @@
+{
+  "title": "Тёмный рыцарь",
+  "originalTitle": "The Dark Knight",
+  "description": "Бэтмен поднимает ставки в войне с криминалом. С помощью лейтенанта Джима Гордона и прокурора Харви Дента он намерен очистить улицы от преступности, отравляющей город. Сотрудничество оказывается эффективным, но скоро они обнаружат себя посреди хаоса, развязанного восходящим криминальным гением, известным испуганным горожанам под именем Джокер.",
+  "posterUrl": "https://image.tmdb.org/t/p/w342/aPtN76OjnNKLqCJ2FJBnQOIL031.jpg",
+  "backgroundUrl": "https://image.tmdb.org/t/p/w1280/dqK9Hag1054tghRQSqLSfrkvQnA.jpg",
+  "genres": [
+    {
+      "id": 28,
+      "name": "боевик"
+    },
+    {
+      "id": 80,
+      "name": "криминал"
+    },
+    {
+      "id": 53,
+      "name": "триллер"
+    }
+  ],
+  "keywords": [
+    {
+      "id": 853,
+      "name": "crime fighter"
+    },
+    {
+      "id": 1308,
+      "name": "secret identity"
+    },
+    {
+      "id": 2095,
+      "name": "anti hero"
+    },
+    {
+      "id": 3151,
+      "name": "scarecrow"
+    },
+    {
+      "id": 4426,
+      "name": "sadism"
+    },
+    {
+      "id": 4630,
+      "name": "chaos"
+    },
+    {
+      "id": 7002,
+      "name": "vigilante"
+    },
+    {
+      "id": 9715,
+      "name": "superhero"
+    },
+    {
+      "id": 9717,
+      "name": "based on comic"
+    },
+    {
+      "id": 10044,
+      "name": "tragic hero"
+    },
+    {
+      "id": 10291,
+      "name": "organized crime"
+    },
+    {
+      "id": 14625,
+      "name": "anti villain"
+    },
+    {
+      "id": 18023,
+      "name": "criminal mastermind"
+    },
+    {
+      "id": 33518,
+      "name": "district attorney"
+    },
+    {
+      "id": 33637,
+      "name": "super power"
+    },
+    {
+      "id": 163074,
+      "name": "super villain"
+    },
+    {
+      "id": 207268,
+      "name": "neo-noir"
+    },
+    {
+      "id": 325778,
+      "name": "bold"
+    }
+  ],
+  "releaseDate": "2008",
+  "director": "Кристофер Нолан",
+  "directorImageUrl": "https://image.tmdb.org/t/p/w185/xuAIuYSmsUzKlUMBFGVZaWsY3DZ.jpg",
+  "directorId": "525",
+  "cast": [
+    {
+      "name": "Кристиан Бейл",
+      "character": "Bruce Wayne",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/7Pxez9J8fuPd2Mn9kex13YALrCQ.jpg",
+      "id": "3894"
+    },
+    {
+      "name": "Хит Леджер",
+      "character": "Joker",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/AdWKVqyWpkYSfKE5Gb2qn8JzHni.jpg",
+      "id": "1810"
+    },
+    {
+      "name": "Аарон Екгарт",
+      "character": "Harvey Dent",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/u5JjnRMr9zKEVvOP7k3F6gdcwT6.jpg",
+      "id": "6383"
+    },
+    {
+      "name": "Майкл Кейн",
+      "character": "Alfred",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/bVZRMlpjTAO2pJK6v90buFgVbSW.jpg",
+      "id": "3895"
+    },
+    {
+      "name": "Мэгги Джилленхол",
+      "character": "Rachel",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/vsfkWdYWmA9CpzMHTJzrFxlDnEZ.jpg",
+      "id": "1579"
+    },
+    {
+      "name": "Гэри Олдман",
+      "character": "Gordon",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/yhaSM5habNNI1Tf4ALRwRk3VvSZ.jpg",
+      "id": "64"
+    },
+    {
+      "name": "Морган Фримен",
+      "character": "Lucius Fox",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/905k0RFzH0Kd6gx8oSxRdnr6FL.jpg",
+      "id": "192"
+    },
+    {
+      "name": "Моник Кёрнен",
+      "character": "Ramirez",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/lJgLQs7cfM49m8VzVviwxIByz76.jpg",
+      "id": "53651"
+    },
+    {
+      "name": "Рон Дин",
+      "character": "Wuertz",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/mgqdr4VFrTVZatkki2suNLYxeDG.jpg",
+      "id": "57597"
+    },
+    {
+      "name": "Киллиан Мёрфи",
+      "character": "Scarecrow",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/2lKs67r7FI4bPu0AXxMUJZxmUXn.jpg",
+      "id": "2037"
+    }
+  ]
+}

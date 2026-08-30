@@ -1,0 +1,106 @@
+{
+  "title": "Есть ли бог?",
+  "originalTitle": "Is God Is",
+  "subtitle": "Is God Is",
+  "description": "Сёстры-близнецы Расин и Анайя в детстве пережили пожар, который оставил их с большим количеством шрамов. Однажды девушки получают письмо от матери, которую считали погибшей в огне. Они вскоре отправляются к ней и встречают прикованную к постели женщину на грани смерти. Мать сперва рассказывает Расин и Анайе о пожаре и причинах своего исчезновения, но затем просит дочерей исполнить её последнее желание: убить их жестокого отца, который и вызвал тот пожар.",
+  "posterUrl": "https://image.tmdb.org/t/p/w342/rCYQGHdoz7qwYsb6wXETJfUfDLX.jpg",
+  "backgroundUrl": "https://image.tmdb.org/t/p/w1280/kmS3arkEsybCEw0ddWhDVQxCXf5.jpg",
+  "rating": "5,8",
+  "runtime": 99,
+  "genres": [
+    {
+      "id": 18,
+      "name": "драма"
+    },
+    {
+      "id": 53,
+      "name": "триллер"
+    }
+  ],
+  "productionCompanies": [
+    {
+      "id": 74251,
+      "name": "Linden Productions",
+      "logoUrl": "https://image.tmdb.org/t/p/w200/erf3CwR8em5JI4u8K1g1jOGrcnr.png"
+    },
+    {
+      "id": 267168,
+      "name": "Orion Pictures",
+      "logoUrl": "https://image.tmdb.org/t/p/w200/xAot4SSOIHiWQ2WEnVXYGR1lce9.png"
+    },
+    {
+      "id": 197821,
+      "name": "Viva Maude",
+      "logoUrl": "https://image.tmdb.org/t/p/w200/7Di681ml6mBfrWPA8o34cgSdwoe.png"
+    },
+    {
+      "id": 82474,
+      "name": "CYRK"
+    }
+  ],
+  "releaseDate": "2026-05-14",
+  "tagline": "",
+  "director": "Aleshea Harris",
+  "directorImageUrl": "https://image.tmdb.org/t/p/w185/k8uKNa8tTAAJ0lDyUl24VTsI6wy.jpg",
+  "directorId": "3876244",
+  "cast": [
+    {
+      "name": "Кара Янг",
+      "character": "Racine",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/x6a4q3V21TEWg8xsl5W4zM7H442.jpg",
+      "id": "1964315"
+    },
+    {
+      "name": "Mallori Johnson",
+      "character": "Anaia",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/gP9sIAP3aflFbogBWRZGLJXiPJl.jpg",
+      "id": "3308114"
+    },
+    {
+      "name": "Вивика А. Фокс",
+      "character": "Ruby",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/wj77CCErWt1H0GNqYwCFNYulH7g.jpg",
+      "id": "2535"
+    },
+    {
+      "name": "Стерлинг К. Браун",
+      "character": "Man",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/uq4kBHad6mOA4iXpX8f16PQJBEA.jpg",
+      "id": "1225953"
+    },
+    {
+      "name": "Жанель Монэ",
+      "character": "Angie",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/axTIbPz6ZbqlcCwkNBgD59gY3lx.jpg",
+      "id": "1005852"
+    },
+    {
+      "name": "Майкелти Уильямсон",
+      "character": "Chuck Hall",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/dR16zD9AjnHWbeN5OVmJWE0vSax.jpg",
+      "id": "34"
+    },
+    {
+      "name": "Эрика Александер",
+      "character": "Divine",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/8o9KbXYoRi9v1u94nbjrslOzE0n.jpg",
+      "id": "33655"
+    },
+    {
+      "name": "Xavier Mills",
+      "character": "Scotch",
+      "id": "3745125"
+    },
+    {
+      "name": "Justen Ross",
+      "character": "Riley",
+      "id": "4435578"
+    },
+    {
+      "name": "Джозиа Кросс",
+      "character": "Ezekiel",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/t6wC8LhdCPhlsIsyzqZSro54hfa.jpg",
+      "id": "3318577"
+    }
+  ]
+}

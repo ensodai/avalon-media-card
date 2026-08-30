@@ -1,0 +1,55 @@
+{
+  "title": "Jamai Raja",
+  "originalTitle": "Jamai Raja",
+  "subtitle": "Jamai Raja",
+  "description": "",
+  "posterUrl": "https://image.tmdb.org/t/p/w342/7TDfSot51AFRK8aFs2kO3snM4um.jpg",
+  "backgroundUrl": "https://image.tmdb.org/t/p/w1280/aSxmk7crbJKSwRXagAN1uvvc80i.jpg",
+  "rating": "5,5",
+  "genres": [
+    {
+      "id": 18,
+      "name": "драма"
+    },
+    {
+      "id": 10766,
+      "name": "Мыльная опера"
+    }
+  ],
+  "releaseDate": "2014-08-04",
+  "tagline": "",
+  "cast": [
+    {
+      "name": "Ravi Dubey",
+      "character": "Siddharth Khurana",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/dUhZ0E8nchBkjYV0okWfj4BLxy2.jpg",
+      "id": "1252841"
+    },
+    {
+      "name": "Nia Sharma",
+      "character": "Roshni Patel",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/9hbyrb75slwMnTMiJCQN1vPd40C.jpg",
+      "id": "1255271"
+    },
+    {
+      "name": "Achint Kaur",
+      "character": "Durgadevi Patel",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/8PUzky4QtI31LnrC6PJqfBWpzH1.jpg",
+      "id": "229265"
+    }
+  ],
+  "numberOfSeasons": 1,
+  "numberOfEpisodes": 701,
+  "status": "Завершен",
+  "network": "ZEE5",
+  "seasons": [
+    {
+      "id": "145694",
+      "seasonNumber": 1,
+      "name": "Сезон 1",
+      "overview": "",
+      "episodeCount": 701,
+      "airDate": "2014-08-04"
+    }
+  ]
+}

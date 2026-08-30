@@ -1,0 +1,98 @@
+{
+  "title": "Дюна",
+  "originalTitle": "Dune",
+  "subtitle": "Dune",
+  "description": "Наследник знаменитого дома Атрейдесов Пол отправляется вместе с семьей на одну из самых опасных планет во Вселенной — Арракис. Здесь нет ничего, кроме песка, палящего солнца, гигантских чудовищ и основной причины межгалактических конфликтов — невероятно ценного ресурса, который называется меланж. В результате захвата власти Пол вынужден бежать и скрываться, и это становится началом его эпического путешествия. Враждебный мир Арракиса приготовил для него множество тяжелых испытаний, но только тот, кто готов взглянуть в глаза своему страху, достоин стать избранным.",
+  "posterUrl": "https://image.tmdb.org/t/p/w342/3hbXNclcHaj5KiF6kK41GBMjyFr.jpg",
+  "backgroundUrl": "https://image.tmdb.org/t/p/w1280/qVgZu5BTx6pu4owCvVOm4zjTfOi.jpg",
+  "rating": "7,8",
+  "runtime": 155,
+  "genres": [
+    {
+      "id": 878,
+      "name": "фантастика"
+    },
+    {
+      "id": 12,
+      "name": "приключения"
+    },
+    {
+      "id": 10752,
+      "name": "военный"
+    }
+  ],
+  "productionCompanies": [
+    {
+      "id": 923,
+      "name": "Legendary Pictures",
+      "logoUrl": "https://image.tmdb.org/t/p/w200/5UQsZrfbfG2dYJbx8DxfoTr2Bvu.png"
+    }
+  ],
+  "releaseDate": "2021-09-15",
+  "tagline": "«Час настал»",
+  "director": "Дени Вильнёв",
+  "directorImageUrl": "https://image.tmdb.org/t/p/w185/zdDx9Xs93UIrJFWYApYR28J8M6b.jpg",
+  "directorId": "137427",
+  "cast": [
+    {
+      "name": "Тимоти Шаламе",
+      "character": "Paul Atreides",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/fI6Zwvwo0KuUMfutTyHCTuWEIrx.jpg",
+      "id": "1190668"
+    },
+    {
+      "name": "Ребекка Фергюсон",
+      "character": "Lady Jessica Atreides",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/lJloTOheuQSirSLXNA3JHsrMNfH.jpg",
+      "id": "933238"
+    },
+    {
+      "name": "Оскар Айзек",
+      "character": "Duke Leto Atreides",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/dW5U5yrIIPmMjRThR9KT2xH6nTz.jpg",
+      "id": "25072"
+    },
+    {
+      "name": "Джейсон Момоа",
+      "character": "Duncan Idaho",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/3troAR6QbSb6nUFMDu61YCCWLKa.jpg",
+      "id": "117642"
+    },
+    {
+      "name": "Стеллан Скарсгард",
+      "character": "Baron Vladimir Harkonnen",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/mW7xmtGV4y79kQGn0zkKVGDMAmw.jpg",
+      "id": "1640"
+    },
+    {
+      "name": "Стивен Маккинли Хендерсон",
+      "character": "Thufir Hawat",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/z2weSPo4sdMNj47tP5o0me41r2z.jpg",
+      "id": "196179"
+    },
+    {
+      "name": "Джош Бролин",
+      "character": "Gurney Halleck",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/sX2etBbIkxRaCsATyw5ZpOVMPTD.jpg",
+      "id": "16851"
+    },
+    {
+      "name": "Хавьер Бардем",
+      "character": "Stilgar",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/p5xjCovj1uzvA2SXrWLH78Nh1Jf.jpg",
+      "id": "3810"
+    },
+    {
+      "name": "Шэрон Дункан-Брюстер",
+      "character": "Dr. Liet Kynes",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/gp5h6rOrqBrIGgID4AMd58O6Ow6.jpg",
+      "id": "195666"
+    },
+    {
+      "name": "Чан Чэнь",
+      "character": "Dr. Wellington Yueh",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/4BOQ5pJXdsArkMHvyVhrV8Ditnr.jpg",
+      "id": "1622"
+    }
+  ]
+}

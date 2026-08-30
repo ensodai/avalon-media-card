@@ -1,0 +1,98 @@
+{
+  "title": "Непохищенная невеста",
+  "originalTitle": "दिलवाले दुल्हनिया ले जायेंगे",
+  "subtitle": "दिलवाले दुल्हनिया ले जायेंगे",
+  "description": "Двадцать лет тому назад Балдев Синг эмигрирует в Англию и оседает в Лондоне вместе с семьёй. Но даже после столь продолжительного проживания на чужбине он сохраняет приверженность национальным традициям и планирует выдать замуж старшую дочь Симран за сына старого друга, живущего в Пенджабе. Незадолго перед помолвкой Симран знакомится с весельчаком и балагуром Раджом.  Симран очень симпатичен Радж, но она далеко не сразу осознаёт, что под маской беззаботности скрывается преданная и любящая её душа. Когда молодые люди наконец-то понимают, что любят друг друга, уже поздно, приготовления к помолвке невозможно остановить. Единственная возможность избежать непоправимого — бежать, но Радж убежден, что им в жизни не будет счастья без благословения родителей Симран…",
+  "posterUrl": "https://image.tmdb.org/t/p/w342/sctBFkLHYYqaHHNJj7r1jSOkfB9.jpg",
+  "backgroundUrl": "https://image.tmdb.org/t/p/w1280/84beTJf26mfhoasUlKSOiNSutyS.jpg",
+  "rating": "8,5",
+  "runtime": 181,
+  "genres": [
+    {
+      "id": 35,
+      "name": "комедия"
+    },
+    {
+      "id": 18,
+      "name": "драма"
+    },
+    {
+      "id": 10749,
+      "name": "мелодрама"
+    }
+  ],
+  "productionCompanies": [
+    {
+      "id": 1569,
+      "name": "Yash Raj Films",
+      "logoUrl": "https://image.tmdb.org/t/p/w200/lvzN86o3jrP44DIvn4SMBLOl9PF.png"
+    }
+  ],
+  "releaseDate": "1995-10-20",
+  "tagline": "«Влюбляйтесь снова и снова...»",
+  "director": "Aditya Chopra",
+  "directorImageUrl": "https://image.tmdb.org/t/p/w185/eXYKfA6bg12pn9LPrWeRfxYQwcb.jpg",
+  "directorId": "35771",
+  "cast": [
+    {
+      "name": "काजोल",
+      "character": "Simran Singh",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/h4m0TkDuEMCUNaPrQxMRyFb2AQ7.jpg",
+      "id": "55061"
+    },
+    {
+      "name": "Шахрух Хан",
+      "character": "Raj Malhotra",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/d8jQehnCiGuLhZbs1DyB2uDu5BA.jpg",
+      "id": "35742"
+    },
+    {
+      "name": "Амриш Пури",
+      "character": "Chaudhry Baldev Singh",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/uhMGFS7tuG71LDv2wk9LfZZ4EG6.jpg",
+      "id": "691"
+    },
+    {
+      "name": "Farida Jalal",
+      "character": "Lajwanti 'Lajjo' Singh",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/tJdqL4BRSAWVFX1W6cmwxFs9IFh.jpg",
+      "id": "146971"
+    },
+    {
+      "name": "Anupam Kher",
+      "character": "Dharamvir Malhotra",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/kgU5Ap1Kf9RnicB5DMcXEZqed2f.jpg",
+      "id": "6217"
+    },
+    {
+      "name": "Pooja Ruparel",
+      "character": "Rajeshwari \"Chutki\" Singh",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/evHnj6s0Z2sbV1Mq0dfXxQQU8Mf.jpg",
+      "id": "146973"
+    },
+    {
+      "name": "Parmeet Sethi",
+      "character": "Kuljeet Singh",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/paTrHCbnwMxBZREfoGcfY5TlvyY.jpg",
+      "id": "85696"
+    },
+    {
+      "name": "Satish Shah",
+      "character": "Ajit Singh, Kuljeet's Father",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/AaXbQI0fAoTW4Qjg4dAtC5xkK1G.jpg",
+      "id": "35759"
+    },
+    {
+      "name": "Mandira Bedi",
+      "character": "Preeti Singh, Kuljeet's Sister",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/l50tq0OwzIxE4Z5JXDUSQvqCltN.jpg",
+      "id": "146974"
+    },
+    {
+      "name": "Achala Sachdev",
+      "character": "Simran's Grandmother",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/6kgq6Mnmd01HZzvbsEDQAFBurog.jpg",
+      "id": "146972"
+    }
+  ]
+}

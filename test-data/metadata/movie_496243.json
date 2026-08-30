@@ -1,0 +1,157 @@
+{
+  "title": "Паразиты",
+  "originalTitle": "기생충",
+  "description": "Обычное корейское семейство жизнь не балует. Приходится жить в сыром грязном полуподвале, воровать интернет у соседей и перебиваться случайными подработками. Однажды друг сына семейства, уезжая на стажировку за границу, предлагает тому заменить его и поработать репетитором у старшеклассницы в богатой семье Пак. Подделав диплом о высшем образовании, парень отправляется в шикарный дизайнерский особняк и производит на хозяйку дома хорошее впечатление. Тут же ему в голову приходит необычный план по трудоустройству сестры.",
+  "posterUrl": "https://image.tmdb.org/t/p/w342/9xL2PwIOerz8jld06J9cxwuJfoD.jpg",
+  "backgroundUrl": "https://image.tmdb.org/t/p/w1280/wCuUKiRaz0wEESsYqmQy005xvTE.jpg",
+  "genres": [
+    {
+      "id": 35,
+      "name": "комедия"
+    },
+    {
+      "id": 53,
+      "name": "триллер"
+    },
+    {
+      "id": 18,
+      "name": "драма"
+    }
+  ],
+  "keywords": [
+    {
+      "id": 10123,
+      "name": "dark comedy"
+    },
+    {
+      "id": 10453,
+      "name": "con artist"
+    },
+    {
+      "id": 11479,
+      "name": "social commentary"
+    },
+    {
+      "id": 11935,
+      "name": "working class"
+    },
+    {
+      "id": 12347,
+      "name": "infiltration"
+    },
+    {
+      "id": 12565,
+      "name": "psychological thriller"
+    },
+    {
+      "id": 14514,
+      "name": "class differences"
+    },
+    {
+      "id": 18035,
+      "name": "family"
+    },
+    {
+      "id": 198673,
+      "name": "unemployed"
+    },
+    {
+      "id": 215138,
+      "name": "domestic worker"
+    },
+    {
+      "id": 237462,
+      "name": "wealthy family"
+    },
+    {
+      "id": 261681,
+      "name": "south korea"
+    },
+    {
+      "id": 269808,
+      "name": "introspective"
+    },
+    {
+      "id": 283556,
+      "name": "caste violence"
+    },
+    {
+      "id": 290327,
+      "name": "seoul, south korea"
+    },
+    {
+      "id": 352649,
+      "name": "anti-capitalist"
+    },
+    {
+      "id": 370793,
+      "name": "oscar winner"
+    }
+  ],
+  "releaseDate": "2019",
+  "director": "Пон Джун Хо",
+  "directorImageUrl": "https://image.tmdb.org/t/p/w185/stwnTvZAoD8gEJEDHpDQyLCyDy5.jpg",
+  "directorId": "21684",
+  "cast": [
+    {
+      "name": "Сон Кан Хо",
+      "character": "Kim Ki-taek",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/kBM9UTPYXUA2RNk210DXhztLFns.jpg",
+      "id": "20738"
+    },
+    {
+      "name": "Ли Сон Гюн",
+      "character": "Park Dong-ik",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/nHFBbSFohzOUOvMxPVwe3Es2nJw.jpg",
+      "id": "115290"
+    },
+    {
+      "name": "Чо Ё Чжон",
+      "character": "Yeon-kyo",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/5MgWM8pkUiYkj9MEaEpO0Ir1FD9.jpg",
+      "id": "556435"
+    },
+    {
+      "name": "Чхве У Сик",
+      "character": "Ki-woo",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/hRDiuKWwe156zRjEu826eci7H3r.jpg",
+      "id": "1255881"
+    },
+    {
+      "name": "Пак Со Там",
+      "character": "Ki-jung",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/fGVOikpvivopeATDy6ZzLdKYXDu.jpg",
+      "id": "1442583"
+    },
+    {
+      "name": "Ли Чон Ын",
+      "character": "Moon-gwang",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/4r3K47UpSmzZ5t9cyTRRqRl9rdz.jpg",
+      "id": "1572354"
+    },
+    {
+      "name": "Чан Хе Джин",
+      "character": "Chung-sook",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/pZiQXSWwo9F4gncHfa1yw0CQjxk.jpg",
+      "id": "2158882"
+    },
+    {
+      "name": "Пак Мён Хун",
+      "character": "Geun-se",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/5SucrxkigHss7UuJKrkfAZX5MXz.jpg",
+      "id": "1694435"
+    },
+    {
+      "name": "Чон Чжи Со",
+      "character": "Da-hye",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/jsUPFmY1HlML92ubVtSE8L8ovz6.jpg",
+      "id": "1418762"
+    },
+    {
+      "name": "Чон Хён Чжун",
+      "character": "Da-song",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/vZadA6ip6V2kh0VZW9RwnLcYFgW.jpg",
+      "id": "2306987"
+    }
+  ]
+}

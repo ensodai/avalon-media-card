@@ -1,0 +1,2 @@
+ALTER TABLE media
+    ADD COLUMN anime_sub_type VARCHAR(30) NOT NULL DEFAULT 'NOT_ANIME';

@@ -1,0 +1,136 @@
+{
+  "title": "Живая ярость",
+  "originalTitle": "The Furious",
+  "description": "Юго-Восточная Азия. Дочь немого разнорабочего Ван Вэя похищает преступная группировка. Не дождавшись помощи от полиции, он самостоятельно отправляется на поиски. Его неожиданным союзником становится Навин — неутомимый журналист, жена которого исчезла, расследуя деятельность той же самой группировки. Мужчинам из разных слоёв общества предстоит научиться доверять друг другу и сотрудничать, используя навыки рукопашного боя, полученные благодаря их тайному прошлому.",
+  "posterUrl": "https://image.tmdb.org/t/p/w342/bVeGiwpYRIwSxBDREyOWjzcxN0r.jpg",
+  "backgroundUrl": "https://image.tmdb.org/t/p/w1280/1AVF2fAevpfi2HP6AEpptG1kg8R.jpg",
+  "genres": [
+    {
+      "id": 28,
+      "name": "боевик"
+    },
+    {
+      "id": 80,
+      "name": "криминал"
+    },
+    {
+      "id": 53,
+      "name": "триллер"
+    }
+  ],
+  "keywords": [
+    {
+      "id": 779,
+      "name": "martial arts"
+    },
+    {
+      "id": 780,
+      "name": "kung fu"
+    },
+    {
+      "id": 11107,
+      "name": "rescue mission"
+    },
+    {
+      "id": 11734,
+      "name": "police corruption"
+    },
+    {
+      "id": 163117,
+      "name": "child trafficking"
+    },
+    {
+      "id": 170865,
+      "name": "child kidnapping"
+    },
+    {
+      "id": 222665,
+      "name": "missing wife"
+    },
+    {
+      "id": 239584,
+      "name": "child rescue"
+    },
+    {
+      "id": 323809,
+      "name": "depressing"
+    },
+    {
+      "id": 325829,
+      "name": "inflammatory"
+    },
+    {
+      "id": 370995,
+      "name": "relentless vengeance"
+    },
+    {
+      "id": 374947,
+      "name": "dynamic duo"
+    }
+  ],
+  "releaseDate": "2026",
+  "director": "Кэндзи Танигаки",
+  "directorImageUrl": "https://image.tmdb.org/t/p/w185/2ZV2n02pZq1Sc2szQuyF1HVssi7.jpg",
+  "directorId": "1113443",
+  "cast": [
+    {
+      "name": "Се Мяо",
+      "character": "Wang Wei",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/wMs2w0GsTLStLHTEDyd1FfNhzuv.jpg",
+      "id": "83487"
+    },
+    {
+      "name": "Джо Таслим",
+      "character": "Navin",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/bk2j6Oa8T02KtvpD4qOXXGJe4Vy.jpg",
+      "id": "592496"
+    },
+    {
+      "name": "Ян Энью",
+      "character": "Rainy",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/dlQ4aZ418hBtDkEP58qMKBjRf0a.jpg",
+      "id": "2956442"
+    },
+    {
+      "name": "Яян Рухьян",
+      "character": "Tak",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/y8ZLh6FZMuLFw8PhqDxcEsyozjJ.jpg",
+      "id": "142019"
+    },
+    {
+      "name": "Яанин Висмитананда",
+      "character": "Matia",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/73xhAKFbeNSlJTwUCsQCAtryLYS.jpg",
+      "id": "135347"
+    },
+    {
+      "name": "Брайан Лэ",
+      "character": "Ho",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/cdtKmPpmBrnVAiqFQVE4urxu0ko.jpg",
+      "id": "2410189"
+    },
+    {
+      "name": "Джои Иванага",
+      "character": "Pak Lung",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/iwZXKVNZioAZaej7wUbOeYx1uLd.jpg",
+      "id": "2115758"
+    },
+    {
+      "name": "Сахаяк Бунтханакит",
+      "character": "Mr. Song",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/a36MI02S0f11bJZjBoxkZTsUDAK.jpg",
+      "id": "521673"
+    },
+    {
+      "name": "Манатсанун Панлертвонгскул",
+      "character": "Yadong",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/zj09X1mHTrRNiyGmKpbTjJyierc.jpg",
+      "id": "1338439"
+    },
+    {
+      "name": "Winai Wiangyangkung",
+      "character": "驴头",
+      "id": "1191266"
+    }
+  ]
+}

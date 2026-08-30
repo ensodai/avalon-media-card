@@ -1,0 +1,159 @@
+{
+  "title": "Дом Дракона",
+  "originalTitle": "House of the Dragon",
+  "description": "После смерти короля Визериса династия Таргариенов начинает бескомпромиссную борьбу за Железный трон. Предводительницей «черной» ветви становится принцесса Рейнира, а на стороне «зеленой» оказывается ее лучшая подруга и дочь десницы короля Алисента. В битве за престол соперницы заручаются поддержкой неожиданных союзников, плетут интриги — и используют разрушительную мощь драконов.",
+  "posterUrl": "https://image.tmdb.org/t/p/w342/hXyYN6LFo7QnKUA3QBx7B3KsnJE.jpg",
+  "backgroundUrl": "https://image.tmdb.org/t/p/w1280/577eXC8wFQT0eUrJcgznSiFPRmk.jpg",
+  "genres": [
+    {
+      "id": 10765,
+      "name": "НФ и Фэнтези"
+    },
+    {
+      "id": 18,
+      "name": "драма"
+    },
+    {
+      "id": 10759,
+      "name": "Боевик и Приключения"
+    }
+  ],
+  "keywords": [
+    {
+      "id": 1326,
+      "name": "infidelity"
+    },
+    {
+      "id": 2011,
+      "name": "queen"
+    },
+    {
+      "id": 2284,
+      "name": "horseback riding"
+    },
+    {
+      "id": 2673,
+      "name": "horse"
+    },
+    {
+      "id": 4379,
+      "name": "time travel"
+    },
+    {
+      "id": 9194,
+      "name": "harem"
+    },
+    {
+      "id": 13084,
+      "name": "king"
+    },
+    {
+      "id": 155139,
+      "name": "porn parody"
+    }
+  ],
+  "releaseDate": "2022",
+  "director": "Дэвид Хэнкок",
+  "directorId": "2460802",
+  "cast": [
+    {
+      "name": "Мэтт Смит",
+      "character": "Prince Daemon Targaryen",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/wxMdHj4UA6LgIU5MiA7CKySZeVU.jpg",
+      "id": "136532"
+    },
+    {
+      "name": "Эмма Д’Арси",
+      "character": "Princess Rhaenyra Targaryen",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/9Zlmb7VmtVCxkLq5yqFFRRxCaED.jpg",
+      "id": "2121005"
+    },
+    {
+      "name": "Оливия Кук",
+      "character": "Queen Alicent Hightower",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/eIpUKrBoddAM0PoNv8n2Mq99VO1.jpg",
+      "id": "1173984"
+    },
+    {
+      "name": "Джеймс Нортон",
+      "character": "Lord Ormund Hightower",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/3i9z9MkUCrlOGdMRw00j2vScxGC.jpg",
+      "id": "1205278"
+    },
+    {
+      "name": "Стив Туссен",
+      "character": "Lord Corlys 'The Sea Snake' Velaryon",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/9rJafPDkQP8YuLy9iY5v19ZfMIW.jpg",
+      "id": "55412"
+    },
+    {
+      "name": "Фабьен Франкель",
+      "character": "Ser Criston Cole",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/nXh1h7KbdeZc41ucwGhzp1cOMnd.jpg",
+      "id": "2583704"
+    },
+    {
+      "name": "Мэттью Нихэм",
+      "character": "Lord Larys 'Clubfoot' Strong",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/sZHT2xFtnBawU3DoaWZACSv15gX.jpg",
+      "id": "1584566"
+    },
+    {
+      "name": "Соноя Мидзуно",
+      "character": "Mysaria 'The White Worm'",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/WVROOHuk6G6QgVe0pU8R2i1fsE.jpg",
+      "id": "1457238"
+    },
+    {
+      "name": "Том Глинн-Карни",
+      "character": "King Aegon II Targaryen",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/jJ3KqUW8ySGBwHXOCN3x2Wxjm5W.jpg",
+      "id": "1765227"
+    },
+    {
+      "name": "Юэн Митчелл",
+      "character": "Prince Aemond Targaryen",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/v1PqysDnx5umfA2DqGyjwuAxc9C.jpg",
+      "id": "1829122"
+    }
+  ],
+  "status": "Идет",
+  "seasons": [
+    {
+      "id": "9f0e460d-5eba-4198-9df3-7954e87783e6",
+      "seasonNumber": 0,
+      "name": "Спецматериалы",
+      "overview": "",
+      "posterUrl": "https://image.tmdb.org/t/p/w342/n9z5p7psbfhLsaRyUrv0jrNCbh0.jpg",
+      "episodeCount": 73,
+      "airDate": "2022-08-21"
+    },
+    {
+      "id": "c818446a-f27f-4b40-89c0-c94757ad0ad0",
+      "seasonNumber": 1,
+      "name": "Сезон 1",
+      "overview": "Действие происходит почти за 200 лет до событий «Игры престолов». Король Визерис I Таргариен нарушает традиции и назначает своей наследницей Железного трона дочь, принцессу Рейниру, что разжигает напряжённость в королевстве.",
+      "posterUrl": "https://image.tmdb.org/t/p/w342/ljHKFkoLD3WQ6hU6NtrgG61ap3G.jpg",
+      "episodeCount": 10,
+      "airDate": "2022-08-21"
+    },
+    {
+      "id": "39969fb5-d5b4-438b-85a3-77f1fc33fdf7",
+      "seasonNumber": 2,
+      "name": "Сезон 2",
+      "overview": "Дом Таргариенов расколот надвое. Гражданская война нависает над королевством, когда обе стороны ищут поддержки у великих домов Вестероса, в итоге собирая армии — и драконов.",
+      "posterUrl": "https://image.tmdb.org/t/p/w342/a5C5IRCKLWR3HlXYooj5HL08Jv1.jpg",
+      "episodeCount": 8,
+      "airDate": "2024-06-16"
+    },
+    {
+      "id": "0d022047-ad54-4fcf-b469-2fd3100b05f8",
+      "seasonNumber": 3,
+      "name": "Сезон 3",
+      "overview": "Чёрные и Зелёные фракции вступают в ожесточённую, беспощадную борьбу за Железный Трон. Пока драконы и армии сталкиваются по всему королевству, Вестерос становится свидетелем разрушительных последствий тотальной войны.",
+      "posterUrl": "https://image.tmdb.org/t/p/w342/5jC7R3GKlP4GI8MFfrwwx4kQxsY.jpg",
+      "episodeCount": 8,
+      "airDate": "2026-06-21"
+    }
+  ]
+}

@@ -1,0 +1,111 @@
+{
+  "title": "Реинкарнация безработного: История о приключениях в другом мире",
+  "originalTitle": "無職転生 ～異世界行ったら本気だす～",
+  "description": "Бывает в жизни невезение. Только тридцатичетырёхлетний безработный отаку-бездельник доходит до точки и решает, что пора взяться за ум и изменить свою в общем-то никчёмную жизнь, как его насмерть сбивает грузовик. Однако на этом история его жизни не заканчивается, ведь он приходит в себя в теле ребёнка, причём в совершенно ином мире, где в ходу магия да и рыцарские бои на мечах вполне в порядке вещей. Отныне нашего героя зовут Рудеус Грейрат, и он начнёт-таки жизнь с нового листа, но теперь уже в новом полном опасностей и чудес мире.",
+  "posterUrl": "https://image.tmdb.org/t/p/w342/bC2DRV5S6BDtW0DmAqN3g3xtLoP.jpg",
+  "backgroundUrl": "https://image.tmdb.org/t/p/w1280/j9fRIimor0AMFJR9kjZubXcABzZ.jpg",
+  "genres": [
+    {
+      "id": 10759,
+      "name": "Боевик и Приключения"
+    },
+    {
+      "id": 16,
+      "name": "мультфильм"
+    },
+    {
+      "id": 10765,
+      "name": "НФ и Фэнтези"
+    }
+  ],
+  "keywords": [
+    {
+      "id": 1956,
+      "name": "world war ii"
+    },
+    {
+      "id": 13008,
+      "name": "train"
+    },
+    {
+      "id": 180204,
+      "name": "wounded soldier"
+    },
+    {
+      "id": 227807,
+      "name": "young soldier"
+    }
+  ],
+  "releaseDate": "2021",
+  "cast": [
+    {
+      "name": "Юми Утияма",
+      "character": "Rudeus Greyrat (voice)",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/JvavoF3YOLCf4LHfl4XvYobANE.jpg",
+      "id": "1321070"
+    },
+    {
+      "name": "Томокадзу Сугита",
+      "character": "Rudeus Greyrat's Former Self (voice)",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/cv5zuPZySNsHXu24pjKLYCRzJ2J.jpg",
+      "id": "144655"
+    },
+    {
+      "name": "Ай Какума",
+      "character": "Eris Boreas Greyrat (voice)",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/o3tQSeeJAeafJNvQs2IKvpKY7av.jpg",
+      "id": "1324646"
+    },
+    {
+      "name": "Аи Каяно",
+      "character": "Sylphiette (voice)",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/l8ywp387rfdAS7mOExe3cEZnsk0.jpg",
+      "id": "1254671"
+    },
+    {
+      "name": "Кономи Кохара",
+      "character": "Roxy Migurdia (voice)",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/3wjTzpJpBiTkLexdMmo9a3wfgRT.jpg",
+      "id": "1820616"
+    }
+  ],
+  "status": "Идет",
+  "seasons": [
+    {
+      "id": "780567cf-2f50-4bd3-9b9c-94bdfc484aef",
+      "seasonNumber": 0,
+      "name": "Спецматериалы",
+      "overview": "",
+      "posterUrl": "https://image.tmdb.org/t/p/w342/oxH1Ls6Nj2PGEy5TKtBddI4msuA.jpg",
+      "episodeCount": 3,
+      "airDate": "2022-03-16"
+    },
+    {
+      "id": "571cff1a-524a-4845-9e3a-a78c4f39a170",
+      "seasonNumber": 1,
+      "name": "Сезон 1",
+      "overview": "",
+      "posterUrl": "https://image.tmdb.org/t/p/w342/sviEqFIPJW5gFtuYy8XyE0Uscid.jpg",
+      "episodeCount": 23,
+      "airDate": "2021-01-11"
+    },
+    {
+      "id": "23e8d3dc-49eb-4787-a492-725147b1f6d3",
+      "seasonNumber": 2,
+      "name": "Сезон 2",
+      "overview": "",
+      "posterUrl": "https://image.tmdb.org/t/p/w342/fvntPxpRKvUCcHeRC9ORIzQNEEY.jpg",
+      "episodeCount": 24,
+      "airDate": "2023-07-10"
+    },
+    {
+      "id": "d2be86e9-3ed7-4452-a1e5-251fb82eb911",
+      "seasonNumber": 3,
+      "name": "Сезон 3",
+      "overview": "",
+      "posterUrl": "https://image.tmdb.org/t/p/w342/tn2mxPYSSUPHgfcAe5SCga1DO0i.jpg",
+      "episodeCount": 14,
+      "airDate": "2026-07-04"
+    }
+  ]
+}

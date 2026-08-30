@@ -1,0 +1,9 @@
+{
+  "subtitles.index_fmt": "Субтитры %d",
+  "dubs.multiple_fmt": "Озвучки (%1$d): %2$s и др.",
+  "dubs.single_fmt": "Озвучка: %s",
+  "season.index_fmt": "%d сезон",
+  "season.collaps_fmt": "Collaps • Сезон %d",
+  "episodes.collaps_count_fmt": "Collaps • %d серий",
+  "episode.index_fmt": "Серия %d"
+}

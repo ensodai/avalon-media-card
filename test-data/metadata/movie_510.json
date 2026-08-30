@@ -1,0 +1,89 @@
+{
+  "title": "Пролетая над гнездом кукушки",
+  "originalTitle": "One Flew Over the Cuckoo's Nest",
+  "subtitle": "One Flew Over the Cuckoo's Nest",
+  "description": "Рэндла Патрика Макмёрфи, патологического преступника и бунтаря, переводят из колонии в психиатрическую клинику, чтобы установить, является он душевнобольным или нет. В клинике он обнаруживает, что отделение контролирует хладнокровная, строгая и одержимая распорядком старшая медсестра Милдред Рэтчед. Макмёрфи намерен не подчиняться абсурдным, на его взгляд, правилам и одновременно повеселиться от души. Его бунтарская натура заражает других пациентов, но сестра Рэтчед решительно настроена пресечь это.",
+  "posterUrl": "https://image.tmdb.org/t/p/w342/fn5m0hbHOqEWpSGmDzvhj8G0KCq.jpg",
+  "backgroundUrl": "https://image.tmdb.org/t/p/w1280/uA8eSNAUUUyfHNIrG4h0zHxzt9W.jpg",
+  "rating": "8,4",
+  "runtime": 134,
+  "genres": [
+    {
+      "id": 18,
+      "name": "драма"
+    }
+  ],
+  "productionCompanies": [
+    {
+      "id": 286,
+      "name": "Fantasy Films"
+    }
+  ],
+  "releaseDate": "1975-11-19",
+  "tagline": "«Если он сумасшедший, то кто же тогда ты?»",
+  "director": "Милош Форман",
+  "directorImageUrl": "https://image.tmdb.org/t/p/w185/O2Crxh0l3u1mxHvjA6003gEpi7.jpg",
+  "directorId": "3974",
+  "cast": [
+    {
+      "name": "Джек Николсон",
+      "character": "Randle Patrick McMurphy",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/hBHcQIEa6P48HQAlLZkh0eKSSkG.jpg",
+      "id": "514"
+    },
+    {
+      "name": "Брэд Дуриф",
+      "character": "Billy Bibbit",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/ex7AmuHM3owhUetYZAyOmN1ehWS.jpg",
+      "id": "1370"
+    },
+    {
+      "name": "Луиза Флетчер",
+      "character": "Nurse Mildred Ratched",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/hN15em5LqXqDe1QgDa6lXK9fx3z.jpg",
+      "id": "7071"
+    },
+    {
+      "name": "Дэнни Де Вито",
+      "character": "Martini",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/6kO4IN7ndoIGw2JhyhAQN3SFmdx.jpg",
+      "id": "518"
+    },
+    {
+      "name": "Уильям Редфилд",
+      "character": "Dale Harding",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/6w7BRi6bTRZq263Bxkfogy4ekLB.jpg",
+      "id": "7072"
+    },
+    {
+      "name": "Скэтмэн Крозерс",
+      "character": "Orderly Turkle",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/ughfThqQuuoPLSsC9HfkxwX370w.jpg",
+      "id": "7077"
+    },
+    {
+      "name": "Кристофер Ллойд",
+      "character": "Max Taber",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/nxVjpyb3UrfbPZnEyDNlQVlFAs5.jpg",
+      "id": "1062"
+    },
+    {
+      "name": "Уилл Сэмпсон",
+      "character": "Chief Bromden",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/eTFrqcbAxcFzqmdEDR5PhIUKTNW.jpg",
+      "id": "68301"
+    },
+    {
+      "name": "Дин Р. Брукс",
+      "character": "Dr. John Spivey",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/636TZnpOjCoZXkdqKBOFxP2r67Y.jpg",
+      "id": "7075"
+    },
+    {
+      "name": "Майкл Берриман",
+      "character": "Ellis",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/jnyXbS5NqYdfZyvRUX2PHeKuOg4.jpg",
+      "id": "7073"
+    }
+  ]
+}

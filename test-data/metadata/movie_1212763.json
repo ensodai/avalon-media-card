@@ -1,0 +1,169 @@
+{
+  "title": "Зловещие мертвецы: Пекло",
+  "originalTitle": "Evil Dead Burn",
+  "description": "После смерти мужа, женщина приезжает в отдалённый дом его семьи, надеясь найти там поддержку и покой. Но постепенно всё превращается в кошмар: родственники один за другим становятся одержимыми демонами. В этот момент она осознаёт, что данные ею клятвы любви и верности не заканчиваются даже со смертью.",
+  "posterUrl": "https://image.tmdb.org/t/p/w342/nbQgIssZPp1WsX1BF1OK7rBKe98.jpg",
+  "backgroundUrl": "https://image.tmdb.org/t/p/w1280/A5Tz6ogGt4VV8NESG9oWVct5bo1.jpg",
+  "genres": [
+    {
+      "id": 27,
+      "name": "ужасы"
+    },
+    {
+      "id": 53,
+      "name": "триллер"
+    }
+  ],
+  "keywords": [
+    {
+      "id": 3739,
+      "name": "funeral"
+    },
+    {
+      "id": 4129,
+      "name": "widow"
+    },
+    {
+      "id": 6152,
+      "name": "supernatural"
+    },
+    {
+      "id": 9663,
+      "name": "sequel"
+    },
+    {
+      "id": 9712,
+      "name": "possession"
+    },
+    {
+      "id": 9872,
+      "name": "grief"
+    },
+    {
+      "id": 10041,
+      "name": "dysfunctional family"
+    },
+    {
+      "id": 13153,
+      "name": "spirit"
+    },
+    {
+      "id": 15001,
+      "name": "demon"
+    },
+    {
+      "id": 15285,
+      "name": "spin off"
+    },
+    {
+      "id": 18035,
+      "name": "family"
+    },
+    {
+      "id": 157458,
+      "name": "book of the dead"
+    },
+    {
+      "id": 157459,
+      "name": "evil dead"
+    },
+    {
+      "id": 161261,
+      "name": "demonic possession"
+    },
+    {
+      "id": 175421,
+      "name": "death of husband"
+    },
+    {
+      "id": 202371,
+      "name": "aggressive"
+    },
+    {
+      "id": 212643,
+      "name": "abusive husband"
+    },
+    {
+      "id": 256183,
+      "name": "supernatural horror"
+    },
+    {
+      "id": 283085,
+      "name": "body horror"
+    },
+    {
+      "id": 325821,
+      "name": "ghoulish"
+    },
+    {
+      "id": 325854,
+      "name": "tragic"
+    }
+  ],
+  "releaseDate": "2026",
+  "director": "Себастьян Ваничек",
+  "directorImageUrl": "https://image.tmdb.org/t/p/w185/oaFARB57cuQWyiAqSabmCqvkaUW.jpg",
+  "directorId": "3662751",
+  "cast": [
+    {
+      "name": "Сухейла Якуб",
+      "character": "Alice",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/ljuwA97evcoadIE7VlV1AXpKi1j.jpg",
+      "id": "2037046"
+    },
+    {
+      "name": "Тэнди Райт",
+      "character": "Susan",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/zluVB3mzZVlv8D013OgeQLhzNEw.jpg",
+      "id": "33310"
+    },
+    {
+      "name": "Хантер Духан",
+      "character": "Joseph",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/uLZmUQknSsImU6dG03F6EeXhE4g.jpg",
+      "id": "1911865"
+    },
+    {
+      "name": "Люсианна Бьюкенен",
+      "character": "Thya",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/9fTzSU4310StDoO9T0nQyGOLurn.jpg",
+      "id": "1399806"
+    },
+    {
+      "name": "Эролл Шанд",
+      "character": "Edgar",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/75nc5lUcp1So9RTNNr08NZ0oQDG.jpg",
+      "id": "150396"
+    },
+    {
+      "name": "Мод Дэвей",
+      "character": "Polly",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/gJsnWVfgcyFrTYPVvcJrvIjIH1k.jpg",
+      "id": "1695501"
+    },
+    {
+      "name": "Джордж Пуллар",
+      "character": "Will",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/lF86e5h2iMS8IaIuExv1p81mi7R.jpg",
+      "id": "2242834"
+    },
+    {
+      "name": "Виктори Ндукве",
+      "character": "Leo",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/fAIXv88uXtJp1dH5qoMpsZxn8w1.jpg",
+      "id": "3047382"
+    },
+    {
+      "name": "Киану Карим",
+      "character": "Jared",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/dobjH9GFqBRhYJejTUBMaHCqWmH.jpg",
+      "id": "5662484"
+    },
+    {
+      "name": "Michael Hurst",
+      "character": "Benjamin Price (voice)",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/tBYX46fSi8jtp196U8L7Vd37KZW.jpg",
+      "id": "62573"
+    }
+  ]
+}

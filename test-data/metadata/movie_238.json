@@ -1,0 +1,173 @@
+{
+  "title": "Крёстный отец",
+  "originalTitle": "The Godfather",
+  "description": "Криминальная сага, повествующая о нью-йоркской сицилийской мафиозной семье Корлеоне. Фильм охватывает период 1945-1955 годов. Глава семьи, Дон Вито Корлеоне, выдаёт замуж свою дочь. В это время со Второй мировой войны возвращается его любимый сын Майкл. Майкл, герой войны, гордость семьи, не выражает желания заняться жестоким семейным бизнесом. Дон Корлеоне ведёт дела по старым правилам, но наступают иные времена, и появляются люди, желающие изменить сложившиеся порядки. На Дона Корлеоне совершается покушение.",
+  "posterUrl": "https://image.tmdb.org/t/p/w342/hoowzozsn0XQGtgH8nyivAMZfPN.jpg",
+  "backgroundUrl": "https://image.tmdb.org/t/p/w1280/tSPT36ZKlP2WVHJLM4cQPLSzv3b.jpg",
+  "genres": [
+    {
+      "id": 18,
+      "name": "драма"
+    },
+    {
+      "id": 80,
+      "name": "криминал"
+    }
+  ],
+  "keywords": [
+    {
+      "id": 131,
+      "name": "italy"
+    },
+    {
+      "id": 697,
+      "name": "loss of loved one"
+    },
+    {
+      "id": 699,
+      "name": "love at first sight"
+    },
+    {
+      "id": 818,
+      "name": "based on novel or book"
+    },
+    {
+      "id": 1295,
+      "name": "europe"
+    },
+    {
+      "id": 1715,
+      "name": "symbolism"
+    },
+    {
+      "id": 3149,
+      "name": "gangster"
+    },
+    {
+      "id": 4677,
+      "name": "patriarch"
+    },
+    {
+      "id": 10291,
+      "name": "organized crime"
+    },
+    {
+      "id": 10391,
+      "name": "mafia"
+    },
+    {
+      "id": 11001,
+      "name": "religion"
+    },
+    {
+      "id": 15095,
+      "name": "revenge motive"
+    },
+    {
+      "id": 33421,
+      "name": "crime family"
+    },
+    {
+      "id": 155538,
+      "name": "sicilian mafia"
+    },
+    {
+      "id": 156043,
+      "name": "religious hypocrisy"
+    },
+    {
+      "id": 163656,
+      "name": "gun violence"
+    },
+    {
+      "id": 165725,
+      "name": "rise to power"
+    },
+    {
+      "id": 181858,
+      "name": "gang violence"
+    },
+    {
+      "id": 207883,
+      "name": "1940s"
+    },
+    {
+      "id": 208611,
+      "name": "1950s"
+    },
+    {
+      "id": 257630,
+      "name": "mafia war"
+    },
+    {
+      "id": 370793,
+      "name": "oscar winner"
+    }
+  ],
+  "releaseDate": "1972",
+  "director": "Фрэнсис Форд Коппола",
+  "directorImageUrl": "https://image.tmdb.org/t/p/w185/IwGgkmW6IoJ9vuNF0T9CU3FYUX.jpg",
+  "directorId": "1776",
+  "cast": [
+    {
+      "name": "Марлон Брандо",
+      "character": "Don Vito Corleone",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/fuTEPMsBtV1zE98ujPONbKiYDc2.jpg",
+      "id": "3084"
+    },
+    {
+      "name": "Аль Пачино",
+      "character": "Michael Corleone",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/m8HAAjq1T75JypKk0v1FFQn4ysZ.jpg",
+      "id": "1158"
+    },
+    {
+      "name": "Джеймс Каан",
+      "character": "Sonny Corleone",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/z2Lz3rtxZ7aJjzBUkCnExvo8stn.jpg",
+      "id": "3085"
+    },
+    {
+      "name": "Роберт Дюваль",
+      "character": "Tom Hagen",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/3tcKxC5Sc3DJ6XPDKKC2EAomEWn.jpg",
+      "id": "3087"
+    },
+    {
+      "name": "Richard S. Castellano",
+      "character": "Clemenza",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/1vr75BdHWret81vuSJ3ugiCBkxw.jpg",
+      "id": "3086"
+    },
+    {
+      "name": "Дайан Китон",
+      "character": "Kay Adams",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/A8B3BsFgbmw2WEmJuQX38qeU9eR.jpg",
+      "id": "3092"
+    },
+    {
+      "name": "Талия Шайр",
+      "character": "Connie Corleone Rizzi",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/oktJmlLeyYKBCWPNjHskDwAfjct.jpg",
+      "id": "3094"
+    },
+    {
+      "name": "Gianni Russo",
+      "character": "Carlo Rizzi",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/jfeGnQfXMzKXsuSPm9oTxm6FOuz.jpg",
+      "id": "3095"
+    },
+    {
+      "name": "Sterling Hayden",
+      "character": "Captain McCluskey",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/dCTe6BsGSp9QTcva2Pz4wbxxYMY.jpg",
+      "id": "3088"
+    },
+    {
+      "name": "Джон Марли",
+      "character": "Jack Woltz",
+      "profileUrl": "https://image.tmdb.org/t/p/w185/xyzwd0CiBjXfowH3HcPhvuWcV5B.jpg",
+      "id": "3142"
+    }
+  ]
+}

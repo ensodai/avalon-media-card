@@ -5,11 +5,16 @@ set -e
 # 🌿 Avalon Media Server - 1-Click Interactive Installer (RU / EN)
 # ==============================================================================
 
-# Проверка прав root
+# Автоматическое повышение прав через sudo при необходимости
 if [ "$EUID" -ne 0 ]; then
-  echo "❌ Пожалуйста, запустите установщик с правами root (sudo)."
-  echo "❌ Please run this installer as root (sudo)."
-  exit 1
+  if command -v sudo >/dev/null 2>&1; then
+    echo "🔐 Запрос прав администратора (sudo)..."
+    exec sudo bash -c "$(curl -fsSL https://raw.githubusercontent.com/ensodai/avalon-media-card/main/scripts/install.sh)"
+  else
+    echo "❌ Пожалуйста, запустите установщик с правами root (sudo)."
+    echo "❌ Please run this installer as root (sudo)."
+    exit 1
+  fi
 fi
 
 # Очистка экрана и приветствие
@@ -35,6 +40,7 @@ if [ "$LANG_CODE" == "ru" ]; then
   MSG_DIR_PROMPT="Папка для установки [/opt/avalon]: "
   MSG_USER_MODE_PROMPT="Создать отдельного пользователя 'avalon'? (Рекомендуется для безопасности) [Y/n]: "
   MSG_CUSTOM_USER_PROMPT="Имя пользователя для запуска службы [%s]: "
+  MSG_CREATING_USER="👤 Создание пользователя ОС '%s'..."
   MSG_PORT_PROMPT="Порт сервера [8080]: "
   MSG_ADMIN_USER_PROMPT="Логин администратора веб-панели [admin]: "
   MSG_PASS_PROMPT="Пароль администратора (Enter для автогенерации): "
@@ -61,6 +67,7 @@ else
   MSG_DIR_PROMPT="Installation directory [/opt/avalon]: "
   MSG_USER_MODE_PROMPT="Create dedicated 'avalon' user? (Recommended for security) [Y/n]: "
   MSG_CUSTOM_USER_PROMPT="Linux user to run the service [%s]: "
+  MSG_CREATING_USER="👤 Creating system user '%s'..."
   MSG_PORT_PROMPT="Server port [8080]: "
   MSG_ADMIN_USER_PROMPT="Web admin username [admin]: "
   MSG_PASS_PROMPT="Admin password (press Enter to auto-generate): "
@@ -104,11 +111,16 @@ if [[ "$CREATE_DEDICATED_USER" == "n" || "$CREATE_DEDICATED_USER" == "no" || "$C
   RUN_USER=${RUN_USER:-$DEFAULT_USER}
 else
   RUN_USER="avalon"
-  # Создаем системного пользователя без шелла, если его еще нет
-  if ! id -u avalon >/dev/null 2>&1; then
-    useradd -r -s /usr/sbin/nologin -d "$INSTALL_DIR" avalon || true
-  fi
 fi
+
+# Создаем пользователя, если он не существует в системе
+if ! id -u "$RUN_USER" >/dev/null 2>&1; then
+  printf "$MSG_CREATING_USER\n" "$RUN_USER"
+  useradd -r -s /usr/sbin/nologin -d "$INSTALL_DIR" "$RUN_USER" 2>/dev/null || useradd -r -s /bin/false "$RUN_USER" 2>/dev/null || useradd "$RUN_USER" || true
+fi
+
+# Определение группы пользователя
+USER_GROUP=$(id -gn "$RUN_USER" 2>/dev/null || echo "$RUN_USER")
 
 # 3. Порт
 read -rp "$MSG_PORT_PROMPT" SERVER_PORT </dev/tty || SERVER_PORT="8080"
@@ -163,27 +175,18 @@ fi
 # Создаем структуру каталогов
 mkdir -p "$INSTALL_DIR/plugins" "$INSTALL_DIR/data"
 
-# Получение последних ссылок на релиз из GitHub API
+# Скачивание сервера и плагинов с GitHub Releases
 echo "$MSG_DOWNLOADING"
 REPO="ensodai/avalon-media-card"
-RELEASE_JSON=$(curl -s "https://api.github.com/repos/$REPO/releases/latest")
-
-JAR_URL=$(echo "$RELEASE_JSON" | grep -o 'https://[^"]*avalon-server[^"]*\.jar' | head -n 1)
-PLUGINS_URL=$(echo "$RELEASE_JSON" | grep -o 'https://[^"]*avalon-plugins[^"]*\.zip' | head -n 1)
-
-if [ -z "$JAR_URL" ]; then
-  JAR_URL="https://github.com/$REPO/releases/latest/download/avalon-server.jar"
-fi
+JAR_URL="https://github.com/$REPO/releases/latest/download/avalon-server.jar"
+PLUGINS_URL="https://github.com/$REPO/releases/latest/download/avalon-plugins.zip"
 
 curl -fsSL -o "$INSTALL_DIR/avalon-server.jar" "$JAR_URL"
 
-# Скачивание плагинов
-if [ -n "$PLUGINS_URL" ]; then
-  echo "$MSG_DOWNLOADING_PLUGINS"
-  curl -fsSL -o "$INSTALL_DIR/plugins.zip" "$PLUGINS_URL"
-  unzip -o -q "$INSTALL_DIR/plugins.zip" -d "$INSTALL_DIR/plugins"
-  rm -f "$INSTALL_DIR/plugins.zip"
-fi
+echo "$MSG_DOWNLOADING_PLUGINS"
+curl -fsSL -o "$INSTALL_DIR/plugins.zip" "$PLUGINS_URL"
+unzip -o -q "$INSTALL_DIR/plugins.zip" -d "$INSTALL_DIR/plugins"
+rm -f "$INSTALL_DIR/plugins.zip"
 
 # Запись .env
 cat <<EOF > "$INSTALL_DIR/.env"
@@ -194,7 +197,7 @@ EOF
 chmod 600 "$INSTALL_DIR/.env"
 
 # Установка прав на директорию
-chown -R "$RUN_USER:$RUN_USER" "$INSTALL_DIR" || chown -R "$RUN_USER" "$INSTALL_DIR"
+chown -R "$RUN_USER:$USER_GROUP" "$INSTALL_DIR" 2>/dev/null || chown -R "$RUN_USER" "$INSTALL_DIR" 2>/dev/null || true
 
 # Определение пути к Java
 JAVA_PATH=$(command -v java || echo "/usr/bin/java")
@@ -209,6 +212,7 @@ After=network.target
 [Service]
 Type=simple
 User=$RUN_USER
+Group=$USER_GROUP
 WorkingDirectory=$INSTALL_DIR
 ExecStart=$JAVA_PATH -Xmx2g -jar $INSTALL_DIR/avalon-server.jar
 Restart=always

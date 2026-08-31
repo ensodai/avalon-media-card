@@ -3,6 +3,7 @@ package org.ensodai.avalonmediacard.presentation.screens.detailsScreen.targets.w
 import androidx.compose.animation.*
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.core.animateFloatAsState
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -327,7 +328,7 @@ fun WebTvSeasonsSection(
                                         season = season,
                                         isSelected = isSelected,
                                         onClick = {
-                                            if (!isSelected) {
+                                            if (!isSelected || activeSeasonContent?.episodes.isNullOrEmpty()) {
                                                 season.selectAction?.let(onAction)
                                             }
                                         }
@@ -405,73 +406,50 @@ fun WebTvSeasonsSection(
                         },
                     verticalArrangement = Arrangement.spacedBy(20.dp)
                 ) {
-                    if (isEpisodesLoading) {
-                        WebEpisodesGridSkeleton()
-                    } else if (episodes.isEmpty()) {
-                        Box(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .height(320.dp),
-                            contentAlignment = Alignment.Center
-                        ) {
-                            Text(
-                                text = stringResource(Res.string.details_seasons_not_available),
-                                color = Color.White.copy(alpha = 0.5f),
-                                fontSize = 14.sp
-                            )
-                        }
-                    } else {
-                        HorizontalPager(
-                            state = pagerState,
-                            beyondViewportPageCount = 1,
-                            pageSpacing = 16.dp,
-                            contentPadding = PaddingValues(horizontal = 8.dp, vertical = 6.dp),
-                            modifier = Modifier.fillMaxWidth(),
-                            verticalAlignment = Alignment.Top
-                        ) { page ->
-                            val start = page * EPISODES_PAGE_SIZE
-                            val end = (start + EPISODES_PAGE_SIZE).coerceAtMost(episodes.size)
-                            val pageEpisodes = if (start < episodes.size) episodes.subList(start, end) else emptyList()
-
-                            Column(
-                                modifier = Modifier.fillMaxWidth(),
-                                verticalArrangement = Arrangement.spacedBy(16.dp)
+                    Crossfade(
+                        targetState = isEpisodesLoading,
+                        animationSpec = tween(durationMillis = 250),
+                        label = "WebEpisodesCrossfade"
+                    ) { loading ->
+                        if (loading) {
+                            WebEpisodesGridSkeleton()
+                        } else if (episodes.isEmpty()) {
+                            Box(
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .height(320.dp),
+                                contentAlignment = Alignment.Center
                             ) {
-                                // Row 1 (up to 3 cards)
-                                val row1 = pageEpisodes.take(3)
-                                Row(
-                                    modifier = Modifier.fillMaxWidth(),
-                                    horizontalArrangement = Arrangement.spacedBy(16.dp)
-                                ) {
-                                    row1.forEach { ep ->
-                                        val epId = ep.id.ifBlank { "${component.selectedSeasonNumber}_${ep.episodeNumber}" }
-                                        Box(modifier = Modifier.weight(1f)) {
-                                            WebEpisodeGridCard(
-                                                episode = ep,
-                                                seasonNumber = component.selectedSeasonNumber,
-                                                isSelectedOnTouch = isTouch && activeTouchEpisodeId == epId,
-                                                onTouchSelect = {
-                                                    activeTouchEpisodeId = if (activeTouchEpisodeId == epId) null else epId
-                                                },
-                                                onPlay = { ep.playAction?.let(onAction) },
-                                                onToggleWatch = { ep.toggleWatchedAction?.let(onAction) },
-                                                onAction = onAction
-                                            )
-                                        }
-                                    }
-                                    repeat(3 - row1.size) {
-                                        Spacer(modifier = Modifier.weight(1f))
-                                    }
-                                }
+                                Text(
+                                    text = stringResource(Res.string.details_seasons_not_available),
+                                    color = Color.White.copy(alpha = 0.5f),
+                                    fontSize = 14.sp
+                                )
+                            }
+                        } else {
+                            HorizontalPager(
+                                state = pagerState,
+                                beyondViewportPageCount = 1,
+                                pageSpacing = 16.dp,
+                                contentPadding = PaddingValues(horizontal = 8.dp, vertical = 6.dp),
+                                modifier = Modifier.fillMaxWidth(),
+                                verticalAlignment = Alignment.Top
+                            ) { page ->
+                                val start = page * EPISODES_PAGE_SIZE
+                                val end = (start + EPISODES_PAGE_SIZE).coerceAtMost(episodes.size)
+                                val pageEpisodes = if (start < episodes.size) episodes.subList(start, end) else emptyList()
 
-                                // Row 2 (up to 3 cards)
-                                if (pageEpisodes.size > 3) {
-                                    val row2 = pageEpisodes.drop(3).take(3)
+                                Column(
+                                    modifier = Modifier.fillMaxWidth(),
+                                    verticalArrangement = Arrangement.spacedBy(16.dp)
+                                ) {
+                                    // Row 1 (up to 3 cards)
+                                    val row1 = pageEpisodes.take(3)
                                     Row(
                                         modifier = Modifier.fillMaxWidth(),
                                         horizontalArrangement = Arrangement.spacedBy(16.dp)
                                     ) {
-                                        row2.forEach { ep ->
+                                        row1.forEach { ep ->
                                             val epId = ep.id.ifBlank { "${component.selectedSeasonNumber}_${ep.episodeNumber}" }
                                             Box(modifier = Modifier.weight(1f)) {
                                                 WebEpisodeGridCard(
@@ -487,8 +465,37 @@ fun WebTvSeasonsSection(
                                                 )
                                             }
                                         }
-                                        repeat(3 - row2.size) {
+                                        repeat(3 - row1.size) {
                                             Spacer(modifier = Modifier.weight(1f))
+                                        }
+                                    }
+
+                                    // Row 2 (up to 3 cards)
+                                    if (pageEpisodes.size > 3) {
+                                        val row2 = pageEpisodes.drop(3).take(3)
+                                        Row(
+                                            modifier = Modifier.fillMaxWidth(),
+                                            horizontalArrangement = Arrangement.spacedBy(16.dp)
+                                        ) {
+                                            row2.forEach { ep ->
+                                                val epId = ep.id.ifBlank { "${component.selectedSeasonNumber}_${ep.episodeNumber}" }
+                                                Box(modifier = Modifier.weight(1f)) {
+                                                    WebEpisodeGridCard(
+                                                        episode = ep,
+                                                        seasonNumber = component.selectedSeasonNumber,
+                                                        isSelectedOnTouch = isTouch && activeTouchEpisodeId == epId,
+                                                        onTouchSelect = {
+                                                            activeTouchEpisodeId = if (activeTouchEpisodeId == epId) null else epId
+                                                        },
+                                                        onPlay = { ep.playAction?.let(onAction) },
+                                                        onToggleWatch = { ep.toggleWatchedAction?.let(onAction) },
+                                                        onAction = onAction
+                                                    )
+                                                }
+                                            }
+                                            repeat(3 - row2.size) {
+                                                Spacer(modifier = Modifier.weight(1f))
+                                            }
                                         }
                                     }
                                 }
@@ -1347,9 +1354,11 @@ private fun WebMarkSeasonButton(
 }
 
 @Composable
-private fun WebEpisodesGridSkeleton() {
+private fun WebEpisodesGridSkeleton(modifier: Modifier = Modifier) {
     Column(
-        modifier = Modifier.fillMaxWidth(),
+        modifier = modifier
+            .fillMaxWidth()
+            .padding(horizontal = 8.dp, vertical = 6.dp),
         verticalArrangement = Arrangement.spacedBy(16.dp)
     ) {
         repeat(2) {
@@ -1358,37 +1367,73 @@ private fun WebEpisodesGridSkeleton() {
                 horizontalArrangement = Arrangement.spacedBy(16.dp)
             ) {
                 repeat(3) {
-                    Column(
-                        modifier = Modifier
-                            .weight(1f)
-                            .clip(RoundedCornerShape(12.dp))
-                            .background(Color.White.copy(alpha = 0.03f))
-                            .padding(bottom = 10.dp)
-                    ) {
-                        Box(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .aspectRatio(16f / 9f)
-                                .shimmerPlaceholder(true, RoundedCornerShape(topStart = 12.dp, topEnd = 12.dp))
-                        )
-                        Spacer(modifier = Modifier.height(8.dp))
-                        Box(
-                            modifier = Modifier
-                                .padding(horizontal = 10.dp)
-                                .fillMaxWidth(0.7f)
-                                .height(14.dp)
-                                .shimmerPlaceholder(true, RoundedCornerShape(4.dp))
-                        )
-                        Spacer(modifier = Modifier.height(6.dp))
-                        Box(
-                            modifier = Modifier
-                                .padding(horizontal = 10.dp)
-                                .fillMaxWidth(0.4f)
-                                .height(10.dp)
-                                .shimmerPlaceholder(true, RoundedCornerShape(4.dp))
-                        )
+                    Box(modifier = Modifier.weight(1f)) {
+                        WebEpisodeGridSkeletonCard()
                     }
                 }
+            }
+        }
+    }
+}
+
+@Composable
+private fun WebEpisodeGridSkeletonCard(modifier: Modifier = Modifier) {
+    Column(
+        modifier = modifier
+            .fillMaxWidth()
+            .padding(vertical = 4.dp)
+            .border(1.dp, Color.White.copy(alpha = 0.08f), RoundedCornerShape(12.dp))
+            .background(Color(0xFF141418), RoundedCornerShape(12.dp))
+    ) {
+        // 1. Thumbnail Container 16:9
+        Box(
+            modifier = Modifier
+                .fillMaxWidth()
+                .aspectRatio(16f / 9f)
+                .clip(RoundedCornerShape(topStart = 12.dp, topEnd = 12.dp))
+                .shimmerPlaceholder(true, RoundedCornerShape(topStart = 12.dp, topEnd = 12.dp))
+        )
+
+        // 2. Card Content (Title, Meta, Synopsis)
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(14.dp)
+        ) {
+            // Title Shimmer
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth(0.75f)
+                    .height(18.dp)
+                    .shimmerPlaceholder(true, RoundedCornerShape(4.dp))
+            )
+
+            Spacer(modifier = Modifier.height(4.dp))
+
+            // Metadata Shimmer (Air Date & Rating)
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth(0.40f)
+                    .height(14.dp)
+                    .shimmerPlaceholder(true, RoundedCornerShape(4.dp))
+            )
+
+            Spacer(modifier = Modifier.height(6.dp))
+
+            // Synopsis Shimmer (2 lines)
+            Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
+                Box(
+                    modifier = Modifier
+                        .fillMaxWidth(0.95f)
+                        .height(12.dp)
+                        .shimmerPlaceholder(true, RoundedCornerShape(4.dp))
+                )
+                Box(
+                    modifier = Modifier
+                        .fillMaxWidth(0.60f)
+                        .height(12.dp)
+                        .shimmerPlaceholder(true, RoundedCornerShape(4.dp))
+                )
             }
         }
     }

@@ -355,6 +355,8 @@
     <string name="job_acting">Acting</string>
     <string name="media_untitled">Untitled</string>
     <string name="person_unknown">Unknown</string>
+    <string name="person_biography">Biography</string>
+    <string name="person_filmography">Filmography</string>
     <string name="details_season_format">Season %1$d</string>
     <string name="details_episode_format">Episode %1$d</string>
 </resources>

@@ -41,22 +41,43 @@ class MediaDetailsStateManager(
 
     fun loadMediaDetailsInitial(key: MediaKey, force: Boolean = false, language: String = "ru") {
         val flow = mediaDetailsStatesMap.getOrPut(key) { MutableStateFlow(MediaDetailsState(isLoading = true)) }
-        if (flow.value.metadata != null && !force) return
+        if (flow.value.metadata != null && !force) {
+            val metadata = flow.value.metadata
+            if (metadata != null && metadata.seasons.isNotEmpty()) {
+                val currentSelected = flow.value.selectedSeasonNumber
+                val targetSeason = metadata.seasons.firstOrNull { it.seasonNumber == currentSelected }
+                    ?: metadata.seasons.firstOrNull { it.seasonNumber == 1 }
+                    ?: metadata.seasons.first()
+                if (flow.value.seasonContents[targetSeason.seasonNumber]?.episodes.isNullOrEmpty()) {
+                    loadSeasonDetails(key, targetSeason.seasonNumber, isInitial = true, language = language)
+                }
+            }
+            return
+        }
 
-        flow.value = flow.value.copy(isLoading = true, error = null)
+        flow.update { it.copy(isLoading = true, error = null) }
 
         scope.launch {
             try {
                 val metadata = getMediaDetailsUseCase(key, language)
-                flow.value = MediaDetailsState(metadata = metadata)
+                flow.update { currentState ->
+                    currentState.copy(
+                        metadata = metadata,
+                        isLoading = false,
+                        error = null
+                    )
+                }
 
                 // Если это сериал и есть сезоны, сразу грузим первый сезон (или 1-й по счету)
                 if (metadata.seasons.isNotEmpty()) {
-                    val firstSeason = metadata.seasons.firstOrNull { it.seasonNumber == 1 } ?: metadata.seasons.first()
+                    val currentSelected = flow.value.selectedSeasonNumber
+                    val firstSeason = metadata.seasons.firstOrNull { it.seasonNumber == currentSelected }
+                        ?: metadata.seasons.firstOrNull { it.seasonNumber == 1 }
+                        ?: metadata.seasons.first()
                     loadSeasonDetails(key, firstSeason.seasonNumber, isInitial = true, language = language)
                 }
             } catch (e: Exception) {
-                flow.value = MediaDetailsState(error = e.message ?: "Ошибка получения деталей фильма")
+                flow.update { it.copy(isLoading = false, error = e.message ?: "Ошибка получения деталей фильма") }
             }
         }
     }
@@ -68,9 +89,9 @@ class MediaDetailsStateManager(
         flow.update { currentState ->
             if (currentState.seasonContents[seasonNumber]?.isLoading == true) return@update currentState
 
-            shouldLoad = true
             val existingEpisodes = currentState.seasonContents[seasonNumber]?.episodes
             val hasExistingEpisodes = !existingEpisodes.isNullOrEmpty()
+            shouldLoad = !hasExistingEpisodes
 
             val currentContents = currentState.seasonContents.toMutableMap()
             currentContents[seasonNumber] = org.ensodai.avalonmediacard.contract.slot.SeasonContent(
@@ -78,7 +99,7 @@ class MediaDetailsStateManager(
                 episodes = existingEpisodes
             )
             currentState.copy(
-                selectedSeasonNumber = if (!isInitial || currentState.selectedSeasonNumber == 1) seasonNumber else currentState.selectedSeasonNumber,
+                selectedSeasonNumber = seasonNumber,
                 seasonContents = currentContents
             )
         }
@@ -87,21 +108,23 @@ class MediaDetailsStateManager(
         scope.launch {
             try {
                 val episodes = getSeasonDetailsUseCase(key, seasonNumber, language)
-                val stateAfterFetch = flow.value
-                val updatedContents = stateAfterFetch.seasonContents.toMutableMap()
-                updatedContents[seasonNumber] = org.ensodai.avalonmediacard.contract.slot.SeasonContent(
-                    isLoading = false,
-                    episodes = episodes
-                )
-                flow.value = stateAfterFetch.copy(seasonContents = updatedContents)
+                flow.update { currentState ->
+                    val updatedContents = currentState.seasonContents.toMutableMap()
+                    updatedContents[seasonNumber] = org.ensodai.avalonmediacard.contract.slot.SeasonContent(
+                        isLoading = false,
+                        episodes = episodes
+                    )
+                    currentState.copy(seasonContents = updatedContents)
+                }
             } catch (e: Exception) {
-                val stateAfterError = flow.value
-                val updatedContents = stateAfterError.seasonContents.toMutableMap()
-                updatedContents[seasonNumber] = org.ensodai.avalonmediacard.contract.slot.SeasonContent(
-                    isLoading = false,
-                    episodes = updatedContents[seasonNumber]?.episodes // Оставляем старые если ошибка
-                )
-                flow.value = stateAfterError.copy(seasonContents = updatedContents)
+                flow.update { currentState ->
+                    val updatedContents = currentState.seasonContents.toMutableMap()
+                    updatedContents[seasonNumber] = org.ensodai.avalonmediacard.contract.slot.SeasonContent(
+                        isLoading = false,
+                        episodes = updatedContents[seasonNumber]?.episodes
+                    )
+                    currentState.copy(seasonContents = updatedContents)
+                }
             }
         }
     }
@@ -110,14 +133,14 @@ class MediaDetailsStateManager(
         val flow = recommendationsStatesMap.getOrPut(key) { MutableStateFlow(DetailsWidgetState(isLoading = true)) }
         if (flow.value.movies.isNotEmpty()) return
 
-        flow.value = flow.value.copy(isLoading = true)
+        flow.update { it.copy(isLoading = true, error = null) }
 
         scope.launch {
             try {
                 val movies = getRecommendationsUseCase(key, 1, language)
-                flow.value = DetailsWidgetState(movies = movies, page = 1)
+                flow.update { it.copy(movies = movies, page = 1, isLoading = false, error = null) }
             } catch (e: Exception) {
-                flow.value = DetailsWidgetState(error = e.message ?: "Ошибка получения рекомендаций")
+                flow.update { it.copy(isLoading = false, error = e.message ?: "Ошибка получения рекомендаций") }
             }
         }
     }
@@ -138,19 +161,20 @@ class MediaDetailsStateManager(
         scope.launch {
             try {
                 val newMovies = getRecommendationsUseCase(key, page, language)
-                val currentState = flow.value
-                if (newMovies.isNotEmpty()) {
-                    val combined = (currentState.movies + newMovies).distinctBy { it.id }
-                    flow.value = DetailsWidgetState(
-                        movies = combined,
-                        page = page
-                    )
-                } else {
-                    flow.value = currentState.copy(isLoading = false)
+                flow.update { currentState ->
+                    if (newMovies.isNotEmpty()) {
+                        val combined = (currentState.movies + newMovies).distinctBy { it.id }
+                        currentState.copy(
+                            movies = combined,
+                            page = page,
+                            isLoading = false
+                        )
+                    } else {
+                        currentState.copy(isLoading = false)
+                    }
                 }
             } catch (e: Exception) {
-                val currentState = flow.value
-                flow.value = currentState.copy(isLoading = false, error = e.message ?: "Ошибка получения данных")
+                flow.update { it.copy(isLoading = false, error = e.message ?: "Ошибка получения данных") }
             }
         }
     }
@@ -159,14 +183,14 @@ class MediaDetailsStateManager(
         val flow = similarStatesMap.getOrPut(key) { MutableStateFlow(DetailsWidgetState(isLoading = true)) }
         if (flow.value.movies.isNotEmpty()) return
 
-        flow.value = flow.value.copy(isLoading = true)
+        flow.update { it.copy(isLoading = true, error = null) }
 
         scope.launch {
             try {
                 val movies = getSimilarUseCase(key, 1, language)
-                flow.value = DetailsWidgetState(movies = movies, page = 1)
+                flow.update { it.copy(movies = movies, page = 1, isLoading = false, error = null) }
             } catch (e: Exception) {
-                flow.value = DetailsWidgetState(error = e.message ?: "Ошибка получения похожих фильмов")
+                flow.update { it.copy(isLoading = false, error = e.message ?: "Ошибка получения похожих фильмов") }
             }
         }
     }
@@ -187,19 +211,20 @@ class MediaDetailsStateManager(
         scope.launch {
             try {
                 val newMovies = getSimilarUseCase(key, page, language)
-                val currentState = flow.value
-                if (newMovies.isNotEmpty()) {
-                    val combined = (currentState.movies + newMovies).distinctBy { it.id }
-                    flow.value = DetailsWidgetState(
-                        movies = combined,
-                        page = page
-                    )
-                } else {
-                    flow.value = currentState.copy(isLoading = false)
+                flow.update { currentState ->
+                    if (newMovies.isNotEmpty()) {
+                        val combined = (currentState.movies + newMovies).distinctBy { it.id }
+                        currentState.copy(
+                            movies = combined,
+                            page = page,
+                            isLoading = false
+                        )
+                    } else {
+                        currentState.copy(isLoading = false)
+                    }
                 }
             } catch (e: Exception) {
-                val currentState = flow.value
-                flow.value = currentState.copy(isLoading = false, error = e.message ?: "Ошибка получения данных")
+                flow.update { it.copy(isLoading = false, error = e.message ?: "Ошибка получения данных") }
             }
         }
     }

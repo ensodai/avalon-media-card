@@ -154,6 +154,8 @@ class RutubeApiClient(
         return try {
             val response = httpClient.get(url) {
                 header(HttpHeaders.UserAgent, "Mozilla/5.0 (Windows NT 10.0; Win64; x64)")
+                header(HttpHeaders.Referrer, "https://rutube.ru/")
+                header("Origin", "https://rutube.ru")
             }
             if (response.status.isSuccess()) {
                 response.bodyAsText()

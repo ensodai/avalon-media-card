@@ -355,6 +355,8 @@
     <string name="job_acting">В ролях</string>
     <string name="media_untitled">Без названия</string>
     <string name="person_unknown">Без имени</string>
+    <string name="person_biography">Биография</string>
+    <string name="person_filmography">Фильмография</string>
     <string name="details_season_format">Сезон %1$d</string>
     <string name="details_episode_format">Эпизод %1$d</string>
 </resources>

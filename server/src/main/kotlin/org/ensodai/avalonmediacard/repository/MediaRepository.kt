@@ -41,6 +41,7 @@ class MediaRepository(
                 .firstOrNull()
 
             val year = metadata.releaseDate?.take(4)?.toIntOrNull()
+            val parsedRating = metadata.rating?.replace(',', '.')?.toDoubleOrNull()
 
             val mediaId = if (existing != null) {
                 val id = existing[MediaTable.id]
@@ -48,7 +49,7 @@ class MediaRepository(
                     it[this.mediaType] = mediaType
                     if (metadata.imdbId != null) it[imdbId] = metadata.imdbId
                     it[releaseYear] = year
-                    it[tmdbRating] = metadata.rating?.toDoubleOrNull()
+                    it[tmdbRating] = parsedRating
                     it[status] = metadata.status
                     it[animeSubType] = metadata.animeSubType
                 }
@@ -60,7 +61,7 @@ class MediaRepository(
                     it[this.mediaType] = mediaType
                     it[this.imdbId] = metadata.imdbId
                     it[releaseYear] = year
-                    it[tmdbRating] = metadata.rating?.toDoubleOrNull()
+                    it[tmdbRating] = parsedRating
                     it[status] = metadata.status
                     it[animeSubType] = metadata.animeSubType
                 } get MediaTable.id
@@ -631,6 +632,8 @@ class MediaRepository(
                 }
             }
 
+            val tmdbRatingStr = existing[MediaTable.tmdbRating]?.toString()
+
             MediaMetadata(
                 title = trans?.get(MediaTranslationTable.title) ?: "",
                 originalTitle = trans?.get(MediaTranslationTable.originalTitle),
@@ -638,7 +641,7 @@ class MediaRepository(
                 description = trans?.get(MediaTranslationTable.overview),
                 posterUrl = posterRow?.get(MediaImageTable.url)?.toProxyImageUrl("w342"),
                 backgroundUrl = backdropRow?.get(MediaImageTable.url)?.toProxyImageUrl("w1280"),
-                rating = existing[MediaTable.tmdbRating]?.toString(),
+                rating = tmdbRatingStr,
                 genres = genres,
                 keywords = keywords,
                 releaseDate = existing[MediaTable.releaseYear]?.toString(),

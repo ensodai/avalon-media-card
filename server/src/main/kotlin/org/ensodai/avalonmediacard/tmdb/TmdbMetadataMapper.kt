@@ -178,6 +178,8 @@ class TmdbMetadataMapper {
             title = titleText
         )
 
+        val mappedRating = movie.voteAverage?.let { String.format(java.util.Locale.US, "%.1f", it) }
+
         return MediaMetadata(
             title = titleText,
             originalTitle = subtitleText,
@@ -186,7 +188,7 @@ class TmdbMetadataMapper {
             description = movie.overview,
             posterUrl = selectedPoster,
             backgroundUrl = movie.backdropPath.toProxyImageUrl("w1280"),
-            rating = movie.voteAverage?.let { "%.1f".format(it) },
+            rating = mappedRating,
             runtime = runtimeInt,
             genres = movie.genres.map { GenreMetadata(id = it.id, name = it.name) },
             keywords = emptyList(),

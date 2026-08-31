@@ -155,7 +155,7 @@ class TmdbMediaCatalog(
 
         try {
             val dbCached = cacheRepository.getMetadata("tmdb", key.id, language)
-            if (dbCached != null) {
+            if (dbCached != null && dbCached.rating != null) {
                 logger.info("getMediaDetails БД-КЭШ-ХИТ для key=$key, lang=$language")
                 return dbCached
             }
@@ -167,7 +167,7 @@ class TmdbMediaCatalog(
         val mutex = activeRequests.getOrPut(key) { Mutex() }
         return mutex.withLock {
             val dbCached = cacheRepository.getMetadata("tmdb", key.id, language)
-            if (dbCached != null) {
+            if (dbCached != null && dbCached.rating != null) {
                 return@withLock dbCached
             }
 
@@ -218,7 +218,7 @@ class TmdbMediaCatalog(
         // Мапим обратно по ключам, чтобы быстро найти
         for (key in keys) {
             val cached = dbCachedBatch[key.id]
-            if (cached != null) {
+            if (cached != null && cached.rating != null) {
                 result[key] = cached
             }
         }

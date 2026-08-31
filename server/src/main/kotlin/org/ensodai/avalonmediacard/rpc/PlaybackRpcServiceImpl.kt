@@ -5,6 +5,7 @@ import kotlinx.coroutines.CancellationException
 import org.ensodai.avalonmediacard.contract.auth.AuthState
 import org.ensodai.avalonmediacard.contract.model.MediaCatalog
 import org.ensodai.avalonmediacard.contract.model.MediaKey
+import org.ensodai.avalonmediacard.contract.plugins.StreamType
 import org.ensodai.avalonmediacard.contract.plugins.UserMediaBindingProvider
 import org.ensodai.avalonmediacard.contract.plugins.resolveTargetStream
 import org.ensodai.avalonmediacard.contract.rpc.PlaybackMetadataResult
@@ -118,7 +119,7 @@ class PlaybackRpcServiceImpl(
                 ?: return StreamPlaybackResult.NoSourceBound("Серия не найдена в текущем источнике")
 
             val preparedStream = pluginManager.prepareStream(targetStream, userId)
-            val secureUrl = sanitizeAndWrapStreamUrl(preparedStream.url, userId)
+            val secureUrl = sanitizeAndWrapStreamUrl(preparedStream.url, userId, preparedStream.type)
 
             return StreamPlaybackResult.Ready(
                 streamUrl = secureUrl,
@@ -136,7 +137,7 @@ class PlaybackRpcServiceImpl(
         }
     }
 
-    private fun sanitizeAndWrapStreamUrl(rawUrl: String, userId: Uuid?): String {
+    private fun sanitizeAndWrapStreamUrl(rawUrl: String, userId: Uuid?, streamType: StreamType? = null): String {
         if (rawUrl.startsWith("/gst/")) {
             return rawUrl
         }
@@ -172,6 +173,7 @@ class PlaybackRpcServiceImpl(
                 return streamTokenService.wrapUrl(
                     targetUrl = decodedTarget,
                     userId = userId,
+                    streamType = streamType,
                     headers = customHeaders,
                     authHeader = authHeader
                 )
@@ -184,7 +186,8 @@ class PlaybackRpcServiceImpl(
         if (rawUrl.startsWith("http://") || rawUrl.startsWith("https://")) {
             return streamTokenService.wrapUrl(
                 targetUrl = rawUrl,
-                userId = userId
+                userId = userId,
+                streamType = streamType
             )
         }
 

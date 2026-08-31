@@ -3,16 +3,18 @@ package org.ensodai.avalonmediacard.presentation.screens.detailsScreen.targets.w
 import androidx.compose.animation.Crossfade
 import androidx.compose.animation.core.FastOutSlowInEasing
 import androidx.compose.animation.core.tween
+import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Icon
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -24,8 +26,10 @@ import androidx.compose.ui.input.pointer.pointerHoverIcon
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import avalonmediacard.client.generated.resources.*
 import com.composables.icons.lucide.Lucide
 import com.composables.icons.lucide.Star
+import org.jetbrains.compose.resources.stringResource
 import org.ensodai.avalonmediacard.contract.slot.Action
 import org.ensodai.avalonmediacard.contract.slot.GenreItem
 import org.ensodai.avalonmediacard.contract.slot.SlotData
@@ -41,7 +45,8 @@ fun WebMetaLine(
     Crossfade(
         targetState = isLoading,
         animationSpec = tween(300, easing = FastOutSlowInEasing),
-        modifier = modifier
+        modifier = modifier,
+        label = "WebMetaLineCrossfade"
     ) { loading ->
         if (loading) {
             Row(
@@ -67,9 +72,16 @@ fun WebMetaLine(
                 // MediaType skeleton
                 Box(
                     modifier = Modifier
+                        .width(58.dp)
+                        .height(22.dp)
+                        .shimmerPlaceholder(true, RoundedCornerShape(50))
+                )
+                // Status skeleton
+                Box(
+                    modifier = Modifier
                         .width(52.dp)
-                        .height(18.dp)
-                        .shimmerPlaceholder(true, RoundedCornerShape(4.dp))
+                        .height(22.dp)
+                        .shimmerPlaceholder(true, RoundedCornerShape(50))
                 )
                 WebMetaDot()
                 // Genres skeleton
@@ -82,16 +94,16 @@ fun WebMetaLine(
             }
         } else {
             val header = headerData ?: return@Crossfade
-            val rating = header.rating ?: header.ratings.firstOrNull()?.value?.toDoubleOrNull()
-            val year = header.releaseDate?.take(4)
+            val rating = header.rating ?: header.ratings.firstOrNull()?.value?.replace(',', '.')?.toDoubleOrNull()
+            val year = header.releaseDate?.split("-")?.firstOrNull() ?: header.releaseDate?.take(4)
             val genres = header.genres
-            val mediaType = header.mediaType
+            val mediaType = header.mediaType?.uppercase()
 
             Row(
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.spacedBy(8.dp)
             ) {
-                // Rating with Golden Star
+                // 1. Rating with Golden Star
                 if (rating != null && rating > 0.0) {
                     Row(
                         verticalAlignment = Alignment.CenterVertically,
@@ -118,7 +130,7 @@ fun WebMetaLine(
                     WebMetaDot()
                 }
 
-                // Release Year
+                // 2. Release Year
                 if (!year.isNullOrBlank()) {
                     Text(
                         text = year,
@@ -126,31 +138,68 @@ fun WebMetaLine(
                         fontSize = 14.sp,
                         fontWeight = FontWeight.Medium
                     )
-                    if (genres.isNotEmpty() || !mediaType.isNullOrBlank()) {
-                        WebMetaDot()
-                    }
+                    WebMetaDot()
                 }
 
-                // Media Type (if provided)
-                val localizedMediaType = when (mediaType?.lowercase()) {
-                    "movie" -> "Фильм"
-                    "tv", "series" -> "Сериал"
-                    else -> mediaType
-                }
-                if (!localizedMediaType.isNullOrBlank()) {
-                    Text(
-                        text = localizedMediaType,
-                        color = Color.White.copy(alpha = 0.85f),
-                        fontSize = 14.sp,
-                        fontWeight = FontWeight.Medium
+                // 3. Media Type Badge (Фильм / Сериал)
+                if (mediaType == "MOVIE") {
+                    WebMetaBadge(
+                        text = stringResource(Res.string.details_meta_movie),
+                        backgroundColor = Color(0xFF1E88E5).copy(alpha = 0.15f),
+                        contentColor = Color(0xFF90CAF9),
+                        borderColor = Color(0xFF1E88E5).copy(alpha = 0.3f)
                     )
-                    if (genres.isNotEmpty()) {
-                        WebMetaDot()
+                } else if (mediaType == "TV") {
+                    WebMetaBadge(
+                        text = stringResource(Res.string.details_meta_series),
+                        backgroundColor = Color(0xFF8E24AA).copy(alpha = 0.15f),
+                        contentColor = Color(0xFFE1BEE7),
+                        borderColor = Color(0xFF8E24AA).copy(alpha = 0.3f)
+                    )
+
+                    // 4. Status Badge (Идет / Завершен / Отменен)
+                    val status = header.status
+                    if (!status.isNullOrBlank()) {
+                        val statusText = when (status.lowercase()) {
+                            "идет", "ongoing", "returning series" -> stringResource(Res.string.details_meta_status_ongoing)
+                            "завершен", "ended", "completed" -> stringResource(Res.string.details_meta_status_completed)
+                            "отменен", "canceled", "cancelled" -> stringResource(Res.string.details_meta_status_canceled)
+                            else -> status
+                        }
+                        val (bg, fg, border) = when (status.lowercase()) {
+                            "идет", "ongoing", "returning series" -> Triple(
+                                Color(0xFF4CAF50).copy(alpha = 0.15f),
+                                Color(0xFFA5D6A7),
+                                Color(0xFF4CAF50).copy(alpha = 0.3f)
+                            )
+                            "завершен", "ended", "completed" -> Triple(
+                                Color(0xFF9E9E9E).copy(alpha = 0.15f),
+                                Color(0xFFE0E0E0),
+                                Color(0xFF9E9E9E).copy(alpha = 0.3f)
+                            )
+                            "отменен", "canceled", "cancelled" -> Triple(
+                                Color(0xFFF44336).copy(alpha = 0.15f),
+                                Color(0xFFEF9A9A),
+                                Color(0xFFF44336).copy(alpha = 0.3f)
+                            )
+                            else -> Triple(
+                                Color.White.copy(alpha = 0.08f),
+                                Color.White.copy(alpha = 0.85f),
+                                Color.White.copy(alpha = 0.12f)
+                            )
+                        }
+                        WebMetaBadge(
+                            text = statusText,
+                            backgroundColor = bg,
+                            contentColor = fg,
+                            borderColor = border
+                        )
                     }
                 }
 
-                // Genres
+                // 5. Genres
                 if (genres.isNotEmpty()) {
+                    WebMetaDot()
                     Row(
                         verticalAlignment = Alignment.CenterVertically,
                         horizontalArrangement = Arrangement.spacedBy(4.dp)
@@ -176,6 +225,30 @@ fun WebMetaLine(
                 }
             }
         }
+    }
+}
+
+@Composable
+private fun WebMetaBadge(
+    text: String,
+    backgroundColor: Color,
+    contentColor: Color,
+    borderColor: Color,
+    modifier: Modifier = Modifier
+) {
+    Box(
+        modifier = modifier
+            .background(backgroundColor, RoundedCornerShape(50))
+            .border(1.dp, borderColor, RoundedCornerShape(50))
+            .padding(horizontal = 10.dp, vertical = 3.dp),
+        contentAlignment = Alignment.Center
+    ) {
+        Text(
+            text = text,
+            color = contentColor,
+            fontSize = 12.sp,
+            fontWeight = FontWeight.SemiBold
+        )
     }
 }
 

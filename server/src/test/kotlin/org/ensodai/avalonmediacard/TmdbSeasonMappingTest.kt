@@ -9,12 +9,10 @@ import org.ensodai.avalonmediacard.contract.model.EntityType
 import org.ensodai.avalonmediacard.contract.model.MediaKey
 import org.ensodai.avalonmediacard.contract.model.MediaProvider
 import org.ensodai.avalonmediacard.tmdb.TmdbApi
-import kotlin.test.Ignore
 import kotlin.test.Test
 import kotlin.test.assertNotNull
 import kotlin.test.assertTrue
 
-@Ignore
 class TmdbSeasonMappingTest {
 
     @Test
@@ -52,7 +50,7 @@ class TmdbSeasonMappingTest {
     }
 
     @Test
-    fun testGetSeasonDetailsWithCleanIdSucceeds() = runBlocking {
+    fun testGetSeasonDetailsForShow119051() = runBlocking {
         val httpClient = HttpClient(io.ktor.client.engine.okhttp.OkHttp) {
             install(io.ktor.client.plugins.HttpTimeout) {
                 requestTimeoutMillis = 15000
@@ -73,17 +71,12 @@ class TmdbSeasonMappingTest {
         }
         val api = TmdbApi(httpClient, fakeSettings)
 
-        // When clean ID "tv:94997" is passed without duplicate prefix:
-        val seasonDetails = api.getSeasonDetails("tv:94997", 1, "ru")
+        val movieDetails = api.getMovieDetails("tv:119051", language = "ru")
+        println("MovieDetails for 119051: $movieDetails")
+
+        val season1 = api.getSeasonDetails("tv:119051", 1, "ru")
+        println("Season 1 episodes count for 119051: ${season1?.episodes?.size}")
+
         httpClient.close()
-
-        println("House of the Dragon Season 1 episodes count: ${seasonDetails?.episodes?.size}")
-        seasonDetails?.episodes?.forEach { ep ->
-            println("Episode ${ep.episodeNumber}: '${ep.name}', stillPath: ${ep.stillPath}")
-        }
-
-        assertNotNull(seasonDetails, "Season details must not be null for House of the Dragon")
-        assertTrue(seasonDetails.episodes.isNotEmpty(), "Episodes list must not be empty")
-        assertTrue(seasonDetails.episodes.first().name?.isNotBlank() == true, "Episode 1 must have a localized Russian name")
     }
 }

@@ -51,13 +51,15 @@ class MediaDetailsSlotFactory(
                     val userLocale = userSettings?.uiLocale ?: "ru"
                     val localizedGenres = genreDictionaryProvider?.getLocalizedGenres(userLocale)
                     val mappedGenres = customized.genres.withLocalizedGenres(localizedGenres)
+                    val ratingDouble = customized.rating?.replace(',', '.')?.toDoubleOrNull()
+                    val ratingString = ratingDouble?.let { ((it * 10).toInt() / 10.0).toString() } ?: customized.rating?.replace(',', '.')
                     SlotData.Header(
                         title = customized.title,
                         originalTitle = customized.originalTitle,
                         subtitle = customized.subtitle,
                         tagline = customized.tagline,
-                        rating = customized.rating?.toDoubleOrNull(),
-                        ratings = customized.rating?.let { listOf(MediaRatingItem("TMDB", it)) } ?: emptyList(),
+                        rating = ratingDouble,
+                        ratings = ratingString?.let { listOf(MediaRatingItem("TMDB", it)) } ?: emptyList(),
                         genres = mappedGenres.map {
                             GenreItem(
                                 id = it.id.toString(),
@@ -161,7 +163,12 @@ class MediaDetailsSlotFactory(
             }
     }
 
-    fun buildTvSeasonsFlow(key: MediaKey, userId: Uuid?, userMovies: UserMovieProvider?): Flow<SlotUpdate> {
+    fun buildTvSeasonsFlow(
+        key: MediaKey,
+        userId: Uuid?,
+        userMovies: UserMovieProvider?,
+        userSettingsProvider: UserGlobalSettingsProvider? = null
+    ): Flow<SlotUpdate> {
         val tmdbFlow = stateManager.getMediaDetailsState(key)
 
         val userTriggerFlow = if (userId != null && userMovies != null) {
@@ -249,6 +256,11 @@ class MediaDetailsSlotFactory(
         .onStart {
             if (key.type == EntityType.TV) {
                 emit(SlotUpdate(slotId = SlotId.TvSeasons, nodeId = "${pluginId}_seasons", state = SlotState.Loading()))
+                val userSettings = if (userId != null && userSettingsProvider != null) {
+                    runCatching { userSettingsProvider.getUserSettings(userId) }.getOrNull()
+                } else null
+                val targetLang = userSettings.resolveTargetLanguage()
+                stateManager.loadMediaDetailsInitial(key, language = targetLang)
             }
         }
     }

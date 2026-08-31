@@ -14,7 +14,7 @@ object WasmStreamEngineFactory {
     ): WasmStreamEngine? {
         return when {
             url.contains(".avi", ignoreCase = true) -> null
-            url.contains(".m3u8", ignoreCase = true) && Hls.isSupported() -> {
+            (url.contains(".m3u8", ignoreCase = true) || url.contains("m3u8", ignoreCase = true) || url.contains("playlist.m3u8", ignoreCase = true)) && Hls.isSupported() -> {
                 HlsStreamEngine(videoElement, controller, lastKnownTimeProvider)
             }
             url.contains(".mpd", ignoreCase = true) && DashStreamEngine.isSupported() -> {

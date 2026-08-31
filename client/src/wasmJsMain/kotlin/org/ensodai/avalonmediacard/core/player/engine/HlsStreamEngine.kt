@@ -50,13 +50,15 @@ class HlsStreamEngine(
         onHlsEventWasm(hls, "hlsError") { data ->
             val fatal = isHlsErrorFatalWasm(data)
             val errorType = getHlsErrorTypeWasm(data)
+            val details = getHlsErrorDetailsWasm(data)
+
             if (fatal) {
                 when (errorType) {
                     "networkError" -> {
                         networkErrorRetries++
                         if (networkErrorRetries > 3) {
                             controller.state.playbackError =
-                                "Failed to load video stream from server (502 Bad Gateway). Format or torrent stream is not supported in web version."
+                                "Failed to load video stream from server ($details). Format or torrent stream is not supported in web version."
                             controller.state.isBuffering = false
                             hlsStopLoadWasm(hls)
                         } else {
@@ -67,10 +69,12 @@ class HlsStreamEngine(
                             hlsStartLoadWasm(hls)
                         }
                     }
-                    "mediaError" -> hlsRecoverMediaErrorWasm(hls)
+                    "mediaError" -> {
+                        hlsRecoverMediaErrorWasm(hls)
+                    }
                     else -> {
                         controller.state.playbackError =
-                            "Failed to load video stream. Please choose another source or open in external player."
+                            "Failed to load video stream ($details). Please choose another source or open in external player."
                         controller.state.isBuffering = false
                         hlsStopLoadWasm(hls)
                     }
@@ -206,3 +210,12 @@ private external fun getArrayLengthWasm(arr: JsAny): Int
 
 @JsFun("(arr, index) => arr[index]")
 private external fun getArrayElementWasm(arr: JsAny, index: Int): JsAny
+
+@JsFun("(data) => (data && data.details) ? String(data.details) : ''")
+private external fun getHlsErrorDetailsWasm(data: JsAny): String
+
+@JsFun("(data) => (data && data.response && data.response.code) ? parseInt(data.response.code) : 0")
+private external fun getHlsHttpResponseCodeWasm(data: JsAny): Int
+
+@JsFun("(data) => (data && data.url) ? String(data.url) : ((data && data.context && data.context.url) ? String(data.context.url) : '')")
+private external fun getHlsErrorUrlWasm(data: JsAny): String

@@ -47,7 +47,7 @@ fun CriticsRatingsSlotContent(
 }
 
 fun getRatingColor(source: String, value: String): Color {
-    val cleanValue = value.replace("%", "").trim()
+    val cleanValue = value.replace("%", "").replace(",", ".").trim()
     val num = cleanValue.toDoubleOrNull() ?: return Color(0xFFFFC107)
 
     val is100Scale = value.contains("%") ||

@@ -4,6 +4,18 @@ html, body {
     margin: 0;
     padding: 0;
     overflow: hidden;
+    background: #000000;
+}
+
+body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+}
+
+#compose-root {
+    width: 100%;
+    height: 100%;
+    position: relative;
+    z-index: 1;
 }
 
 canvas {
@@ -11,7 +23,8 @@ canvas {
     width: 100%;
     height: 100%;
     z-index: 1;
-    background: transparent !important;
+    background-color: transparent !important;
+    outline: none;
 }
 
 #video-underlay-container {
@@ -22,4 +35,80 @@ canvas {
     height: 100%;
     z-index: 0;
     pointer-events: none;
+}
+
+/* Контейнер лоадера */
+.loader-container {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #000000;
+    z-index: 9999;
+    transition: opacity 0.3s ease-out;
+}
+
+/* Кинематографичный лоадер */
+.cinematic-loader {
+    position: relative;
+    width: 64px;
+    height: 64px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.loader-orb {
+    position: absolute;
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    background: #ffffff;
+    box-shadow: 0 0 16px 3px rgba(255, 255, 255, 0.45), 0 0 32px 6px rgba(255, 255, 255, 0.18);
+    animation: orb-pulse 2s cubic-bezier(0.4, 0.0, 0.2, 1) infinite;
+}
+
+.loader-spinner {
+    width: 64px;
+    height: 64px;
+    animation: spinner-rotate 1.3s cubic-bezier(0.45, 0.05, 0.55, 0.95) infinite;
+    transform-origin: center;
+}
+
+.loader-track {
+    fill: none;
+    stroke: rgba(255, 255, 255, 0.08);
+    stroke-width: 2.5;
+}
+
+.loader-arc {
+    fill: none;
+    stroke: url(#spinner-gradient);
+    stroke-width: 2.5;
+    stroke-linecap: round;
+    stroke-dasharray: 120 45;
+}
+
+@keyframes spinner-rotate {
+    0% {
+        transform: rotate(0deg);
+    }
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
+@keyframes orb-pulse {
+    0%, 100% {
+        transform: scale(0.85);
+        opacity: 0.45;
+    }
+    50% {
+        transform: scale(1.15);
+        opacity: 0.95;
+    }
 }

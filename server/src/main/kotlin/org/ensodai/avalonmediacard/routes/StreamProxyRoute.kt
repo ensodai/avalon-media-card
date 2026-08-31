@@ -29,9 +29,14 @@ fun Route.streamProxyRoutes(
         handle {
             val token = call.parameters["token"] ?: return@handle call.respond(HttpStatusCode.BadRequest, "Missing token")
             val payload = tokenService.decryptAndValidate(token)
-                ?: return@handle call.respond(HttpStatusCode.Forbidden, "Invalid or expired playback token")
-
             val requestedPath = call.parameters.getAll("filename")?.joinToString("/")?.takeIf { it.isNotBlank() }
+
+            logger.debug("[STREAM_PROXY] Incoming request: method={}, path={}, targetUrl={}", call.request.httpMethod.value, requestedPath, payload?.targetUrl)
+
+            if (payload == null) {
+                logger.warn("[STREAM_PROXY] Token decryption failed or token expired for: {}", token.take(20))
+                return@handle call.respond(HttpStatusCode.Forbidden, "Invalid or expired playback token")
+            }
 
             handleProxyRequest(
                 call = call,
@@ -71,7 +76,8 @@ private suspend fun handleProxyRequest(
         requestedSubPath != "manifest.mpd" &&
         requestedSubPath != "video.mp4" &&
         requestedSubPath != "meta" &&
-        requestedSubPath != "segment.ts"
+        requestedSubPath != "segment.ts" &&
+        requestedSubPath != "segment.m4s"
     ) {
         try {
             val baseUri = URI(baseTargetUrl)
@@ -90,6 +96,29 @@ private suspend fun handleProxyRequest(
         baseTargetUrl
     }
 
+    // Резолвинг эффективных заголовков для защиты от Hotlink Protection (Rutube, VK и др.)
+    val targetUri = runCatching { URI(targetUrl) }.getOrNull()
+    val targetHost = targetUri?.host?.lowercase() ?: ""
+    val effectiveHeaders = customHeaders.toMutableMap()
+
+    if (!effectiveHeaders.containsKey(HttpHeaders.Referrer) && !effectiveHeaders.containsKey("Referer")) {
+        if (targetHost.contains("rutube.ru") || targetHost.contains("rtbcdn.ru")) {
+            effectiveHeaders[HttpHeaders.Referrer] = "https://rutube.ru/"
+        } else if (targetUri != null && !targetUri.scheme.isNullOrBlank() && !targetUri.host.isNullOrBlank()) {
+            effectiveHeaders[HttpHeaders.Referrer] = "${targetUri.scheme}://${targetUri.host}/"
+        }
+    }
+
+    if (!effectiveHeaders.containsKey("Origin")) {
+        if (targetHost.contains("rutube.ru") || targetHost.contains("rtbcdn.ru")) {
+            effectiveHeaders["Origin"] = "https://rutube.ru"
+        }
+    }
+
+    if (!effectiveHeaders.containsKey(HttpHeaders.UserAgent) && !effectiveHeaders.containsKey("User-Agent")) {
+        effectiveHeaders[HttpHeaders.UserAgent] = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36"
+    }
+
     try {
         val statement = proxyHttpClient.prepareRequest(targetUrl) {
             this.method = if (isHead) HttpMethod.Head else HttpMethod.Get
@@ -102,7 +131,11 @@ private suspend fun handleProxyRequest(
                     lower != "if-modified-since" &&
                     lower != "connection" &&
                     lower != "range" &&
-                    lower != "if-range"
+                    lower != "if-range" &&
+                    lower != "referer" &&
+                    lower != "origin" &&
+                    lower != "accept-encoding" &&
+                    !lower.startsWith("sec-")
                 ) {
                     values.forEach { header(key, it) }
                 }
@@ -111,7 +144,7 @@ private suspend fun handleProxyRequest(
             clientRange?.let { header(HttpHeaders.Range, it) }
             clientIfRange?.let { header(HttpHeaders.IfRange, it) }
 
-            customHeaders.forEach { (key, value) ->
+            effectiveHeaders.forEach { (key, value) ->
                 header(key, value)
             }
 
@@ -142,7 +175,7 @@ private suspend fun handleProxyRequest(
                         targetUrl = absoluteLocation,
                         userId = userId,
                         flags = flags,
-                        headers = customHeaders,
+                        headers = effectiveHeaders,
                         authHeader = authHeader
                     )
                     call.respondRedirect("/api/stream-proxy/$newToken/$ext")
@@ -162,41 +195,92 @@ private suspend fun handleProxyRequest(
                         values.forEach { call.response.headers.append(name, it) }
                     }
                 }
-                call.response.headers.append("Access-Control-Expose-Headers", "Content-Length, Content-Range, Accept-Ranges")
+                call.response.headers.append(HttpHeaders.AcceptRanges, "bytes")
+                call.response.headers.append("Access-Control-Expose-Headers", "Content-Length, Content-Range, Accept-Ranges, Content-Type, ETag, Last-Modified")
+                proxyResponse.contentLength()?.let { call.response.headers.append(HttpHeaders.ContentLength, it.toString()) }
                 proxyResponse.contentType()?.let { call.response.headers.append(HttpHeaders.ContentType, it.toString()) }
                 call.respond(proxyResponse.status)
                 return@execute
             }
 
+            logger.debug("[STREAM_PROXY] Upstream response: status={}, contentType={}, targetUrl={}", proxyResponse.status, proxyResponse.contentType(), targetUrl)
+
+            if (!proxyResponse.status.isSuccess() && proxyResponse.status != HttpStatusCode.PartialContent) {
+                val errorBody = proxyResponse.bodyAsText()
+                logger.warn("[STREAM_PROXY] Upstream error (status={}): {}", proxyResponse.status, errorBody.take(500))
+                proxyResponse.headers.forEach { name, values ->
+                    val lowerName = name.lowercase()
+                    if (lowerName != HttpHeaders.TransferEncoding.lowercase() &&
+                        lowerName != HttpHeaders.Connection.lowercase() &&
+                        !lowerName.startsWith("access-control-")
+                    ) {
+                        values.forEach { call.response.headers.append(name, it) }
+                    }
+                }
+                call.response.headers.append("Access-Control-Expose-Headers", "Content-Length, Content-Range, Accept-Ranges")
+                call.respond(proxyResponse.status, errorBody)
+                return@execute
+            }
+
             val contentTypeStr = proxyResponse.contentType()?.toString() ?: ""
             val isM3u8 = contentTypeStr.contains("mpegurl", ignoreCase = true) ||
-                (targetUrl.substringBefore("?").endsWith(".m3u8", ignoreCase = true) && !contentTypeStr.startsWith("video/"))
+                contentTypeStr.contains("x-mpegurl", ignoreCase = true) ||
+                (requestedSubPath != null && requestedSubPath.endsWith(".m3u8", ignoreCase = true)) ||
+                (targetUrl.substringBefore("?").endsWith(".m3u8", ignoreCase = true) && !contentTypeStr.startsWith("video/")) ||
+                (targetUrl.contains("m3u8", ignoreCase = true) && !contentTypeStr.startsWith("video/"))
             val isDash = contentTypeStr.contains("dash+xml", ignoreCase = true) ||
                 contentTypeStr.contains("vnd.mpeg.dash", ignoreCase = true) ||
+                (requestedSubPath != null && requestedSubPath.endsWith(".mpd", ignoreCase = true)) ||
                 (targetUrl.substringBefore("?").endsWith(".mpd", ignoreCase = true) && !contentTypeStr.startsWith("video/"))
 
             if (isM3u8) {
-                val m3u8Text = proxyResponse.bodyAsText()
+                val rawBytes = proxyResponse.bodyAsBytes()
+                val isGzip = rawBytes.size >= 2 && rawBytes[0] == 0x1f.toByte() && rawBytes[1] == 0x8b.toByte()
+                val decompressedBytes = if (isGzip) {
+                    try {
+                        java.util.zip.GZIPInputStream(rawBytes.inputStream()).use { it.readBytes() }
+                    } catch (_: Exception) {
+                        rawBytes
+                    }
+                } else {
+                    rawBytes
+                }
+                val m3u8Text = String(decompressedBytes, Charsets.UTF_8)
+
+                logger.debug("[STREAM_PROXY] Raw M3U8 (gzip={}, length={}, preview={})", isGzip, m3u8Text.length, m3u8Text.take(250).replace("\n", "\\n"))
                 val rewrittenM3u8 = rewriteM3u8Playlist(
                     content = m3u8Text,
                     baseUrlStr = targetUrl,
                     userId = userId,
                     flags = flags,
-                    customHeaders = customHeaders,
+                    customHeaders = effectiveHeaders,
                     authHeader = authHeader,
                     tokenService = tokenService
                 )
+                logger.debug("[STREAM_PROXY] Rewritten M3U8 (length={}, preview={})", rewrittenM3u8.length, rewrittenM3u8.take(250).replace("\n", "\\n"))
 
                 call.response.headers.append("Access-Control-Expose-Headers", "Content-Length, Content-Range, Accept-Ranges")
                 call.respondText(rewrittenM3u8, ContentType.parse("application/vnd.apple.mpegurl"), proxyResponse.status)
             } else if (isDash) {
-                val mpdText = proxyResponse.bodyAsText()
+                val rawBytes = proxyResponse.bodyAsBytes()
+                val isGzip = rawBytes.size >= 2 && rawBytes[0] == 0x1f.toByte() && rawBytes[1] == 0x8b.toByte()
+                val decompressedBytes = if (isGzip) {
+                    try {
+                        java.util.zip.GZIPInputStream(rawBytes.inputStream()).use { it.readBytes() }
+                    } catch (_: Exception) {
+                        rawBytes
+                    }
+                } else {
+                    rawBytes
+                }
+                val mpdText = String(decompressedBytes, Charsets.UTF_8)
+
                 val rewrittenMpd = rewriteMpdManifest(
                     content = mpdText,
                     baseUrlStr = targetUrl,
                     userId = userId,
                     flags = flags,
-                    customHeaders = customHeaders,
+                    customHeaders = effectiveHeaders,
                     authHeader = authHeader,
                     tokenService = tokenService
                 )
@@ -216,11 +300,18 @@ private suspend fun handleProxyRequest(
                     }
                 }
                 call.response.headers.append(HttpHeaders.AcceptRanges, "bytes")
-                call.response.headers.append("Access-Control-Expose-Headers", "Content-Length, Content-Range, Accept-Ranges")
+                call.response.headers.append("Access-Control-Expose-Headers", "Content-Length, Content-Range, Accept-Ranges, Content-Type, ETag, Last-Modified")
 
                 val length = proxyResponse.contentLength()
+                val effectiveStatus = if (clientRange != null && proxyResponse.status == HttpStatusCode.OK && length != null && length > 0) {
+                    call.response.headers.append(HttpHeaders.ContentRange, "bytes 0-${length - 1}/$length")
+                    HttpStatusCode.PartialContent
+                } else {
+                    proxyResponse.status
+                }
+
                 call.respondBytesWriter(
-                    status = proxyResponse.status,
+                    status = effectiveStatus,
                     contentType = proxyResponse.contentType(),
                     contentLength = length
                 ) {
@@ -273,7 +364,8 @@ fun rewriteM3u8Playlist(
     val baseUrl = try { URI(baseUrlStr) } catch (_: Exception) { null }
     val sb = StringBuilder(content.length + 2048)
     val lines = content.lineSequence()
-    var expectUriOnNextLine = false
+    var isStreamInfPlaylist = false
+    var isSegmentInf = false
 
     for (line in lines) {
         val trimmed = line.trim()
@@ -301,7 +393,14 @@ fun rewriteM3u8Playlist(
                         headers = customHeaders,
                         authHeader = authHeader
                     )
-                    val newUri = "/api/stream-proxy/$newToken/meta"
+                    val ext = if (trimmed.startsWith("#EXT-X-MEDIA:") && !resolved.contains(".vtt", ignoreCase = true) && !resolved.contains(".webvtt", ignoreCase = true)) {
+                        "playlist.m3u8"
+                    } else if (resolved.contains(".m3u8", ignoreCase = true)) {
+                        "playlist.m3u8"
+                    } else {
+                        "meta"
+                    }
+                    val newUri = "/api/stream-proxy/$newToken/$ext"
                     sb.append(trimmed.substring(0, start))
                         .append(newUri)
                         .append(trimmed.substring(end))
@@ -311,15 +410,22 @@ fun rewriteM3u8Playlist(
             }
         }
 
-        // 2. Позиционные теги, за которыми следует URI на следующей строке (#EXT-X-STREAM-INF, #EXTINF)
-        if (trimmed.startsWith("#EXT-X-STREAM-INF") || trimmed.startsWith("#EXTINF")) {
-            expectUriOnNextLine = true
+        // 2. Позиционные теги
+        if (trimmed.startsWith("#EXT-X-STREAM-INF")) {
+            isStreamInfPlaylist = true
+            isSegmentInf = false
+            sb.append(trimmed).append('\n')
+            continue
+        }
+        if (trimmed.startsWith("#EXTINF")) {
+            isSegmentInf = true
+            isStreamInfPlaylist = false
             sb.append(trimmed).append('\n')
             continue
         }
 
         // 3. Сам URI, следующий после тега
-        if (!trimmed.startsWith("#") && expectUriOnNextLine) {
+        if (!trimmed.startsWith("#") && (isStreamInfPlaylist || isSegmentInf)) {
             val resolved = if (baseUrl != null) {
                 try { baseUrl.resolve(trimmed).toString() } catch (_: Exception) { trimmed }
             } else trimmed
@@ -331,9 +437,20 @@ fun rewriteM3u8Playlist(
                 headers = customHeaders,
                 authHeader = authHeader
             )
-            val ext = if (resolved.substringBefore("?").endsWith(".m3u8", ignoreCase = true)) "playlist.m3u8" else "segment.ts"
+            val ext = if (isStreamInfPlaylist) {
+                "playlist.m3u8"
+            } else {
+                if (resolved.substringBefore("?").endsWith(".m4s", ignoreCase = true) || resolved.contains(".m4s", ignoreCase = true)) {
+                    "segment.m4s"
+                } else if (resolved.substringBefore("?").endsWith(".m3u8", ignoreCase = true)) {
+                    "playlist.m3u8"
+                } else {
+                    "segment.ts"
+                }
+            }
             sb.append("/api/stream-proxy/").append(newToken).append('/').append(ext).append('\n')
-            expectUriOnNextLine = false
+            isStreamInfPlaylist = false
+            isSegmentInf = false
         } else {
             sb.append(trimmed).append('\n')
         }

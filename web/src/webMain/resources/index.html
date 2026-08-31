@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" style="background: #000000;">
 <head>
     <meta charset="UTF-8">
     <meta content="width=device-width, initial-scale=1.0" name="viewport">
-    <title>Avalon media card</title>
+    <title>Avalon Media Card</title>
     <link rel="icon" type="image/png" href="favicon.png">
     <link href="styles.css" rel="stylesheet" type="text/css">
     <!-- Подключение локальной версии hls.js -->
@@ -11,8 +11,27 @@
     <!-- Подключение локальной версии dash.js (MPEG-DASH) -->
     <script defer src="dash.all.min.js"></script>
 </head>
-<body style="text-align: center; align-content: center">
+<body style="background: #000000; text-align: center; align-content: center">
+<!-- Мгновенный HTML лоадер до запуска Compose -->
+<div id="avalon-html-loader" class="loader-container">
+    <div class="cinematic-loader">
+        <div class="loader-orb"></div>
+        <svg class="loader-spinner" viewBox="0 0 60 60">
+            <defs>
+                <linearGradient id="spinner-gradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                    <stop offset="0%" stop-color="#ffffff" stop-opacity="1" />
+                    <stop offset="60%" stop-color="#ffffff" stop-opacity="0.3" />
+                    <stop offset="100%" stop-color="#ffffff" stop-opacity="0" />
+                </linearGradient>
+            </defs>
+            <circle class="loader-track" cx="30" cy="30" r="26" />
+            <circle class="loader-arc" cx="30" cy="30" r="26" />
+        </svg>
+    </div>
+</div>
+
 <div id="video-underlay-container"></div>
+<div id="compose-root"></div>
 <script src="web.js" type="application/javascript"></script>
 </body>
 </html>

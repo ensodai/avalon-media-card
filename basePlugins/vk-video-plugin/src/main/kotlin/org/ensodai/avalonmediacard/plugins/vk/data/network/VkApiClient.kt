@@ -6,6 +6,7 @@ import io.ktor.client.request.forms.submitForm
 import io.ktor.client.request.header
 import io.ktor.client.statement.bodyAsText
 import io.ktor.http.Parameters
+import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
 import kotlinx.serialization.json.Json
@@ -94,6 +95,7 @@ class VkApiClient(
                     return@withLock token
                 }
             } catch (e: Exception) {
+                if (e is CancellationException) throw e
                 logger.warn("VK Video: Primary token endpoint failed (${e.message}), trying fallback...")
             }
 
@@ -135,6 +137,7 @@ class VkApiClient(
                     return@withLock token
                 }
             } catch (e: Exception) {
+                if (e is CancellationException) throw e
                 logger.error("VK Video: Error acquiring anonymous token from fallback: ${e.message}")
             }
 
@@ -179,6 +182,7 @@ class VkApiClient(
                 return items
             }
         } catch (e: Exception) {
+            if (e is CancellationException) throw e
             logger.warn("VK Video search failed for query '$query': ${e.message}")
         }
 
@@ -216,6 +220,7 @@ class VkApiClient(
             val root = json.decodeFromString<VkRootResponseDto>(body)
             return root.response?.albums ?: emptyList()
         } catch (e: Exception) {
+            if (e is CancellationException) throw e
             logger.warn("VK Video album search failed for query '$query': ${e.message}")
         }
 
@@ -253,6 +258,7 @@ class VkApiClient(
             val getResponse = json.decodeFromString<org.ensodai.avalonmediacard.plugins.vk.data.network.dto.VkVideoGetResponseDto>(body)
             return getResponse.response?.items ?: emptyList()
         } catch (e: Exception) {
+            if (e is CancellationException) throw e
             logger.error("VK Video failed to fetch album videos for owner=$ownerId album=$albumId: ${e.message}")
         }
 
@@ -288,6 +294,7 @@ class VkApiClient(
             val getResponse = json.decodeFromString<org.ensodai.avalonmediacard.plugins.vk.data.network.dto.VkVideoGetResponseDto>(body)
             return getResponse.response?.items?.firstOrNull()
         } catch (e: Exception) {
+            if (e is CancellationException) throw e
             logger.error("VK Video failed to fetch video ${ownerId}_${videoId}: ${e.message}")
         }
 

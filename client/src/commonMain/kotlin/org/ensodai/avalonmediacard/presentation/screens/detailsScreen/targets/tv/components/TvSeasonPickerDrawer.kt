@@ -45,9 +45,7 @@ internal fun TvSeasonPickerDrawer(
                     isSelected = isSelected,
                     icon = if (isSelected) Lucide.Check else null,
                     onClick = {
-                        if (!isSelected) {
-                            season.selectAction?.let(onAction)
-                        }
+                        season.selectAction?.let(onAction)
                         onDismiss()
                     }
                 )

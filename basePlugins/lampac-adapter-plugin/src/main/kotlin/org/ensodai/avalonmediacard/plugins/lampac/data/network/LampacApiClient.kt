@@ -4,6 +4,7 @@ import io.ktor.client.*
 import io.ktor.client.request.*
 import io.ktor.client.statement.*
 import io.ktor.http.*
+import kotlinx.coroutines.CancellationException
 import kotlinx.serialization.json.Json
 import org.ensodai.avalonmediacard.contract.parsers.HlsPlaylistParser
 import org.ensodai.avalonmediacard.contract.parsers.HlsResolved
@@ -99,7 +100,8 @@ class LampacApiClient(
                 emptyList()
             }
         } catch (e: Exception) {
-            logger.error("Lampac: Error querying /lite/events for $title", e)
+            if (e is CancellationException) throw e
+            logger.warn("Lampac: /lite/events unavailable at $baseUrl: ${e.message}")
             emptyList()
         }
     }
@@ -159,7 +161,8 @@ class LampacApiClient(
                 emptyList()
             }
         } catch (e: Exception) {
-            logger.error("Lampac: Error fetching from balancer $balancer", e)
+            if (e is CancellationException) throw e
+            logger.warn("Lampac: Balancer $balancer error at $baseUrl: ${e.message}")
             emptyList()
         }
     }
@@ -207,7 +210,8 @@ class LampacApiClient(
                 emptyList()
             }
         } catch (e: Exception) {
-            logger.error("Lampac: Error fetching URL $targetUrl", e)
+            if (e is CancellationException) throw e
+            logger.warn("Lampac: Error fetching URL $targetUrl: ${e.message}")
             emptyList()
         }
     }
@@ -238,7 +242,8 @@ class LampacApiClient(
                 emptyList()
             }
         } catch (e: Exception) {
-            logger.error("Lampac: Error searching torrents for $title", e)
+            if (e is CancellationException) throw e
+            logger.warn("Lampac: Error searching torrents for $title: ${e.message}")
             emptyList()
         }
     }

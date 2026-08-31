@@ -112,7 +112,7 @@ class MediaDetailsPlugin : AvalonPlugin {
             layout.add(org.ensodai.avalonmediacard.contract.slot.LayoutNode("${id}_similar", SlotId.Carousels))
 
             if (isTvShow) {
-                add(SlotId.TvSeasons, "${id}_seasons", slotFactory.buildTvSeasonsFlow(key, userId, context.userMovies))
+                add(SlotId.TvSeasons, "${id}_seasons", slotFactory.buildTvSeasonsFlow(key, userId, context.userMovies, context.userGlobalSettings))
             }
 
             if (userId != null) {

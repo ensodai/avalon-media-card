@@ -3,6 +3,7 @@ package org.ensodai.avalonmediacard.security
 import kotlinx.coroutines.runBlocking
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
+import org.ensodai.avalonmediacard.contract.plugins.StreamType
 import org.ensodai.avalonmediacard.repository.SystemSettingsRepository
 import org.koin.core.annotation.Single
 import org.slf4j.LoggerFactory
@@ -202,6 +203,7 @@ class StreamTokenService(
         targetUrl: String,
         userId: Uuid?,
         filename: String? = null,
+        streamType: StreamType? = null,
         headers: Map<String, String> = emptyMap(),
         authHeader: String? = null,
         ttlSeconds: Long = 900L
@@ -213,7 +215,13 @@ class StreamTokenService(
             authHeader = authHeader,
             ttlSeconds = ttlSeconds
         )
-        val name = filename ?: if (targetUrl.substringBefore("?").endsWith(".m3u8", ignoreCase = true)) "playlist.m3u8" else "video.mp4"
+        val name = filename ?: when {
+            streamType == StreamType.Hls -> "playlist.m3u8"
+            targetUrl.contains(".m3u8", ignoreCase = true) || targetUrl.contains("format=m3u8", ignoreCase = true) || targetUrl.contains("m3u8=", ignoreCase = true) || targetUrl.contains("/hls", ignoreCase = true) || targetUrl.contains("/balancer", ignoreCase = true) -> "playlist.m3u8"
+            targetUrl.contains(".mpd", ignoreCase = true) || targetUrl.contains("/dash", ignoreCase = true) -> "manifest.mpd"
+            targetUrl.contains(".ts", ignoreCase = true) || targetUrl.contains("format=ts", ignoreCase = true) -> "segment.ts"
+            else -> "video.mp4"
+        }
         return "/api/stream-proxy/$token/$name"
     }
 }

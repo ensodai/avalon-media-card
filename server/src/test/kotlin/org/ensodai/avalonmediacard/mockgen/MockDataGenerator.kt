@@ -39,7 +39,7 @@ class MockDataGenerator {
             println("Found ${moviesToFetch.size} movies and ${showsToFetch.size} shows to fetch metadata for.")
 
             val json = Json { prettyPrint = true }
-            val outputDir = File("test-data/metadata")
+            val outputDir = File("движок рекомендаций мок данные/metadata")
             if (!outputDir.exists()) outputDir.mkdirs()
 
             run {

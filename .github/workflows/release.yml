@@ -1,0 +1,151 @@
+name: Release Build & Publish
+
+on:
+  push:
+    tags:
+      - 'v*'
+  workflow_dispatch:
+    inputs:
+      version:
+        description: 'Release version (e.g. 1.0.0)'
+        required: true
+        default: '1.0.0'
+
+permissions:
+  contents: write
+
+jobs:
+  build-server-android-linux:
+    name: Build Server, Plugins, Android & Linux
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up JDK 21
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '21'
+
+      - name: Setup Android SDK
+        uses: android-actions/setup-android@v3
+
+      - name: Setup Gradle
+        uses: gradle/actions/setup-gradle@v4
+
+      - name: Make Gradle executable
+        run: chmod +x gradlew
+
+      - name: Build Server Fat JAR
+        run: ./gradlew :server:buildFatJar
+
+      - name: Build Core Plugins
+        run: ./gradlew :basePlugins:home-feed-plugin:build :basePlugins:media-details-plugin:build :basePlugins:person-details-plugin:build :basePlugins:media-list-plugin:build :basePlugins:trakt-metadata-plugin:build :basePlugins:torrserver-plugin:build :basePlugins:recommendation-plugin:build :basePlugins:anilibria-plugin:build :basePlugins:rutube-plugin:build :basePlugins:collaps-plugin:build :basePlugins:vk-video-plugin:build :basePlugins:lampac-adapter-plugin:build
+
+      - name: Build Android APK
+        run: ./gradlew :androidApp:assembleDebug
+
+      - name: Build Linux Desktop (.deb)
+        run: ./gradlew :desktopApp:packageDeb
+
+      - name: Collect artifacts
+        run: |
+          mkdir -p dist
+          
+          # 1. Сервер
+          if [ -f server/build/libs/avalon-media-card-server.jar ]; then
+            cp server/build/libs/avalon-media-card-server.jar dist/avalon-server.jar
+          fi
+          
+          # 2. Плагины в один архив
+          if [ -d server/plugins ] && [ "$(ls -A server/plugins)" ]; then
+            zip -j dist/avalon-plugins.zip server/plugins/*.jar
+          fi
+          
+          # 3. Android APK
+          if [ -f androidApp/build/outputs/apk/debug/androidApp-debug.apk ]; then
+            cp androidApp/build/outputs/apk/debug/androidApp-debug.apk dist/avalon-android.apk
+          fi
+          
+          # 4. Linux DEB
+          find desktopApp/build/compose/binaries/main/deb -name "*.deb" -exec cp {} dist/avalon-linux.deb \;
+
+      - name: Upload Linux & Server Artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: artifacts-linux-server
+          path: dist/*
+          retention-days: 1
+
+  build-windows:
+    name: Build Windows Desktop (.exe)
+    runs-on: windows-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up JDK 21
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '21'
+
+      - name: Setup Gradle
+        uses: gradle/actions/setup-gradle@v4
+
+      - name: Download MPV Player DLLs
+        shell: bash
+        run: bash scripts/download_mpv.sh
+
+      - name: Build Windows Installer (.exe & .msi)
+        shell: bash
+        run: ./gradlew :desktopApp:packageExe :desktopApp:packageMsi
+
+      - name: Collect Windows Artifacts
+        shell: bash
+        run: |
+          mkdir -p dist-win
+          find desktopApp/build/compose/binaries/main/exe -name "*.exe" -exec cp {} dist-win/avalon-windows.exe \; || true
+          find desktopApp/build/compose/binaries/main/msi -name "*.msi" -exec cp {} dist-win/avalon-windows.msi \; || true
+
+      - name: Upload Windows Artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: artifacts-windows
+          path: dist-win/*
+          retention-days: 1
+
+  publish-release:
+    name: Publish GitHub Release
+    needs: [build-server-android-linux, build-windows]
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Download all built artifacts
+        uses: actions/download-artifact@v4
+        with:
+          path: release-assets
+          merge-multiple: true
+
+      - name: Determine Release Tag
+        id: release_info
+        run: |
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
+            TAG="v${{ github.event.inputs.version }}"
+          else
+            TAG="${{ github.ref_name }}"
+          fi
+          echo "tag=$TAG" >> $GITHUB_OUTPUT
+
+      - name: Create GitHub Release and Upload Assets
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ steps.release_info.outputs.tag }}
+          name: "Release ${{ steps.release_info.outputs.tag }}"
+          files: release-assets/*
+          generate_release_notes: true
+          draft: false
+          prerelease: false

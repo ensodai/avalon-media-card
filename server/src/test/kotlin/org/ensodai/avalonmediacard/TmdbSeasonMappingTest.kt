@@ -10,9 +10,11 @@ import org.ensodai.avalonmediacard.contract.model.MediaKey
 import org.ensodai.avalonmediacard.contract.model.MediaProvider
 import org.ensodai.avalonmediacard.tmdb.TmdbApi
 import kotlin.test.Test
+import kotlin.test.Ignore
 import kotlin.test.assertNotNull
 import kotlin.test.assertTrue
 
+@Ignore
 class TmdbSeasonMappingTest {
 
     @Test

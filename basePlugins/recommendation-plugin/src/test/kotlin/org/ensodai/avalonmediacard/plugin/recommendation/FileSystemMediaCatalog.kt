@@ -19,12 +19,15 @@ class FileSystemMediaCatalog(
     companion object {
         fun resolveMockMetadataDir(): String {
             val candidates = listOf(
+                File("test-data/metadata"),
+                File("../../test-data/metadata"),
+                File("../../../test-data/metadata"),
                 File("движок рекомендаций мок данные/metadata"),
                 File("../../движок рекомендаций мок данные/metadata"),
                 File("../../../движок рекомендаций мок данные/metadata")
             )
             return candidates.firstOrNull { it.exists() && it.isDirectory }?.path
-                ?: "движок рекомендаций мок данные/metadata"
+                ?: "test-data/metadata"
         }
     }
 

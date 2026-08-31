@@ -27,7 +27,7 @@ object EnvHelper {
         file.readLines().forEach { line ->
             val parts = line.split("=", limit = 2)
             if (parts.size == 2 && parts[0].trim() == key) {
-                return parts[1].trim()
+                return parts[1].trim().removeSurrounding("\"").removeSurrounding("'")
             }
         }
         return null

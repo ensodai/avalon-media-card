@@ -35,6 +35,13 @@ dependencyResolutionManagement {
         }
         mavenCentral()
         maven { url = uri("https://jitpack.io") }
+        maven {
+            url = uri("https://maven.pkg.github.com/ensodai/avalon-media-card-core-contract")
+            credentials {
+                username = System.getenv("GITHUB_ACTOR") ?: "ensodai"
+                password = System.getenv("GITHUB_TOKEN") ?: System.getenv("SERVER_DEPLOY_KEY")
+            }
+        }
     }
 }
 

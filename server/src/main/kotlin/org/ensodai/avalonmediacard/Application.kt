@@ -44,7 +44,8 @@ import org.koin.ktor.ext.inject
 import java.io.File
 
 fun main() {
-    embeddedServer(Netty, port = System.getenv("PORT")?.toInt() ?: 8080, host = "0.0.0.0", module = Application::module)
+    val port = EnvHelper.getEnv("PORT")?.toIntOrNull() ?: 8080
+    embeddedServer(Netty, port = port, host = "0.0.0.0", module = Application::module)
         .start(wait = true)
 }
 

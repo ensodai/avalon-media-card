@@ -18,7 +18,9 @@ echo "=================================================================="
 echo "          🌿 Avalon Media Server Installer / Установщик"
 echo "=================================================================="
 echo ""
-read -rp "Продолжить на русском? / Continue in Russian? [Y/n] (Да/нет): " LANG_INPUT
+
+# Интерактивное чтение строго из /dev/tty (работает при curl | bash)
+read -rp "Продолжить на русском? / Continue in Russian? [Y/n] (Да/нет): " LANG_INPUT </dev/tty || LANG_INPUT="ru"
 LANG_INPUT=$(echo "$LANG_INPUT" | tr '[:upper:]' '[:lower:]')
 
 if [[ "$LANG_INPUT" == "n" || "$LANG_INPUT" == "no" || "$LANG_INPUT" == "нет" || "$LANG_INPUT" == "н" ]]; then
@@ -88,17 +90,17 @@ echo "  $MSG_TITLE"
 echo "=================================================================="
 
 # 1. Папка установки
-read -rp "$MSG_DIR_PROMPT" INSTALL_DIR
+read -rp "$MSG_DIR_PROMPT" INSTALL_DIR </dev/tty || INSTALL_DIR="/opt/avalon"
 INSTALL_DIR=${INSTALL_DIR:-/opt/avalon}
 
 # 2. Выбор пользователя ОС
-read -rp "$MSG_USER_MODE_PROMPT" CREATE_DEDICATED_USER
+read -rp "$MSG_USER_MODE_PROMPT" CREATE_DEDICATED_USER </dev/tty || CREATE_DEDICATED_USER="y"
 CREATE_DEDICATED_USER=$(echo "$CREATE_DEDICATED_USER" | tr '[:upper:]' '[:lower:]')
 
 if [[ "$CREATE_DEDICATED_USER" == "n" || "$CREATE_DEDICATED_USER" == "no" || "$CREATE_DEDICATED_USER" == "нет" || "$CREATE_DEDICATED_USER" == "н" ]]; then
   DEFAULT_USER=${SUDO_USER:-root}
   PROMPT_TEXT=$(printf "$MSG_CUSTOM_USER_PROMPT" "$DEFAULT_USER")
-  read -rp "$PROMPT_TEXT" RUN_USER
+  read -rp "$PROMPT_TEXT" RUN_USER </dev/tty || RUN_USER="$DEFAULT_USER"
   RUN_USER=${RUN_USER:-$DEFAULT_USER}
 else
   RUN_USER="avalon"
@@ -109,15 +111,15 @@ else
 fi
 
 # 3. Порт
-read -rp "$MSG_PORT_PROMPT" SERVER_PORT
+read -rp "$MSG_PORT_PROMPT" SERVER_PORT </dev/tty || SERVER_PORT="8080"
 SERVER_PORT=${SERVER_PORT:-8080}
 
 # 4. Логин веб-админа
-read -rp "$MSG_ADMIN_USER_PROMPT" ADMIN_USER
+read -rp "$MSG_ADMIN_USER_PROMPT" ADMIN_USER </dev/tty || ADMIN_USER="admin"
 ADMIN_USER=${ADMIN_USER:-admin}
 
 # 5. Пароль веб-админа
-read -rp "$MSG_PASS_PROMPT" ADMIN_PASSWORD
+read -rp "$MSG_PASS_PROMPT" ADMIN_PASSWORD </dev/tty || ADMIN_PASSWORD=""
 if [ -z "$ADMIN_PASSWORD" ]; then
   if command -v openssl >/dev/null 2>&1; then
     ADMIN_PASSWORD=$(openssl rand -base64 12 | tr -dc 'a-zA-Z0-9!@#%')

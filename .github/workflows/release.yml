@@ -11,8 +11,15 @@ on:
         required: true
         default: '1.0.0'
 
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
 permissions:
   contents: write
+
+env:
+  GRADLE_OPTS: "-Dorg.gradle.jvmargs=-Xmx4g -Dorg.gradle.parallel=true -Dorg.gradle.caching=true"
 
 jobs:
   build-server-android-linux:
@@ -32,23 +39,21 @@ jobs:
       - name: Setup Android SDK
         uses: android-actions/setup-android@v3
 
-      - name: Setup Gradle
+      - name: Setup Gradle with Caching
         uses: gradle/actions/setup-gradle@v4
+        with:
+          cache-read-only: false
 
       - name: Make Gradle executable
         run: chmod +x gradlew
 
-      - name: Build Server Fat JAR
-        run: ./gradlew :server:buildFatJar
-
-      - name: Build Core Plugins
-        run: ./gradlew :basePlugins:home-feed-plugin:build :basePlugins:media-details-plugin:build :basePlugins:person-details-plugin:build :basePlugins:media-list-plugin:build :basePlugins:trakt-metadata-plugin:build :basePlugins:torrserver-plugin:build :basePlugins:recommendation-plugin:build :basePlugins:anilibria-plugin:build :basePlugins:rutube-plugin:build :basePlugins:collaps-plugin:build :basePlugins:vk-video-plugin:build :basePlugins:lampac-adapter-plugin:build
-
-      - name: Build Android APK
-        run: ./gradlew :androidApp:assembleDebug
-
-      - name: Build Linux Desktop (.deb)
-        run: ./gradlew :desktopApp:packageDeb
+      - name: Build All Targets (Parallel)
+        run: |
+          ./gradlew compileAll \
+            :server:buildFatJar \
+            :androidApp:assembleDebug \
+            :desktopApp:packageDeb \
+            --parallel
 
       - name: Collect artifacts
         run: |
@@ -93,8 +98,10 @@ jobs:
           distribution: 'temurin'
           java-version: '21'
 
-      - name: Setup Gradle
+      - name: Setup Gradle with Caching
         uses: gradle/actions/setup-gradle@v4
+        with:
+          cache-read-only: false
 
       - name: Download MPV Player DLLs
         shell: bash
@@ -102,7 +109,7 @@ jobs:
 
       - name: Build Windows Installer (.exe & .msi)
         shell: bash
-        run: ./gradlew :desktopApp:packageExe :desktopApp:packageMsi
+        run: ./gradlew :desktopApp:packageExe :desktopApp:packageMsi --parallel
 
       - name: Collect Windows Artifacts
         shell: bash

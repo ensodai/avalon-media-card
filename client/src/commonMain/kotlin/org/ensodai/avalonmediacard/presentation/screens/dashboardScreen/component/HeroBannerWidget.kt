@@ -52,9 +52,14 @@ fun HeroBannerWidget(
     modifier: Modifier = Modifier,
     scrollOffsetProvider: () -> Float = { 0f }
 ) {
-    val data = state.data
-    val items = data?.items ?: emptyList()
-    val isReady = !state.isLoading && data != null && items.isNotEmpty()
+    if (state.isLoading && state.data == null) {
+        HeroBannerSkeleton(modifier = modifier)
+        return
+    }
+
+    val data = state.data ?: return
+    val items = data.items
+    if (items.isEmpty()) return
 
     val initialPage = 0
     val pagerState = rememberPagerState(initialPage = initialPage) { 
@@ -67,8 +72,8 @@ fun HeroBannerWidget(
     val isFocused by interactionSource.collectIsFocusedAsState()
     val isUserInteracting = isHovered || isFocused
 
-    LaunchedEffect(pagerState, isUserInteracting, isReady) {
-        if (isReady && !isUserInteracting && items.size > 1) {
+    LaunchedEffect(pagerState, isUserInteracting) {
+        if (!isUserInteracting && items.size > 1) {
             while (true) {
                 delay(5000L.milliseconds)
                 pagerState.animateScrollToPage(pagerState.currentPage + 1)
@@ -82,7 +87,7 @@ fun HeroBannerWidget(
             .height(520.dp)
             .clipToBounds()
             .onKeyEvent { event ->
-                if (isReady && event.type == KeyEventType.KeyDown) {
+                if (event.type == KeyEventType.KeyDown) {
                     when (event.key) {
                         Key.DirectionRight -> {
                             scope.launch { pagerState.animateScrollToPage(pagerState.currentPage + 1) }
@@ -106,15 +111,11 @@ fun HeroBannerWidget(
                 activeBorderColor = Color.Transparent,
                 shape = RoundedCornerShape(0.dp),
                 onClick = {
-                    if (isReady) {
-                        val currentItem = items[pagerState.currentPage % items.size]
-                        onAction(ActionNavigate(Screen.Details(currentItem.key)))
-                    }
+                    val currentItem = items[pagerState.currentPage % items.size]
+                    onAction(ActionNavigate(Screen.Details(currentItem.key)))
                 }
             )
-            .shimmerPlaceholder(isLoading = !isReady, shape = RoundedCornerShape(0.dp))
     ) {
-        if (!isReady) return@Box
         
         HorizontalPager(
             state = pagerState,
@@ -176,7 +177,7 @@ fun HeroBannerWidget(
                         .fillMaxWidth(0.75f)
                 ) {
                     Text(
-                        text = data?.title?.uppercase() ?: "",
+                        text = data.title.uppercase(),
                         color = MaterialTheme.colorScheme.primary,
                         style = MaterialTheme.typography.labelLarge,
                         letterSpacing = 2.sp,
@@ -190,7 +191,7 @@ fun HeroBannerWidget(
                         fontWeight = FontWeight.ExtraBold,
                         lineHeight = 46.sp
                     )
-                    data?.subtitle?.let {
+                    data.subtitle?.let {
                         Spacer(modifier = Modifier.height(8.dp))
                         Text(
                             text = it,
@@ -308,6 +309,73 @@ fun HeroBannerWidget(
                     }
                 }
             }
+        }
+    }
+}
+
+@Composable
+private fun HeroBannerSkeleton(
+    modifier: Modifier = Modifier
+) {
+    Box(
+        modifier = modifier
+            .fillMaxWidth()
+            .height(520.dp)
+            .clipToBounds()
+    ) {
+        // Фоновый шиммер бэкдропа
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
+                .shimmerPlaceholder(isLoading = true, shape = RoundedCornerShape(0.dp))
+        )
+
+        // Темный кинематографичный градиент снизу
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
+                .background(
+                    Brush.verticalGradient(
+                        colorStops = arrayOf(
+                            0.0f to Color.Transparent,
+                            0.5f to Color.Black.copy(alpha = 0.4f),
+                            0.85f to Color.Black.copy(alpha = 0.85f),
+                            1.0f to Color.Black
+                        )
+                    )
+                )
+        )
+
+        // Скелетон инфо-блока (категория, заголовок, описание)
+        Column(
+            modifier = Modifier
+                .align(Alignment.BottomStart)
+                .padding(start = 32.dp, end = 120.dp, bottom = 40.dp)
+                .fillMaxWidth(0.75f)
+        ) {
+            // Категория / Бейдж
+            Box(
+                modifier = Modifier
+                    .width(140.dp)
+                    .height(14.dp)
+                    .shimmerPlaceholder(isLoading = true, shape = RoundedCornerShape(4.dp))
+            )
+            Spacer(modifier = Modifier.height(12.dp))
+            // Название фильма (крупный блок)
+            Box(
+                modifier = Modifier
+                    .width(360.dp)
+                    .height(36.dp)
+                    .shimmerPlaceholder(isLoading = true, shape = RoundedCornerShape(6.dp))
+            )
+            Spacer(modifier = Modifier.height(10.dp))
+            // Описание
+            Box(
+                modifier = Modifier
+                    .width(480.dp)
+                    .height(16.dp)
+                    .shimmerPlaceholder(isLoading = true, shape = RoundedCornerShape(4.dp))
+            )
         }
     }
 }

@@ -12,6 +12,7 @@ data class SettingsViewState(
     val titleMode: TitleDisplayMode = TitleDisplayMode.LOCALIZED,
     val titleLanguage: String? = null,
     val overviewLanguage: String? = null,
+    val tmdbReadToken: String? = null,
     val isLoading: Boolean = false,
     val error: String? = null,
     val successMessage: String? = null

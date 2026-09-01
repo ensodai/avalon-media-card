@@ -89,11 +89,16 @@ class PluginManager(
     ).apply { tryEmit(Unit) }
     val pluginUpdates = _pluginUpdates.asSharedFlow()
 
+    suspend fun emitChangeEvent(event: String) {
+        changeEvents.emit(event)
+    }
+
     init {
         val classLoader = this::class.java.classLoader
-        val pluginsDir = File("plugins")
-        if (!pluginsDir.exists()) {
-            pluginsDir.mkdirs()
+        val pluginsDir = if (File("server/plugins").exists() && (File("server/plugins").listFiles { file -> file.extension == "jar" }?.isNotEmpty() == true)) {
+            File("server/plugins")
+        } else {
+            File("plugins").apply { if (!exists()) mkdirs() }
         }
 
         // Инициализируем системные интеграции ядра (Core)
@@ -128,6 +133,9 @@ class PluginManager(
 
         newPlugins.forEach { plugin ->
             // Очищаем старые регистрации при перезагрузке плагина с тем же id
+            loadedPlugins.filter { it.id == plugin.id }.forEach { oldPlugin ->
+                runCatching { oldPlugin.onDestroy() }
+            }
             loadedPlugins.removeIf { it.id == plugin.id }
             pluginClassLoaders.remove(plugin.id)?.let { runCatching { it.close() } }
             pluginClassLoaders[plugin.id] = classLoader
@@ -148,7 +156,7 @@ class PluginManager(
                 userCustomLists = userCustomLists,
                 settings = PluginSettingsImpl(plugin.id, systemSettingsRepository, changeEvents),
                 userSettings = UserPluginSettingsImpl(plugin.id, userIntegrationSettingsRepository),
-                integrationManager = IntegrationSettingsManagerImpl(plugin.id, systemSettingsRepository, userIntegrationSettingsRepository, userExternalAuthRepository),
+                integrationManager = IntegrationSettingsManagerImpl(plugin.id, systemSettingsRepository, userIntegrationSettingsRepository, userExternalAuthRepository, userSettingsRepository),
                 userMediaBindings = userMediaBindings,
                 sourceMappings = sourceMappingProvider,
                 updater = SlotUpdaterImpl(_slotUpdates),
@@ -331,6 +339,19 @@ class PluginManager(
         pluginContexts.remove(pluginId)?.let { context ->
             context.scope.cancel()
         }
+        _pluginUpdates.tryEmit(Unit)
+        updateSerializersModule()
+    }
+
+    fun destroyAll() {
+        loadedPlugins.forEach { plugin ->
+            runCatching { plugin.onDestroy() }
+        }
+        loadedPlugins.clear()
+        pluginContexts.values.forEach { it.scope.cancel() }
+        pluginContexts.clear()
+        pluginClassLoaders.values.forEach { runCatching { it.close() } }
+        pluginClassLoaders.clear()
         _pluginUpdates.tryEmit(Unit)
         updateSerializersModule()
     }

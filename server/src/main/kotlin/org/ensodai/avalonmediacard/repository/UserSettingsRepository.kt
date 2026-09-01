@@ -37,13 +37,15 @@ class UserSettingsRepository {
                 } else {
                     TitleDisplayMode.LOCALIZED
                 }
+                val tmdbToken = row[UserSettingsTable.tmdbReadToken]
 
                 UserSettingsDto(
                     uiLocale = locale,
                     posterLanguage = posterLang,
                     titleMode = titleMode,
                     titleLanguage = titleLanguage,
-                    overviewLanguage = overviewLang
+                    overviewLanguage = overviewLang,
+                    tmdbReadToken = tmdbToken
                 )
             } else {
                 UserSettingsDto()
@@ -65,6 +67,7 @@ class UserSettingsRepository {
                     it[UserSettingsTable.posterLanguage] = settings.posterLanguage
                     it[UserSettingsTable.titleMode] = titleModeVal
                     it[UserSettingsTable.overviewLanguage] = settings.overviewLanguage
+                    it[UserSettingsTable.tmdbReadToken] = settings.tmdbReadToken?.trim()
                 }
             } else {
                 UserSettingsTable.insert {
@@ -73,6 +76,7 @@ class UserSettingsRepository {
                     it[UserSettingsTable.posterLanguage] = settings.posterLanguage
                     it[UserSettingsTable.titleMode] = titleModeVal
                     it[UserSettingsTable.overviewLanguage] = settings.overviewLanguage
+                    it[UserSettingsTable.tmdbReadToken] = settings.tmdbReadToken?.trim()
                 }
             }
         }

@@ -35,6 +35,10 @@ data class AdminActions(
     val onTestJackettConnection: () -> Unit,
     val onTestTmdbConnection: () -> Unit,
     val onTestTorrServerConnection: () -> Unit,
+    val onSaveTmdbSettings: () -> Unit,
+    val onSaveTorrServerSettings: () -> Unit,
+    val onSaveProwlarrSettings: () -> Unit,
+    val onSaveJackettSettings: () -> Unit,
     val loadGlobalIntegrations: () -> Unit,
     val saveGlobalIntegrations: () -> Unit,
 

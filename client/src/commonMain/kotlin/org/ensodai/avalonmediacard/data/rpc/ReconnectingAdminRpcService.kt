@@ -6,6 +6,10 @@ import org.ensodai.avalonmediacard.contract.admin.CreateUserRequest
 import org.ensodai.avalonmediacard.contract.admin.GlobalIntegrationSettingsDto
 import org.ensodai.avalonmediacard.contract.admin.ServerSystemInfoDto
 import org.ensodai.avalonmediacard.contract.admin.UpdateGlobalIntegrationSettingsRequest
+import org.ensodai.avalonmediacard.contract.admin.UpdateJackettSettingsRequest
+import org.ensodai.avalonmediacard.contract.admin.UpdateProwlarrSettingsRequest
+import org.ensodai.avalonmediacard.contract.admin.UpdateTmdbSettingsRequest
+import org.ensodai.avalonmediacard.contract.admin.UpdateTorrServerSettingsRequest
 import org.ensodai.avalonmediacard.contract.admin.UserDto
 import org.ensodai.avalonmediacard.contract.model.UserRole
 import org.ensodai.avalonmediacard.contract.model.UserStatus
@@ -45,6 +49,18 @@ class ReconnectingAdminRpcService(
         
     override suspend fun updateGlobalIntegrationSettings(request: UpdateGlobalIntegrationSettingsRequest): AdminActionResponse =
         executor.execute("updateGlobalIntegrationSettings", getService = { getService() }) { updateGlobalIntegrationSettings(request) }
+
+    override suspend fun updateTmdbSettings(request: UpdateTmdbSettingsRequest): AdminActionResponse =
+        executor.execute("updateTmdbSettings", getService = { getService() }) { updateTmdbSettings(request) }
+
+    override suspend fun updateTorrServerSettings(request: UpdateTorrServerSettingsRequest): AdminActionResponse =
+        executor.execute("updateTorrServerSettings", getService = { getService() }) { updateTorrServerSettings(request) }
+
+    override suspend fun updateProwlarrSettings(request: UpdateProwlarrSettingsRequest): AdminActionResponse =
+        executor.execute("updateProwlarrSettings", getService = { getService() }) { updateProwlarrSettings(request) }
+
+    override suspend fun updateJackettSettings(request: UpdateJackettSettingsRequest): AdminActionResponse =
+        executor.execute("updateJackettSettings", getService = { getService() }) { updateJackettSettings(request) }
 
     override suspend fun testTmdbConnection(token: String): AdminActionResponse =
         executor.execute("testTmdbConnection", getService = { getService() }) { testTmdbConnection(token) }

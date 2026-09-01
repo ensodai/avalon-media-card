@@ -4,7 +4,7 @@ plugins {
 }
 
 dependencies {
-    implementation("org.ensodai.avalonmediacard:avalon-media-card-core-contract:1.0.0-SNAPSHOT")
+    implementation(libs.avalon.core.contract)
     implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.6.3")
     implementation("io.ktor:ktor-client-core-jvm:3.5.0")
     testImplementation(kotlin("test"))

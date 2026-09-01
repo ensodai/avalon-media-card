@@ -104,7 +104,7 @@ class CoreIntegrations(
             userCustomLists = userCustomLists,
             settings = coreSettings,
             userSettings = UserPluginSettingsImpl("core", userIntegrationSettingsRepository),
-            integrationManager = IntegrationSettingsManagerImpl("core", systemSettingsRepository, userIntegrationSettingsRepository, userExternalAuthRepository),
+            integrationManager = IntegrationSettingsManagerImpl("core", systemSettingsRepository, userIntegrationSettingsRepository, userExternalAuthRepository, userSettingsRepository),
             userMediaBindings = userMediaBindings,
             sourceMappings = sourceMappingProvider,
             updater = slotUpdater,
@@ -131,48 +131,6 @@ class CoreIntegrations(
         coreContext.slots.onScreen<Screen.Integrations> { _, userId ->
             val locale = if (userId != null) userSettingsRepository.getUserLocale(userId) else "ru"
             val isEn = locale.startsWith("en", ignoreCase = true)
-
-            val tmdbFlow = changeEvents
-                .filter { it == "plugin:core:tmdb_read_token" }
-                .map { Unit }
-                .onStart { emit(Unit) }
-                .map {
-                    val readToken = systemSettingsRepository.getSetting("tmdb_read_token") ?: ""
-
-                    SlotUpdate(
-                        slotId = SlotId.Integrations,
-                        nodeId = "core_tmdb",
-                        state = org.ensodai.avalonmediacard.contract.slot.SlotState.Content(
-                            SlotData.SettingsGroup(
-                                title = if (isEn) "System Settings" else "Системные настройки",
-                                description = if (isEn) "Core application settings required for catalogs and search." else "Основные настройки приложения, необходимые для работы с каталогами и поиском.",
-                                fields = listOf(
-                                    SettingField.Info(
-                                        key = "tmdb_info",
-                                        label = if (isEn) "About Access Key" else "О ключе доступа",
-                                        description = if (isEn) "This key is required for media catalog and movie/TV search. You can obtain it for free in your TMDB profile." else "Этот ключ необходим для работы медиа-каталога и поиска фильмов/сериалов. Вы можете получить его бесплатно в вашем личном профиле TMDB.",
-                                        action = ActionOpenUrl("https://www.themoviedb.org/settings/api"),
-                                        actionLabel = if (isEn) "Get Read Access Token →" else "Получить Read Access Token →"
-                                    ),
-                                    SettingField.TextField(
-                                        key = "tmdb_read_token",
-                                        label = "TMDB Read Access Token (v4)",
-                                        value = readToken,
-                                        placeholder = if (isEn) "Enter Read Access Token..." else "Введите Read Access Token...",
-                                        isSensitive = true,
-                                        isEnabled = tmdbValidationStatus != ValidationStatus.Pending,
-                                        validateAction = ValidateTmdbToken(""),
-                                        validationStatus = tmdbValidationStatus,
-                                        validationMessage = tmdbValidationMessage
-                                    )
-                                ),
-                                saveAction = null,
-                                isSaveEnabled = true,
-                                connectionStatus = if (readToken.isNotEmpty() && tmdbValidationStatus == ValidationStatus.None) ValidationStatus.Success else tmdbValidationStatus
-                            )
-                        )
-                    )
-                }
 
             val traktFlow = changeEvents
                 .filter { it.startsWith("plugin:core:trakt_") || it == "plugin:core:trakt_auth_changed" }
@@ -220,10 +178,9 @@ class CoreIntegrations(
 
             ScreenSlots(
                 layout = listOf(
-                    LayoutNode("core_tmdb", SlotId.Integrations),
                     LayoutNode("core_trakt", SlotId.Integrations)
                 ),
-                flow = kotlinx.coroutines.flow.merge(tmdbFlow, traktFlow).map { ScreenStreamEvent.Update(it) }
+                flow = traktFlow.map { ScreenStreamEvent.Update(it) }
             )
         }
 

@@ -5,6 +5,7 @@ import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.withContext
 import org.ensodai.avalonmediacard.contract.auth.AuthState
 import org.ensodai.avalonmediacard.contract.i18n.PluginLocaleElement
+import org.ensodai.avalonmediacard.contract.i18n.PluginUserElement
 import org.ensodai.avalonmediacard.contract.model.SidebarItem
 import org.ensodai.avalonmediacard.contract.model.SidebarItemType
 import org.ensodai.avalonmediacard.contract.model.WidgetSettingsData
@@ -45,7 +46,8 @@ class SduiRpcServiceImpl(
     override fun streamSidebar(): Flow<List<SidebarItem>> = channelFlow {
         val userId = session.awaitUserId()
         val userLocale = getUserLocale(userId)
-        withContext(PluginLocaleElement(userLocale)) {
+        val userContext = PluginLocaleElement(userLocale) + (userId?.let { PluginUserElement(it) } ?: kotlin.coroutines.EmptyCoroutineContext)
+        withContext(userContext) {
             pluginManager.pluginUpdates.flatMapLatest {
                 val flows = pluginManager.getSidebarFlows(userId)
                 if (flows.isEmpty()) {
@@ -83,7 +85,8 @@ class SduiRpcServiceImpl(
     override suspend fun getGlobalManifest(): GlobalManifest {
         val userId = session.awaitUserId()
         val userLocale = getUserLocale(userId)
-        return withContext(PluginLocaleElement(userLocale)) {
+        val userContext = PluginLocaleElement(userLocale) + (userId?.let { PluginUserElement(it) } ?: kotlin.coroutines.EmptyCoroutineContext)
+        return withContext(userContext) {
             pluginManager.buildGlobalManifest(userId)
         }
     }
@@ -91,7 +94,8 @@ class SduiRpcServiceImpl(
     override fun streamScreen(screen: Screen): Flow<ScreenStreamEvent> = channelFlow {
         val userId = session.awaitUserId()
         val userLocale = getUserLocale(userId)
-        withContext(PluginLocaleElement(userLocale)) {
+        val userContext = PluginLocaleElement(userLocale) + (userId?.let { PluginUserElement(it) } ?: kotlin.coroutines.EmptyCoroutineContext)
+        withContext(userContext) {
             val allScreenSlots = pluginManager.getScreenSlots(screen, userId)
             println("SduiRpcService streamScreen: screen=$screen (class=${screen::class}), allScreenSlots=${allScreenSlots.size}")
 

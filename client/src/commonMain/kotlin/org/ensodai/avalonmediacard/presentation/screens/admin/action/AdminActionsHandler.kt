@@ -4,9 +4,15 @@ import androidx.lifecycle.viewModelScope
 import avalonmediacard.client.generated.resources.*
 import kotlinx.coroutines.launch
 import org.ensodai.avalonmediacard.contract.admin.UpdateGlobalIntegrationSettingsRequest
+import org.ensodai.avalonmediacard.contract.admin.UpdateJackettSettingsRequest
+import org.ensodai.avalonmediacard.contract.admin.UpdateProwlarrSettingsRequest
+import org.ensodai.avalonmediacard.contract.admin.UpdateTmdbSettingsRequest
+import org.ensodai.avalonmediacard.contract.admin.UpdateTorrServerSettingsRequest
 import org.jetbrains.compose.resources.getString
 import org.ensodai.avalonmediacard.contract.model.UserRole
 import org.ensodai.avalonmediacard.contract.model.UserStatus
+import org.ensodai.avalonmediacard.data.AppSettingsStorage
+import org.ensodai.avalonmediacard.data.repository.GlobalManifestRepository
 import org.ensodai.avalonmediacard.domain.useCases.adminScreenUseCase.*
 import org.ensodai.avalonmediacard.presentation.screens.admin.AdminViewModel
 import org.ensodai.avalonmediacard.presentation.screens.admin.model.AdminTab
@@ -271,7 +277,9 @@ fun AdminViewModel.loadGlobalIntegrations(
 }
 
 fun AdminViewModel.saveGlobalIntegrations(
-    updateGlobalIntegrationSettingsUseCase: UpdateGlobalIntegrationSettingsUseCase
+    updateGlobalIntegrationSettingsUseCase: UpdateGlobalIntegrationSettingsUseCase,
+    manifestRepository: GlobalManifestRepository,
+    appSettingsStorage: AppSettingsStorage
 ) {
     val state = viewState.value
     updateViewState { it.copy(isIntegrationsLoading = true, error = null, successMessage = null) }
@@ -294,6 +302,8 @@ fun AdminViewModel.saveGlobalIntegrations(
             )
         ).fold(
             onSuccess = {
+                manifestRepository.refreshManifest()
+                appSettingsStorage.notifySettingsChanged()
                 val msg = getString(Res.string.admin_msg_settings_saved)
                 updateViewState {
                     it.copy(
@@ -308,6 +318,161 @@ fun AdminViewModel.saveGlobalIntegrations(
                 updateViewState {
                     it.copy(
                         isIntegrationsLoading = false,
+                        error = msg
+                    )
+                }
+            }
+        )
+    }
+}
+
+fun AdminViewModel.saveTmdbSettings(
+    updateTmdbSettingsUseCase: UpdateTmdbSettingsUseCase,
+    manifestRepository: GlobalManifestRepository,
+    appSettingsStorage: AppSettingsStorage
+) {
+    val state = viewState.value
+    updateViewState { it.copy(isTmdbSaving = true, error = null, successMessage = null) }
+    viewModelScope.launch {
+        updateTmdbSettingsUseCase(
+            UpdateTmdbSettingsRequest(
+                token = state.tmdbReadTokenInput,
+                shareWithUsers = state.tmdbShareWithUsers
+            )
+        ).fold(
+            onSuccess = {
+                manifestRepository.refreshManifest()
+                appSettingsStorage.notifySettingsChanged()
+                val msg = getString(Res.string.admin_msg_settings_saved)
+                updateViewState {
+                    it.copy(
+                        isTmdbSaving = false,
+                        successMessage = msg
+                    )
+                }
+            },
+            onFailure = { exception ->
+                val fallback = getString(Res.string.admin_msg_error_save_settings)
+                val msg = exception.message ?: fallback
+                updateViewState {
+                    it.copy(
+                        isTmdbSaving = false,
+                        error = msg
+                    )
+                }
+            }
+        )
+    }
+}
+
+fun AdminViewModel.saveTorrServerSettings(
+    updateTorrServerSettingsUseCase: UpdateTorrServerSettingsUseCase,
+    appSettingsStorage: AppSettingsStorage
+) {
+    val state = viewState.value
+    updateViewState { it.copy(isTorrServerSaving = true, error = null, successMessage = null) }
+    viewModelScope.launch {
+        updateTorrServerSettingsUseCase(
+            UpdateTorrServerSettingsRequest(
+                host = state.torrServerHostInput,
+                login = state.torrServerLoginInput,
+                password = state.torrServerPasswordInput,
+                shareWithUsers = state.torrServerShareWithUsers,
+                useGst = state.torrServerUseGst
+            )
+        ).fold(
+            onSuccess = {
+                appSettingsStorage.notifySettingsChanged()
+                val msg = getString(Res.string.admin_msg_settings_saved)
+                updateViewState {
+                    it.copy(
+                        isTorrServerSaving = false,
+                        successMessage = msg
+                    )
+                }
+            },
+            onFailure = { exception ->
+                val fallback = getString(Res.string.admin_msg_error_save_settings)
+                val msg = exception.message ?: fallback
+                updateViewState {
+                    it.copy(
+                        isTorrServerSaving = false,
+                        error = msg
+                    )
+                }
+            }
+        )
+    }
+}
+
+fun AdminViewModel.saveProwlarrSettings(
+    updateProwlarrSettingsUseCase: UpdateProwlarrSettingsUseCase,
+    appSettingsStorage: AppSettingsStorage
+) {
+    val state = viewState.value
+    updateViewState { it.copy(isProwlarrSaving = true, error = null, successMessage = null) }
+    viewModelScope.launch {
+        updateProwlarrSettingsUseCase(
+            UpdateProwlarrSettingsRequest(
+                url = state.prowlarrUrlInput,
+                apiKey = state.prowlarrApiKeyInput,
+                shareWithUsers = state.prowlarrShareWithUsers
+            )
+        ).fold(
+            onSuccess = {
+                appSettingsStorage.notifySettingsChanged()
+                val msg = getString(Res.string.admin_msg_settings_saved)
+                updateViewState {
+                    it.copy(
+                        isProwlarrSaving = false,
+                        successMessage = msg
+                    )
+                }
+            },
+            onFailure = { exception ->
+                val fallback = getString(Res.string.admin_msg_error_save_settings)
+                val msg = exception.message ?: fallback
+                updateViewState {
+                    it.copy(
+                        isProwlarrSaving = false,
+                        error = msg
+                    )
+                }
+            }
+        )
+    }
+}
+
+fun AdminViewModel.saveJackettSettings(
+    updateJackettSettingsUseCase: UpdateJackettSettingsUseCase,
+    appSettingsStorage: AppSettingsStorage
+) {
+    val state = viewState.value
+    updateViewState { it.copy(isJackettSaving = true, error = null, successMessage = null) }
+    viewModelScope.launch {
+        updateJackettSettingsUseCase(
+            UpdateJackettSettingsRequest(
+                url = state.jackettUrlInput,
+                apiKey = state.jackettApiKeyInput,
+                shareWithUsers = state.jackettShareWithUsers
+            )
+        ).fold(
+            onSuccess = {
+                appSettingsStorage.notifySettingsChanged()
+                val msg = getString(Res.string.admin_msg_settings_saved)
+                updateViewState {
+                    it.copy(
+                        isJackettSaving = false,
+                        successMessage = msg
+                    )
+                }
+            },
+            onFailure = { exception ->
+                val fallback = getString(Res.string.admin_msg_error_save_settings)
+                val msg = exception.message ?: fallback
+                updateViewState {
+                    it.copy(
+                        isJackettSaving = false,
                         error = msg
                     )
                 }

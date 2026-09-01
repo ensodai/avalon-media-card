@@ -10,5 +10,11 @@
   "media.tv": "TV Show",
   "media.movie": "Movie",
   "media.media": "Media",
-  "feed.error_loading": "Loading error"
+  "feed.error_loading": "Loading error",
+  "onboarding.admin.title": "Welcome to Avalon Media!",
+  "onboarding.admin.desc": "To start browsing movies, TV shows, and personalized recommendations, please configure your TMDB API token in server settings.",
+  "onboarding.admin.button": "Server Settings",
+  "onboarding.user.title": "Welcome to Avalon Media!",
+  "onboarding.user.desc": "To access the movie and TV catalog, please specify your personal TMDB API token in app settings.",
+  "onboarding.user.button": "App Settings"
 }

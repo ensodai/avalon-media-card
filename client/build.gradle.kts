@@ -34,7 +34,7 @@ kotlin {
             languageSettings.optIn("kotlin.uuid.ExperimentalUuidApi")
         }
         commonMain.dependencies {
-            api("org.ensodai.avalonmediacard:avalon-media-card-core-contract:1.0.0-SNAPSHOT")
+            api(libs.avalon.core.contract)
             implementation(libs.androidx.datastore.preferences.core)
             implementation(libs.androidx.datastore.core.okio)
             implementation(libs.okio)

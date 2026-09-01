@@ -45,7 +45,8 @@ class SettingsViewModel(
                     posterLanguage = serverSettings.posterLanguage,
                     titleMode = serverSettings.titleMode,
                     titleLanguage = serverSettings.titleLanguage,
-                    overviewLanguage = serverSettings.overviewLanguage
+                    overviewLanguage = serverSettings.overviewLanguage,
+                    tmdbReadToken = serverSettings.tmdbReadToken
                 )
             }
             if (serverSettings.uiLocale.isNotBlank()) {
@@ -83,6 +84,9 @@ class SettingsViewModel(
             updateViewState { it.copy(overviewLanguage = overviewLang) }
             persistSettings()
         },
+        onTmdbTokenChanged = { token ->
+            updateViewState { it.copy(tmdbReadToken = token) }
+        },
         onSaveClicked = {
             persistSettings(showFeedback = true)
         },
@@ -102,7 +106,8 @@ class SettingsViewModel(
                 posterLanguage = currentState.posterLanguage,
                 titleMode = currentState.titleMode,
                 titleLanguage = currentState.titleLanguage,
-                overviewLanguage = currentState.overviewLanguage
+                overviewLanguage = currentState.overviewLanguage,
+                tmdbReadToken = currentState.tmdbReadToken
             )
             updateUserSettingsUseCase(dto)
             appSettingsStorage.notifySettingsChanged()

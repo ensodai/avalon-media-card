@@ -5,7 +5,9 @@ import kotlinx.coroutines.launch
 import org.ensodai.avalonmediacard.contract.admin.CreateUserRequest
 import org.ensodai.avalonmediacard.contract.model.UserRole
 import org.ensodai.avalonmediacard.contract.rpc.AdminRpcService
+import org.ensodai.avalonmediacard.data.AppSettingsStorage
 import org.ensodai.avalonmediacard.data.TokenStorage
+import org.ensodai.avalonmediacard.data.repository.GlobalManifestRepository
 import org.ensodai.avalonmediacard.domain.useCases.adminScreenUseCase.AddUserUseCase
 import org.ensodai.avalonmediacard.domain.useCases.adminScreenUseCase.ClearDiscoverCacheUseCase
 import org.ensodai.avalonmediacard.domain.useCases.adminScreenUseCase.ClearFeedCacheUseCase
@@ -20,6 +22,10 @@ import org.ensodai.avalonmediacard.domain.useCases.adminScreenUseCase.TestProwla
 import org.ensodai.avalonmediacard.domain.useCases.adminScreenUseCase.TestTmdbConnectionUseCase
 import org.ensodai.avalonmediacard.domain.useCases.adminScreenUseCase.TestTorrServerConnectionUseCase
 import org.ensodai.avalonmediacard.domain.useCases.adminScreenUseCase.UpdateGlobalIntegrationSettingsUseCase
+import org.ensodai.avalonmediacard.domain.useCases.adminScreenUseCase.UpdateJackettSettingsUseCase
+import org.ensodai.avalonmediacard.domain.useCases.adminScreenUseCase.UpdateProwlarrSettingsUseCase
+import org.ensodai.avalonmediacard.domain.useCases.adminScreenUseCase.UpdateTmdbSettingsUseCase
+import org.ensodai.avalonmediacard.domain.useCases.adminScreenUseCase.UpdateTorrServerSettingsUseCase
 import org.ensodai.avalonmediacard.domain.useCases.adminScreenUseCase.UpdateUserRoleUseCase
 import org.ensodai.avalonmediacard.domain.useCases.adminScreenUseCase.UpdateUserStatusUseCase
 import org.ensodai.avalonmediacard.presentation.core.mvi.BaseViewModel
@@ -53,6 +59,10 @@ import org.ensodai.avalonmediacard.presentation.screens.admin.action.onUserRoleC
 import org.ensodai.avalonmediacard.presentation.screens.admin.action.onUserStatusChange
 import org.ensodai.avalonmediacard.presentation.screens.admin.action.onUsernameChanged
 import org.ensodai.avalonmediacard.presentation.screens.admin.action.saveGlobalIntegrations
+import org.ensodai.avalonmediacard.presentation.screens.admin.action.saveJackettSettings
+import org.ensodai.avalonmediacard.presentation.screens.admin.action.saveProwlarrSettings
+import org.ensodai.avalonmediacard.presentation.screens.admin.action.saveTmdbSettings
+import org.ensodai.avalonmediacard.presentation.screens.admin.action.saveTorrServerSettings
 import org.ensodai.avalonmediacard.presentation.screens.admin.action.testJackettConnection
 import org.ensodai.avalonmediacard.presentation.screens.admin.action.testProwlarrConnection
 import org.ensodai.avalonmediacard.presentation.screens.admin.action.testTmdbConnection
@@ -71,6 +81,10 @@ class AdminViewModel(
     private val resetUserPasswordUseCase: ResetUserPasswordUseCase,
     private val getGlobalIntegrationSettingsUseCase: GetGlobalIntegrationSettingsUseCase,
     private val updateGlobalIntegrationSettingsUseCase: UpdateGlobalIntegrationSettingsUseCase,
+    private val updateTmdbSettingsUseCase: UpdateTmdbSettingsUseCase,
+    private val updateTorrServerSettingsUseCase: UpdateTorrServerSettingsUseCase,
+    private val updateProwlarrSettingsUseCase: UpdateProwlarrSettingsUseCase,
+    private val updateJackettSettingsUseCase: UpdateJackettSettingsUseCase,
     private val testTmdbConnectionUseCase: TestTmdbConnectionUseCase,
     private val testTorrServerConnectionUseCase: TestTorrServerConnectionUseCase,
     private val testProwlarrConnectionUseCase: TestProwlarrConnectionUseCase,
@@ -79,6 +93,8 @@ class AdminViewModel(
     private val clearDiscoverCacheUseCase: ClearDiscoverCacheUseCase,
     private val clearFeedCacheUseCase: ClearFeedCacheUseCase,
     private val clearMediaCacheUseCase: ClearMediaCacheUseCase,
+    private val appSettingsStorage: AppSettingsStorage,
+    private val manifestRepository: GlobalManifestRepository,
     private val tokenStorage: TokenStorage
 ) : BaseViewModel<AdminViewState, AdminActions>(
     initialState = AdminViewState(
@@ -131,8 +147,12 @@ class AdminViewModel(
         onTestJackettConnection = { testJackettConnection(testJackettConnectionUseCase) },
         onTestTmdbConnection = { testTmdbConnection(testTmdbConnectionUseCase) },
         onTestTorrServerConnection = { testTorrServerConnection(testTorrServerConnectionUseCase) },
+        onSaveTmdbSettings = { saveTmdbSettings(updateTmdbSettingsUseCase, manifestRepository, appSettingsStorage) },
+        onSaveTorrServerSettings = { saveTorrServerSettings(updateTorrServerSettingsUseCase, appSettingsStorage) },
+        onSaveProwlarrSettings = { saveProwlarrSettings(updateProwlarrSettingsUseCase, appSettingsStorage) },
+        onSaveJackettSettings = { saveJackettSettings(updateJackettSettingsUseCase, appSettingsStorage) },
         loadGlobalIntegrations = { loadGlobalIntegrations(getGlobalIntegrationSettingsUseCase) },
-        saveGlobalIntegrations = { saveGlobalIntegrations(updateGlobalIntegrationSettingsUseCase) },
+        saveGlobalIntegrations = { saveGlobalIntegrations(updateGlobalIntegrationSettingsUseCase, manifestRepository, appSettingsStorage) },
         loadSystemInfo = { loadSystemInfo(getSystemInfoUseCase) },
         onClearDiscoverCache = { clearDiscoverCache(clearDiscoverCacheUseCase, getSystemInfoUseCase) },
         onClearFeedCache = { clearFeedCache(clearFeedCacheUseCase, getSystemInfoUseCase) },

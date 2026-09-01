@@ -5,11 +5,16 @@ import io.ktor.client.call.*
 import io.ktor.client.plugins.*
 import io.ktor.client.request.*
 import io.ktor.client.statement.*
+import kotlin.coroutines.coroutineContext
+import org.ensodai.avalonmediacard.contract.i18n.PluginUserElement
 import org.ensodai.avalonmediacard.contract.model.EntityType
 import org.ensodai.avalonmediacard.contract.model.TmdbMovieDto
 import org.ensodai.avalonmediacard.contract.model.TmdbMultiSearchDto
 import org.ensodai.avalonmediacard.contract.model.KeywordMetadata
+import org.ensodai.avalonmediacard.contract.model.UserRole
 import org.ensodai.avalonmediacard.repository.SystemSettingsRepository
+import org.ensodai.avalonmediacard.repository.UserRepository
+import org.ensodai.avalonmediacard.repository.UserSettingsRepository
 import org.ensodai.avalonmediacard.tmdb.responses.*
 import org.ensodai.avalonmediacard.utils.EnvHelper
 import org.koin.core.annotation.Single
@@ -18,7 +23,9 @@ import org.slf4j.LoggerFactory
 @Single
 class TmdbApi(
     private val client: HttpClient,
-    private val systemSettingsRepository: SystemSettingsRepository
+    private val systemSettingsRepository: SystemSettingsRepository,
+    private val userSettingsRepository: UserSettingsRepository = UserSettingsRepository(),
+    private val userRepository: UserRepository = UserRepository()
 ) {
     private val logger = LoggerFactory.getLogger(TmdbApi::class.java)
 
@@ -26,8 +33,29 @@ class TmdbApi(
         logger.info("TMDB client reset. (No cache in V2)")
     }
 
+    suspend fun isTmdbConfiguredForCurrentUser(): Boolean {
+        return getToken() != null
+    }
+
     private suspend fun getToken(): String? {
-        return systemSettingsRepository.getSetting("tmdb_read_token") ?: EnvHelper.getEnv("TMDB_READ_TOKEN")
+        val currentUserId = coroutineContext[PluginUserElement]?.userId
+        if (currentUserId != null) {
+            val userToken = userSettingsRepository.getUserSettings(currentUserId).tmdbReadToken?.takeIf { it.isNotBlank() }
+            if (userToken != null) return userToken
+        }
+
+        val isShared = systemSettingsRepository.getSetting("tmdb_share_with_users")?.toBooleanStrictOrNull() ?: true
+        val globalToken = systemSettingsRepository.getSetting("tmdb_read_token") ?: EnvHelper.getEnv("TMDB_READ_TOKEN")
+
+        if (currentUserId != null) {
+            val isUserAdmin = userRepository.findById(currentUserId)?.role == UserRole.ADMIN
+            if (isShared || isUserAdmin) {
+                return globalToken
+            }
+        } else {
+            return globalToken
+        }
+        return null
     }
 
     suspend fun validateToken(token: String): Boolean {

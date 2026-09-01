@@ -49,6 +49,10 @@ data class AdminViewState(
     val jackettTestSuccess: Boolean? = null,
 
     val isIntegrationsLoading: Boolean = false,
+    val isTmdbSaving: Boolean = false,
+    val isTorrServerSaving: Boolean = false,
+    val isProwlarrSaving: Boolean = false,
+    val isJackettSaving: Boolean = false,
 
     // System Tab
     val systemInfo: ServerSystemInfoDto? = null,

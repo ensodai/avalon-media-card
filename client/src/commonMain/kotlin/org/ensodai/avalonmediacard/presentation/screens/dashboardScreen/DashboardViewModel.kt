@@ -40,6 +40,7 @@ class DashboardViewModel(
                 SlotId.HeroBanner -> FeedItem.HeroBanner(node.nodeId, SlotUiState(isLoading = true))
                 SlotId.CarouselBackdrops -> FeedItem.Backdrops(node.nodeId, SlotUiState(isLoading = true))
                 SlotId.Exploration -> FeedItem.Exploration(node.nodeId, SlotUiState(isLoading = true))
+                SlotId.Banner -> FeedItem.Banner(node.nodeId, SlotUiState(isLoading = true))
                 else -> FeedItem.Carousel(node.nodeId, SlotUiState(isLoading = true))
             }
         }
@@ -82,6 +83,11 @@ class DashboardViewModel(
                                         )
 
                                         SlotId.Exploration -> FeedItem.Exploration(
+                                            node.nodeId,
+                                            SlotUiState(isLoading = true)
+                                        )
+
+                                        SlotId.Banner -> FeedItem.Banner(
                                             node.nodeId,
                                             SlotUiState(isLoading = true)
                                         )
@@ -135,6 +141,7 @@ fun FeedItem.toLoading(): FeedItem {
         is FeedItem.Carousel -> copy(state = SlotUiState(isLoading = true))
         is FeedItem.Backdrops -> copy(state = SlotUiState(isLoading = true))
         is FeedItem.Exploration -> copy(state = SlotUiState(isLoading = true))
+        is FeedItem.Banner -> copy(state = SlotUiState(isLoading = true))
     }
 }
 
@@ -148,6 +155,7 @@ fun FeedItem.withUpdate(slotState: SlotState): FeedItem {
         is FeedItem.Carousel -> copy(state = slotState.toUiState(state.data))
         is FeedItem.Backdrops -> copy(state = slotState.toUiState(state.data))
         is FeedItem.Exploration -> copy(state = slotState.toUiState(state.data))
+        is FeedItem.Banner -> copy(state = slotState.toUiState(state.data))
     }
 }
 

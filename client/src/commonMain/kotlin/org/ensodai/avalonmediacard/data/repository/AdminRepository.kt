@@ -5,6 +5,10 @@ import org.ensodai.avalonmediacard.contract.admin.CreateUserRequest
 import org.ensodai.avalonmediacard.contract.admin.GlobalIntegrationSettingsDto
 import org.ensodai.avalonmediacard.contract.admin.ServerSystemInfoDto
 import org.ensodai.avalonmediacard.contract.admin.UpdateGlobalIntegrationSettingsRequest
+import org.ensodai.avalonmediacard.contract.admin.UpdateJackettSettingsRequest
+import org.ensodai.avalonmediacard.contract.admin.UpdateProwlarrSettingsRequest
+import org.ensodai.avalonmediacard.contract.admin.UpdateTmdbSettingsRequest
+import org.ensodai.avalonmediacard.contract.admin.UpdateTorrServerSettingsRequest
 import org.ensodai.avalonmediacard.contract.admin.UserDto
 import org.ensodai.avalonmediacard.contract.model.UserRole
 import org.ensodai.avalonmediacard.contract.model.UserStatus
@@ -43,6 +47,22 @@ class AdminRepository(private val adminRpcService: AdminRpcService) {
 
     suspend fun updateGlobalIntegrationSettings(request: UpdateGlobalIntegrationSettingsRequest): AdminActionResponse {
         return adminRpcService.updateGlobalIntegrationSettings(request)
+    }
+
+    suspend fun updateTmdbSettings(request: UpdateTmdbSettingsRequest): AdminActionResponse {
+        return adminRpcService.updateTmdbSettings(request)
+    }
+
+    suspend fun updateTorrServerSettings(request: UpdateTorrServerSettingsRequest): AdminActionResponse {
+        return adminRpcService.updateTorrServerSettings(request)
+    }
+
+    suspend fun updateProwlarrSettings(request: UpdateProwlarrSettingsRequest): AdminActionResponse {
+        return adminRpcService.updateProwlarrSettings(request)
+    }
+
+    suspend fun updateJackettSettings(request: UpdateJackettSettingsRequest): AdminActionResponse {
+        return adminRpcService.updateJackettSettings(request)
     }
 
     suspend fun testTmdbConnection(token: String): AdminActionResponse {

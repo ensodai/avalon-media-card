@@ -27,6 +27,11 @@ sealed interface FeedItem {
         override val nodeId: String,
         val state: SlotUiState<SlotData.Exploration> = SlotUiState()
     ) : FeedItem
+
+    data class Banner(
+        override val nodeId: String,
+        val state: SlotUiState<SlotData.Banner> = SlotUiState()
+    ) : FeedItem
 }
 
 data class DashboardViewState(

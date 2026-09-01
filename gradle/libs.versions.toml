@@ -33,8 +33,10 @@ kotlinx-coroutines = "1.10.1"
 jna = "5.16.0"
 mpvLib = "0.1.9"
 kermit = "2.1.0"
+avalon-core-contract = "1.0.1"
 
 [libraries]
+avalon-core-contract = { module = "org.ensodai.avalonmediacard:avalon-media-card-core-contract", version.ref = "avalon-core-contract" }
 kermit = { module = "co.touchlab:kermit", version.ref = "kermit" }
 androidx-datastore-preferences-core = { module = "androidx.datastore:datastore-preferences-core", version.ref = "androidx-datastore" }
 androidx-datastore-core-okio = { module = "androidx.datastore:datastore-core-okio", version.ref = "androidx-datastore" }

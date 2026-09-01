@@ -12,11 +12,16 @@ class IntegrationSettingsManagerImpl(
     private val pluginId: String,
     private val systemSettingsRepository: SystemSettingsRepository,
     private val userIntegrationSettingsRepository: UserIntegrationSettingsRepository,
-    private val userExternalAuthRepository: org.ensodai.avalonmediacard.repository.UserExternalAuthRepository
+    private val userExternalAuthRepository: org.ensodai.avalonmediacard.repository.UserExternalAuthRepository,
+    private val userSettingsRepository: org.ensodai.avalonmediacard.repository.UserSettingsRepository
 ) : IntegrationSettingsManager {
 
     override suspend fun getTmdbToken(userId: Uuid?): ResolvedIntegrationSetting? {
         if (userId != null) {
+            val userAppToken = userSettingsRepository.getUserSettings(userId).tmdbReadToken
+            if (!userAppToken.isNullOrBlank()) {
+                return ResolvedIntegrationSetting(userAppToken, IntegrationSettingSource.PERSONAL)
+            }
             val userToken = userIntegrationSettingsRepository.getSetting(userId, pluginId, "tmdb_read_token")
                 ?: userIntegrationSettingsRepository.getSetting(userId, "core", "tmdb_read_token")
             if (!userToken.isNullOrBlank()) {
@@ -24,7 +29,7 @@ class IntegrationSettingsManagerImpl(
             }
         }
         
-        val allowSharedTmdb = systemSettingsRepository.getSetting("tmdb_share_with_users")?.toBooleanStrictOrNull() ?: true
+        val allowSharedTmdb = systemSettingsRepository.getSetting("tmdb_share_with_users")?.toBooleanStrictOrNull() ?: false
         if (allowSharedTmdb) {
             val globalToken = systemSettingsRepository.getSetting("tmdb_read_token")
             if (!globalToken.isNullOrBlank()) {

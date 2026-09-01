@@ -10,5 +10,11 @@
   "media.tv": "Сериал",
   "media.movie": "Фильм",
   "media.media": "Медиа",
-  "feed.error_loading": "Ошибка загрузки"
+  "feed.error_loading": "Ошибка загрузки",
+  "onboarding.admin.title": "Добро пожаловать в Avalon Media!",
+  "onboarding.admin.desc": "Для загрузки каталога фильмов, сериалов и персональных рекомендаций укажите API-токен TMDB в системных настройках сервера.",
+  "onboarding.admin.button": "Настройки сервера",
+  "onboarding.user.title": "Добро пожаловать в Avalon Media!",
+  "onboarding.user.desc": "Для доступа к каталогу фильмов и сериалов укажите ваш персональный токен TMDB в настройках приложения.",
+  "onboarding.user.button": "Настройки приложения"
 }

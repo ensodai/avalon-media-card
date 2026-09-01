@@ -117,31 +117,6 @@ fun SettingsScreen(
                 modifier = Modifier.fillMaxWidth().padding(start = 4.dp, bottom = 8.dp)
             )
 
-            // Темная тема
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .focusRequester(focusRequester)
-                    .tvAndWebHoverEffect(
-                        shape = RoundedCornerShape(8.dp),
-                        onClick = { actions.onToggleDarkMode(!state.isDarkModeEnabled) }
-                    )
-                    .padding(vertical = 10.dp, horizontal = 8.dp),
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.SpaceBetween
-            ) {
-                Text(
-                    text = stringResource(Res.string.settings_dark_mode),
-                    fontSize = 15.sp,
-                    color = MaterialTheme.colorScheme.onSurface
-                )
-                Switch(
-                    checked = state.isDarkModeEnabled,
-                    onCheckedChange = actions.onToggleDarkMode,
-                    modifier = Modifier.clearAndSetSemantics {}
-                )
-            }
-
             Spacer(modifier = Modifier.height(8.dp))
 
             // Язык интерфейса
@@ -315,6 +290,37 @@ fun SettingsScreen(
                     tint = MaterialTheme.colorScheme.onSurfaceVariant
                 )
             }
+
+            Spacer(modifier = Modifier.height(16.dp))
+
+            // TMDB Token
+            Text(
+                text = stringResource(Res.string.settings_tmdb_token_title),
+                fontSize = 12.sp,
+                fontWeight = FontWeight.SemiBold,
+                color = MaterialTheme.colorScheme.primary,
+                modifier = Modifier.fillMaxWidth().padding(start = 4.dp, bottom = 4.dp)
+            )
+
+            Text(
+                text = stringResource(Res.string.settings_tmdb_token_description),
+                fontSize = 12.sp,
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                modifier = Modifier.fillMaxWidth().padding(start = 4.dp, bottom = 8.dp)
+            )
+
+            OutlinedTextField(
+                value = state.tmdbReadToken ?: "",
+                onValueChange = { actions.onTmdbTokenChanged(it.ifBlank { null }) },
+                placeholder = { Text(stringResource(Res.string.settings_tmdb_token_placeholder), fontSize = 13.sp) },
+                singleLine = true,
+                modifier = Modifier.fillMaxWidth(),
+                shape = RoundedCornerShape(8.dp),
+                colors = OutlinedTextFieldDefaults.colors(
+                    focusedBorderColor = MaterialTheme.colorScheme.primary,
+                    unfocusedBorderColor = MaterialTheme.colorScheme.outlineVariant
+                )
+            )
 
             Spacer(modifier = Modifier.height(24.dp))
 

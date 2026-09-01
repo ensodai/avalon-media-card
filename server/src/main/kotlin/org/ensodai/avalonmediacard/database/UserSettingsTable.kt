@@ -6,4 +6,5 @@ object UserSettingsTable : BaseUuidTable("user_settings") {
     val posterLanguage = varchar("poster_language", 20).nullable()
     val titleMode = varchar("title_mode", 20).default("LOCALIZED")
     val overviewLanguage = varchar("overview_language", 20).nullable()
+    val tmdbReadToken = varchar("tmdb_read_token", 512).nullable()
 }

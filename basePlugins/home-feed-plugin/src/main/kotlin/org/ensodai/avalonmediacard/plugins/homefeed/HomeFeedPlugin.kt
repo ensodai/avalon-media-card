@@ -151,7 +151,7 @@ class HomeFeedPlugin : AvalonPlugin {
         }
 
         context.slots.declare<Screen.Dashboard>(
-            slots = listOf(SlotId.HeroBanner, SlotId.CarouselBackdrops, SlotId.Exploration, SlotId.Carousels),
+            slots = listOf(SlotId.HeroBanner, SlotId.CarouselBackdrops, SlotId.Exploration, SlotId.Carousels, SlotId.Banner),
             manifestLayout = { userId -> buildManifestLayout(context, userId, "dashboard") }
         )
         context.slots.onScreen<Screen.Dashboard> { _, userId ->
@@ -159,7 +159,7 @@ class HomeFeedPlugin : AvalonPlugin {
         }
 
         context.slots.declare<Screen.Movies>(
-            slots = listOf(SlotId.HeroBanner, SlotId.Carousels),
+            slots = listOf(SlotId.HeroBanner, SlotId.Carousels, SlotId.Banner),
             manifestLayout = { userId -> buildManifestLayout(context, userId, "movies") }
         )
         context.slots.onScreen<Screen.Movies> { _, userId ->
@@ -167,7 +167,7 @@ class HomeFeedPlugin : AvalonPlugin {
         }
 
         context.slots.declare<Screen.TvShows>(
-            slots = listOf(SlotId.HeroBanner, SlotId.Carousels),
+            slots = listOf(SlotId.HeroBanner, SlotId.Carousels, SlotId.Banner),
             manifestLayout = { userId -> buildManifestLayout(context, userId, "tv_shows") }
         )
         context.slots.onScreen<Screen.TvShows> { _, userId ->
@@ -175,7 +175,7 @@ class HomeFeedPlugin : AvalonPlugin {
         }
 
         context.slots.declare<Screen.Trends>(
-            slots = listOf(SlotId.HeroBanner, SlotId.Carousels),
+            slots = listOf(SlotId.HeroBanner, SlotId.Carousels, SlotId.Banner),
             manifestLayout = { userId -> buildManifestLayout(context, userId, "trends") }
         )
         context.slots.onScreen<Screen.Trends> { _, userId ->
@@ -440,6 +440,50 @@ class HomeFeedPlugin : AvalonPlugin {
         val targetLang = userSettings.resolveTargetLanguage()
         val titleMode = userSettings?.titleMode ?: TitleDisplayMode.LOCALIZED
 
+        val tmdbTokenSetting = runCatching { context.integrationManager.getTmdbToken(userId) }.getOrNull()
+        val isTmdbConfigured = tmdbTokenSetting != null
+        val globalTokenSetting = runCatching { context.integrationManager.getTmdbToken(null) }.getOrNull()
+        val isFreshServerWithoutToken = globalTokenSetting == null
+
+        if (!isTmdbConfigured) {
+            val title = if (isFreshServerWithoutToken) {
+                context.i18n.t("onboarding.admin.title")
+            } else {
+                context.i18n.t("onboarding.user.title")
+            }
+            val desc = if (isFreshServerWithoutToken) {
+                context.i18n.t("onboarding.admin.desc")
+            } else {
+                context.i18n.t("onboarding.user.desc")
+            }
+            val buttonLabel = if (isFreshServerWithoutToken) {
+                context.i18n.t("onboarding.admin.button")
+            } else {
+                context.i18n.t("onboarding.user.button")
+            }
+            val action = if (isFreshServerWithoutToken) ActionNavigate(Screen.Admin) else ActionNavigate(Screen.Settings)
+
+            val bannerNode = LayoutNode("onboarding_banner", SlotId.Banner)
+            val bannerSlotUpdate = SlotUpdate(
+                SlotId.Banner,
+                "onboarding_banner",
+                SlotState.Content(
+                    SlotData.Banner(
+                        id = "onboarding_banner",
+                        title = title,
+                        description = desc,
+                        iconName = "settings",
+                        primaryAction = action,
+                        primaryActionLabel = buttonLabel
+                    )
+                )
+            )
+            return ScreenSlots(
+                layout = listOf(bannerNode),
+                flow = flowOf(ScreenStreamEvent.Update(bannerSlotUpdate))
+            )
+        }
+
         val dynamicSections = getOrGenerateSections(context, userId, scopeName, targetLang)
         val heroSections = dynamicSections.filter { it.type == SectionType.HERO }
         val allOtherCandidateSections = dynamicSections.filter { it.type != SectionType.HERO }
@@ -469,25 +513,32 @@ class HomeFeedPlugin : AvalonPlugin {
             val primaryHero = heroSections.firstOrNull()
             if (primaryHero != null) {
                 launch {
-                    val hMovies = fetchDynamicMovies(primaryHero, 1, context, targetLang).distinctBy { it.id }.take(5)
-                    val items = hMovies.map { it.toCarouselItem(titleMode) }
-
-                    send(
-                        ScreenStreamEvent.Update(
-                            SlotUpdate(
-                                SlotId.HeroBanner, "hero_merged",
-                                SlotState.Content(
-                                    SlotData.Hero(
-                                        id = "hero_merged",
-                                        title = primaryHero.title,
-                                        subtitle = primaryHero.description,
-                                        items = items,
-                                        telemetryContext = ClickstreamContext.CAROUSEL_DISCOVER
+                    try {
+                        val hMovies = fetchDynamicMovies(primaryHero, 1, context, targetLang).distinctBy { it.id }.take(5)
+                        if (hMovies.isNotEmpty()) {
+                            val items = hMovies.map { it.toCarouselItem(titleMode) }
+                            send(
+                                ScreenStreamEvent.Update(
+                                    SlotUpdate(
+                                        SlotId.HeroBanner, "hero_merged",
+                                        SlotState.Content(
+                                            SlotData.Hero(
+                                                id = "hero_merged",
+                                                title = primaryHero.title,
+                                                subtitle = primaryHero.description,
+                                                items = items,
+                                                telemetryContext = ClickstreamContext.CAROUSEL_DISCOVER
+                                            )
+                                        )
                                     )
                                 )
                             )
-                        )
-                    )
+                        } else {
+                            send(ScreenStreamEvent.Update(SlotUpdate(SlotId.HeroBanner, "hero_merged", SlotState.Empty)))
+                        }
+                    } catch (e: Exception) {
+                        send(ScreenStreamEvent.Update(SlotUpdate(SlotId.HeroBanner, "hero_merged", SlotState.Empty)))
+                    }
                 }
             } else {
                 send(ScreenStreamEvent.Update(SlotUpdate(SlotId.HeroBanner, "hero_merged", SlotState.Empty)))
@@ -602,6 +653,13 @@ class HomeFeedPlugin : AvalonPlugin {
 
         val userSettings = runCatching { context.userGlobalSettings.getUserSettings(userId) }.getOrNull()
         val targetLang = userSettings.resolveTargetLanguage()
+
+        val tmdbTokenSetting = runCatching { context.integrationManager.getTmdbToken(userId) }.getOrNull()
+        val isTmdbConfigured = tmdbTokenSetting != null
+
+        if (!isTmdbConfigured) {
+            return listOf(LayoutNode("onboarding_banner", SlotId.Banner))
+        }
 
         val dynamicSections = getOrGenerateSections(context, userId, scopeName, targetLang)
         val heroSections = dynamicSections.filter { it.type == SectionType.HERO }

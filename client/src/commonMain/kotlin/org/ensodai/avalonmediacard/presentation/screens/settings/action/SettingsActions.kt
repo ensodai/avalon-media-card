@@ -11,6 +11,7 @@ data class SettingsActions(
     val onPosterLanguageSelected: (String?) -> Unit,
     val onTitleLanguageSelected: (String?) -> Unit,
     val onOverviewLanguageSelected: (String?) -> Unit,
+    val onTmdbTokenChanged: (String?) -> Unit,
     val onSaveClicked: () -> Unit,
     val clearMessages: () -> Unit
 ) : BaseActions()

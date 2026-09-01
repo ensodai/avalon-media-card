@@ -112,18 +112,6 @@ fun Application.module() {
     }
     install(Krpc)
 
-    // Загружаем плагины из папки plugins при старте сервера
-    val pluginsDir = if (File("server/plugins").exists()) File("server/plugins") else File("plugins").apply { mkdirs() }
-    pluginsDir.listFiles()?.forEach { file ->
-        if (file.isFile && file.extension == "jar") {
-            try {
-                pluginManager.loadPlugin(file)
-            } catch (e: Exception) {
-                e.printStackTrace()
-            }
-        }
-    }
-
     routing {
         imageProxyRoutes(safeProxyHttpClient)
         streamProxyRoutes(streamTokenService, safeProxyHttpClient)
@@ -175,6 +163,7 @@ fun Application.module() {
     monitor.subscribe(ApplicationStopped) {
         syncWorker.stop()
         keywordsWorker.stop()
+        pluginManager.destroyAll()
         DatabaseFactory.close()
     }
 }

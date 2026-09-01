@@ -55,6 +55,9 @@
     <string name="settings_language_ru">Русский</string>
     <string name="settings_language_en">English</string>
     <string name="settings_btn_save">Сохранить</string>
+    <string name="settings_tmdb_token_title">API-токен TMDB</string>
+    <string name="settings_tmdb_token_description">Персональный Read Access Token (v4) для доступа к каталогу TMDB.</string>
+    <string name="settings_tmdb_token_placeholder">Введите личный токен TMDB...</string>
 
     <!-- Login / Auth Screen -->
     <string name="login_title_sign_in">Вход</string>

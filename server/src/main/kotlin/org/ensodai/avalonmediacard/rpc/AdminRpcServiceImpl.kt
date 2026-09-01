@@ -10,6 +10,10 @@ import org.ensodai.avalonmediacard.contract.admin.CreateUserRequest
 import org.ensodai.avalonmediacard.contract.admin.GlobalIntegrationSettingsDto
 import org.ensodai.avalonmediacard.contract.admin.ServerSystemInfoDto
 import org.ensodai.avalonmediacard.contract.admin.UpdateGlobalIntegrationSettingsRequest
+import org.ensodai.avalonmediacard.contract.admin.UpdateJackettSettingsRequest
+import org.ensodai.avalonmediacard.contract.admin.UpdateProwlarrSettingsRequest
+import org.ensodai.avalonmediacard.contract.admin.UpdateTmdbSettingsRequest
+import org.ensodai.avalonmediacard.contract.admin.UpdateTorrServerSettingsRequest
 import org.ensodai.avalonmediacard.contract.admin.UserDto
 import org.ensodai.avalonmediacard.contract.auth.AuthState
 import org.ensodai.avalonmediacard.contract.model.UserRole
@@ -247,6 +251,68 @@ class AdminRpcServiceImpl(
             request.jackettShareWithUsers?.let {
                 systemSettingsRepository.saveSetting("jackett_share_with_users", it.toString())
             }
+
+            if (request.tmdbReadToken != null || request.tmdbShareWithUsers != null) {
+                userFeedCacheRepository.invalidateAll()
+                discoverCacheRepository.clearAll()
+                pluginManager.emitChangeEvent("plugin:core:tmdb_read_token")
+            }
+
+            AdminActionResponse(success = true)
+        } catch (e: Exception) {
+            AdminActionResponse(success = false, error = e.message)
+        }
+    }
+
+    override suspend fun updateTmdbSettings(request: UpdateTmdbSettingsRequest): AdminActionResponse {
+        requireAdmin()
+        return try {
+            systemSettingsRepository.saveSetting("tmdb_read_token", (request.token ?: "").trim())
+            systemSettingsRepository.saveSetting("tmdb_share_with_users", request.shareWithUsers.toString())
+            userFeedCacheRepository.invalidateAll()
+            discoverCacheRepository.clearAll()
+            pluginManager.emitChangeEvent("plugin:core:tmdb_read_token")
+            AdminActionResponse(success = true)
+        } catch (e: Exception) {
+            AdminActionResponse(success = false, error = e.message)
+        }
+    }
+
+    override suspend fun updateTorrServerSettings(request: UpdateTorrServerSettingsRequest): AdminActionResponse {
+        requireAdmin()
+        return try {
+            systemSettingsRepository.saveSetting("torrserver_host", (request.host ?: "").trim())
+            systemSettingsRepository.saveSetting("torrserver_login", (request.login ?: "").trim())
+            systemSettingsRepository.saveSetting("torrserver_password", (request.password ?: "").trim())
+            systemSettingsRepository.saveSetting("torrserver_share_with_users", request.shareWithUsers.toString())
+            systemSettingsRepository.saveSetting("torrserver_use_gst", request.useGst.toString())
+            pluginManager.emitChangeEvent("plugin:torrserver:host")
+            AdminActionResponse(success = true)
+        } catch (e: Exception) {
+            AdminActionResponse(success = false, error = e.message)
+        }
+    }
+
+    override suspend fun updateProwlarrSettings(request: UpdateProwlarrSettingsRequest): AdminActionResponse {
+        requireAdmin()
+        return try {
+            systemSettingsRepository.saveSetting("prowlarr_url", (request.url ?: "").trim())
+            systemSettingsRepository.saveSetting("prowlarr_api_key", (request.apiKey ?: "").trim())
+            systemSettingsRepository.saveSetting("prowlarr_share_with_users", request.shareWithUsers.toString())
+            pluginManager.emitChangeEvent("plugin:prowlarr:url")
+            AdminActionResponse(success = true)
+        } catch (e: Exception) {
+            AdminActionResponse(success = false, error = e.message)
+        }
+    }
+
+    override suspend fun updateJackettSettings(request: UpdateJackettSettingsRequest): AdminActionResponse {
+        requireAdmin()
+        return try {
+            systemSettingsRepository.saveSetting("jackett_url", (request.url ?: "").trim())
+            systemSettingsRepository.saveSetting("jackett_api_key", (request.apiKey ?: "").trim())
+            systemSettingsRepository.saveSetting("jackett_share_with_users", request.shareWithUsers.toString())
+            pluginManager.emitChangeEvent("plugin:jackett:url")
             AdminActionResponse(success = true)
         } catch (e: Exception) {
             AdminActionResponse(success = false, error = e.message)

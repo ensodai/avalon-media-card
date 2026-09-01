@@ -79,6 +79,11 @@ class TrendsViewModel(
                                             SlotUiState(isLoading = true)
                                         )
 
+                                        SlotId.Banner -> FeedItem.Banner(
+                                            node.nodeId,
+                                            SlotUiState(isLoading = true)
+                                        )
+
                                         else -> FeedItem.Carousel(node.nodeId, SlotUiState(isLoading = true))
                                     }
                                 }

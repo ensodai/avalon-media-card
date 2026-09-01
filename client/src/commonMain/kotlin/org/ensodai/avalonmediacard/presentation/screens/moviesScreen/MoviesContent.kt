@@ -94,6 +94,14 @@ fun MoviesContent(
                             )
                         }
 
+                        is FeedItem.Banner -> {
+                            org.ensodai.avalonmediacard.presentation.components.OnboardingBannerWidget(
+                                state = item.state,
+                                onAction = onAction,
+                                modifier = Modifier.padding(horizontal = 16.dp)
+                            )
+                        }
+
                         is FeedItem.Carousel -> {
                             MovieCarousel(
                                 state = item.state,

@@ -226,13 +226,23 @@ fun AdminIntegrationsTab(
                     Spacer(modifier = Modifier.weight(1f))
                 }
 
-                AvalonButton(
-                    text = stringResource(Res.string.admin_integrations_test_connection),
-                    onClick = actions.onTestTmdbConnection,
-                    isLoading = state.isTmdbTesting,
-                    containerColor = MaterialTheme.colorScheme.surfaceVariant,
-                    contentColor = MaterialTheme.colorScheme.onSurface
-                )
+                Row(
+                    horizontalArrangement = Arrangement.spacedBy(12.dp),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    AvalonButton(
+                        text = stringResource(Res.string.admin_integrations_test_connection),
+                        onClick = actions.onTestTmdbConnection,
+                        isLoading = state.isTmdbTesting,
+                        containerColor = MaterialTheme.colorScheme.surfaceVariant,
+                        contentColor = MaterialTheme.colorScheme.onSurface
+                    )
+                    AvalonButton(
+                        text = stringResource(Res.string.admin_integrations_btn_save),
+                        onClick = actions.onSaveTmdbSettings,
+                        isLoading = state.isTmdbSaving
+                    )
+                }
             }
         }
 
@@ -448,13 +458,23 @@ fun AdminIntegrationsTab(
                     Spacer(modifier = Modifier.weight(1f))
                 }
 
-                AvalonButton(
-                    text = stringResource(Res.string.admin_integrations_test_connection),
-                    onClick = actions.onTestTorrServerConnection,
-                    isLoading = state.isTorrServerTesting,
-                    containerColor = MaterialTheme.colorScheme.surfaceVariant,
-                    contentColor = MaterialTheme.colorScheme.onSurface
-                )
+                Row(
+                    horizontalArrangement = Arrangement.spacedBy(12.dp),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    AvalonButton(
+                        text = stringResource(Res.string.admin_integrations_test_connection),
+                        onClick = actions.onTestTorrServerConnection,
+                        isLoading = state.isTorrServerTesting,
+                        containerColor = MaterialTheme.colorScheme.surfaceVariant,
+                        contentColor = MaterialTheme.colorScheme.onSurface
+                    )
+                    AvalonButton(
+                        text = stringResource(Res.string.admin_integrations_btn_save),
+                        onClick = actions.onSaveTorrServerSettings,
+                        isLoading = state.isTorrServerSaving
+                    )
+                }
             }
         }
 
@@ -618,13 +638,23 @@ fun AdminIntegrationsTab(
                     Spacer(modifier = Modifier.weight(1f))
                 }
 
-                AvalonButton(
-                    text = stringResource(Res.string.admin_integrations_test_connection),
-                    onClick = actions.onTestProwlarrConnection,
-                    isLoading = state.isProwlarrTesting,
-                    containerColor = MaterialTheme.colorScheme.surfaceVariant,
-                    contentColor = MaterialTheme.colorScheme.onSurface
-                )
+                Row(
+                    horizontalArrangement = Arrangement.spacedBy(12.dp),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    AvalonButton(
+                        text = stringResource(Res.string.admin_integrations_test_connection),
+                        onClick = actions.onTestProwlarrConnection,
+                        isLoading = state.isProwlarrTesting,
+                        containerColor = MaterialTheme.colorScheme.surfaceVariant,
+                        contentColor = MaterialTheme.colorScheme.onSurface
+                    )
+                    AvalonButton(
+                        text = stringResource(Res.string.admin_integrations_btn_save),
+                        onClick = actions.onSaveProwlarrSettings,
+                        isLoading = state.isProwlarrSaving
+                    )
+                }
             }
         }
 
@@ -788,30 +818,27 @@ fun AdminIntegrationsTab(
                     Spacer(modifier = Modifier.weight(1f))
                 }
 
-                AvalonButton(
-                    text = stringResource(Res.string.admin_integrations_test_connection),
-                    onClick = actions.onTestJackettConnection,
-                    isLoading = state.isJackettTesting,
-                    containerColor = MaterialTheme.colorScheme.surfaceVariant,
-                    contentColor = MaterialTheme.colorScheme.onSurface
-                )
+                Row(
+                    horizontalArrangement = Arrangement.spacedBy(12.dp),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    AvalonButton(
+                        text = stringResource(Res.string.admin_integrations_test_connection),
+                        onClick = actions.onTestJackettConnection,
+                        isLoading = state.isJackettTesting,
+                        containerColor = MaterialTheme.colorScheme.surfaceVariant,
+                        contentColor = MaterialTheme.colorScheme.onSurface
+                    )
+                    AvalonButton(
+                        text = stringResource(Res.string.admin_integrations_btn_save),
+                        onClick = actions.onSaveJackettSettings,
+                        isLoading = state.isJackettSaving
+                    )
+                }
             }
         }
 
-        // Save Button
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(bottom = 32.dp),
-            horizontalArrangement = Arrangement.End
-        ) {
-            AvalonButton(
-                text = stringResource(Res.string.admin_integrations_btn_save),
-                onClick = actions.saveGlobalIntegrations,
-                isLoading = state.isIntegrationsLoading,
-                modifier = Modifier.width(260.dp)
-            )
-        }
+        Spacer(modifier = Modifier.height(32.dp))
     }
 }
 

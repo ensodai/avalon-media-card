@@ -227,6 +227,7 @@
     <string name="admin_system_btn_flush_tmdb">Сбросить кэш TMDB</string>
     <string name="admin_system_btn_flush_feed">Сбросить ленты пользователей</string>
     <string name="admin_system_btn_flush_media">Очистить метаданные медиа</string>
+    <string name="admin_system_btn_reload_plugins">Перезагрузить плагины</string>
 
     <string name="admin_users_title">Пользователи медиа-сервера</string>
     <string name="admin_users_count_summary">Всего: %1$d • Администраторов: %2$d • Обычных: %3$d</string>
@@ -299,6 +300,8 @@
     <string name="admin_msg_error_flush_feed">Ошибка сброса лент: %1$s</string>
     <string name="admin_msg_cache_media_flushed">Кэш медиаданных очищен</string>
     <string name="admin_msg_error_flush_media">Ошибка очистки медиа: %1$s</string>
+    <string name="admin_msg_plugins_reloaded">Плагины сервера успешно перезагружены</string>
+    <string name="admin_msg_error_reload_plugins">Ошибка перезагрузки плагинов: %1$s</string>
 
     <string name="details_meta_series">Сериал</string>
     <string name="details_meta_movie">Фильм</string>

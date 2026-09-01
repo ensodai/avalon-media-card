@@ -791,3 +791,33 @@ fun AdminViewModel.clearMediaCache(
         )
     }
 }
+
+fun AdminViewModel.reloadPlugins(
+    reloadPluginsUseCase: ReloadPluginsUseCase,
+    getSystemInfoUseCase: GetSystemInfoUseCase
+) {
+    updateViewState { it.copy(isSystemActionLoading = true, systemActionMessage = null) }
+    viewModelScope.launch {
+        reloadPluginsUseCase().fold(
+            onSuccess = { res ->
+                val defaultMsg = getString(Res.string.admin_msg_plugins_reloaded)
+                updateViewState {
+                    it.copy(
+                        isSystemActionLoading = false,
+                        systemActionMessage = res.error ?: defaultMsg
+                    )
+                }
+                loadSystemInfo(getSystemInfoUseCase)
+            },
+            onFailure = { err ->
+                val msg = getString(Res.string.admin_msg_error_reload_plugins, err.message ?: "")
+                updateViewState {
+                    it.copy(
+                        isSystemActionLoading = false,
+                        systemActionMessage = msg
+                    )
+                }
+            }
+        )
+    }
+}

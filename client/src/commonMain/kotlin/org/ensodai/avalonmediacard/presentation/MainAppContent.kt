@@ -33,6 +33,7 @@ import org.ensodai.avalonmediacard.presentation.screens.admin.AdminScreen
 import org.ensodai.avalonmediacard.presentation.screens.commonComponents.*
 import org.ensodai.avalonmediacard.presentation.screens.customListScreen.CustomListScreen
 import org.ensodai.avalonmediacard.presentation.screens.dashboardScreen.DashboardScreen
+import org.ensodai.avalonmediacard.presentation.screens.demoScreen.DemoScreen
 import org.ensodai.avalonmediacard.presentation.screens.detailsScreen.DetailsScreen
 import org.ensodai.avalonmediacard.presentation.screens.dynamic.DynamicScreen
 import org.ensodai.avalonmediacard.presentation.screens.integrations.IntegrationsScreen
@@ -223,6 +224,11 @@ fun MainAppContent(
                                                             title = currentSidebarItems.find { it.itemId == tabId }?.let { getLocalizedSidebarTitle(it) }
                                                                 ?: ""
                                                         )
+//                                                        DemoScreen(
+//                                                            title = currentSidebarItems.find { it.itemId == tabId }?.let { getLocalizedSidebarTitle(it) }
+//                                                                ?: "",
+//                                                            onAction = handleAction
+//                                                        )
                                                     }
 
                                                     is Screen.Movies -> {

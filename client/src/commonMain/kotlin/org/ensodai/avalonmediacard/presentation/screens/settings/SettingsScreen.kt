@@ -4,7 +4,9 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.focusGroup
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -18,6 +20,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.semantics.clearAndSetSemantics
 import androidx.compose.ui.text.font.FontWeight
@@ -54,6 +57,7 @@ fun SettingsScreen(
     var isSelectingOverviewLanguage by remember { mutableStateOf(false) }
 
     val focusRequester = remember { FocusRequester() }
+    val scrollState = rememberScrollState()
 
     LaunchedEffect(Unit) {
         runCatching { focusRequester.requestFocus() }
@@ -76,61 +80,74 @@ fun SettingsScreen(
 
     val selectedOverviewLanguageText = getLanguageLabel(state.overviewLanguage ?: "auto", isMediaOption = true)
 
-    Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-        Column(
+    BoxWithConstraints(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(MaterialTheme.colorScheme.background)
+    ) {
+        Box(
             modifier = Modifier
-                .widthIn(max = 480.dp)
                 .fillMaxWidth()
-                .focusGroup()
-                .clip(RoundedCornerShape(16.dp))
-                .background(MaterialTheme.colorScheme.surfaceVariant)
-                .padding(24.dp),
-            horizontalAlignment = Alignment.CenterHorizontally
+                .defaultMinSize(minHeight = maxHeight)
+                .verticalScroll(scrollState)
+                .padding(vertical = 24.dp, horizontal = 16.dp),
+            contentAlignment = Alignment.Center
         ) {
-            Icon(
-                imageVector = Lucide.Settings,
-                contentDescription = null,
-                modifier = Modifier.size(40.dp),
-                tint = MaterialTheme.colorScheme.primary
-            )
-            Spacer(modifier = Modifier.height(12.dp))
-            Text(
-                text = stringResource(Res.string.settings_title),
-                fontSize = 22.sp,
-                fontWeight = FontWeight.Bold,
-                color = MaterialTheme.colorScheme.onSurface
-            )
-            Spacer(modifier = Modifier.height(4.dp))
-            Text(
-                text = stringResource(Res.string.settings_subtitle),
-                fontSize = 13.sp,
-                color = MaterialTheme.colorScheme.onSurfaceVariant
-            )
-            Spacer(modifier = Modifier.height(24.dp))
-
-            // === GENERAL SETTINGS === //
-            Text(
-                text = stringResource(Res.string.settings_section_general),
-                fontSize = 12.sp,
-                fontWeight = FontWeight.SemiBold,
-                color = MaterialTheme.colorScheme.primary,
-                modifier = Modifier.fillMaxWidth().padding(start = 4.dp, bottom = 8.dp)
-            )
-
-            Spacer(modifier = Modifier.height(8.dp))
-
-            // Язык интерфейса
-            Row(
+            Column(
                 modifier = Modifier
+                    .widthIn(max = 480.dp)
                     .fillMaxWidth()
-                    .tvAndWebHoverEffect(
-                        shape = RoundedCornerShape(8.dp),
-                        onClick = { isSelectingAppLanguage = true }
-                    )
-                    .padding(vertical = 10.dp, horizontal = 8.dp),
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.SpaceBetween
+                    .focusGroup()
+                    .clip(RoundedCornerShape(16.dp))
+                    .background(MaterialTheme.colorScheme.surfaceVariant)
+                    .padding(24.dp),
+                horizontalAlignment = Alignment.CenterHorizontally
             ) {
+                Icon(
+                    imageVector = Lucide.Settings,
+                    contentDescription = null,
+                    modifier = Modifier.size(40.dp),
+                    tint = MaterialTheme.colorScheme.primary
+                )
+                Spacer(modifier = Modifier.height(12.dp))
+                Text(
+                    text = stringResource(Res.string.settings_title),
+                    fontSize = 22.sp,
+                    fontWeight = FontWeight.Bold,
+                    color = MaterialTheme.colorScheme.onSurface
+                )
+                Spacer(modifier = Modifier.height(4.dp))
+                Text(
+                    text = stringResource(Res.string.settings_subtitle),
+                    fontSize = 13.sp,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                )
+                Spacer(modifier = Modifier.height(24.dp))
+
+                // === GENERAL SETTINGS === //
+                Text(
+                    text = stringResource(Res.string.settings_section_general),
+                    fontSize = 12.sp,
+                    fontWeight = FontWeight.SemiBold,
+                    color = MaterialTheme.colorScheme.primary,
+                    modifier = Modifier.fillMaxWidth().padding(start = 4.dp, bottom = 8.dp)
+                )
+
+                Spacer(modifier = Modifier.height(8.dp))
+
+                // Язык интерфейса
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .focusRequester(focusRequester)
+                        .tvAndWebHoverEffect(
+                            shape = RoundedCornerShape(8.dp),
+                            onClick = { isSelectingAppLanguage = true }
+                        )
+                        .padding(vertical = 10.dp, horizontal = 8.dp),
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.SpaceBetween
+                ) {
                 Column {
                     Text(
                         text = stringResource(Res.string.settings_language),
@@ -334,7 +351,7 @@ fun SettingsScreen(
                         .tvAndWebHoverEffect(
                             shape = RoundedCornerShape(8.dp),
                             onClick = actions.onSaveClicked,
-                            activeBorderColor = MaterialTheme.colorScheme.primary
+                            activeBorderColor = Color.White
                         )
                         .background(MaterialTheme.colorScheme.primary, RoundedCornerShape(8.dp)),
                     contentAlignment = Alignment.Center
@@ -360,6 +377,7 @@ fun SettingsScreen(
                 Text(text = state.successMessage!!, color = MaterialTheme.colorScheme.primary, fontSize = 13.sp)
             }
         }
+    }
 
         // --- ВЫБОР ЯЗЫКА ИНТЕРФЕЙСА --- //
         if (isSelectingAppLanguage) {

@@ -32,15 +32,18 @@ if [ "$LANG_CODE" == "ru" ]; then
   MSG_ADMIN_USER_PROMPT="Логин администратора веб-панели [admin]: "
   MSG_PASS_PROMPT="Пароль администратора (Enter для автогенерации): "
   MSG_GEN_PASS="🔑 Сгенерирован надежный пароль администратора: "
+  MSG_WEB_PROMPT="Установить веб-клиент? [Y/n] (Да/нет): "
   MSG_DEP_CHECK="🔍 Проверка окружения..."
   MSG_JAVA_MISSING="❌ Java 21 не найдена! Пожалуйста, установите Java 21 (например: sudo apt install openjdk-21-jre-headless)"
   MSG_JAVA_OK="✅ Java 21 обнаружена."
   MSG_DOWNLOADING="📦 Скачивание последней версии Avalon Server с GitHub..."
   MSG_DOWNLOADING_PLUGINS="🧩 Скачивание и распаковка базовых плагинов..."
+  MSG_DOWNLOADING_WEB="🌐 Скачивание и распаковка веб-клиента..."
   MSG_SERVICE_SETUP="⚙️ Настройка пользовательской службы (systemd)..."
   MSG_SERVICE_START="🚀 Запуск службы Avalon Media Server..."
   MSG_SUCCESS_HEADER="🎉 Avalon Media Server успешно установлен и запущен!"
-  MSG_URL="🌐 Адрес веб-панели: "
+  MSG_URL="🌐 Сервер API / RPC: "
+  MSG_WEB_URL="🌐 Веб-клиент:        "
   MSG_LOGIN="👤 Логин:          "
   MSG_PASS="🔑 Пароль:         "
   MSG_DIR="📂 Рабочая папка:   "
@@ -55,15 +58,18 @@ else
   MSG_ADMIN_USER_PROMPT="Web admin username [admin]: "
   MSG_PASS_PROMPT="Admin password (press Enter to auto-generate): "
   MSG_GEN_PASS="🔑 Generated secure admin password: "
+  MSG_WEB_PROMPT="Install web client? [Y/n]: "
   MSG_DEP_CHECK="🔍 Checking environment..."
   MSG_JAVA_MISSING="❌ Java 21 not found! Please install Java 21 (e.g.: sudo apt install openjdk-21-jre-headless)"
   MSG_JAVA_OK="✅ Java 21 detected."
   MSG_DOWNLOADING="📦 Downloading the latest Avalon Server release from GitHub..."
   MSG_DOWNLOADING_PLUGINS="🧩 Downloading and unpacking core plugins..."
+  MSG_DOWNLOADING_WEB="🌐 Downloading and unpacking web client..."
   MSG_SERVICE_SETUP="⚙️ Configuring user service (systemd)..."
   MSG_SERVICE_START="🚀 Starting Avalon Media Server service..."
   MSG_SUCCESS_HEADER="🎉 Avalon Media Server successfully installed and running!"
-  MSG_URL="🌐 Web URL:          "
+  MSG_URL="🌐 Server API / RPC: "
+  MSG_WEB_URL="🌐 Web Client:        "
   MSG_LOGIN="👤 Admin username:   "
   MSG_PASS="🔑 Admin password:   "
   MSG_DIR="📂 Directory:        "
@@ -87,11 +93,20 @@ INSTALL_DIR="${INSTALL_DIR/#\~/$HOME}"
 read -rp "$MSG_PORT_PROMPT" SERVER_PORT </dev/tty || SERVER_PORT="8080"
 SERVER_PORT=${SERVER_PORT:-8080}
 
-# 3. Логин веб-админа
+# 3. Веб-клиент
+read -rp "$MSG_WEB_PROMPT" INSTALL_WEB_INPUT </dev/tty || INSTALL_WEB_INPUT="y"
+INSTALL_WEB_INPUT=$(echo "$INSTALL_WEB_INPUT" | tr '[:upper:]' '[:lower:]')
+if [[ "$INSTALL_WEB_INPUT" == "n" || "$INSTALL_WEB_INPUT" == "no" || "$INSTALL_WEB_INPUT" == "нет" || "$INSTALL_WEB_INPUT" == "н" ]]; then
+  INSTALL_WEB=false
+else
+  INSTALL_WEB=true
+fi
+
+# 4. Логин веб-админа
 read -rp "$MSG_ADMIN_USER_PROMPT" ADMIN_USER </dev/tty || ADMIN_USER="admin"
 ADMIN_USER=${ADMIN_USER:-admin}
 
-# 4. Пароль веб-админа
+# 5. Пароль веб-админа
 read -rp "$MSG_PASS_PROMPT" ADMIN_PASSWORD </dev/tty || ADMIN_PASSWORD=""
 if [ -z "$ADMIN_PASSWORD" ]; then
   if command -v openssl >/dev/null 2>&1; then
@@ -121,6 +136,7 @@ echo "$MSG_DOWNLOADING"
 REPO="ensodai/avalon-media-card"
 JAR_URL="https://github.com/$REPO/releases/latest/download/avalon-server.jar"
 PLUGINS_URL="https://github.com/$REPO/releases/latest/download/avalon-plugins.zip"
+WEB_URL="https://github.com/$REPO/releases/latest/download/avalon-web.zip"
 
 curl -fsSL -o "$INSTALL_DIR/avalon-server.jar" "$JAR_URL"
 
@@ -128,6 +144,16 @@ echo "$MSG_DOWNLOADING_PLUGINS"
 curl -fsSL -o "$INSTALL_DIR/plugins.zip" "$PLUGINS_URL"
 unzip -o -q "$INSTALL_DIR/plugins.zip" -d "$INSTALL_DIR/plugins"
 rm -f "$INSTALL_DIR/plugins.zip"
+
+# Скачивание и распаковка веб-клиента при выборе
+if [ "$INSTALL_WEB" = true ]; then
+  mkdir -p "$INSTALL_DIR/web"
+  echo "$MSG_DOWNLOADING_WEB"
+  if curl -fsSL -o "$INSTALL_DIR/web.zip" "$WEB_URL"; then
+    unzip -o -q "$INSTALL_DIR/web.zip" -d "$INSTALL_DIR/web"
+    rm -f "$INSTALL_DIR/web.zip"
+  fi
+fi
 
 # Запись .env
 cat <<EOF > "$INSTALL_DIR/.env"
@@ -185,7 +211,10 @@ echo ""
 echo "=================================================================="
 echo " $MSG_SUCCESS_HEADER"
 echo "=================================================================="
-echo "$MSG_URL http://${SERVER_IP}:${SERVER_PORT}"
+if [ "$INSTALL_WEB" = true ]; then
+  echo "$MSG_WEB_URL http://${SERVER_IP}:${SERVER_PORT}"
+fi
+echo "$MSG_URL http://${SERVER_IP}:${SERVER_PORT}/api/rpc"
 echo "$MSG_LOGIN$ADMIN_USER"
 echo "$MSG_PASS$ADMIN_PASSWORD"
 echo "$MSG_DIR$INSTALL_DIR"

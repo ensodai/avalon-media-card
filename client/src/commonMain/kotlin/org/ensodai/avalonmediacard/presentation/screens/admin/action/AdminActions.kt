@@ -46,5 +46,6 @@ data class AdminActions(
     val loadSystemInfo: () -> Unit,
     val onClearDiscoverCache: () -> Unit,
     val onClearFeedCache: () -> Unit,
-    val onClearMediaCache: () -> Unit
+    val onClearMediaCache: () -> Unit,
+    val onReloadPlugins: () -> Unit
 ) : BaseActions()

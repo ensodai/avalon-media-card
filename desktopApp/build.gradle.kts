@@ -35,6 +35,10 @@ kotlin {
     }
 }
 
+val desktopVersionName = providers.gradleProperty("desktop.versionName")
+    .orElse(providers.gradleProperty("app.versionName"))
+    .getOrElse("1.0.0")
+
 compose.desktop {
     application {
         mainClass = "org.ensodai.avalonmediacard.desktop.MainKt"
@@ -58,13 +62,13 @@ compose.desktop {
                 "jdk.crypto.ec"
             )
             packageName = "AvalonMediaCard"
-            packageVersion = "1.0.0"
+            packageVersion = desktopVersionName
             description = "Avalon Media Card Desktop"
             copyright = "© 2026 Ensodai"
             vendor = "Ensodai"
 
             linux {
-                debPackageVersion = "1.0.0"
+                debPackageVersion = desktopVersionName
                 menuGroup = "AudioVideo"
                 appCategory = "AudioVideo"
                 iconFile.set(project.file("src/jvmMain/resources/icons/icon.png"))

@@ -112,7 +112,7 @@ Explicitly designed and compiled for television displays with full D-Pad directi
 <!-- <p align="center"><img src="assets/screenshots/tv-dpad-navigation.gif" alt="Android TV 10-Foot Leanback Navigation" width="800" /></p> -->
 
 ### 3. 🗄️ Metadata Aggregation & Bring-Your-Own-Key (BYOK)
-Seamless integration with **The Movie Database (TMDB)**, **Trakt.tv**. Full multi-user support with custom watchlists, episode watch progress tracking, resume points, and personal ratings.
+Seamless integration with **The Movie Database (TMDB)**, **Trakt.tv**, and anime metadata catalogs (Shikimori). Full multi-user support with custom watchlists, episode watch progress tracking, resume points, and personal ratings.
 
 ### 4. ⚙️ Admin Control Center & Granular Governance
 Dedicated administrator dashboard for multi-tenant user provisioning, access control, cache invalidation, and independent configuration cards for metadata providers and stream proxy connectors.

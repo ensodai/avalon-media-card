@@ -10,7 +10,9 @@ plugins {
 }
 
 group = "org.ensodai.avalonmediacard"
-version = "1.0.0"
+version = providers.gradleProperty("server.versionName")
+    .orElse(providers.gradleProperty("app.versionName"))
+    .getOrElse("1.0.0")
 application {
     mainClass = "org.ensodai.avalonmediacard.ApplicationKt"
 }
@@ -30,6 +32,8 @@ dependencies {
     implementation(libs.logback)
     implementation(libs.ktor.serverCore)
     implementation(libs.ktor.serverNetty)
+    implementation(libs.ktor.serverCompression)
+    implementation(libs.ktor.serverForwardedHeader)
     implementation("io.ktor:ktor-server-cors-jvm:3.5.0")
     implementation("io.ktor:ktor-server-websockets-jvm:3.5.0")
     implementation("io.ktor:ktor-server-partial-content-jvm:3.5.0")

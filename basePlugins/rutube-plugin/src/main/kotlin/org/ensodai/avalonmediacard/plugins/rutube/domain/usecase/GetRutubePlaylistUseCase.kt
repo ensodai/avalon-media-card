@@ -68,8 +68,16 @@ class GetRutubePlaylistUseCase(
         val videoId = sourceId.removePrefix("rutube_")
         val streamInfo = repository.getStreamInfo(videoId) ?: return emptyList()
 
+        val userLang = if (userId != null) {
+            try {
+                context.userGlobalSettings.getUserSettings(userId)?.uiLocale?.ifBlank { "ru" } ?: "ru"
+            } catch (_: Exception) {
+                "ru"
+            }
+        } else "ru"
+
         val metadata = try {
-            context.catalog.getMediaDetails(key)
+            context.catalog.getMediaDetails(key, language = userLang)
         } catch (e: Exception) {
             null
         }
@@ -118,8 +126,16 @@ class GetRutubePlaylistUseCase(
         val videoId = sourceId.removePrefix("rutube_ep_").removePrefix("rutube_")
         val streamInfo = repository.getStreamInfo(videoId) ?: return emptyList()
 
+        val userLang = if (userId != null) {
+            try {
+                context.userGlobalSettings.getUserSettings(userId)?.uiLocale?.ifBlank { "ru" } ?: "ru"
+            } catch (_: Exception) {
+                "ru"
+            }
+        } else "ru"
+
         val metadata = try {
-            context.catalog.getMediaDetails(key)
+            context.catalog.getMediaDetails(key, language = userLang)
         } catch (e: Exception) {
             null
         }
@@ -165,16 +181,27 @@ class GetRutubePlaylistUseCase(
         userId: Uuid?
     ): List<MediaStream> {
         val logger = context.logger
-        val seasonNum = Regex("""rutube_season_(?:.+_)?(\d+)""").find(sourceId)?.groupValues?.get(1)?.toIntOrNull() ?: 1
+        // 1. Check persistent database mappings for zero-delay instant response
+        val dbMappings = context.sourceMappings.getMappings(key.id, sourceId)
+        val seasonNum = dbMappings.firstOrNull()?.seasons?.firstOrNull()
+            ?: Regex("""_(\d+)_(?:author|composite)""").find(sourceId)?.groupValues?.get(1)?.toIntOrNull()
+            ?: Regex("""rutube_season_(\d+)""").find(sourceId)?.groupValues?.get(1)?.toIntOrNull()
+            ?: 1
+
+        val userLang = if (userId != null) {
+            try {
+                context.userGlobalSettings.getUserSettings(userId)?.uiLocale?.ifBlank { "ru" } ?: "ru"
+            } catch (_: Exception) {
+                "ru"
+            }
+        } else "ru"
 
         val metadata = try {
-            context.catalog.getMediaDetails(key)
+            context.catalog.getMediaDetails(key, language = userLang)
         } catch (e: Exception) {
             null
         }
 
-        // 1. Check persistent database mappings for zero-delay instant response
-        val dbMappings = context.sourceMappings.getMappings(key.id, sourceId)
         if (dbMappings.isNotEmpty()) {
             return buildPlaylistFromDbMappings(key, sourceId, dbMappings, seasonNum, userId, metadata)
         }
@@ -229,7 +256,7 @@ class GetRutubePlaylistUseCase(
             }
         }
 
-        val authorHash = Regex("""rutube_season_\d+_author_(-?\d+)""").find(sourceId)?.groupValues?.get(1)?.toIntOrNull()
+        val authorHash = Regex("""_author_(-?\d+)""").find(sourceId)?.groupValues?.get(1)?.toIntOrNull()
         val filteredMappedList = if (authorHash != null) {
             val authorEpisodes = mappedList.filter { it.video.authorName?.hashCode() == authorHash }
             if (authorEpisodes.isNotEmpty()) authorEpisodes else mappedList
@@ -272,8 +299,16 @@ class GetRutubePlaylistUseCase(
         metadata: org.ensodai.avalonmediacard.contract.model.MediaMetadata?
     ): List<MediaStream> {
         val logger = context.logger
+        val userLang = if (userId != null) {
+            try {
+                context.userGlobalSettings.getUserSettings(userId)?.uiLocale?.ifBlank { "ru" } ?: "ru"
+            } catch (_: Exception) {
+                "ru"
+            }
+        } else "ru"
+
         val tmdbEpisodes = try {
-            context.catalog.getSeasonDetails(key, seasonNum)
+            context.catalog.getSeasonDetails(key, seasonNum, language = userLang)
         } catch (e: Exception) {
             emptyList()
         }
@@ -296,7 +331,7 @@ class GetRutubePlaylistUseCase(
             val progress = progressList.find { it.season == seasonNum && it.episode == epNum }
 
             val episodeName = tmdbEp?.name?.ifBlank { null }
-                ?: context.i18n.t("rutube.episode_title_fmt", epNum)
+                ?: context.i18n.tForLocale(userLang, "rutube.episode_title_fmt", epNum)
             val finalTitle = if (metadata?.title?.isNotBlank() == true) {
                 "${metadata.title} • S${seasonNum}E${epNum} «$episodeName»"
             } else {

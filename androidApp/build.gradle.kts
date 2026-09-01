@@ -60,20 +60,44 @@ fun getLocalIp(): String {
     return "10.0.2.2"
 }
 
+fun gradleString(name: String, fallback: String? = null, default: String = ""): String =
+    providers.gradleProperty(name)
+        .orElse(providers.gradleProperty(fallback ?: name))
+        .getOrElse(default)
+
+fun gradleInt(name: String, fallback: String? = null, default: Int = 1): Int =
+    gradleString(name, fallback, default.toString()).toIntOrNull() ?: default
+
+val androidVersionName = gradleString("android.versionName", fallback = "app.versionName", default = "1.0.0")
+val androidVersionCode = gradleInt("android.versionCode", fallback = "app.versionCode", default = 1)
+val androidCompileSdk = gradleInt("android.compileSdk", fallback = "app.compileSdk", default = 37)
+val androidMinSdk = gradleInt("android.minSdk", fallback = "app.minSdk", default = 26)
+val androidTargetSdk = gradleInt("android.targetSdk", fallback = "app.targetSdk", default = 37)
+
 android {
     namespace = "org.ensodai.avalonmediacard"
-    compileSdk = 37
+    compileSdk = androidCompileSdk
 
     defaultConfig {
         applicationId = "org.ensodai.avalonmediacard"
-        minSdk = 26
-        targetSdk = 37
-        versionCode = 1
-        versionName = "1.0.0"
+        minSdk = androidMinSdk
+        targetSdk = androidTargetSdk
+        versionCode = androidVersionCode
+        versionName = androidVersionName
     }
 
     buildTypes {
         debug {
+            versionNameSuffix = "-debug"
+            val prodServerUrl = project.findProperty("AVALON_PROD_SERVER_URL") as? String
+                ?: System.getenv("AVALON_PROD_SERVER_URL")
+                ?: ""
+            buildConfigField("String", "SERVER_URL", "\"$prodServerUrl\"")
+        }
+        create("debugLocal") {
+            initWith(buildTypes.getByName("debug"))
+            matchingFallbacks += listOf("debug")
+            versionNameSuffix = "-debugLocal"
             val localIp = getLocalIp()
             buildConfigField("String", "SERVER_URL", "\"ws://$localIp:8080/api/rpc\"")
         }
@@ -81,6 +105,7 @@ android {
             isMinifyEnabled = true
             isShrinkResources = true
             isDebuggable = false
+            versionNameSuffix = "-release"
             val prodServerUrl = project.findProperty("AVALON_PROD_SERVER_URL") as? String
                 ?: System.getenv("AVALON_PROD_SERVER_URL")
                 ?: ""
@@ -144,4 +169,10 @@ dependencies {
     implementation(libs.mpv.lib)
     implementation(files("../libs/media3-decoder-ffmpeg-1.10.1-custom-v7.aar"))
     debugImplementation(libs.compose.uiTooling)
+}
+
+tasks.register<Exec>("runDebugLocalSetup") {
+    group = "help"
+    description = "Sets up adb reverse for all active emulators to work with local backend on port 8080."
+    commandLine("bash", "-c", "adb devices | grep emulator | cut -f1 | xargs -I {} adb -s {} reverse tcp:8080 tcp:8080")
 }

@@ -54,6 +54,7 @@ jobs:
         run: |
           ./gradlew compileAll \
             :server:buildFatJar \
+            :web:wasmJsBrowserDistribution \
             :androidApp:assembleDebug \
             :desktopApp:packageDeb \
             --parallel
@@ -79,6 +80,14 @@ jobs:
           
           # 4. Linux DEB
           find desktopApp/build/compose/binaries/main/deb -name "*.deb" -exec cp {} dist/avalon-linux.deb \;
+
+          # 5. Веб-клиент (Wasm)
+          DIST_ROOT="$(pwd)/dist"
+          if [ -d web/build/dist/wasmJs/productionExecutable ]; then
+            (cd web/build/dist/wasmJs/productionExecutable && zip -r "$DIST_ROOT/avalon-web.zip" .)
+          elif [ -d web/build/dist/wasmJs ]; then
+            (cd web/build/dist/wasmJs && zip -r "$DIST_ROOT/avalon-web.zip" .)
+          fi
 
       - name: Upload Linux & Server Artifacts
         uses: actions/upload-artifact@v4

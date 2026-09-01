@@ -1,39 +1,39 @@
 [versions]
 androidx-lifecycle = "2.11.0"
-composeMultiplatform = "1.11.1"
+composeMultiplatform = "1.12.0"
+material3 = "1.12.0-alpha03"
 junit = "4.13.2"
 kotlin = "2.4.10"
-kotlin-wrappers = "2026.7.5"
+kotlin-wrappers = "2026.8.5"
 ktor = "3.5.1"
-logback = "1.6.0"
-material3 = "1.11.0-alpha07"
+logback = "1.6.3"
 kotlinx-rpc = "0.10.3"
 koin = "4.2.2"
-koin-compiler = "1.0.2"
+koin-compiler = "1.1.0"
 coil = "3.5.0"
-exposed = "1.3.1"
+exposed = "1.5.0"
 hikaricp = "7.1.0"
-flyway = "13.0.0"
-sqlite-jdbc = "3.53.2.1"
+flyway = "13.4.0"
+sqlite-jdbc = "3.53.4.0"
 postgresql = "42.7.13"
 kotlinx-datetime = "0.8.0"
 multiplatform-nav3-ui = "1.1.1"
 lucide-cmp = "2.2.1"
 androidx-datastore = "1.3.0-alpha10"
 okio = "3.18.1"
-okhttp = "4.12.0"
-trakt-api = "1.5.1"
+okhttp = "5.5.0"
+trakt-api = "1.13.0"
 agp = "9.1.1"
 activityCompose = "1.13.0"
-media3 = "1.10.1"
+media3 = "1.11.0"
 media3Avi = "2.3.0"
 tvMaterial = "1.1.0"
-filekit = "0.14.2"
-kotlinx-coroutines = "1.10.1"
-jna = "5.16.0"
-mpvLib = "0.1.9"
+filekit = "0.15.0"
+kotlinx-coroutines = "1.11.0"
+jna = "5.19.1"
+mpvLib = "0.1.12"
 kermit = "2.1.0"
-avalon-core-contract = "1.0.1"
+avalon-core-contract = "1.0.2"
 
 [libraries]
 avalon-core-contract = { module = "org.ensodai.avalonmediacard:avalon-media-card-core-contract", version.ref = "avalon-core-contract" }
@@ -65,6 +65,8 @@ compose-uiTooling = { module = "org.jetbrains.compose.ui:ui-tooling", version.re
 logback = { module = "ch.qos.logback:logback-classic", version.ref = "logback" }
 ktor-serverCore = { module = "io.ktor:ktor-server-core-jvm", version.ref = "ktor" }
 ktor-serverNetty = { module = "io.ktor:ktor-server-netty-jvm", version.ref = "ktor" }
+ktor-serverCompression = { module = "io.ktor:ktor-server-compression-jvm", version.ref = "ktor" }
+ktor-serverForwardedHeader = { module = "io.ktor:ktor-server-forwarded-header-jvm", version.ref = "ktor" }
 ktor-serverTestHost = { module = "io.ktor:ktor-server-test-host-jvm", version.ref = "ktor" }
 wrappers-browser = { module = "org.jetbrains.kotlin-wrappers:kotlin-browser", version.ref = "kotlin-wrappers" }
 kotlinx-rpc-krpc-client = { module = "org.jetbrains.kotlinx:kotlinx-rpc-krpc-client", version.ref = "kotlinx-rpc" }

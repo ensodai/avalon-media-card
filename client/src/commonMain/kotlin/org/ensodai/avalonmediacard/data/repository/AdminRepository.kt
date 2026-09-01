@@ -96,4 +96,8 @@ class AdminRepository(private val adminRpcService: AdminRpcService) {
     suspend fun clearMediaCache(): AdminActionResponse {
         return adminRpcService.clearMediaCache()
     }
+
+    suspend fun reloadPlugins(): AdminActionResponse {
+        return adminRpcService.reloadPlugins()
+    }
 }

@@ -8,7 +8,7 @@ import java.io.File
 import java.io.FileOutputStream
 import java.security.KeyStore
 import java.security.cert.X509Certificate
-import `is`.xyz.mpv.MPVLib
+import `is`.xyz.mpv.MPV
 import `is`.xyz.mpv.MPVNode
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -41,6 +41,8 @@ class MpvPlaybackController(
     val context: Context
 ) : CommonPlaybackController() {
 
+    val mpv = MPV()
+
     private val logger = AppLogging.logger("MpvPlaybackController")
     private val scope = CoroutineScope(Dispatchers.Main + SupervisorJob())
     private val json = Json { ignoreUnknownKeys = true }
@@ -49,7 +51,7 @@ class MpvPlaybackController(
     private var isInitialized = false
     private var pendingSeekSeconds: Double = 0.0
 
-    private val logObserver = object : MPVLib.LogObserver {
+    private val logObserver = object : MPV.LogObserver {
         override fun logMessage(prefix: String, level: Int, text: String) {
             val trimmed = text.trim()
             if (trimmed.isNotBlank() && !prefix.startsWith("cache") && !trimmed.contains("Linearizing discontinuity")) {
@@ -58,7 +60,7 @@ class MpvPlaybackController(
         }
     }
 
-    private val eventObserver = object : MPVLib.EventObserver {
+    private val eventObserver = object : MPV.EventObserver {
         override fun eventProperty(property: String) {}
 
         override fun eventProperty(property: String, value: Long) {
@@ -111,12 +113,12 @@ class MpvPlaybackController(
 
         override fun eventProperty(property: String, value: MPVNode) {}
 
-        override fun event(eventId: Int) {
+        override fun event(eventId: Int, data: MPVNode) {
             when (eventId) {
-                MPVLib.mpvEventId.MPV_EVENT_START_FILE -> {
+                MPV.mpvEvent.MPV_EVENT_START_FILE -> {
                     state.isBuffering = true
                 }
-                MPVLib.mpvEventId.MPV_EVENT_FILE_LOADED -> {
+                MPV.mpvEvent.MPV_EVENT_FILE_LOADED -> {
                     state.isBuffering = false
                     state.isPlaying = true
 
@@ -124,13 +126,13 @@ class MpvPlaybackController(
                         val sec = pendingSeekSeconds.toInt()
                         pendingSeekSeconds = 0.0
                         scope.launch(Dispatchers.IO) {
-                            MPVLib.setPropertyInt("time-pos", sec)
+                            mpv.setPropertyInt("time-pos", sec)
                         }
                     }
 
                     // Считываем список дорожек при загрузке файла
                     scope.launch(Dispatchers.IO) {
-                        val trackListStr = MPVLib.getPropertyString("track-list")
+                        val trackListStr = mpv.getPropertyString("track-list")
                         if (!trackListStr.isNullOrBlank()) {
                             scope.launch(Dispatchers.Main) {
                                 parseTrackList(trackListStr)
@@ -138,11 +140,11 @@ class MpvPlaybackController(
                         }
                     }
                 }
-                MPVLib.mpvEventId.MPV_EVENT_PLAYBACK_RESTART -> {
+                MPV.mpvEvent.MPV_EVENT_PLAYBACK_RESTART -> {
                     state.isBuffering = false
                     state.isPlaying = true
                 }
-                MPVLib.mpvEventId.MPV_EVENT_END_FILE -> {
+                MPV.mpvEvent.MPV_EVENT_END_FILE -> {
                     state.isPlaying = false
                 }
             }
@@ -287,142 +289,137 @@ class MpvPlaybackController(
 
     private fun initializeMpv() {
         try {
-            synchronized(initLock) {
-                if (!isNativeInitialized) {
-                    val resolvedFontFamily = setupFontsAndCerts(context.applicationContext)
+            val resolvedFontFamily = setupFontsAndCerts(context.applicationContext)
 
-                    MPVLib.create(context.applicationContext)
+            mpv.create(context.applicationContext)
 
-                    // Графика и аппаратное декодирование (с софтверным фоллбэком как на ПК)
-                    MPVLib.setOptionString("vo", "gpu")
-                    MPVLib.setOptionString("hwdec", "mediacodec,mediacodec-copy,auto-safe")
-                    MPVLib.setOptionString("hwdec-codecs", "all")
-                    MPVLib.setOptionString("hwdec-software-fallback", "1")
-                    MPVLib.setOptionString("hwdec-extra-frames", "8")
-                    MPVLib.setOptionString("vd-lavc-threads", "0")
-                    MPVLib.setOptionString("vd-lavc-dr", "yes")
+            // Графика и аппаратное декодирование (с софтверным фоллбэком как на ПК)
+            mpv.setOptionString("vo", "gpu")
+            mpv.setOptionString("hwdec", "mediacodec,mediacodec-copy,auto-safe")
+            mpv.setOptionString("hwdec-codecs", "all")
+            mpv.setOptionString("hwdec-software-fallback", "1")
+            mpv.setOptionString("hwdec-extra-frames", "8")
+            mpv.setOptionString("vd-lavc-threads", "0")
+            mpv.setOptionString("vd-lavc-dr", "yes")
 
-                    // Оптимизация программного скейлера (при CPU фоллбэке на ARM)
-                    MPVLib.setOptionString("sws-scaler", "fast-bilinear")
-                    MPVLib.setOptionString("sws-fast", "yes")
-                    MPVLib.setOptionString("sws-allow-zimg", "yes")
+            // Оптимизация программного скейлера (при CPU фоллбэке на ARM)
+            mpv.setOptionString("sws-scaler", "fast-bilinear")
+            mpv.setOptionString("sws-fast", "yes")
+            mpv.setOptionString("sws-allow-zimg", "yes")
 
-                    // Вывод и синхронизация
-                    MPVLib.setOptionString("video-sync", "audio")
+            // Вывод и синхронизация
+            mpv.setOptionString("video-sync", "audio")
 
-                    // Настройки буферизации для TorrServer / HTTP стриминга адаптивно под объем памяти устройства
-                    val actManager = context.applicationContext.getSystemService(Context.ACTIVITY_SERVICE) as? ActivityManager
-                    val memoryClass = actManager?.memoryClass ?: 192
-                    val demuxerBufferBytes = when {
-                        memoryClass <= 192 -> 64L * 1024 * 1024   // 64MB для low-end TV (1GB RAM)
-                        memoryClass <= 384 -> 128L * 1024 * 1024  // 128MB для medium TV / Mobile (2-3GB RAM)
-                        else -> 256L * 1024 * 1024                // 256MB для high-end устройств (4GB+ RAM)
-                    }
-                    val demuxerBackBufferBytes = demuxerBufferBytes / 2
+            // Настройки буферизации для TorrServer / HTTP стриминга адаптивно под объем памяти устройства
+            val actManager = context.applicationContext.getSystemService(Context.ACTIVITY_SERVICE) as? ActivityManager
+            val memoryClass = actManager?.memoryClass ?: 192
+            val demuxerBufferBytes = when {
+                memoryClass <= 192 -> 64L * 1024 * 1024   // 64MB для low-end TV (1GB RAM)
+                memoryClass <= 384 -> 128L * 1024 * 1024  // 128MB для medium TV / Mobile (2-3GB RAM)
+                else -> 256L * 1024 * 1024                // 256MB для high-end устройств (4GB+ RAM)
+            }
+            val demuxerBackBufferBytes = demuxerBufferBytes / 2
 
-                    MPVLib.setOptionString("cache", "yes")
-                    MPVLib.setOptionString("cache-secs", "120.0")
-                    MPVLib.setOptionString("demuxer-max-bytes", demuxerBufferBytes.toString())
-                    MPVLib.setOptionString("demuxer-max-back-bytes", demuxerBackBufferBytes.toString())
-                    MPVLib.setOptionString("demuxer-seekable-cache", "yes")
-                    MPVLib.setOptionString("demuxer-readahead-secs", "30.0")
-                    MPVLib.setOptionString("stream-buffer-size", "4194304") // 4 MiB
+            mpv.setOptionString("cache", "yes")
+            mpv.setOptionString("cache-secs", "120.0")
+            mpv.setOptionString("demuxer-max-bytes", demuxerBufferBytes.toString())
+            mpv.setOptionString("demuxer-max-back-bytes", demuxerBackBufferBytes.toString())
+            mpv.setOptionString("demuxer-seekable-cache", "yes")
+            mpv.setOptionString("demuxer-readahead-secs", "30.0")
+            mpv.setOptionString("stream-buffer-size", "4194304") // 4 MiB
 
-                    // Защита от сетевого отката субтитров
-                    MPVLib.setOptionString("demuxer-mkv-subtitle-preroll", "no")
-                    MPVLib.setOptionString("demuxer-mkv-subtitle-preroll-secs", "0.0")
+            // Защита от сетевого отката субтитров
+            mpv.setOptionString("demuxer-mkv-subtitle-preroll", "no")
+            mpv.setOptionString("demuxer-mkv-subtitle-preroll-secs", "0.0")
 
-                    // Сетевой стек FFmpeg и протокол HTTP
-                    MPVLib.setOptionString("demuxer-lavf-buffersize", "4194304") // 4 MiB
-                    MPVLib.setOptionString("demuxer-lavf-probesize", "32768000") // 32 MiB
-                    MPVLib.setOptionString("demuxer-lavf-analyzeduration", "5.0")
-                    MPVLib.setOptionString("demuxer-lavf-linearize-timestamps", "no")
-                    MPVLib.setOptionString("demuxer-mkv-probe-start-time", "no")
-                    MPVLib.setOptionString(
-                        "demuxer-lavf-o",
-                        "reconnect=1,reconnect_streamed=1,reconnect_delay_max=5,reconnect_on_network_error=1,reconnect_on_http_error=4xx,5xx,seekable=1,tcp_nodelay=1"
-                    )
+            // Сетевой стек FFmpeg и протокол HTTP
+            mpv.setOptionString("demuxer-lavf-buffersize", "4194304") // 4 MiB
+            mpv.setOptionString("demuxer-lavf-probesize", "32768000") // 32 MiB
+            mpv.setOptionString("demuxer-lavf-analyzeduration", "5.0")
+            mpv.setOptionString("demuxer-lavf-linearize-timestamps", "no")
+            mpv.setOptionString("demuxer-mkv-probe-start-time", "no")
+            mpv.setOptionString(
+                "demuxer-lavf-o",
+                "reconnect=1,reconnect_streamed=1,reconnect_delay_max=5,reconnect_on_network_error=1,reconnect_on_http_error=4xx,5xx,seekable=1,tcp_nodelay=1"
+            )
 
-                    // Устойчивость декодеров к повреждениям сетевого потока
-                    MPVLib.setOptionString("vd-lavc-o", "err_detect=ignore_err")
-                    MPVLib.setOptionString("ad-lavc-o", "err_detect=ignore_err")
+            // Устойчивость декодеров к повреждениям сетевого потока
+            mpv.setOptionString("vd-lavc-o", "err_detect=ignore_err")
+            mpv.setOptionString("ad-lavc-o", "err_detect=ignore_err")
 
-                    // Поведение перемотки в торрент-стримах (быстрый seek без сброса сети)
-                    MPVLib.setOptionString("hr-seek", "no")
-                    MPVLib.setOptionString("hr-seek-framedrop", "yes")
+            // Поведение перемотки в торрент-стримах (быстрый seek без сброса сети)
+            mpv.setOptionString("hr-seek", "no")
+            mpv.setOptionString("hr-seek-framedrop", "yes")
 
-                    // Аудио-тракт и защита от щелчков
-                    MPVLib.setOptionString("ao", "audiotrack,opensles,auto")
-                    MPVLib.setOptionString("audio-stream-silence", "yes")
-                    MPVLib.setOptionString("audio-buffer", "0.5")
-                    MPVLib.setOptionString("audio-resample-async", "1")
-                    MPVLib.setOptionString("audio-pitch-correction", "yes")
+            // Аудио-тракт и защита от щелчков
+            mpv.setOptionString("ao", "audiotrack,opensles,auto")
+            mpv.setOptionString("audio-stream-silence", "yes")
+            mpv.setOptionString("audio-buffer", "0.5")
+            mpv.setOptionString("audio-resample-async", "1")
+            mpv.setOptionString("audio-pitch-correction", "yes")
 
-                    // Настройки шрифтов и субтитров (libass) через локальный каталог шрифтов приложения
-                    val fontsDirPath = "${context.filesDir.path}/fonts/"
-                    MPVLib.setOptionString("sub-fonts-dir", fontsDirPath)
-                    MPVLib.setOptionString("sub-font-provider", "none")
-                    MPVLib.setOptionString("sub-font", resolvedFontFamily)
-                    MPVLib.setOptionString("sub-font-size", "65")
-                    MPVLib.setOptionString("sub-color", "#FFFFFFFF")
-                    MPVLib.setOptionString("sub-border-color", "#FF000000")
-                    MPVLib.setOptionString("sub-border-size", "3")
-                    MPVLib.setOptionString("sub-pos", "100")
-                    MPVLib.setOptionString("sub-ass-shaper", "simple")
-                    MPVLib.setOptionString("sub-ass-override", "force")
-                    MPVLib.setOptionString("sub-ass-justify", "yes")
-                    MPVLib.setOptionString("sub-scale-with-window", "yes")
+            // Настройки шрифтов и субтитров (libass) через локальный каталог шрифтов приложения
+            val fontsDirPath = "${context.filesDir.path}/fonts/"
+            mpv.setOptionString("sub-fonts-dir", fontsDirPath)
+            mpv.setOptionString("sub-font-provider", "none")
+            mpv.setOptionString("sub-font", resolvedFontFamily)
+            mpv.setOptionString("sub-font-size", "65")
+            mpv.setOptionString("sub-color", "#FFFFFFFF")
+            mpv.setOptionString("sub-border-color", "#FF000000")
+            mpv.setOptionString("sub-border-size", "3")
+            mpv.setOptionString("sub-pos", "100")
+            mpv.setOptionString("sub-ass-shaper", "simple")
+            mpv.setOptionString("sub-ass-override", "force")
+            mpv.setOptionString("sub-ass-justify", "yes")
+            mpv.setOptionString("sub-scale-with-window", "yes")
 
-                    // TLS сертификаты
-                    val certFile = File(context.filesDir, "cacert.pem")
-                    if (certFile.exists()) {
-                        MPVLib.setOptionString("tls-verify", "yes")
-                        MPVLib.setOptionString("tls-ca-file", certFile.path)
-                    }
-
-                    // Логирование нативного ядра MPV в Android Logcat
-                    MPVLib.setOptionString("msg-level", "all=v")
-                    MPVLib.setOptionString("terminal", "no")
-
-                    // Поведение окна и аудио
-                    MPVLib.setOptionString("keep-open", "yes")
-                    MPVLib.setOptionString("idle", "yes")
-                    MPVLib.setOptionString("force-window", "no")
-                    MPVLib.setOptionString("audio-client-name", "AvalonMediaCard")
-                    MPVLib.setOptionString("vd-lavc-film-grain", "cpu")
-
-                    // Сеть, системный User-Agent (точь-в-точь как в Media3 / HttpURLConnection) и отключение ytdl
-                    val systemUserAgent = System.getProperty("http.agent")
-                        ?: "Dalvik/2.1.0 (Linux; U; Android ${android.os.Build.VERSION.RELEASE}; ${android.os.Build.MODEL})"
-                    MPVLib.setOptionString("user-agent", systemUserAgent)
-                    MPVLib.setOptionString("network-timeout", "30")
-                    MPVLib.setOptionString("ytdl", "no")
-
-                    MPVLib.init()
-                    isNativeInitialized = true
-                    logger.d { "MPV core initialized successfully with subtitles and fontconfig" }
-                }
+            // TLS сертификаты
+            val certFile = File(context.filesDir, "cacert.pem")
+            if (certFile.exists()) {
+                mpv.setOptionString("tls-verify", "yes")
+                mpv.setOptionString("tls-ca-file", certFile.path)
             }
 
+            // Логирование нативного ядра MPV в Android Logcat
+            mpv.setOptionString("msg-level", "all=v")
+            mpv.setOptionString("terminal", "no")
+
+            // Поведение окна и аудио
+            mpv.setOptionString("keep-open", "yes")
+            mpv.setOptionString("idle", "yes")
+            mpv.setOptionString("force-window", "no")
+            mpv.setOptionString("audio-client-name", "AvalonMediaCard")
+            mpv.setOptionString("vd-lavc-film-grain", "cpu")
+
+            // Сеть, системный User-Agent (точь-в-точь как в Media3 / HttpURLConnection) и отключение ytdl
+            val systemUserAgent = System.getProperty("http.agent")
+                ?: "Dalvik/2.1.0 (Linux; U; Android ${android.os.Build.VERSION.RELEASE}; ${android.os.Build.MODEL})"
+            mpv.setOptionString("user-agent", systemUserAgent)
+            mpv.setOptionString("network-timeout", "30")
+            mpv.setOptionString("ytdl", "no")
+
+            mpv.init()
+            logger.d { "MPV core initialized successfully with subtitles and fontconfig" }
+
             // Регистрация слушателей для текущего контроллера
-            MPVLib.addLogObserver(logObserver)
-            MPVLib.addObserver(eventObserver)
+            mpv.addLogObserver(logObserver)
+            mpv.addObserver(eventObserver)
             observeProperties()
 
             isInitialized = true
         } catch (e: Exception) {
-            Log.e("MpvPlaybackController", "Failed to initialize MPVLib", e)
+            Log.e("MpvPlaybackController", "Failed to initialize MPV", e)
             state.playbackError = "MPV initialization error: ${e.message}"
         }
     }
 
     private fun observeProperties() {
-        MPVLib.observeProperty("time-pos", MPVLib.mpvFormat.MPV_FORMAT_DOUBLE)
-        MPVLib.observeProperty("duration", MPVLib.mpvFormat.MPV_FORMAT_DOUBLE)
-        MPVLib.observeProperty("pause", MPVLib.mpvFormat.MPV_FORMAT_FLAG)
-        MPVLib.observeProperty("paused-for-cache", MPVLib.mpvFormat.MPV_FORMAT_FLAG)
-        MPVLib.observeProperty("demuxer-cache-time", MPVLib.mpvFormat.MPV_FORMAT_DOUBLE)
-        MPVLib.observeProperty("track-list", MPVLib.mpvFormat.MPV_FORMAT_STRING)
+        mpv.observeProperty("time-pos", MPV.mpvFormat.MPV_FORMAT_DOUBLE)
+        mpv.observeProperty("duration", MPV.mpvFormat.MPV_FORMAT_DOUBLE)
+        mpv.observeProperty("pause", MPV.mpvFormat.MPV_FORMAT_FLAG)
+        mpv.observeProperty("paused-for-cache", MPV.mpvFormat.MPV_FORMAT_FLAG)
+        mpv.observeProperty("demuxer-cache-time", MPV.mpvFormat.MPV_FORMAT_DOUBLE)
+        mpv.observeProperty("track-list", MPV.mpvFormat.MPV_FORMAT_STRING)
     }
 
     private fun parseTrackList(jsonString: String) {
@@ -542,15 +539,15 @@ class MpvPlaybackController(
         scope.launch(Dispatchers.IO) {
             try {
                 if (url.contains(".avi", ignoreCase = true) || url.contains("format=avi", ignoreCase = true)) {
-                    MPVLib.setOptionString("demuxer-lavf-o", "fflags=+ignidx+genpts")
+                    mpv.setOptionString("demuxer-lavf-o", "fflags=+ignidx+genpts")
                 } else if (url.startsWith("http://", ignoreCase = true) || url.startsWith("https://", ignoreCase = true)) {
-                    MPVLib.setOptionString("demuxer-lavf-o", "fflags=+discardcorrupt+genpts")
+                    mpv.setOptionString("demuxer-lavf-o", "fflags=+discardcorrupt+genpts")
                 } else {
-                    MPVLib.setOptionString("demuxer-lavf-o", "")
+                    mpv.setOptionString("demuxer-lavf-o", "")
                 }
-                MPVLib.command("loadfile", url)
-                MPVLib.setPropertyBoolean("pause", false)
-                MPVLib.setPropertyString("vo", "gpu")
+                mpv.command("loadfile", url)
+                mpv.setPropertyBoolean("pause", false)
+                mpv.setPropertyString("vo", "gpu")
             } catch (e: Exception) {
                 Log.e("MpvPlaybackController", "Failed to loadfile in MPV", e)
             }
@@ -559,33 +556,33 @@ class MpvPlaybackController(
 
     override fun play() {
         scope.launch(Dispatchers.IO) {
-            MPVLib.setPropertyBoolean("pause", false)
+            mpv.setPropertyBoolean("pause", false)
         }
     }
 
     override fun pause() {
         scope.launch(Dispatchers.IO) {
-            MPVLib.setPropertyBoolean("pause", true)
+            mpv.setPropertyBoolean("pause", true)
         }
     }
 
     override fun togglePlayPause() {
         scope.launch(Dispatchers.IO) {
-            MPVLib.command("cycle", "pause")
+            mpv.command("cycle", "pause")
         }
     }
 
     override fun seek(time: Double) {
         updateTime(time)
         scope.launch(Dispatchers.IO) {
-            MPVLib.command("seek", time.toInt().toString(), "absolute", "keyframes")
+            mpv.command("seek", time.toInt().toString(), "absolute", "keyframes")
         }
     }
 
     override fun setMuted(muted: Boolean) {
         state.isMuted = muted
         scope.launch(Dispatchers.IO) {
-            MPVLib.setPropertyBoolean("mute", muted)
+            mpv.setPropertyBoolean("mute", muted)
         }
     }
 
@@ -593,7 +590,7 @@ class MpvPlaybackController(
         state.volume = volume
         if (!state.isMuted) {
             scope.launch(Dispatchers.IO) {
-                MPVLib.setPropertyInt("volume", (volume * 100).toInt())
+                mpv.setPropertyInt("volume", (volume * 100).toInt())
             }
         }
     }
@@ -602,7 +599,7 @@ class MpvPlaybackController(
         super.selectAudioTrack(track)
         val trackId = track.id.toIntOrNull() ?: return
         scope.launch(Dispatchers.IO) {
-            MPVLib.setPropertyInt("aid", trackId)
+            mpv.setPropertyInt("aid", trackId)
         }
     }
 
@@ -610,10 +607,10 @@ class MpvPlaybackController(
         super.selectSubtitleTrack(track)
         scope.launch(Dispatchers.IO) {
             if (track == null) {
-                MPVLib.setPropertyString("sid", "no")
+                mpv.setPropertyString("sid", "no")
             } else {
                 val trackId = track.id.toIntOrNull() ?: return@launch
-                MPVLib.setPropertyInt("sid", trackId)
+                mpv.setPropertyInt("sid", trackId)
             }
         }
     }
@@ -621,11 +618,12 @@ class MpvPlaybackController(
     fun release() {
         scope.cancel()
         try {
-            MPVLib.removeLogObserver(logObserver)
-            MPVLib.removeObserver(eventObserver)
-            MPVLib.command("stop")
+            mpv.removeLogObserver(logObserver)
+            mpv.removeObserver(eventObserver)
+            mpv.command("stop")
+            mpv.destroy()
         } catch (e: Exception) {
-            Log.e("MpvPlaybackController", "Error during MPVLib stop", e)
+            Log.e("MpvPlaybackController", "Error during MPV stop/destroy", e)
         }
     }
 }

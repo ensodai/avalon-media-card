@@ -5,7 +5,10 @@ import io.ktor.http.*
 import io.ktor.server.application.*
 import io.ktor.server.engine.*
 import io.ktor.server.netty.*
+import io.ktor.server.http.content.*
+import io.ktor.server.plugins.compression.*
 import io.ktor.server.plugins.cors.routing.*
+import io.ktor.server.plugins.forwardedheaders.*
 import io.ktor.server.plugins.partialcontent.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
@@ -101,6 +104,21 @@ fun Application.module() {
         maxAgeInSeconds = 86400 // Кеш preflight на 24ч, чтобы не слать OPTIONS на каждый чанк
     }
 
+    // Поддержка проксирования (Nginx, Caddy, Cloudflare)
+    install(ForwardedHeaders)
+    install(XForwardedHeaders)
+
+    // Сжатие статики (Wasm, JS, JSON)
+    install(Compression) {
+        gzip {
+            priority = 1.0
+        }
+        deflate {
+            priority = 10.0
+            minimumSize(1024)
+        }
+    }
+
     // Поддержка Range Requests (HTTP 206 Partial Content)
     install(PartialContent)
 
@@ -116,8 +134,13 @@ fun Application.module() {
         imageProxyRoutes(safeProxyHttpClient)
         streamProxyRoutes(streamTokenService, safeProxyHttpClient)
 
-        get("/") {
-            call.respondText("Avalon Media Card Server API (RPC is running)")
+        val webDir = File(EnvHelper.getEnv("WEB_DIR") ?: "web")
+        if (webDir.exists() && webDir.isDirectory) {
+            staticFiles("/", webDir, index = "index.html")
+        } else {
+            get("/") {
+                call.respondText("Avalon Media Card Server API (RPC is running)")
+            }
         }
 
         rpc("/api/rpc") {

@@ -373,10 +373,21 @@ fun AdminSystemTab(
                     onClick = { actions.onClearFeedCache() },
                     modifier = Modifier.weight(1f)
                 )
+            }
 
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.spacedBy(12.dp)
+            ) {
                 AvalonButton(
                     text = stringResource(Res.string.admin_system_btn_flush_media),
                     onClick = { actions.onClearMediaCache() },
+                    modifier = Modifier.weight(1f)
+                )
+
+                AvalonButton(
+                    text = stringResource(Res.string.admin_system_btn_reload_plugins),
+                    onClick = { actions.onReloadPlugins() },
                     modifier = Modifier.weight(1f)
                 )
             }

@@ -421,7 +421,7 @@ class AdminRpcServiceImpl(
         val dbType = if (isSqlite) "SQLite (WAL mode)" else "PostgreSQL 17+"
 
         return ServerSystemInfoDto(
-            coreVersion = CoreVersion.getDisplayVersion(),
+            coreVersion = CoreVersion.getDisplayVersion(ServerRuntimeInfo.serverVersion),
             protocolVersion = CoreVersion.PROTOCOL_VERSION,
             buildDate = CoreVersion.BUILD_DATE,
             uptimeSeconds = ServerRuntimeInfo.getUptimeSeconds(),
@@ -453,5 +453,16 @@ class AdminRpcServiceImpl(
         requireAdmin()
         val count = mediaRepository.clearAll()
         return AdminActionResponse(success = true, error = "Кэш метаданных медиа очищен (удалено записей: $count)")
+    }
+
+    override suspend fun reloadPlugins(): AdminActionResponse {
+        requireAdmin()
+        return try {
+            val count = pluginManager.reloadAllPlugins()
+            AdminActionResponse(success = true, error = "Плагины успешно перезагружены (активно модулей: $count)")
+        } catch (e: Exception) {
+            logger.error("Failed to reload plugins", e)
+            AdminActionResponse(success = false, error = "Ошибка перезагрузки плагинов: ${e.message}")
+        }
     }
 }

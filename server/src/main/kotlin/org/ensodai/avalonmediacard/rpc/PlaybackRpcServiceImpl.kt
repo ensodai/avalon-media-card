@@ -5,6 +5,7 @@ import kotlinx.coroutines.CancellationException
 import org.ensodai.avalonmediacard.contract.auth.AuthState
 import org.ensodai.avalonmediacard.contract.model.MediaCatalog
 import org.ensodai.avalonmediacard.contract.model.MediaKey
+import org.ensodai.avalonmediacard.contract.model.withUserSettings
 import org.ensodai.avalonmediacard.contract.plugins.StreamType
 import org.ensodai.avalonmediacard.contract.plugins.UserMediaBindingProvider
 import org.ensodai.avalonmediacard.contract.plugins.resolveTargetStream
@@ -13,6 +14,7 @@ import org.ensodai.avalonmediacard.contract.rpc.PlaybackRpcService
 import org.ensodai.avalonmediacard.contract.rpc.SourceSelectionResult
 import org.ensodai.avalonmediacard.contract.rpc.StreamPlaybackResult
 import org.ensodai.avalonmediacard.plugin.PluginManager
+import org.ensodai.avalonmediacard.repository.UserSettingsRepository
 import org.ensodai.avalonmediacard.security.RpcSessionContext
 import org.ensodai.avalonmediacard.security.StreamTokenService
 import org.koin.core.annotation.Factory
@@ -27,7 +29,8 @@ class PlaybackRpcServiceImpl(
     private val userMediaBindings: UserMediaBindingProvider,
     private val pluginManager: PluginManager,
     private val mediaCatalog: MediaCatalog,
-    private val streamTokenService: StreamTokenService
+    private val streamTokenService: StreamTokenService,
+    private val userSettingsRepository: UserSettingsRepository
 ) : PlaybackRpcService {
 
     private val logger = LoggerFactory.getLogger(PlaybackRpcServiceImpl::class.java)
@@ -70,8 +73,11 @@ class PlaybackRpcServiceImpl(
                 ?: return PlaybackMetadataResult.NoSourceBound
 
             val targetCursor = targetPair.second
-            val mediaDetails = runCatching { mediaCatalog.getMediaDetails(key) }.getOrNull()
-            val canonicalSeriesTitle = mediaDetails?.title?.takeIf { it.isNotBlank() }
+            val userSettings = if (userId != null) runCatching { userSettingsRepository.getUserSettings(userId) }.getOrNull() else null
+            val targetLang = userSettings?.uiLocale?.takeIf { it.isNotBlank() } ?: "ru"
+            val mediaDetails = runCatching { mediaCatalog.getMediaDetails(key, language = targetLang) }.getOrNull()
+            val customizedDetails = mediaDetails?.withUserSettings(userSettings)
+            val canonicalSeriesTitle = customizedDetails?.title?.takeIf { it.isNotBlank() }
 
             return PlaybackMetadataResult.Ready(
                 currentSeason = targetStream.seasonNumber ?: targetCursor?.season,

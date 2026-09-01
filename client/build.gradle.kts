@@ -10,11 +10,14 @@ plugins {
     kotlin("plugin.serialization") version "2.3.21"
 }
 
+group = "org.ensodai.avalonmediacard"
+version = providers.gradleProperty("app.versionName").getOrElse("1.0.0")
+
 kotlin {
     android {
         namespace = "org.ensodai.avalonmediacard.client"
-        compileSdk = 37
-        minSdk = 26
+        compileSdk = (project.findProperty("android.compileSdk") ?: project.findProperty("app.compileSdk") ?: "37").toString().toInt()
+        minSdk = (project.findProperty("android.minSdk") ?: project.findProperty("app.minSdk") ?: "26").toString().toInt()
     }
 
     jvm()

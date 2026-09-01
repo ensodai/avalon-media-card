@@ -30,7 +30,6 @@ import androidx.compose.ui.viewinterop.AndroidView
 import androidx.media3.common.MediaItem
 import androidx.media3.common.util.UnstableApi
 import androidx.media3.ui.PlayerView
-import `is`.xyz.mpv.MPVLib
 import org.ensodai.avalonmediacard.contract.model.EntityType
 import org.ensodai.avalonmediacard.core.player.StreamUrlResolver
 import org.ensodai.avalonmediacard.contract.plugins.MediaStream
@@ -248,6 +247,7 @@ actual fun VideoPlayer(
                     )
                 }
                 PlayerEngine.MPV -> {
+                    val mpv = mpvControllerLazy.value.mpv
                     AndroidView(
                         factory = { ctx ->
                             SurfaceView(ctx).apply {
@@ -257,18 +257,18 @@ actual fun VideoPlayer(
                                 holder.addCallback(object : SurfaceHolder.Callback {
                                     override fun surfaceCreated(holder: SurfaceHolder) {
                                         logger.d { "MPV Surface created -> attachSurface" }
-                                        MPVLib.attachSurface(holder.surface)
-                                        MPVLib.setPropertyString("vo", "gpu")
+                                        mpv.attachSurface(holder.surface)
+                                        mpv.setPropertyString("vo", "gpu")
                                     }
 
                                     override fun surfaceChanged(holder: SurfaceHolder, format: Int, width: Int, height: Int) {
-                                        MPVLib.setPropertyString("android-surface-size", "${width}x$height")
+                                        mpv.setPropertyString("android-surface-size", "${width}x$height")
                                     }
 
                                     override fun surfaceDestroyed(holder: SurfaceHolder) {
                                         logger.d { "MPV Surface destroyed -> detachSurface" }
-                                        MPVLib.setPropertyString("vo", "null")
-                                        MPVLib.detachSurface()
+                                        mpv.setPropertyString("vo", "null")
+                                        mpv.detachSurface()
                                     }
                                 })
                                 layoutParams = android.view.ViewGroup.LayoutParams(

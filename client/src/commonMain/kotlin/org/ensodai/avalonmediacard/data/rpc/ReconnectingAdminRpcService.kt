@@ -85,4 +85,7 @@ class ReconnectingAdminRpcService(
 
     override suspend fun clearMediaCache(): AdminActionResponse =
         executor.execute("clearMediaCache", getService = { getService() }) { clearMediaCache() }
+
+    override suspend fun reloadPlugins(): AdminActionResponse =
+        executor.execute("reloadPlugins", getService = { getService() }) { reloadPlugins() }
 }

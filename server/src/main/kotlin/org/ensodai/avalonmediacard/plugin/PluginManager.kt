@@ -93,13 +93,16 @@ class PluginManager(
         changeEvents.emit(event)
     }
 
-    init {
-        val classLoader = this::class.java.classLoader
-        val pluginsDir = if (File("server/plugins").exists() && (File("server/plugins").listFiles { file -> file.extension == "jar" }?.isNotEmpty() == true)) {
+    private fun getPluginsDir(): File {
+        return if (File("server/plugins").exists() && (File("server/plugins").listFiles { file -> file.extension == "jar" }?.isNotEmpty() == true)) {
             File("server/plugins")
         } else {
             File("plugins").apply { if (!exists()) mkdirs() }
         }
+    }
+
+    init {
+        val pluginsDir = getPluginsDir()
 
         // Инициализируем системные интеграции ядра (Core)
         coreIntegrations.initialize(
@@ -354,6 +357,52 @@ class PluginManager(
         pluginClassLoaders.clear()
         _pluginUpdates.tryEmit(Unit)
         updateSerializersModule()
+    }
+
+    fun reloadAllPlugins(): Int {
+        logger.info("Starting hot reload of all plugins...")
+
+        // 1. Очищаем все загруженные плагины
+        loadedPlugins.forEach { plugin ->
+            runCatching { plugin.onDestroy() }
+        }
+        loadedPlugins.clear()
+
+        pluginContexts.values.forEach { it.scope.cancel() }
+        pluginContexts.clear()
+
+        pluginClassLoaders.values.forEach { runCatching { it.close() } }
+        pluginClassLoaders.clear()
+
+        // 2. Переинициализируем системные интеграции ядра (Core)
+        coreIntegrations.initialize(
+            changeEvents = changeEvents,
+            pluginContexts = pluginContexts,
+            userIntegrationSettingsRepository = userIntegrationSettingsRepository,
+            streams = StreamRegistry(
+                fallbackProvider = { k, s, u, p -> getPlaylistForMedia(k, s, u, p) },
+                fallbackPreparer = { s, u -> prepareStream(s, u) }
+            ),
+            slotUpdater = SlotUpdaterImpl(_slotUpdates)
+        )
+
+        // 3. Сканируем папку плагинов и загружаем JAR файлы
+        val pluginsDir = getPluginsDir()
+        val jarFiles = pluginsDir.listFiles { file -> file.extension == "jar" } ?: emptyArray()
+
+        jarFiles.forEach { jarFile ->
+            try {
+                loadPlugin(jarFile)
+            } catch (e: Exception) {
+                logger.error("Failed to reload plugin from {}", jarFile.name, e)
+            }
+        }
+
+        updateSerializersModule()
+        _pluginUpdates.tryEmit(Unit)
+
+        logger.info("Plugin reload complete. Active plugins count: {}", loadedPlugins.size)
+        return loadedPlugins.size
     }
 }
 

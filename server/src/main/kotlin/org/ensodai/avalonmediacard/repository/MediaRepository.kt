@@ -677,11 +677,15 @@ class MediaRepository(
             }.firstOrNull()
 
             val seasonId = if (existingSeason != null) {
+                MediaSeasonTable.update({ MediaSeasonTable.id eq existingSeason[MediaSeasonTable.id] }) {
+                    it[this.episodeCount] = episodes.size
+                }
                 existingSeason[MediaSeasonTable.id]
             } else {
                 MediaSeasonTable.insert {
                     it[this.mediaId] = mediaId
                     it[this.seasonNumber] = seasonNumber
+                    it[this.episodeCount] = episodes.size
                 } get MediaSeasonTable.id
             }
 

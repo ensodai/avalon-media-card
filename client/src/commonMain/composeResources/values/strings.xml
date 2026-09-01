@@ -227,6 +227,7 @@
     <string name="admin_system_btn_flush_tmdb">Reset TMDB Cache</string>
     <string name="admin_system_btn_flush_feed">Reset User Feeds</string>
     <string name="admin_system_btn_flush_media">Clear Media Metadata</string>
+    <string name="admin_system_btn_reload_plugins">Reload Plugins</string>
 
     <string name="admin_users_title">Media Server Users</string>
     <string name="admin_users_count_summary">Total: %1$d • Admins: %2$d • Regular: %3$d</string>
@@ -299,6 +300,8 @@
     <string name="admin_msg_error_flush_feed">Error resetting feed cache: %1$s</string>
     <string name="admin_msg_cache_media_flushed">Media metadata cache cleared</string>
     <string name="admin_msg_error_flush_media">Error clearing media metadata: %1$s</string>
+    <string name="admin_msg_plugins_reloaded">Server plugins successfully reloaded</string>
+    <string name="admin_msg_error_reload_plugins">Error reloading plugins: %1$s</string>
 
     <string name="details_meta_series">TV Series</string>
     <string name="details_meta_movie">Movie</string>

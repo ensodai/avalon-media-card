@@ -16,6 +16,7 @@ import org.ensodai.avalonmediacard.domain.useCases.adminScreenUseCase.DeleteUser
 import org.ensodai.avalonmediacard.domain.useCases.adminScreenUseCase.GetGlobalIntegrationSettingsUseCase
 import org.ensodai.avalonmediacard.domain.useCases.adminScreenUseCase.GetSystemInfoUseCase
 import org.ensodai.avalonmediacard.domain.useCases.adminScreenUseCase.GetUsersUseCase
+import org.ensodai.avalonmediacard.domain.useCases.adminScreenUseCase.ReloadPluginsUseCase
 import org.ensodai.avalonmediacard.domain.useCases.adminScreenUseCase.ResetUserPasswordUseCase
 import org.ensodai.avalonmediacard.domain.useCases.adminScreenUseCase.TestJackettConnectionUseCase
 import org.ensodai.avalonmediacard.domain.useCases.adminScreenUseCase.TestProwlarrConnectionUseCase
@@ -58,6 +59,7 @@ import org.ensodai.avalonmediacard.presentation.screens.admin.action.onTorrServe
 import org.ensodai.avalonmediacard.presentation.screens.admin.action.onUserRoleChange
 import org.ensodai.avalonmediacard.presentation.screens.admin.action.onUserStatusChange
 import org.ensodai.avalonmediacard.presentation.screens.admin.action.onUsernameChanged
+import org.ensodai.avalonmediacard.presentation.screens.admin.action.reloadPlugins
 import org.ensodai.avalonmediacard.presentation.screens.admin.action.saveGlobalIntegrations
 import org.ensodai.avalonmediacard.presentation.screens.admin.action.saveJackettSettings
 import org.ensodai.avalonmediacard.presentation.screens.admin.action.saveProwlarrSettings
@@ -93,6 +95,7 @@ class AdminViewModel(
     private val clearDiscoverCacheUseCase: ClearDiscoverCacheUseCase,
     private val clearFeedCacheUseCase: ClearFeedCacheUseCase,
     private val clearMediaCacheUseCase: ClearMediaCacheUseCase,
+    private val reloadPluginsUseCase: ReloadPluginsUseCase,
     private val appSettingsStorage: AppSettingsStorage,
     private val manifestRepository: GlobalManifestRepository,
     private val tokenStorage: TokenStorage
@@ -156,6 +159,7 @@ class AdminViewModel(
         loadSystemInfo = { loadSystemInfo(getSystemInfoUseCase) },
         onClearDiscoverCache = { clearDiscoverCache(clearDiscoverCacheUseCase, getSystemInfoUseCase) },
         onClearFeedCache = { clearFeedCache(clearFeedCacheUseCase, getSystemInfoUseCase) },
-        onClearMediaCache = { clearMediaCache(clearMediaCacheUseCase, getSystemInfoUseCase) }
+        onClearMediaCache = { clearMediaCache(clearMediaCacheUseCase, getSystemInfoUseCase) },
+        onReloadPlugins = { reloadPlugins(reloadPluginsUseCase, getSystemInfoUseCase) }
     )
 }

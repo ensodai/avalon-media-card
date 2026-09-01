@@ -8,6 +8,11 @@ plugins {
     alias(libs.plugins.koin.compiler)
 }
 
+group = "org.ensodai.avalonmediacard"
+version = providers.gradleProperty("web.versionName")
+    .orElse(providers.gradleProperty("app.versionName"))
+    .getOrElse("1.0.0")
+
 kotlin {
     js {
         browser {

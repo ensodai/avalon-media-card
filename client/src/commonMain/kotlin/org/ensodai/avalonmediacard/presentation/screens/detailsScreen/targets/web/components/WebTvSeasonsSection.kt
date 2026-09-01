@@ -747,14 +747,18 @@ private fun WebEpisodeGridCard(
                             .background(Color.White.copy(alpha = 0.18f))
                     )
 
-                    // Rating Button (34dp height with label)
+                    // Rating Button (34dp height)
                     Box(contentAlignment = Alignment.Center) {
                         Row(
                             modifier = Modifier
                                 .height(34.dp)
+                                .then(
+                                    if (hasRating) Modifier.padding(horizontal = 8.dp)
+                                    else Modifier.size(34.dp)
+                                )
                                 .tvAndWebHoverEffect(
                                     scaleTarget = 1.06f,
-                                    shape = RoundedCornerShape(17.dp),
+                                    shape = if (hasRating) RoundedCornerShape(17.dp) else CircleShape,
                                     activeBorderWidth = 1.5.dp,
                                     activeBorderColor = currentRatingBorder,
                                     defaultBorderWidth = 1.dp,
@@ -763,23 +767,25 @@ private fun WebEpisodeGridCard(
                                     onStateChange = { isRatingHovered = it },
                                     onClick = { isRatingPopupOpen = true }
                                 )
-                                .background(currentRatingBg, RoundedCornerShape(17.dp))
-                                .padding(horizontal = 8.dp),
+                                .background(currentRatingBg, if (hasRating) RoundedCornerShape(17.dp) else CircleShape),
                             verticalAlignment = Alignment.CenterVertically,
-                            horizontalArrangement = Arrangement.spacedBy(4.dp)
+                            horizontalArrangement = Arrangement.Center
                         ) {
                             Icon(
                                 imageVector = Lucide.Star,
-                                contentDescription = "Оценить",
+                                contentDescription = if (hasRating) "$userRating" else null,
                                 tint = ratingColor,
                                 modifier = Modifier.size(16.dp)
                             )
-                            Text(
-                                text = if (hasRating) "$userRating" else "Оценить",
-                                fontSize = 12.sp,
-                                fontWeight = FontWeight.Bold,
-                                color = ratingColor
-                            )
+                            if (hasRating) {
+                                Spacer(modifier = Modifier.width(4.dp))
+                                Text(
+                                    text = "$userRating",
+                                    fontSize = 12.sp,
+                                    fontWeight = FontWeight.Bold,
+                                    color = ratingColor
+                                )
+                            }
                         }
 
                         if (isRatingPopupOpen) {

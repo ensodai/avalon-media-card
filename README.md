@@ -1,100 +1,264 @@
 <p align="center">
-  <img src="16x9logo.png" alt="Avalon MediaCard Logo" width="600" />
+  <img src="16x9logo.png" alt="Avalon MediaCard Logo" width="650" />
 </p>
 
 <h1 align="center">Avalon MediaCard</h1>
 
 <p align="center">
-  <strong>Современный кроссплатформенный медиацентр и видеоплеер на Kotlin Multiplatform</strong>
+  <strong>Next-Generation Cross-Platform Media Center, Streaming Aggregator & Multi-Engine Playback Ecosystem</strong>
+</p>
+
+<p align="center">
+  <a href="https://kotlinlang.org/"><img src="https://img.shields.io/badge/Kotlin-2.1%2B%20(K2)-7F52FF?style=flat-square&logo=kotlin&logoColor=white" alt="Kotlin 2.1+" /></a>
+  <a href="https://www.jetbrains.com/lp/compose-multiplatform/"><img src="https://img.shields.io/badge/Compose-Multiplatform-4285F4?style=flat-square&logo=jetpackcompose&logoColor=white" alt="Compose Multiplatform" /></a>
+  <a href="https://ktor.io/"><img src="https://img.shields.io/badge/Ktor-3.x%20Netty-009688?style=flat-square&logo=ktor&logoColor=white" alt="Ktor 3.x" /></a>
+  <a href="https://webassembly.org/"><img src="https://img.shields.io/badge/Web-WasmGC-654FF0?style=flat-square&logo=webassembly&logoColor=white" alt="WasmGC" /></a>
+  <a href="https://github.com/Kotlin/kotlinx-rpc"><img src="https://img.shields.io/badge/Kotlin--RPC-WebSocket-orange?style=flat-square" alt="Kotlin-RPC" /></a>
+  <a href="https://opensource.org/licenses/MIT"><img src="https://img.shields.io/badge/License-MIT-blue?style=flat-square" alt="License MIT" /></a>
 </p>
 
 ---
 
-## 🌟 О проекте
+## 🌟 Overview
 
-**Avalon MediaCard** — это мощная и гибкая медиа-система с поддержкой онлайн-стриминга, торрентов, агрегации метаданных (TMDB, Trakt, Shikimori) и адаптивного воспроизведения видео на любых платформах.
+**Avalon MediaCard** is a modern, high-performance, cross-platform media center and video streaming ecosystem built from the ground up with **Kotlin Multiplatform (KMP)** and **Compose Multiplatform**.
 
-Проект построен на принципах **Чистой Архитектуры** (Clean Architecture) и концепции **Server-Driven UI (SDUI)** со встроенной системой динамических плагинов.
+It eliminates cross-platform UI and playback fragmentation by providing a unified **100% shared reactive UI tree** across Desktop, Android TV, and Web, backed by a resilient **Ktor 3.x** server communicating over **Kotlin-RPC WebSockets**, a **Server-Driven UI (SDUI)** architecture, and an isolated **dynamic plugin system**.
 
----
-
-## 📱 Поддерживаемые платформы
-
-| Платформа | Технологический стек | Плеер / Движок |
-|---|---|---|
-| **Android** (Mobile & Android TV) | Compose Multiplatform, Material 3, AndroidX Media3 | Media3 ExoPlayer, FFmpeg Extension, LibVLC, MPV |
-| **Desktop** (Linux / Windows / macOS) | Compose Multiplatform (Desktop JVM), Skiko | LibMPV (Native C-Interop via JNA) |
-| **Web** (Modern Browsers) | Compose Multiplatform for Web (**WasmGC** & JS) | PlaysVideo, HLS.js, DASH.js, HTML5 Video |
+<!-- Placeholder for Hero Showcase Mockup -->
+<!-- <p align="center"><img src="assets/screenshots/hero-showcase.webp" alt="Avalon MediaCard Multi-Device Showcase" width="900" /></p> -->
 
 ---
 
-## 🛠 Технологический стек
+## 📐 Architecture & Tech Stack
 
-* **Язык**: [Kotlin 2.1+](https://kotlinlang.org/) (K2 Compiler enabled)
-* **UI Фреймворк**: [Compose Multiplatform](https://www.jetbrains.com/lp/compose-multiplatform/) (Android, Desktop, Web Wasm)
-* **Бэкенд**: [Ktor 3.x](https://ktor.io/) (Netty Engine) + [Kotlin-RPC](https://github.com/Kotlin/kotlinx-rpc)
-* **База данных**: SQLite + [Exposed ORM](https://github.com/JetBrains/Exposed) (Suspended Transactions DSL/DAO)
-* **DI**: [Koin](https://insert-koin.io/) (Koin Annotations)
-* **Сериализация**: `kotlinx.serialization` (JSON / Proto)
-* **Асинхронность**: Kotlin Coroutines & Flow
+Avalon MediaCard combines a single declarative UI codebase with deeply optimized, platform-native video rendering pipelines:
 
----
+* **Language & Compiler:** Kotlin 2.1+ with the **K2 Compiler** enabled for lightning-fast compilation across JVM, Android, and WebAssembly targets.
+* **UI Framework:** **Compose Multiplatform** (Android Mobile, 10-Foot Android TV, Desktop JVM for Linux/Windows/macOS, and WasmGC for modern browsers).
+* **Backend:** **Ktor 3.x Server** (Netty Engine) with bi-directional **Kotlin-RPC (`kotlinx-rpc`)** over WebSockets.
+* **Database & ORM:** SQLite / PostgreSQL 17+ with **JetBrains Exposed ORM** (fully non-blocking suspended DSL & DAO transactions).
+* **UI Paradigm:** **Server-Driven UI (SDUI)** — Dynamic screen manifests, real-time slot updates, and discovery shelves pushed from the server.
+* **Plugin Architecture:** Dynamic runtime JAR isolation via dedicated `URLClassLoader` instances conforming to the versioned `avalon-media-card-core-contract`.
 
-## 🔌 Архитектура плагинов (`basePlugins`)
+```mermaid
+graph TD
+    subgraph Clients["Client Layer (Compose Multiplatform)"]
+        W[Web Client<br/>WasmGC + JS]
+        D[Desktop Client<br/>Windows / Linux / macOS]
+        A[Android TV & Mobile<br/>10-Foot D-Pad UI]
+    end
 
-Система плагинов построена на общем контракте `avalon-media-card-core-contract`:
-* **TorrServer Plugin** — Стриминг торрентов на лету, предпросмотр и парсинг эпизодов.
-* **Trakt Plugin** — Синхронизация истории просмотров, списков и рейтингов с Trakt.tv.
-* **Recommendation Plugin** — Интеллектуальный движок персонализации на основе семантических векторов и блюпринтов.
-* **VK Video Plugin** — Поиск и воспроизведение видеоконтента VK.
-* **RuTube Plugin** — Интеграция с каталогом RuTube.
-* **AniLibria Plugin** — Онлайн-просмотр аниме с выбором озвучек и качества.
-* **Collaps Plugin / Lampac Adapter** — Агрегаторы онлайн-балансеров.
-* **Media Details / Home Feed / Person Details** — SDUI-модули интерфейса.
+    subgraph Core["Avalon Server Layer (Ktor 3.x)"]
+        RPC[Kotlin-RPC WebSockets]
+        SDUI[SDUI Manifest Generator]
+        REC[Vector Recommendation Engine]
+        DB[(PostgreSQL 17+ / SQLite)]
+    end
 
----
+    subgraph Plugins["Isolated Plugin Ecosystem"]
+        Contract[avalon-media-card-core-contract]
+        P1[Metadata Resolvers]
+        P2[P2P Caching Connectors]
+        P3[Custom Stream Resolvers]
+    end
 
-## 🚀 Сборка и запуск
+    W <==>|Bi-directional Sync| RPC
+    D <==>|Bi-directional Sync| RPC
+    A <==>|Bi-directional Sync| RPC
 
-### 1. Предварительные требования
-* **JDK 21+** (Temurin / Corretto / Oracle)
-* **Android SDK** (API Level 35+) для сборки Android-клиента
+    RPC <--> SDUI
+    RPC <--> REC
+    SDUI <--> DB
+    REC <--> DB
 
-### 2. Настройка окружения
-Скопируйте пример файла переменных окружения:
-```bash
-cp .env.example .env
+    Core <-->|Dynamic ClassLoader Isolation| Contract
+    Contract --- P1
+    Contract --- P2
+    Contract --- P3
 ```
 
-### 3. Запуск модулей
+---
 
-* **Сборка всех платформ:**
-  ```bash
-  ./gradlew assemble
-  ```
+## 🎬 Universal Multi-Engine Video Player Matrix
 
-* **Запуск Ktor Backend сервера:**
-  ```bash
-  ./gradlew :server:run
-  ```
+Video codec compatibility, hardware decoding, and complex vector subtitle rendering (such as styled `.ass/.ssa` anime subtitles) are historical pain points in media centers. Traditional web or mobile clients often force host servers into heavy CPU video transcoding just to burn in subtitles.
 
-* **Запуск Desktop-приложения:**
-  ```bash
-  ./gradlew :desktopApp:run
-  ```
+Avalon MediaCard solves this by deploying a **Universal Multi-Engine Player Matrix** that selects the optimal playback engine natively on each client:
 
-* **Сборка Android Release APK:**
-  ```bash
-  ./gradlew :androidApp:assembleRelease
-  ```
+| Platform | Core Player Engine | Hardware Acceleration | Subtitle Rendering | Key Capabilities |
+|---|---|---|---|---|
+| **Desktop**<br/>*(Linux / Windows / macOS)* | **LibMPV**<br/>*(via JNA C-Interop)* | VAAPI, NVDEC, D3D11VA, VideoToolbox | Native Pixel-Perfect ASS/SSA | Zero-overhead JNA memory bridging, HDR tone mapping, seamless multi-audio track switching, unlimited codec support. |
+| **Android & Android TV**<br/>*(Mobile, Tablet, TV)* | **AndroidX Media3**<br/>*(ExoPlayer + FFmpeg Extensions)* | Android MediaCodec API | Media3 Native + Custom Overlay | **100% D-Pad Remote Optimization**, Leanback 10-foot UI, bundled FFmpeg audio/video extensions, optional LibVLC/MPV fallbacks. |
+| **Web**<br/>*(WasmGC & Modern Browsers)* | **PlaysVideo / Mediabunny**<br/>*(HLS, DASH, MPEG-TS, MP4)* | WebGL / Canvas Direct Draw | WebVTT / ASS.js Canvas | **In-Browser Wasm-FFmpeg Transcoder:** Real-time Web Worker pipeline converting HEVC/AC3/E-AC3/DTS directly in browser with **zero server load**. |
 
-* **Сборка Web Wasm:**
-  ```bash
-  ./gradlew :web:wasmJsBrowserDistribution
-  ```
+<!-- Placeholder for Player Showcase -->
+<!-- <p align="center"><img src="assets/screenshots/player-dynamic-island.webp" alt="Avalon Player with Dynamic Island Controls" width="800" /></p> -->
 
 ---
 
-## 📄 Лицензия
+## 🚀 Key Features
 
-Распространяется под лицензией MIT. Подробности см. в файле LICENSE.
+### 1. 🧠 Mathematical Vector Recommendation Engine (SDUI)
+A vector-based recommendation system calculating multi-dimensional user affinity vectors across genres, keywords, directors, actors, era, pacing, and mood. Applies exponential time decay to older viewing habits and introduces serendipity multipliers to generate rich discovery shelves (*"Moods & Tropes"*, *"Hidden Gems"*, *"Because you watched"*).
+
+<!-- Placeholder for Recommendation Showcase -->
+<!-- <p align="center"><img src="assets/screenshots/sdui-recommendation-engine.webp" alt="SDUI Recommendation Shelves" width="800" /></p> -->
+
+### 2. 📺 Native Android TV 10-Foot Experience
+Explicitly designed and compiled for television displays with full D-Pad directional focus, smooth scale animations, leanback navigation drawers, and episode selector sheets tailored for remote control ergonomics.
+
+<!-- Placeholder for Android TV GIF -->
+<!-- <p align="center"><img src="assets/screenshots/tv-dpad-navigation.gif" alt="Android TV 10-Foot Leanback Navigation" width="800" /></p> -->
+
+### 3. 🗄️ Metadata Aggregation & Bring-Your-Own-Key (BYOK)
+Seamless integration with **The Movie Database (TMDB)**, **Trakt.tv**. Full multi-user support with custom watchlists, episode watch progress tracking, resume points, and personal ratings.
+
+### 4. ⚙️ Admin Control Center & Granular Governance
+Dedicated administrator dashboard for multi-tenant user provisioning, access control, cache invalidation, and independent configuration cards for metadata providers and stream proxy connectors.
+
+<!-- Placeholder for Admin Showcase -->
+<!-- <p align="center"><img src="assets/screenshots/admin-plugin-control.webp" alt="Admin Control Center" width="800" /></p> -->
+
+### 5. 🔌 Modular Plugin SDK
+Dynamic isolated JAR plugin architecture based on `avalon-media-card-core-contract`. Plugins run in sandboxed classloaders with hot-reloading capabilities, ensuring third-party extensions never compromise server stability.
+
+---
+
+## 📦 Installation & Quick Start
+
+### Option A: 1-Click Linux Installer (Recommended)
+
+Deploy the complete server stack (Ktor Backend, SQLite database initialization, Web client, and base plugins) with a single rootless command:
+
+```bash
+bash <(curl -sSL https://raw.githubusercontent.com/ensodai/avalon-media-card/main/scripts/install.sh)
+```
+
+*(Interactive prompts will guide you through directory selection, port configuration, and admin credential setup).*
+
+---
+
+### Option B: Docker Compose
+
+For containerized self-hosted setups (Unraid, TrueNAS, standard Linux servers):
+
+```yaml
+version: '3.8'
+services:
+  avalon-server:
+    image: ghcr.io/ensodai/avalon-media-card:latest
+    container_name: avalon-media-card
+    restart: unless-stopped
+    ports:
+      - "8080:8080"
+    volumes:
+      - ./data:/app/data
+      - ./plugins:/app/plugins
+    environment:
+      - PORT=8080
+      - DB_URL=jdbc:sqlite:/app/data/avalon.db
+```
+
+Launch the container:
+```bash
+docker compose up -d
+```
+Access the web dashboard at `http://localhost:8080`.
+
+---
+
+### Option C: Local Development Build
+
+To build the entire Kotlin Multiplatform project from source:
+
+```bash
+# 1. Clone repository
+git clone https://github.com/ensodai/avalon-media-card.git
+cd avalon-media-card
+
+# 2. Configure environment
+cp .env.example .env
+
+# 3. Run Ktor Backend
+./gradlew :server:run
+
+# 4. Run Desktop App (JVM)
+./gradlew :desktopApp:run
+
+# 5. Build Android Release APK
+./gradlew :androidApp:assembleRelease
+
+# 6. Build WebAssembly Distribution
+./gradlew :web:wasmJsBrowserDistribution
+```
+
+---
+
+## 🧩 Plugin Development SDK
+
+Building custom extensions is straightforward using the `avalon-media-card-core-contract` dependency:
+
+```kotlin
+// Example: Implementing a Custom Stream Resolver Plugin
+import org.ensodai.avalonmediacard.contract.plugins.AvalonPlugin
+import org.ensodai.avalonmediacard.contract.plugins.PluginContext
+import org.ensodai.avalonmediacard.contract.model.MediaKey
+
+class CustomStreamPlugin : AvalonPlugin {
+    override val id: String = "org.example.customstream"
+    override val name: String = "Custom Stream Connector"
+    override val version: String = "1.0.0"
+
+    override fun onInitialize(context: PluginContext) {
+        context.streams.registerProvider("custom_provider") { mediaKey, season, episode, user ->
+            // Custom protocol resolution or local caching connection logic
+            listOf(/* StreamSource objects */)
+        }
+        context.logger.info("CustomStreamPlugin loaded successfully")
+    }
+}
+```
+
+Drop the compiled `.jar` file into the `plugins/` directory and hot-reload via the Admin Dashboard.
+
+---
+
+## 🗺 Roadmap
+
+* [x] **Core:** Compose Multiplatform Web (WasmGC), Desktop (JVM), Android TV & Mobile unification.
+* [x] **Backend:** Ktor 3.x + Kotlin-RPC over WebSockets integration.
+* [x] **Desktop:** LibMPV JNA engine with VAAPI/NVDEC hardware decoding.
+* [x] **Admin:** Granular per-integration settings and independent connection validation.
+* [x] **Engine:** Multi-dimensional vector recommendation system with serendipity calculation.
+* [ ] **Analytics & Insights:** User viewing statistics dashboard (hours watched for movies & TV shows, top actors/directors, keyword tag clouds, favorite genres breakdown).
+* [ ] **TV Show Alerts:** Automated notifications and episode release calendar for tracked series.
+* [ ] **Artwork Enhancement:** Fanart.tv API integration for high-definition backgrounds, logos, and clearart.
+* [ ] **Trakt.tv Sync:** Full two-way scrobbling, watch history, custom lists, and rating synchronization.
+* [ ] **Mobile Landscape UI:** Optimized ergonomics, gesture navigation, and layout adaptations for smartphone horizontal (landscape) orientation.
+
+---
+
+## 🤝 Community & Contributing
+
+Contributions are welcome! Please feel free to submit issues, feature requests, or pull requests:
+
+1. Fork the repository.
+2. Create your feature branch (`git checkout -b feature/amazing-feature`).
+3. Commit your changes with meaningful commit messages.
+4. Push to the branch (`git push origin feature/amazing-feature`).
+5. Open a Pull Request.
+
+---
+
+## ⚖️ Legal Disclaimer & Extensible SDK Notice
+
+**Avalon MediaCard** is strictly engineered as a **Personal Media Extensible SDK and Local Playback Ecosystem**. The core repository provides an empty, modular framework designed to manage and play public domain media (e.g., Blender Foundation Open Movies) and user-owned, legally acquired digital media hosted on personal infrastructure.
+
+Avalon MediaCard does not host, bundle, scrape, index, or distribute any copyrighted media, circumvention devices, or third-party infringement configurations. All dynamic plugins, Peer-to-Peer caching connectors, and metadata resolvers are developed, installed, and maintained independently by the end-user. The developers and maintainers of Avalon MediaCard assume no liability for how users utilize the provided API contracts or custom JAR plugins loaded into their private server instances.
+
+---
+
+<p align="center">
+  Crafted with ❤️ using <strong>Kotlin Multiplatform</strong> & <strong>Compose Multiplatform</strong>
+</p>

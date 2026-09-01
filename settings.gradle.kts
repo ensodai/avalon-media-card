@@ -3,6 +3,8 @@ enableFeaturePreview("TYPESAFE_PROJECT_ACCESSORS")
 
 if (file("../avalon-media-card-core-contract").exists()) {
     includeBuild("../avalon-media-card-core-contract")
+} else if (file("avalon-media-card-core-contract").exists()) {
+    includeBuild("avalon-media-card-core-contract")
 }
 
 pluginManagement {

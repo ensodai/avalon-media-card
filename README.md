@@ -25,8 +25,9 @@
 
 It eliminates cross-platform UI and playback fragmentation by providing a unified **100% shared reactive UI tree** across Desktop, Android TV, and Web, backed by a resilient **Ktor 3.x** server communicating over **Kotlin-RPC WebSockets**, a **Server-Driven UI (SDUI)** architecture, and an isolated **dynamic plugin system**.
 
-<!-- Placeholder for Hero Showcase Mockup -->
-<!-- <p align="center"><img src="assets/screenshots/hero-showcase.webp" alt="Avalon MediaCard Multi-Device Showcase" width="900" /></p> -->
+<p align="center">
+  <img src="assets/screenshots/avalon_media_card_hero.png" alt="Avalon MediaCard Multi-Device Showcase" width="900" />
+</p>
 
 ---
 
@@ -92,8 +93,9 @@ Avalon MediaCard solves this by deploying a **Universal Multi-Engine Player Matr
 | **Android & Android TV**<br/>*(Mobile, Tablet, TV)* | **AndroidX Media3**<br/>*(ExoPlayer + FFmpeg Extensions)* | Android MediaCodec API | Media3 Native + Custom Overlay | **100% D-Pad Remote Optimization**, Leanback 10-foot UI, bundled FFmpeg audio/video extensions, optional LibVLC/MPV fallbacks. |
 | **Web**<br/>*(WasmGC & Modern Browsers)* | **PlaysVideo / Mediabunny**<br/>*(HLS, DASH, MPEG-TS, MP4)* | WebGL / Canvas Direct Draw | WebVTT / ASS.js Canvas | **In-Browser Wasm-FFmpeg Transcoder:** Real-time Web Worker pipeline converting HEVC/AC3/E-AC3/DTS directly in browser with **zero server load**. |
 
-<!-- Placeholder for Player Showcase -->
-<!-- <p align="center"><img src="assets/screenshots/player-dynamic-island.webp" alt="Avalon Player with Dynamic Island Controls" width="800" /></p> -->
+<p align="center">
+  <img src="assets/screenshots/player_web_pc.png" alt="Avalon Universal Video Player" width="850" />
+</p>
 
 ---
 
@@ -102,8 +104,9 @@ Avalon MediaCard solves this by deploying a **Universal Multi-Engine Player Matr
 ### 1. 🧠 Mathematical Vector Recommendation Engine (SDUI)
 A vector-based recommendation system calculating multi-dimensional user affinity vectors across genres, keywords, directors, actors, era, pacing, and mood. Applies exponential time decay to older viewing habits and introduces serendipity multipliers to generate rich discovery shelves (*"Moods & Tropes"*, *"Hidden Gems"*, *"Because you watched"*).
 
-<!-- Placeholder for Recommendation Showcase -->
-<!-- <p align="center"><img src="assets/screenshots/sdui-recommendation-engine.webp" alt="SDUI Recommendation Shelves" width="800" /></p> -->
+<p align="center">
+  <img src="assets/screenshots/feed_recommendation.png" alt="SDUI Dynamic Discovery Shelves" width="850" />
+</p>
 
 ### 2. 📺 Native Android TV 10-Foot Experience
 Explicitly designed and compiled for television displays with full D-Pad directional focus, smooth scale animations, leanback navigation drawers, and episode selector sheets tailored for remote control ergonomics.
@@ -111,16 +114,32 @@ Explicitly designed and compiled for television displays with full D-Pad directi
 <!-- Placeholder for Android TV GIF -->
 <!-- <p align="center"><img src="assets/screenshots/tv-dpad-navigation.gif" alt="Android TV 10-Foot Leanback Navigation" width="800" /></p> -->
 
-### 3. 🗄️ Metadata Aggregation & Bring-Your-Own-Key (BYOK)
+### 3. 📑 Rich Media Hub, Episodes Grid & Cast
+Comprehensive media overview screens featuring high-definition backdrops, status management, custom lists, interactive season/episode grids, and full actor filmographies.
+
+<p align="center">
+  <img src="assets/screenshots/details_web_pc.png" alt="Media Details and Synopsis" width="850" />
+</p>
+
+<p align="center">
+  <img src="assets/screenshots/series_section_web_pc.png" alt="Seasons, Episodes Grid and Top Cast" width="850" />
+</p>
+
+### 4. 🗄️ Metadata Aggregation & Bring-Your-Own-Key (BYOK)
 Seamless integration with **The Movie Database (TMDB)**, **Trakt.tv**, and anime metadata catalogs (Shikimori). Full multi-user support with custom watchlists, episode watch progress tracking, resume points, and personal ratings.
 
-### 4. ⚙️ Admin Control Center & Granular Governance
-Dedicated administrator dashboard for multi-tenant user provisioning, access control, cache invalidation, and independent configuration cards for metadata providers and stream proxy connectors.
+### 5. ⚙️ Admin Control Center & Granular Governance
+Dedicated administrator dashboard for multi-tenant user provisioning, access control, cache invalidation, database metrics, and independent configuration cards for metadata providers and stream proxy connectors.
 
-<!-- Placeholder for Admin Showcase -->
-<!-- <p align="center"><img src="assets/screenshots/admin-plugin-control.webp" alt="Admin Control Center" width="800" /></p> -->
+<p align="center">
+  <img src="assets/screenshots/admin_system.png" alt="Admin System Parameters and Cache Metrics" width="850" />
+</p>
 
-### 5. 🔌 Modular Plugin SDK
+<p align="center">
+  <img src="assets/screenshots/admin_users.png" alt="Admin Multi-User Governance" width="850" />
+</p>
+
+### 6. 🔌 Modular Plugin SDK
 Dynamic isolated JAR plugin architecture based on `avalon-media-card-core-contract`. Plugins run in sandboxed classloaders with hot-reloading capabilities, ensuring third-party extensions never compromise server stability.
 
 ---

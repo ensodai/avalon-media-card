@@ -14,7 +14,8 @@
   <a href="https://ktor.io/"><img src="https://img.shields.io/badge/Ktor-3.x%20Netty-009688?style=flat-square&logo=ktor&logoColor=white" alt="Ktor 3.x" /></a>
   <a href="https://webassembly.org/"><img src="https://img.shields.io/badge/Web-WasmGC-654FF0?style=flat-square&logo=webassembly&logoColor=white" alt="WasmGC" /></a>
   <a href="https://github.com/Kotlin/kotlinx-rpc"><img src="https://img.shields.io/badge/Kotlin--RPC-WebSocket-orange?style=flat-square" alt="Kotlin-RPC" /></a>
-  <a href="https://opensource.org/licenses/MIT"><img src="https://img.shields.io/badge/License-MIT-blue?style=flat-square" alt="License MIT" /></a>
+  <a href="LICENSE"><img src="https://img.shields.io/badge/Core-PolyForm%20Shield%201.0.0-blue?style=flat-square" alt="Core License PolyForm Shield 1.0.0" /></a>
+  <a href="https://opensource.org/licenses/MIT"><img src="https://img.shields.io/badge/Plugins%20SDK-MIT-green?style=flat-square" alt="Plugins SDK License MIT" /></a>
 </p>
 
 ---
@@ -144,52 +145,51 @@ Dynamic isolated JAR plugin architecture based on `avalon-media-card-core-contra
 
 ---
 
-## 📦 Installation & Quick Start
+## 📦 Quick Start Guide
 
-### Option A: 1-Click Linux Installer (Recommended)
+Avalon MediaCard operates on a client-server architecture: you host the **Server**, and connect to it from your browser or device apps.
 
-Deploy the complete server stack (Ktor Backend, SQLite database initialization, Web client, and base plugins) with a single rootless command:
+### Step 1: Install the Server (Backend)
 
+Run the server on your Linux machine, VPS, or NAS using one of the methods:
+
+#### Option A: 1-Click Linux Script (Recommended)
 ```bash
 bash <(curl -sSL https://raw.githubusercontent.com/ensodai/avalon-media-card/main/scripts/install.sh)
 ```
+*(Interactive prompts will guide you through directory setup, port configuration, and admin credentials).*
 
-*(Interactive prompts will guide you through directory selection, port configuration, and admin credential setup).*
-
----
-
-### Option B: Docker Compose
-
-For containerized self-hosted setups (Unraid, TrueNAS, standard Linux servers):
-
-```yaml
-version: '3.8'
-services:
-  avalon-server:
-    image: ghcr.io/ensodai/avalon-media-card:latest
-    container_name: avalon-media-card
-    restart: unless-stopped
-    ports:
-      - "8080:8080"
-    volumes:
-      - ./data:/app/data
-      - ./plugins:/app/plugins
-    environment:
-      - PORT=8080
-      - DB_URL=jdbc:sqlite:/app/data/avalon.db
-```
-
-Launch the container:
+#### Option B: Docker Compose
 ```bash
+mkdir -p avalon && cd avalon
+curl -fsSL https://raw.githubusercontent.com/ensodai/avalon-media-card/main/docker-compose.yml -o docker-compose.yml
 docker compose up -d
 ```
-Access the web dashboard at `http://localhost:8080`.
+
+> 💡 **Server is ready!** A built-in web version is already running at `http://<SERVER_IP>:8080` (Default login: `admin` / `admin`).
 
 ---
 
-### Option C: Local Development Build
+### Step 2: Connect from Your Devices (Clients)
 
-To build the entire Kotlin Multiplatform project from source:
+You can watch media directly in your **Web Browser** at `http://<SERVER_IP>:8080`, or use native client apps for hardware-accelerated playback and TV remote navigation:
+
+1. **Download the app** for your device from [Latest Releases](https://github.com/ensodai/avalon-media-card/releases/latest):
+   * 📺 **Android TV & Mobile:** `avalon-android.apk`
+   * 🪟 **Windows Desktop:** `avalon-windows.exe` (or `.msi`)
+   * 🐧 **Linux Desktop:** `avalon-linux.deb`
+
+2. **Connect to your server:**
+   * Open the app or browser.
+   * Enter your **Server URL**: `http://<SERVER_IP>:8080`
+   * Enter your **Username** and **Password** (default: `admin` / `admin`).
+   * Click **Connect** — your media library and settings will sync automatically!
+
+---
+
+### 🛠️ For Developers: Build from Source
+
+To compile the entire Kotlin Multiplatform ecosystem from scratch:
 
 ```bash
 # 1. Clone repository
@@ -205,7 +205,7 @@ cp .env.example .env
 # 4. Run Desktop App (JVM)
 ./gradlew :desktopApp:run
 
-# 5. Build Android Release APK
+# 5. Build Android APK
 ./gradlew :androidApp:assembleRelease
 
 # 6. Build WebAssembly Distribution
@@ -267,6 +267,13 @@ Contributions are welcome! Please feel free to submit issues, feature requests, 
 3. Commit your changes with meaningful commit messages.
 4. Push to the branch (`git push origin feature/amazing-feature`).
 5. Open a Pull Request.
+
+---
+
+## 📄 License
+
+* **Core Platform & Applications:** Licensed under the [PolyForm Shield License 1.0.0](LICENSE) (Free to use, self-host, and modify; non-compete terms apply).
+* **Plugin SDK & Official Plugins:** The [`avalon-media-card-core-contract`](https://github.com/ensodai/avalon-media-card-core-contract) and all base plugins in `basePlugins/` are licensed under the permissive [MIT License](https://opensource.org/licenses/MIT).
 
 ---
 

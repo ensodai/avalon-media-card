@@ -1,0 +1,27 @@
+# Ignore VCS and IDE
+.git
+.gitignore
+.idea
+*.iml
+
+# Ignore build artifacts except the docker staging directory
+build/
+!build/docker-dist/
+*/build/
+.gradle/
+.kotlin/
+
+# Ignore client modules not needed for the server image
+androidApp/
+desktopApp/
+client/
+libs/
+
+# Ignore local databases and temp files
+*.db
+*.db-shm
+*.db-wal
+*.sqlite
+*.log
+.env
+dist/

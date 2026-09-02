@@ -6,7 +6,9 @@ build/
 **/build/
 !src/**/build/
 .kotlin/
-kotlin-js-store/
+kotlin-js-store/*
+!kotlin-js-store/**/
+!kotlin-js-store/**/yarn.lock
 *.iml
 .idea/
 *.ipr

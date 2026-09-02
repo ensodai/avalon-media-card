@@ -1,3 +1,9 @@
+import org.jetbrains.kotlin.gradle.targets.js.yarn.YarnLockMismatchReport
+import org.jetbrains.kotlin.gradle.targets.js.yarn.YarnPlugin
+import org.jetbrains.kotlin.gradle.targets.js.yarn.YarnRootExtension
+import org.jetbrains.kotlin.gradle.targets.wasm.yarn.WasmYarnPlugin
+import org.jetbrains.kotlin.gradle.targets.wasm.yarn.WasmYarnRootExtension
+
 plugins {
     // this is necessary to avoid the plugins to be loaded multiple times
     // in each subproject's classloader
@@ -11,6 +17,20 @@ plugins {
     alias(libs.plugins.ktor) apply false
     alias(libs.plugins.kotlinx.rpc) apply false
     alias(libs.plugins.koin.compiler) apply false
+}
+
+plugins.withType<WasmYarnPlugin> {
+    the<WasmYarnRootExtension>().apply {
+        yarnLockMismatchReport = YarnLockMismatchReport.WARNING
+        yarnLockAutoReplace = true
+    }
+}
+
+plugins.withType<YarnPlugin> {
+    the<YarnRootExtension>().apply {
+        yarnLockMismatchReport = YarnLockMismatchReport.WARNING
+        yarnLockAutoReplace = true
+    }
 }
 
 tasks.register("compileAll") {
@@ -31,9 +51,52 @@ tasks.register("compileAll") {
         ":basePlugins:torrserver-plugin:build",
         ":basePlugins:rutube-plugin:build",
         ":basePlugins:vk-video-plugin:build",
-        ":basePlugins:anilibria-plugin:build",
-        ":basePlugins:collaps-plugin:build"
+        ":basePlugins:anilibria-plugin:build"
     )
+}
+
+tasks.register("prepareDocker") {
+    group = "docker"
+    description = "Prepare distribution files for Docker build in build/docker-dist"
+    dependsOn(
+        ":server:buildFatJar",
+        ":web:wasmJsBrowserDistribution",
+        ":basePlugins:home-feed-plugin:build",
+        ":basePlugins:recommendation-plugin:build",
+        ":basePlugins:media-details-plugin:build",
+        ":basePlugins:person-details-plugin:build",
+        ":basePlugins:media-list-plugin:build",
+        ":basePlugins:trakt-metadata-plugin:build",
+        ":basePlugins:torrserver-plugin:build",
+        ":basePlugins:rutube-plugin:build",
+        ":basePlugins:vk-video-plugin:build",
+        ":basePlugins:anilibria-plugin:build"
+    )
+    val rootProjectDir = layout.projectDirectory
+    doLast {
+        val dockerDistDir = rootProjectDir.dir("build/docker-dist").asFile
+        dockerDistDir.mkdirs()
+        val webTargetDir = File(dockerDistDir, "web").apply { mkdirs() }
+        val pluginsTargetDir = File(dockerDistDir, "plugins").apply { mkdirs() }
+
+        val serverJar = rootProjectDir.file("server/build/libs/avalon-media-card-server.jar").asFile
+        if (serverJar.exists()) {
+            serverJar.copyTo(File(dockerDistDir, "avalon-server.jar"), overwrite = true)
+        }
+
+        val webDist = rootProjectDir.dir("web/build/dist/wasmJs/productionExecutable").asFile
+        if (webDist.exists()) {
+            webDist.copyRecursively(webTargetDir, overwrite = true)
+        }
+
+        val pluginsDir = rootProjectDir.dir("server/plugins").asFile
+        if (pluginsDir.exists()) {
+            pluginsDir.listFiles { f -> f.extension == "jar" }?.forEach { jar ->
+                jar.copyTo(File(pluginsTargetDir, jar.name), overwrite = true)
+            }
+        }
+        println("✅ Docker distribution successfully prepared in build/docker-dist/")
+    }
 }
 
 tasks.register("runDesktop") {
@@ -85,8 +148,7 @@ tasks.register("runAll") {
         ":basePlugins:torrserver-plugin:build",
         ":basePlugins:rutube-plugin:build",
         ":basePlugins:vk-video-plugin:build",
-        ":basePlugins:anilibria-plugin:build",
-        ":basePlugins:collaps-plugin:build"
+        ":basePlugins:anilibria-plugin:build"
     )
 
     val rootDirPath = rootDir.absolutePath

@@ -1,0 +1,16 @@
+services:
+  avalon-server:
+    image: ghcr.io/ensodai/avalon-media-card:latest
+    container_name: avalon-media-card
+    restart: unless-stopped
+    ports:
+      - "8080:8080"
+    volumes:
+      - ./data:/app/data
+      - ./plugins:/app/plugins
+    environment:
+      - PORT=8080
+      - DB_URL=jdbc:sqlite:/app/data/avalon.db
+      - WEB_DIR=/app/web
+      - ADMIN_USERNAME=admin
+      - ADMIN_PASSWORD=admin

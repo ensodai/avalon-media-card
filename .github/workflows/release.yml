@@ -17,7 +17,7 @@ concurrency:
 
 permissions:
   contents: write
-  packages: read
+  packages: write
 
 env:
   GRADLE_OPTS: "-Dorg.gradle.jvmargs=-Xmx4g -Dorg.gradle.parallel=true -Dorg.gradle.caching=true"
@@ -75,6 +75,7 @@ jobs:
           fi
           
           # 2. Плагины в один архив
+          rm -f server/plugins/*collaps*.jar 2>/dev/null || true
           if [ -d server/plugins ] && [ "$(ls -A server/plugins)" ]; then
             zip -j dist/avalon-plugins.zip server/plugins/*.jar
           fi
@@ -101,6 +102,62 @@ jobs:
           name: artifacts-linux-server
           path: dist/*
           retention-days: 1
+
+      - name: Determine Docker Tag
+        id: docker_tag
+        run: |
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
+            TAG="v${{ github.event.inputs.version }}"
+          else
+            TAG="${{ github.ref_name }}"
+          fi
+          echo "tag=$TAG" >> $GITHUB_OUTPUT
+
+      - name: Prepare Docker Staging Assets
+        run: |
+          mkdir -p build/docker-dist/web build/docker-dist/plugins
+          cp server/build/libs/avalon-media-card-server.jar build/docker-dist/avalon-server.jar
+          if [ -d web/build/dist/wasmJs/productionExecutable ]; then
+            cp -r web/build/dist/wasmJs/productionExecutable/* build/docker-dist/web/
+          elif [ -d web/build/dist/wasmJs ]; then
+            cp -r web/build/dist/wasmJs/* build/docker-dist/web/
+          fi
+          if [ -d server/plugins ] && [ "$(ls -A server/plugins 2>/dev/null)" ]; then
+            cp server/plugins/*.jar build/docker-dist/plugins/
+          fi
+
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v3
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Log in to GitHub Container Registry
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Extract Docker metadata
+        id: meta
+        uses: docker/metadata-action@v5
+        with:
+          images: ghcr.io/${{ github.repository }}
+          tags: |
+            type=raw,value=latest
+            type=raw,value=${{ steps.docker_tag.outputs.tag }}
+
+      - name: Build and push Docker image
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          file: ./Dockerfile
+          platforms: linux/amd64,linux/arm64
+          push: true
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
+
 
   build-windows:
     name: Build Windows Desktop (.exe)
@@ -158,6 +215,7 @@ jobs:
       - name: Download all built artifacts
         uses: actions/download-artifact@v4
         with:
+          pattern: 'artifacts-*'
           path: release-assets
           merge-multiple: true
 

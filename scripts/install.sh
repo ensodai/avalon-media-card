@@ -144,6 +144,7 @@ echo "$MSG_DOWNLOADING_PLUGINS"
 curl -fsSL -o "$INSTALL_DIR/plugins.zip" "$PLUGINS_URL"
 unzip -o -q "$INSTALL_DIR/plugins.zip" -d "$INSTALL_DIR/plugins"
 rm -f "$INSTALL_DIR/plugins.zip"
+rm -f "$INSTALL_DIR/plugins/collaps-plugin.jar" "$INSTALL_DIR/plugins/"*collaps*.jar
 
 # Скачивание и распаковка веб-клиента при выборе
 if [ "$INSTALL_WEB" = true ]; then

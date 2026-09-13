@@ -16,6 +16,10 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.navigation3.runtime.NavKey
 import androidx.savedstate.serialization.SavedStateConfiguration
+import avalonmediacard.client.generated.resources.Res
+import avalonmediacard.client.generated.resources.nav_oauth_auth_error
+import avalonmediacard.client.generated.resources.nav_oauth_error
+import avalonmediacard.client.generated.resources.nav_oauth_success
 import kotlinx.coroutines.launch
 import kotlinx.serialization.modules.SerializersModule
 import kotlinx.serialization.modules.polymorphic
@@ -37,14 +41,14 @@ import org.ensodai.avalonmediacard.data.repository.GlobalManifestRepository
 import org.ensodai.avalonmediacard.data.rpc.RpcConnectionManager
 import org.ensodai.avalonmediacard.presentation.locale.setAppLocale
 import org.ensodai.avalonmediacard.presentation.navigation.ScreenKey
-import org.ensodai.avalonmediacard.presentation.screens.commonComponents.LocalDeviceTarget
 import org.ensodai.avalonmediacard.presentation.screens.commonComponents.DeviceTarget
+import org.ensodai.avalonmediacard.presentation.screens.commonComponents.LocalDeviceTarget
+import org.ensodai.avalonmediacard.presentation.screens.commonComponents.ProvideAdaptiveTvDensity
 import org.ensodai.avalonmediacard.presentation.screens.login.LoginScreen
 import org.ensodai.avalonmediacard.presentation.telemetry.LocalTelemetryTracker
 import org.ensodai.avalonmediacard.presentation.telemetry.TelemetryTracker
-import org.koin.compose.koinInject
-import avalonmediacard.client.generated.resources.*
 import org.jetbrains.compose.resources.getString
+import org.koin.compose.koinInject
 
 private val logger = AppLogging.logger("App")
 
@@ -109,198 +113,203 @@ fun App() {
                 }
         ) {
             MaterialTheme(colorScheme = customColorScheme) {
-            val scope = rememberCoroutineScope()
-            var sidebarItems by remember { mutableStateOf<List<SidebarItem>>(emptyList()) }
-            var isSidebarLoaded by remember { mutableStateOf(false) }
-            var selectedItem by remember { mutableStateOf<SidebarItem?>(null) }
-            var previousItem by remember { mutableStateOf<SidebarItem?>(null) }
-            val tabBackStacks = remember { mutableStateMapOf<String, List<ScreenKey>>() }
-            var uploadStatus by remember { mutableStateOf("") }
+                val scope = rememberCoroutineScope()
+                var sidebarItems by remember { mutableStateOf<List<SidebarItem>>(emptyList()) }
+                var isSidebarLoaded by remember { mutableStateOf(false) }
+                var selectedItem by remember { mutableStateOf<SidebarItem?>(null) }
+                var previousItem by remember { mutableStateOf<SidebarItem?>(null) }
+                val tabBackStacks = remember { mutableStateMapOf<String, List<ScreenKey>>() }
+                var uploadStatus by remember { mutableStateOf("") }
 
-            if (!isLoaded) {
-                Box(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .background(Color.Black),
-                    contentAlignment = Alignment.Center
-                ) {
-                    CircularProgressIndicator(color = Color.White)
+                if (!isLoaded) {
+                    Box(
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .background(Color.Black),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        CircularProgressIndicator(color = Color.White)
+                    }
+                    return@MaterialTheme
                 }
-                return@MaterialTheme
-            }
 
-            if (tokenState == null) {
-                LoginScreen(
-                    initialServerUrl = tokenStorage.cachedServerUrl ?: org.ensodai.avalonmediacard.data.platformServerUrl,
-                    onLoginSuccess = { authResponse ->
-                        val token = authResponse.token
-                        if (!token.isNullOrBlank()) {
-                            scope.launch {
-                                tokenStorage.saveToken(
-                                    token = token,
-                                    role = authResponse.role,
-                                    userId = authResponse.userId,
-                                    username = authResponse.username
-                                )
-                            }
-                        }
-                    },
-                    onLoginClick = { username, password, url ->
-                        runCatching {
-                            tokenStorage.saveServerUrl(url)
-                            connectionManager.clearConnection()
-                            authRpcService.login(LoginRequest(username, password))
-                        }.mapCatching { response ->
-                            if (response.success && !response.token.isNullOrBlank()) {
-                                response
-                            } else {
-                                throw Exception(response.error ?: "Login failed")
-                            }
-                        }
-                    },
-                    onRegisterClick = { username, password, url ->
-                        runCatching {
-                            tokenStorage.saveServerUrl(url)
-                            connectionManager.clearConnection()
-                            authRpcService.register(RegisterRequest(username, password))
-                        }.mapCatching { response ->
-                            if (response.success && !response.token.isNullOrBlank()) {
-                                response
-                            } else {
-                                throw Exception(response.error ?: "Registration failed")
-                            }
-                        }
-                    }
-                )
-                return@MaterialTheme
-            }
-
-            val manifestRepository = koinInject<GlobalManifestRepository>()
-            val isManifestLoaded by manifestRepository.isLoaded.collectAsState()
-
-            LaunchedEffect(tokenState) {
-                connectionManager.clearConnection()
-                if (tokenState != null) {
-                    launch {
-                        try {
-                            manifestRepository.refreshManifest()
-                        } catch (e: Exception) {
-                            if (e is kotlinx.coroutines.CancellationException) throw e
-                            e.printStackTrace()
-                        }
-                    }
-                    launch {
-                        try {
-                            sduiRpcService.streamSidebar().collect { components ->
-                                logger.d { "[CLIENT_SIDEBAR_LOG] streamSidebar collected ${components.size} items: ${components.map { it.title ?: it.itemId }}" }
-                                val items = components
-                                sidebarItems = items
-                                isSidebarLoaded = true
-                                val currentSelected = selectedItem
-                                if (currentSelected == null) {
-                                    selectedItem = items.firstOrNull()
-                                } else {
-                                    val matching = items.firstOrNull { it.itemId == currentSelected.itemId }
-                                    if (matching != null) {
-                                        selectedItem = matching
-                                    } else {
-                                        selectedItem = items.firstOrNull()
-                                    }
+                if (tokenState == null) {
+                    LoginScreen(
+                        initialServerUrl = tokenStorage.cachedServerUrl
+                            ?: org.ensodai.avalonmediacard.data.platformServerUrl,
+                        onLoginSuccess = { authResponse ->
+                            val token = authResponse.token
+                            if (!token.isNullOrBlank()) {
+                                scope.launch {
+                                    tokenStorage.saveToken(
+                                        token = token,
+                                        role = authResponse.role,
+                                        userId = authResponse.userId,
+                                        username = authResponse.username
+                                    )
                                 }
                             }
-                        } catch (e: Exception) {
-                            if (e is kotlinx.coroutines.CancellationException) throw e
-                            e.printStackTrace()
-                        }
-                    }
-
-                    // Перехват OAuth параметров из URL
-                    launch {
-                        val params = getUrlQueryParameters()
-                        val code = params["code"]
-                        val state = params["state"]
-                        if (!code.isNullOrBlank() && !state.isNullOrBlank()) {
-                            try {
-                                val success = authRpcService.exchangeOAuthCode(service = state, code = code)
-                                if (success) {
-                                    uploadStatus = getString(Res.string.nav_oauth_success, state.replaceFirstChar { it.uppercase() })
-                                    try {
-                                        actionRpcService.handleAction(RefreshIntegrationsCommand(service = state))
-                                    } catch (e: Exception) {
-                                        if (e is kotlinx.coroutines.CancellationException) throw e
-                                        e.printStackTrace()
-                                    }
+                        },
+                        onLoginClick = { username, password, url ->
+                            runCatching {
+                                tokenStorage.saveServerUrl(url)
+                                connectionManager.clearConnection()
+                                authRpcService.login(LoginRequest(username, password))
+                            }.mapCatching { response ->
+                                if (response.success && !response.token.isNullOrBlank()) {
+                                    response
                                 } else {
-                                    uploadStatus = getString(Res.string.nav_oauth_error, state)
+                                    throw Exception(response.error ?: "Login failed")
+                                }
+                            }
+                        },
+                        onRegisterClick = { username, password, url ->
+                            runCatching {
+                                tokenStorage.saveServerUrl(url)
+                                connectionManager.clearConnection()
+                                authRpcService.register(RegisterRequest(username, password))
+                            }.mapCatching { response ->
+                                if (response.success && !response.token.isNullOrBlank()) {
+                                    response
+                                } else {
+                                    throw Exception(response.error ?: "Registration failed")
+                                }
+                            }
+                        }
+                    )
+                    return@MaterialTheme
+                }
+
+                val manifestRepository = koinInject<GlobalManifestRepository>()
+                val isManifestLoaded by manifestRepository.isLoaded.collectAsState()
+
+                LaunchedEffect(tokenState) {
+                    connectionManager.clearConnection()
+                    if (tokenState != null) {
+                        launch {
+                            try {
+                                manifestRepository.refreshManifest()
+                            } catch (e: Exception) {
+                                if (e is kotlinx.coroutines.CancellationException) throw e
+                                e.printStackTrace()
+                            }
+                        }
+                        launch {
+                            try {
+                                sduiRpcService.streamSidebar().collect { components ->
+                                    logger.d { "[CLIENT_SIDEBAR_LOG] streamSidebar collected ${components.size} items: ${components.map { it.title ?: it.itemId }}" }
+                                    val items = components
+                                    sidebarItems = items
+                                    isSidebarLoaded = true
+                                    val currentSelected = selectedItem
+                                    if (currentSelected == null) {
+                                        selectedItem = items.firstOrNull()
+                                    } else {
+                                        val matching = items.firstOrNull { it.itemId == currentSelected.itemId }
+                                        if (matching != null) {
+                                            selectedItem = matching
+                                        } else {
+                                            selectedItem = items.firstOrNull()
+                                        }
+                                    }
                                 }
                             } catch (e: Exception) {
                                 if (e is kotlinx.coroutines.CancellationException) throw e
-                                uploadStatus = getString(Res.string.nav_oauth_auth_error, e.message ?: "")
-                            } finally {
-                                clearUrlQueryParameters()
+                                e.printStackTrace()
+                            }
+                        }
+
+                        // Перехват OAuth параметров из URL
+                        launch {
+                            val params = getUrlQueryParameters()
+                            val code = params["code"]
+                            val state = params["state"]
+                            if (!code.isNullOrBlank() && !state.isNullOrBlank()) {
+                                try {
+                                    val success = authRpcService.exchangeOAuthCode(service = state, code = code)
+                                    if (success) {
+                                        uploadStatus = getString(
+                                            Res.string.nav_oauth_success,
+                                            state.replaceFirstChar { it.uppercase() })
+                                        try {
+                                            actionRpcService.handleAction(RefreshIntegrationsCommand(service = state))
+                                        } catch (e: Exception) {
+                                            if (e is kotlinx.coroutines.CancellationException) throw e
+                                            e.printStackTrace()
+                                        }
+                                    } else {
+                                        uploadStatus = getString(Res.string.nav_oauth_error, state)
+                                    }
+                                } catch (e: Exception) {
+                                    if (e is kotlinx.coroutines.CancellationException) throw e
+                                    uploadStatus = getString(Res.string.nav_oauth_auth_error, e.message ?: "")
+                                } finally {
+                                    clearUrlQueryParameters()
+                                }
+                            }
+                        }
+                    } else {
+                        sidebarItems = emptyList()
+                        selectedItem = null
+                        previousItem = null
+                        isSidebarLoaded = false
+                        tabBackStacks.clear()
+                        uploadStatus = ""
+                        manifestRepository.clear()
+                    }
+                }
+
+                if (!isManifestLoaded || !isSidebarLoaded) {
+                    Box(
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .background(Color.Black),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        CircularProgressIndicator(color = Color.White)
+                    }
+                    return@MaterialTheme
+                }
+
+                val configuration = remember {
+                    SavedStateConfiguration {
+                        serializersModule = SerializersModule {
+                            polymorphic(NavKey::class) {
+                                subclass(ScreenKey::class)
                             }
                         }
                     }
-                } else {
-                    sidebarItems = emptyList()
-                    selectedItem = null
-                    previousItem = null
-                    isSidebarLoaded = false
-                    tabBackStacks.clear()
-                    uploadStatus = ""
-                    manifestRepository.clear()
                 }
-            }
 
-            if (!isManifestLoaded || !isSidebarLoaded) {
-                Box(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .background(Color.Black),
-                    contentAlignment = Alignment.Center
-                ) {
-                    CircularProgressIndicator(color = Color.White)
+                val uiModeOverride by appSettingsStorage.uiModeOverride.collectAsState()
+                val baseTarget = LocalDeviceTarget.current
+
+                val finalTarget = when (uiModeOverride) {
+                    UiModeOverride.AUTO -> baseTarget
+                    UiModeOverride.TV -> if (baseTarget == DeviceTarget.ANDROID_MOBILE || baseTarget == DeviceTarget.ANDROID_TV) DeviceTarget.ANDROID_TV else DeviceTarget.TV_WEB
+                    UiModeOverride.PC -> DeviceTarget.DESKTOP_WEB
                 }
-                return@MaterialTheme
-            }
 
-            val configuration = remember {
-                SavedStateConfiguration {
-                    serializersModule = SerializersModule {
-                        polymorphic(NavKey::class) {
-                            subclass(ScreenKey::class)
-                        }
+                ProvideAdaptiveTvDensity(isTv = finalTarget.isTv) {
+                    CompositionLocalProvider(
+                        LocalTelemetryTracker provides telemetryTracker,
+                        LocalDeviceTarget provides finalTarget
+                    ) {
+                        MainAppContent(
+                            sidebarItems = sidebarItems,
+                            tokenStorage = tokenStorage,
+                            sduiRpcService = sduiRpcService,
+                            actionRpcService = actionRpcService,
+                            dialogManager = dialogManager,
+                            configuration = configuration,
+                            uploadStatus = uploadStatus,
+                            onUploadStatusChange = { uploadStatus = it },
+                            userRole = userRoleState,
+                            scope = scope
+                        )
                     }
                 }
             }
-            
-            val uiModeOverride by appSettingsStorage.uiModeOverride.collectAsState()
-            val baseTarget = LocalDeviceTarget.current
-            
-            val finalTarget = when (uiModeOverride) {
-                UiModeOverride.AUTO -> baseTarget
-                UiModeOverride.TV -> if (baseTarget == DeviceTarget.ANDROID_MOBILE || baseTarget == DeviceTarget.ANDROID_TV) DeviceTarget.ANDROID_TV else DeviceTarget.TV_WEB
-                UiModeOverride.PC -> DeviceTarget.DESKTOP_WEB
-            }
-
-            CompositionLocalProvider(
-                LocalTelemetryTracker provides telemetryTracker,
-                LocalDeviceTarget provides finalTarget
-            ) {
-                MainAppContent(
-                    sidebarItems = sidebarItems,
-                    tokenStorage = tokenStorage,
-                    sduiRpcService = sduiRpcService,
-                    actionRpcService = actionRpcService,
-                    dialogManager = dialogManager,
-                    configuration = configuration,
-                    uploadStatus = uploadStatus,
-                    onUploadStatusChange = { uploadStatus = it },
-                    userRole = userRoleState,
-                    scope = scope
-                )
-            }
         }
     }
-}
 }

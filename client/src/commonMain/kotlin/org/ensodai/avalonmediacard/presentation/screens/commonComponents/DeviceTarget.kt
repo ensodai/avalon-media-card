@@ -1,9 +1,16 @@
 package org.ensodai.avalonmediacard.presentation.screens.commonComponents
 
+import androidx.compose.foundation.layout.BoxWithConstraints
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.staticCompositionLocalOf
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.unit.Density
 
 enum class DeviceTarget {
     DESKTOP_WEB,
@@ -47,5 +54,35 @@ fun AdaptiveLayout(
         device.isTablet && tablet != null -> tablet()
         device.isDesktop && web != null -> web()
         else -> default()
+    }
+}
+
+/**
+ * Адаптивный провайдер плотности экрана под ТВ-сетку.
+ * При [isTv] = true масштабирует плотность интерфейса относительно эталонной высоты [baselineHeightDp]
+ * (по умолчанию 540dp, соответствующей эталону Android TV 4K / 1080p при 16:9),
+ * обеспечивая идентичный размер карточек, текста и отступов на любых разрешениях экрана.
+ */
+@Composable
+fun ProvideAdaptiveTvDensity(
+    isTv: Boolean,
+    baselineHeightDp: Float = 540f,
+    content: @Composable () -> Unit
+) {
+    BoxWithConstraints(modifier = Modifier.fillMaxSize()) {
+        val currentDensity = LocalDensity.current
+        val tvDensity = remember(currentDensity, isTv, maxHeight) {
+            if (isTv && maxHeight.value > 0f) {
+                val heightPx = with(currentDensity) { maxHeight.toPx() }
+                val targetDensity = (heightPx / baselineHeightDp).coerceAtLeast(1.0f)
+                Density(density = targetDensity, fontScale = currentDensity.fontScale)
+            } else {
+                currentDensity
+            }
+        }
+        CompositionLocalProvider(
+            LocalDensity provides tvDensity,
+            content = content
+        )
     }
 }

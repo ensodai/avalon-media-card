@@ -372,11 +372,16 @@ class EpisodesNotificationPlugin : AvalonPlugin {
         }
 
         val totalUnread = notifications.count { !it.isRead }
+        val recentUnread = todayEpisodes.count { it.isNew } + thisWeekEpisodes.count { it.isNew }
+        val allEpisodes = todayEpisodes + thisWeekEpisodes + earlierEpisodes
+        val unwatched = allEpisodes.count { !it.isWatched }
 
         return SlotData.EpisodesFeed(
             sections = sections,
             rollups = rollups,
             totalUnreadCount = totalUnread,
+            recentUnreadCount = recentUnread,
+            unwatchedCount = unwatched,
             markAllReadAction = MarkNotificationsReadCommand
         )
     }

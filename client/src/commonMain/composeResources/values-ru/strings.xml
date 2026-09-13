@@ -399,6 +399,7 @@
     <string name="episodes_notifications_movie_premiere">Премьера фильма</string>
     <string name="episodes_notifications_about_movie">О фильме</string>
     <string name="episodes_notifications_rollup_info">Вышло %1$d новых серий (с S%2$dE%3$d по S%4$dE%5$d)</string>
+    <string name="episodes_notifications_hold_for_options">Удерживайте ОК для опций</string>
 
     <!-- Months (Short) -->
     <string name="month_jan_short">янв.</string>

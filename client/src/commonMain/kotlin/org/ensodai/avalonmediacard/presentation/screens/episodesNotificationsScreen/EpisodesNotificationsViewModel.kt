@@ -126,7 +126,10 @@ class EpisodesNotificationsViewModel(
                 updateViewState { current ->
                     val feedData = current.feedSlot?.state?.data ?: return@updateViewState current
                     var unreadDelta = 0
+                    var recentUnreadDelta = 0
+                    var unwatchedDelta = 0
                     val updatedSections = feedData.sections.map { section ->
+                        val isRecentSection = section.sectionId == "today" || section.sectionId == "this_week"
                         section.copy(
                             episodes = section.episodes.map { ep ->
                                 if (ep.mediaKey == action.key &&
@@ -134,8 +137,14 @@ class EpisodesNotificationsViewModel(
                                     ep.episodeNumber == action.episodeNumber
                                 ) {
                                     val wasUnread = ep.isNew
-                                    if (action.isWatched && wasUnread) {
-                                        unreadDelta--
+                                    if (action.isWatched) {
+                                        if (wasUnread) {
+                                            unreadDelta--
+                                            if (isRecentSection) recentUnreadDelta--
+                                        }
+                                        if (!ep.isWatched) unwatchedDelta--
+                                    } else {
+                                        if (ep.isWatched) unwatchedDelta++
                                     }
                                     ep.copy(
                                         isWatched = action.isWatched,
@@ -154,12 +163,16 @@ class EpisodesNotificationsViewModel(
                         )
                     }
                     val newUnreadCount = (feedData.totalUnreadCount + unreadDelta).coerceAtLeast(0)
+                    val newRecentUnreadCount = (feedData.recentUnreadCount + recentUnreadDelta).coerceAtLeast(0)
+                    val newUnwatchedCount = (feedData.unwatchedCount + unwatchedDelta).coerceAtLeast(0)
                     current.copy(
                         feedSlot = current.feedSlot.copy(
                             state = current.feedSlot.state.copy(
                                 data = feedData.copy(
                                     sections = updatedSections,
-                                    totalUnreadCount = newUnreadCount
+                                    totalUnreadCount = newUnreadCount,
+                                    recentUnreadCount = newRecentUnreadCount,
+                                    unwatchedCount = newUnwatchedCount
                                 )
                             )
                         )
@@ -246,7 +259,8 @@ class EpisodesNotificationsViewModel(
                             state = current.feedSlot.state.copy(
                                 data = feedData.copy(
                                     sections = updatedSections,
-                                    totalUnreadCount = 0
+                                    totalUnreadCount = 0,
+                                    recentUnreadCount = 0
                                 )
                             )
                         )

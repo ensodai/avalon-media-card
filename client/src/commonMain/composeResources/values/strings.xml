@@ -399,6 +399,7 @@
     <string name="episodes_notifications_movie_premiere">Movie Premiere</string>
     <string name="episodes_notifications_about_movie">About movie</string>
     <string name="episodes_notifications_rollup_info">%1$d new episodes (from S%2$dE%3$d to S%4$dE%5$d)</string>
+    <string name="episodes_notifications_hold_for_options">Hold OK for options</string>
 
     <!-- Months (Short) -->
     <string name="month_jan_short">Jan</string>

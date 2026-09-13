@@ -23,3 +23,29 @@ val LocalDeviceTarget = staticCompositionLocalOf<DeviceTarget> { DeviceTarget.DE
 val LocalRootOverlay = staticCompositionLocalOf<MutableState<(@Composable () -> Unit)?>> {
     mutableStateOf(null)
 }
+
+/**
+ * Универсальный декларативный компонент выбора разметки под целевое устройство:
+ * - [tv]: Android TV и веб в ТВ-режиме (TV_WEB) с управлением пультом/D-Pad
+ * - [web]: ПК / Десктопный браузер с мышью и клавиатурой (DESKTOP_WEB)
+ * - [mobile]: Мобильные телефоны (тач-интерфейс)
+ * - [tablet]: Планшеты (если не указан, фоллбечится на [web], затем [default])
+ * - [default]: Базовый контент, если специализированный таргет еще не реализован
+ */
+@Composable
+fun AdaptiveLayout(
+    tv: (@Composable () -> Unit)? = null,
+    web: (@Composable () -> Unit)? = null,
+    mobile: (@Composable () -> Unit)? = null,
+    tablet: (@Composable () -> Unit)? = web,
+    default: @Composable () -> Unit
+) {
+    val device = LocalDeviceTarget.current
+    when {
+        device.isTv && tv != null -> tv()
+        device.isPhone && mobile != null -> mobile()
+        device.isTablet && tablet != null -> tablet()
+        device.isDesktop && web != null -> web()
+        else -> default()
+    }
+}

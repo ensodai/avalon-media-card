@@ -5,7 +5,7 @@ import androidx.compose.ui.Modifier
 import kotlin.time.Clock
 import org.ensodai.avalonmediacard.contract.logging.AppLogging
 import org.ensodai.avalonmediacard.contract.slot.Action
-import org.ensodai.avalonmediacard.presentation.screens.commonComponents.LocalDeviceTarget
+import org.ensodai.avalonmediacard.presentation.screens.commonComponents.AdaptiveLayout
 import org.ensodai.avalonmediacard.presentation.screens.detailsScreen.targets.mobile.MediaDetailsLayoutMobile
 import org.ensodai.avalonmediacard.presentation.screens.detailsScreen.targets.tv.MediaDetailsLayoutTv
 import org.ensodai.avalonmediacard.presentation.screens.detailsScreen.targets.web.MediaDetailsLayoutWeb
@@ -26,10 +26,8 @@ fun DetailsContent(
 ) {
     logger.d { "[PROFILING] DetailsContent RECOMPOSE (Header state: ${state.header?.state?.let { it::class.simpleName }}): ${Clock.System.now()}" }
 
-    val deviceTarget = LocalDeviceTarget.current
-
-    when {
-        deviceTarget.isTv -> {
+    AdaptiveLayout(
+        tv = {
             MediaDetailsLayoutTv(
                 state = state,
                 onAction = onAction,
@@ -40,8 +38,20 @@ fun DetailsContent(
                 onRefreshSources = onRefreshSources,
                 modifier = modifier
             )
-        }
-        deviceTarget.isDesktop || deviceTarget.isTablet -> {
+        },
+        mobile = {
+            MediaDetailsLayoutMobile(
+                state = state,
+                onAction = onAction,
+                onClosePlayer = onClosePlayer,
+                onRequestOtherSource = onRequestOtherSource,
+                onCloseSources = onCloseSources,
+                onSelectSource = onSelectSource,
+                onRefreshSources = onRefreshSources,
+                modifier = modifier
+            )
+        },
+        default = {
             MediaDetailsLayoutWeb(
                 state = state,
                 onAction = onAction,
@@ -53,17 +63,5 @@ fun DetailsContent(
                 modifier = modifier
             )
         }
-        else -> {
-            MediaDetailsLayoutMobile(
-                state = state,
-                onAction = onAction,
-                onClosePlayer = onClosePlayer,
-                onRequestOtherSource = onRequestOtherSource,
-                onCloseSources = onCloseSources,
-                onSelectSource = onSelectSource,
-                onRefreshSources = onRefreshSources,
-                modifier = modifier
-            )
-        }
-    }
+    )
 }

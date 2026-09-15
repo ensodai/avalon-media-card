@@ -82,7 +82,7 @@ class StreamTokenService(
         flags: Byte = 0x00,
         headers: Map<String, String> = emptyMap(),
         authHeader: String? = null,
-        ttlSeconds: Long = 900L // 15 минут по умолчанию (Sliding TTL)
+        ttlSeconds: Long = 86_400L // 24 часа по умолчанию (хватает для длинных фильмов, сериалов, перемоток и пауз)
     ): String {
         val expiresAt = Instant.now().epochSecond + ttlSeconds
         val urlBytes = targetUrl.toByteArray(Charsets.UTF_8)
@@ -206,7 +206,7 @@ class StreamTokenService(
         streamType: StreamType? = null,
         headers: Map<String, String> = emptyMap(),
         authHeader: String? = null,
-        ttlSeconds: Long = 900L
+        ttlSeconds: Long = 86_400L
     ): String {
         val token = generateToken(
             targetUrl = targetUrl,

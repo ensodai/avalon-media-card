@@ -83,10 +83,11 @@ fun CustomListsDropdownMenu(
     val density = LocalDensity.current
 
     val submitNewList = {
-        if (listName.isNotBlank()) {
+        val trimmed = listName.trim()
+        if (trimmed.isNotBlank()) {
             val template = button.createListActionTemplate
             if (template != null) {
-                onAction(template.withParameter("listName", listName))
+                onAction(template.withParameter("listName", trimmed))
             }
             isCreatingList = false
             listName = ""
@@ -140,7 +141,7 @@ fun CustomListsDropdownMenu(
                     horizontalArrangement = Arrangement.SpaceBetween
                 ) {
                     Text(
-                        text = list.name,
+                        text = list.name.ifBlank { "Список без названия" },
                         color = if (list.isAdded) Color.White else Color.White.copy(alpha = 0.8f),
                         fontSize = 14.sp,
                         fontWeight = if (list.isAdded) FontWeight.Bold else FontWeight.Normal
@@ -225,11 +226,11 @@ fun CustomListsDropdownMenu(
                     Icon(
                         imageVector = Lucide.Check,
                         contentDescription = stringResource(Res.string.common_save),
-                        tint = if (listName.isNotBlank()) MaterialTheme.colorScheme.primary else Color.White.copy(alpha = 0.3f),
+                        tint = if (listName.trim().isNotBlank()) MaterialTheme.colorScheme.primary else Color.White.copy(alpha = 0.3f),
                         modifier = Modifier
                             .size(24.dp)
-                            .pointerHoverIcon(if (listName.isNotBlank()) PointerIcon.Hand else PointerIcon.Default)
-                            .clickable(enabled = listName.isNotBlank()) { submitNewList() }
+                            .pointerHoverIcon(if (listName.trim().isNotBlank()) PointerIcon.Hand else PointerIcon.Default)
+                            .clickable(enabled = listName.trim().isNotBlank()) { submitNewList() }
                     )
                     Spacer(modifier = Modifier.width(8.dp))
 

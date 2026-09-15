@@ -72,7 +72,7 @@ class CustomListsSelectionScreen(
                 key = { it.id }
             ) { list ->
                 AvalonTvDrawerItem(
-                    title = list.name,
+                    title = list.name.ifBlank { "Список без названия" },
                     isSelected = list.isAdded,
                     onClick = { onAction(list.toggleAction) }
                 )
@@ -119,8 +119,9 @@ class CreateCustomListDrawerScreen(
         val keyboardController = LocalSoftwareKeyboardController.current
 
         val submitNewListTv = {
-            if (listNameTv.isNotBlank()) {
-                onAction(createTemplate.withParameter("listName", listNameTv))
+            val trimmed = listNameTv.trim()
+            if (trimmed.isNotBlank()) {
+                onAction(createTemplate.withParameter("listName", trimmed))
                 navigator.pop()
             }
         }
@@ -158,7 +159,7 @@ class CreateCustomListDrawerScreen(
                                 navigator.pop()
                                 true
                             } else if ((event.key == Key.DirectionCenter || event.key == Key.Enter) && event.type == KeyEventType.KeyDown) {
-                                if (listNameTv.isNotBlank()) {
+                                if (listNameTv.trim().isNotBlank()) {
                                     submitNewListTv()
                                     true
                                 } else {
@@ -172,7 +173,7 @@ class CreateCustomListDrawerScreen(
                 )
             }
 
-            if (listNameTv.isNotBlank()) {
+            if (listNameTv.trim().isNotBlank()) {
                 item(key = "submit_button") {
                     AvalonTvDrawerItem(
                         title = stringResource(Res.string.details_custom_list_create),

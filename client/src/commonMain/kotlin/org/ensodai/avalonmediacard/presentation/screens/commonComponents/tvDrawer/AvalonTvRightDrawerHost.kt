@@ -1,7 +1,9 @@
 package org.ensodai.avalonmediacard.presentation.screens.commonComponents.tvDrawer
 
 import androidx.compose.animation.*
+import androidx.compose.animation.core.FastOutSlowInEasing
 import androidx.compose.animation.core.MutableTransitionState
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
 import androidx.compose.foundation.focusGroup
 import androidx.compose.foundation.gestures.detectTapGestures
@@ -13,11 +15,14 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clipToBounds
+import androidx.compose.ui.draw.drawWithContent
 import androidx.compose.ui.focus.FocusDirection
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusProperties
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.focus.focusRestorer
+import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.key.*
 import androidx.compose.ui.input.pointer.pointerInput
@@ -25,6 +30,7 @@ import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.Dp
+import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Popup
@@ -131,7 +137,18 @@ fun AvalonTvRightDrawerHost(
                                 modifier = Modifier
                                     .fillMaxHeight()
                                     .width(drawerWidth)
-                                    .background(Color(0xFF141418))
+                                    .clipToBounds()
+                                    .background(Color(0xFF131317))
+                                    .drawWithContent {
+                                        drawContent()
+                                        // Четкая левая грань поверх контента шторки
+                                        drawLine(
+                                            color = Color.White.copy(alpha = 0.08f),
+                                            start = Offset(0f, 0f),
+                                            end = Offset(0f, size.height),
+                                            strokeWidth = 1.dp.toPx()
+                                        )
+                                    }
                                     .onKeyEvent { event ->
                                         if (event.type == KeyEventType.KeyUp) {
                                             if (event.key == Key.Back || event.key == Key.Escape) {
@@ -141,19 +158,21 @@ fun AvalonTvRightDrawerHost(
                                         }
                                         false
                                     }
-                                    .padding(start = 24.dp, top = 20.dp, end = 24.dp, bottom = 0.dp)
+                                    .padding(start = 20.dp, top = 22.dp, end = 20.dp, bottom = 0.dp)
                             ) {
                                 if (currentScreen != null) {
                                     AnimatedContent(
                                         targetState = currentScreen,
                                         transitionSpec = {
+                                            val animationSpec = tween<IntOffset>(durationMillis = 280, easing = FastOutSlowInEasing)
+                                            val fadeSpec = tween<Float>(durationMillis = 220)
                                             if (state.isMovingForward) {
-                                                (slideInHorizontally { width -> width / 2 } + fadeIn()) togetherWith
-                                                        (slideOutHorizontally { width -> -width / 2 } + fadeOut())
+                                                (slideInHorizontally(animationSpec = animationSpec) { width -> width / 3 } + fadeIn(animationSpec = fadeSpec)) togetherWith
+                                                        (slideOutHorizontally(animationSpec = animationSpec) { width -> -width / 3 } + fadeOut(animationSpec = fadeSpec))
                                             } else {
-                                                (slideInHorizontally { width -> -width / 2 } + fadeIn()) togetherWith
-                                                        (slideOutHorizontally { width -> width / 2 } + fadeOut())
-                                            }
+                                                (slideInHorizontally(animationSpec = animationSpec) { width -> -width / 3 } + fadeIn(animationSpec = fadeSpec)) togetherWith
+                                                        (slideOutHorizontally(animationSpec = animationSpec) { width -> width / 3 } + fadeOut(animationSpec = fadeSpec))
+                                            }.using(SizeTransform(clip = false))
                                         },
                                         contentKey = { it.key },
                                         label = "TvDrawerTransition"

@@ -4,6 +4,7 @@ import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.focusGroup
+import androidx.compose.ui.focus.focusRestorer
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.itemsIndexed
@@ -104,7 +105,9 @@ private fun MovieCarouselInternal(
     Column(
         modifier = modifier
             .fillMaxWidth()
+            .focusRestorer()
             .focusGroup()
+            .logFocus("MovieCarousel_${component.title}")
             .padding(vertical = 24.dp) // Даем больше воздуха сверху и снизу между каруселями
     ) {
         // === ЗАГОЛОВОК КАРУСЕЛИ ===

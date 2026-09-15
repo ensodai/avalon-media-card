@@ -9,7 +9,6 @@ import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.focusable
 import androidx.compose.foundation.interaction.MutableInteractionSource
-import androidx.compose.foundation.interaction.PressInteraction
 import androidx.compose.foundation.interaction.collectIsPressedAsState
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
@@ -27,7 +26,6 @@ import androidx.compose.ui.input.pointer.pointerHoverIcon
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.layout.onSizeChanged
 import androidx.compose.ui.platform.LocalDensity
-import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
@@ -50,7 +48,6 @@ fun Modifier.tvAndWebHoverEffect(
     onStateChange: ((isActive: Boolean) -> Unit)? = null
 ): Modifier = composed {
     val density = LocalDensity.current
-    val focusManager = LocalFocusManager.current
     val deviceTarget = LocalDeviceTarget.current
     var maxDimensionPx by remember { mutableStateOf(0f) }
 
@@ -65,25 +62,6 @@ fun Modifier.tvAndWebHoverEffect(
     val isActive = isHovered || isFocused
 
     val tvPressEvents = remember { MutableSharedFlow<Boolean>(extraBufferCapacity = 10) }
-
-    LaunchedEffect(interactionSource, deviceTarget) {
-        if (!deviceTarget.isTv) {
-            interactionSource.interactions.collect { interaction ->
-                when (interaction) {
-                    is PressInteraction.Cancel -> {
-                        if (!isHovered && isFocused) {
-                            focusManager.clearFocus()
-                        }
-                    }
-                    is PressInteraction.Release -> {
-                        if (!isHovered && isFocused) {
-                            focusManager.clearFocus()
-                        }
-                    }
-                }
-            }
-        }
-    }
 
     LaunchedEffect(Unit) {
         tvPressEvents.collectLatest { pressed ->
@@ -204,9 +182,6 @@ fun Modifier.tvAndWebHoverEffect(
                             isHovered = false
                             targetRotationX = 0f
                             targetRotationY = 0f
-                            if (!deviceTarget.isTv && !isItemPressed && isFocused && !tvPressed) {
-                                focusManager.clearFocus()
-                            }
                         }
                     }
                 }

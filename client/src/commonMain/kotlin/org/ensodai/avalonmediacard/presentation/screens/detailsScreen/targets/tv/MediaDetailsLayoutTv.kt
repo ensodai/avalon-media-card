@@ -24,6 +24,7 @@ import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusProperties
 import androidx.compose.ui.focus.focusRequester
+import androidx.compose.ui.focus.focusRestorer
 import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
@@ -48,10 +49,15 @@ import org.ensodai.avalonmediacard.presentation.screens.detailsScreen.component.
 import org.ensodai.avalonmediacard.presentation.screens.detailsScreen.component.titleSlot.TitleSlot
 import org.ensodai.avalonmediacard.presentation.screens.detailsScreen.targets.tv.components.TvTvSeasonsSection
 import org.ensodai.avalonmediacard.presentation.screens.detailsScreen.viewState.DetailsViewState
+import org.ensodai.avalonmediacard.contract.logging.AppLogging
+import org.ensodai.avalonmediacard.presentation.screens.commonComponents.logFocus
+
+private val logger = AppLogging.logger("MediaDetailsLayoutTv")
 
 @OptIn(ExperimentalFoundationApi::class, ExperimentalComposeUiApi::class)
 @Composable
 fun MediaDetailsLayoutTv(
+    modifier: Modifier = Modifier,
     state: DetailsViewState,
     onAction: (Action) -> Unit,
     onClosePlayer: (() -> Unit)? = null,
@@ -59,7 +65,6 @@ fun MediaDetailsLayoutTv(
     onCloseSources: (() -> Unit)? = null,
     onSelectSource: ((providerId: String, sourceId: String, seasonNumber: Int?, episodeNumber: Int?, onComplete: () -> Unit) -> Unit)? = null,
     onRefreshSources: (() -> Unit)? = null,
-    modifier: Modifier = Modifier
 ) {
     val isPlayerOpen = state.playerState !is DetailsViewState.PlayerState.Idle
     val scrollState = rememberScrollState()
@@ -67,9 +72,13 @@ fun MediaDetailsLayoutTv(
     val buttonsFocusRequester = remember { FocusRequester() }
     val focusZone = remember { mutableStateOf(TvFocusZone.HEADER) }
 
-    LaunchedEffect(isPlayerOpen) {
-        if (!isPlayerOpen) {
-            runCatching { buttonsFocusRequester.requestFocus() }
+    val hasButtons = state.playButtons?.state?.data != null || state.collectionButtons?.state?.data != null
+    LaunchedEffect(hasButtons, isPlayerOpen) {
+        logger.d { "🎬 [DETAILS] LaunchedEffect(hasButtons=$hasButtons, isPlayerOpen=$isPlayerOpen)" }
+        if (hasButtons && !isPlayerOpen) {
+            logger.d { "🎬 [DETAILS] Кнопки готовы! Запрашиваем buttonsFocusRequester.requestFocus()..." }
+            val res = runCatching { buttonsFocusRequester.requestFocus() }
+            logger.d { "🎬 [DETAILS] buttonsFocusRequester.requestFocus() результат: ${res.isSuccess}" }
         }
     }
 
@@ -205,8 +214,10 @@ fun MediaDetailsLayoutTv(
                         Row(
                             modifier = Modifier
                                 .focusRequester(buttonsFocusRequester)
+                                .focusRestorer()
                                 .focusGroup()
                                 .onFocusChanged { if (it.hasFocus) focusZone.value = TvFocusZone.HEADER }
+                                .logFocus("DetailsButtonsRow")
                                 .padding(start = 32.dp, bottom = 16.dp),
                             horizontalArrangement = Arrangement.spacedBy(12.dp),
                             verticalAlignment = Alignment.CenterVertically
@@ -228,6 +239,7 @@ fun MediaDetailsLayoutTv(
                                     isExpanded = state.isSourcesExpanded,
                                     mediaSourcesList = state.mediaSourcesList,
                                     torrentInspectorState = state.torrentInspector?.state,
+                                    callerFocusRequester = buttonsFocusRequester,
                                     onClose = { onCloseSources?.invoke() },
                                     onSelectSource = onSelectSource,
                                     onRefreshSources = onRefreshSources,

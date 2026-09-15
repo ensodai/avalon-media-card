@@ -18,15 +18,20 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.onPlaced
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import org.ensodai.avalonmediacard.presentation.screens.commonComponents.initialFocus
 import avalonmediacard.client.generated.resources.Res
 import avalonmediacard.client.generated.resources.episodes_notifications_filter_all
 import avalonmediacard.client.generated.resources.episodes_notifications_filter_recent
@@ -46,6 +51,7 @@ import org.jetbrains.compose.resources.stringResource
  */
 @Composable
 fun TvNotificationsHeader(
+    modifier: Modifier = Modifier,
     totalUnreadCount: Int,
     selectedFilter: EpisodeFilter,
     countAll: Int = 0,
@@ -54,7 +60,6 @@ fun TvNotificationsHeader(
     onFilterSelected: (EpisodeFilter) -> Unit,
     onMarkAllReadClicked: () -> Unit,
     firstTabFocusRequester: FocusRequester? = null,
-    modifier: Modifier = Modifier
 ) {
     Row(
         modifier = modifier.fillMaxWidth(),
@@ -96,7 +101,7 @@ fun TvNotificationsHeader(
                 count = countAll,
                 isSelected = selectedFilter == EpisodeFilter.ALL,
                 onClick = { onFilterSelected(EpisodeFilter.ALL) },
-                modifier = if (firstTabFocusRequester != null) Modifier.focusRequester(firstTabFocusRequester) else Modifier
+                modifier = Modifier.initialFocus(firstTabFocusRequester)
             )
             TvFilterTab(
                 label = stringResource(Res.string.episodes_notifications_filter_recent),

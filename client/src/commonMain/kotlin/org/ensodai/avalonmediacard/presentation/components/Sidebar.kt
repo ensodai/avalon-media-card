@@ -30,6 +30,7 @@ import org.ensodai.avalonmediacard.presentation.screens.commonComponents.AvalonD
 import org.ensodai.avalonmediacard.presentation.screens.commonComponents.AvalonDropdownMenuItem
 import org.ensodai.avalonmediacard.presentation.screens.commonComponents.TvDrawerEffect
 import org.ensodai.avalonmediacard.presentation.screens.commonComponents.AvalonTvDrawerItem
+import org.ensodai.avalonmediacard.presentation.screens.commonComponents.LocalContentFocusRequester
 import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.ui.draw.alpha
@@ -54,6 +55,7 @@ private val logger = AppLogging.logger("Sidebar")
 @OptIn(ExperimentalComposeUiApi::class)
 @Composable
 fun Sidebar(
+    modifier: Modifier = Modifier,
     sidebarItems: List<SidebarItem>,
     selectedItem: SidebarItem?,
     onSelected: (SidebarItem) -> Unit,
@@ -65,9 +67,8 @@ fun Sidebar(
     onSettingsClick: (() -> Unit)? = null,
     onIntegrationsClick: (() -> Unit)? = null,
     onAdminClick: (() -> Unit)? = null,
-    userRole: org.ensodai.avalonmediacard.contract.model.UserRole? = null,
+    userRole: UserRole? = null,
     onExpandedChange: (Boolean) -> Unit = {},
-    modifier: Modifier = Modifier
 ) {
     val outlineColor = MaterialTheme.colorScheme.outline
     var isProfileMenuExpanded by remember { mutableStateOf(false) }
@@ -86,8 +87,12 @@ fun Sidebar(
     val contentAlpha by animateFloatAsState(targetValue = if (isExpanded) 1f else 0f, label = "contentAlpha")
 
     val focusManager = LocalFocusManager.current
+    val contentFocusRequester = LocalContentFocusRequester.current
     AvalonBackHandler(enabled = isExpanded) {
-        focusManager.moveFocus(FocusDirection.Right)
+        val moved = focusManager.moveFocus(FocusDirection.Right)
+        if (!moved) {
+            runCatching { contentFocusRequester.requestFocus() }
+        }
         isHovered = false
     }
 
@@ -100,6 +105,8 @@ fun Sidebar(
                 hasFocus = it.hasFocus
                 if (it.hasFocus) {
                     logger.d { "[FOCUS_DEBUG] Sidebar GOT FOCUS! (isFocused=${it.isFocused})" }
+                } else {
+                    logger.d { "[FOCUS_DEBUG] Sidebar LOST FOCUS!" }
                 }
             }
             .pointerInput(Unit) {
@@ -376,6 +383,7 @@ fun SidebarMenuItem(
 
     val isTv = LocalDeviceTarget.current.isTv
     val focusManager = LocalFocusManager.current
+    val contentFocusRequester = LocalContentFocusRequester.current
     Box(
         modifier = modifier
             .fillMaxWidth()
@@ -385,7 +393,10 @@ fun SidebarMenuItem(
                 focusEnabled = !isTv || isExpanded || isSelected,
                 onClick = { 
                     onSelected(item)
-                    focusManager.moveFocus(FocusDirection.Right)
+                    val moved = focusManager.moveFocus(FocusDirection.Right)
+                    if (!moved) {
+                        runCatching { contentFocusRequester.requestFocus() }
+                    }
                 }
             )
             .clip(RoundedCornerShape(8.dp))

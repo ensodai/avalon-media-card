@@ -5,6 +5,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.key
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.focus.focusRestorer
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import com.composables.icons.lucide.Heart
@@ -21,13 +22,13 @@ fun CollectionButtonsSlotContent(
     onAction: (Action) -> Unit,
     modifier: Modifier = Modifier
 ) {
-    Row(modifier = modifier, horizontalArrangement = Arrangement.spacedBy(12.dp)) {
+    Row(modifier = modifier.focusRestorer(), horizontalArrangement = Arrangement.spacedBy(12.dp)) {
         if (isLoading) {
             SecondaryActionButton(icon = Lucide.Heart, tint = Color.Transparent, isLoading = true, onClick = {})
             SecondaryActionButton(icon = Lucide.Heart, tint = Color.Transparent, isLoading = true, onClick = {})
         } else {
-            data.buttons.forEach { btn ->
-                key(btn.icon?.name ?: btn.label) {
+            data.buttons.forEachIndexed { index, btn ->
+                key("collection_btn_$index") {
                     if (!btn.customLists.isNullOrEmpty() || btn.createListActionTemplate != null) {
                         CustomListDropdownButton(button = btn, onAction = onAction)
                     } else {

@@ -569,6 +569,7 @@ private fun SourceTab(
     count: Int,
     isSelected: Boolean,
     isTv: Boolean,
+    modifier: Modifier = Modifier,
     isLoading: Boolean = false,
     onClick: () -> Unit
 ) {
@@ -578,7 +579,7 @@ private fun SourceTab(
     val textColor = if (isSelected) MaterialTheme.colorScheme.onPrimary else Color.White
 
     Row(
-        modifier = Modifier
+        modifier = modifier
             .tvAndWebHoverEffect(scaleTarget = 1.05f, shape = RoundedCornerShape(24.dp), onClick = { onClick() })
             .clip(RoundedCornerShape(24.dp))
             .background(bgColor)
@@ -916,7 +917,8 @@ private fun TorrentSourceCard(
             .then(
                 if (!isDisabled && !isLoading) Modifier.tvAndWebHoverEffect(
                     scaleTarget = 1.02f,
-                    shape = RoundedCornerShape(12.dp)
+                    shape = RoundedCornerShape(12.dp),
+                    onClick = { onClick() }
                 )
                 else Modifier
             )

@@ -4,6 +4,7 @@ import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.unit.dp
 import avalonmediacard.client.generated.resources.*
 import com.composables.icons.lucide.Check
@@ -20,6 +21,7 @@ internal fun TvSeasonPickerDrawer(
     isOpen: Boolean,
     seasons: List<SeasonItem>,
     selectedSeasonNumber: Int,
+    callerFocusRequester: FocusRequester? = null,
     onDismiss: () -> Unit,
     onAction: (Action) -> Unit
 ) {
@@ -28,6 +30,7 @@ internal fun TvSeasonPickerDrawer(
     TvDrawerEffect(
         title = stringResource(Res.string.details_seasons_select_season_title),
         icon = Lucide.Film,
+        callerFocusRequester = callerFocusRequester,
         onDismiss = onDismiss
     ) {
         LazyColumn(

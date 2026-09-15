@@ -16,13 +16,14 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.unit.dp
 import org.ensodai.avalonmediacard.presentation.components.shimmerPlaceholder
 import org.ensodai.avalonmediacard.presentation.screens.commonComponents.tvAndWebHoverEffect
+import org.ensodai.avalonmediacard.presentation.screens.commonComponents.logFocus
 
 @Composable
 fun SecondaryActionButton(
+    modifier: Modifier = Modifier,
     icon: ImageVector,
     tint: Color = Color.White,
     isLoading: Boolean = false,
-    modifier: Modifier = Modifier,
     onClick: () -> Unit
 ) {
     Box(
@@ -39,6 +40,7 @@ fun SecondaryActionButton(
                 clickEnabled = !isLoading,
                 onClick = { onClick() }
             )
+            .logFocus("SecondaryActionButton")
             .background(if (isLoading) Color.Transparent else Color.White.copy(alpha = 0.08f), CircleShape),
         contentAlignment = Alignment.Center
     ) {

@@ -15,7 +15,6 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
-import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import org.ensodai.avalonmediacard.contract.model.EntityType
@@ -26,13 +25,15 @@ import org.ensodai.avalonmediacard.contract.slot.MovieCarouselItem
 import org.ensodai.avalonmediacard.contract.slot.SlotData
 import org.ensodai.avalonmediacard.presentation.components.MediaGridCard
 import org.ensodai.avalonmediacard.presentation.core.SlotUiState
+import org.ensodai.avalonmediacard.presentation.screens.commonComponents.initialFocus
 
 @Composable
 fun MediaGridSlot(
     state: SlotUiState<SlotData.Grid>,
     onAction: (Action) -> Unit,
     modifier: Modifier = Modifier,
-    expectedItemsCount: Int? = null
+    expectedItemsCount: Int? = null,
+    autoFocusFirstItem: Boolean = true
 ) {
     if (state.hasError && state.error != null) {
         org.ensodai.avalonmediacard.presentation.screens.commonComponents.SlotErrorCard(
@@ -50,7 +51,8 @@ fun MediaGridSlot(
         isLoading = state.isInitialLoading,
         onAction = onAction,
         modifier = modifier,
-        expectedItemsCount = expectedItemsCount
+        expectedItemsCount = expectedItemsCount,
+        autoFocusFirstItem = autoFocusFirstItem
     )
 }
 
@@ -60,18 +62,11 @@ private fun MediaGridSlotInternal(
     isLoading: Boolean,
     onAction: (Action) -> Unit,
     modifier: Modifier = Modifier,
-    expectedItemsCount: Int? = null
+    expectedItemsCount: Int? = null,
+    autoFocusFirstItem: Boolean = true
 ) {
     val gridState = rememberLazyGridState()
-    val firstItemFocusRequester = remember { FocusRequester() }
-    var hasRequestedFocus by remember { mutableStateOf(false) }
-
-    LaunchedEffect(component.items.isNotEmpty()) {
-        if (component.items.isNotEmpty() && !hasRequestedFocus) {
-            hasRequestedFocus = true
-            runCatching { firstItemFocusRequester.requestFocus() }
-        }
-    }
+    val firstItemRequester = remember { FocusRequester() }
 
     val loadMoreAction = if (isLoading) null else component.loadMoreAction
     if (loadMoreAction != null) {
@@ -126,7 +121,12 @@ private fun MediaGridSlotInternal(
                     isLoading = false,
                     index = index,
                     onAction = onAction,
-                    modifier = if (index == 0) Modifier.focusRequester(firstItemFocusRequester) else Modifier
+                    modifier = if (index == 0 && autoFocusFirstItem) {
+                        Modifier.initialFocus(
+                            focusRequester = firstItemRequester,
+                            enabled = true
+                        )
+                    } else Modifier
                 )
             }
         }

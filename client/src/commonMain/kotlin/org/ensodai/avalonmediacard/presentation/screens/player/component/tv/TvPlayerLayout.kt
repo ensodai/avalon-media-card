@@ -398,9 +398,6 @@ fun TvPlayerLayout(
                         icon = Lucide.Sparkles,
                         onDismiss = { currentDrawerMenu = TvDrawerMenu.MAIN }
                     ) {
-                        val focusRequester = remember { FocusRequester() }
-                        LaunchedEffect(Unit) { runCatching { focusRequester.requestFocus() } }
-
                         val activeQuality = state.currentQuality ?: state.qualityVariants.firstOrNull()?.label ?: "HD"
 
                         LazyColumn(
@@ -408,7 +405,6 @@ fun TvPlayerLayout(
                         ) {
                             item {
                                 AvalonTvDrawerItem(
-                                    modifier = Modifier.focusRequester(focusRequester),
                                     title = stringResource(Res.string.player_btn_back),
                                     icon = Lucide.ArrowLeft,
                                     onClick = { currentDrawerMenu = TvDrawerMenu.MAIN }
@@ -446,15 +442,12 @@ fun TvPlayerLayout(
                         onDismiss = { currentDrawerMenu = TvDrawerMenu.MAIN }
                     ) {
                         val tracks = if (controller.audioTracks.isNotEmpty()) controller.audioTracks else state.audioTracks
-                        val focusRequester = remember { FocusRequester() }
-                        LaunchedEffect(Unit) { runCatching { focusRequester.requestFocus() } }
 
                         LazyColumn(
                             contentPadding = PaddingValues(bottom = 24.dp)
                         ) {
                             item {
                                 AvalonTvDrawerItem(
-                                    modifier = Modifier.focusRequester(focusRequester),
                                     title = stringResource(Res.string.player_btn_back),
                                     icon = Lucide.ArrowLeft,
                                     onClick = { currentDrawerMenu = TvDrawerMenu.MAIN }
@@ -500,8 +493,6 @@ fun TvPlayerLayout(
                         onDismiss = { currentDrawerMenu = TvDrawerMenu.MAIN }
                     ) {
                         val subs = if (controller.subtitleTracks.isNotEmpty()) controller.subtitleTracks else state.subtitleTracks
-                        val focusRequester = remember { FocusRequester() }
-                        LaunchedEffect(Unit) { runCatching { focusRequester.requestFocus() } }
 
                         val currentSub = controller.selectedSubtitleTrack ?: state.selectedSubtitleTrack
 
@@ -510,7 +501,6 @@ fun TvPlayerLayout(
                         ) {
                             item {
                                 AvalonTvDrawerItem(
-                                    modifier = Modifier.focusRequester(focusRequester),
                                     title = stringResource(Res.string.player_btn_back),
                                     icon = Lucide.ArrowLeft,
                                     onClick = { currentDrawerMenu = TvDrawerMenu.MAIN }
@@ -549,15 +539,11 @@ fun TvPlayerLayout(
                         icon = Lucide.Play,
                         onDismiss = { currentDrawerMenu = TvDrawerMenu.MAIN }
                     ) {
-                        val focusRequester = remember { FocusRequester() }
-                        LaunchedEffect(Unit) { runCatching { focusRequester.requestFocus() } }
-
                         LazyColumn(
                             contentPadding = PaddingValues(bottom = 24.dp)
                         ) {
                             item {
                                 AvalonTvDrawerItem(
-                                    modifier = Modifier.focusRequester(focusRequester),
                                     title = stringResource(Res.string.player_btn_back),
                                     icon = Lucide.ArrowLeft,
                                     onClick = { currentDrawerMenu = TvDrawerMenu.MAIN }

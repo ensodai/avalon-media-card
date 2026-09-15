@@ -14,7 +14,6 @@ import androidx.compose.runtime.setValue
 import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
-import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -25,6 +24,7 @@ import org.ensodai.avalonmediacard.contract.model.MediaProvider
 import org.ensodai.avalonmediacard.contract.slot.Action
 import org.ensodai.avalonmediacard.contract.slot.MovieCarouselItem
 import org.ensodai.avalonmediacard.presentation.components.MediaGridCard
+import org.ensodai.avalonmediacard.presentation.screens.commonComponents.initialFocus
 import org.ensodai.avalonmediacard.presentation.screens.mediaScreen.viewState.MediaListViewState
 
 @Composable
@@ -36,14 +36,6 @@ fun MediaListContent(
     val grids = state.grids.mapNotNull { it.state.data }
     val gridState = rememberLazyGridState()
     val firstItemFocusRequester = remember { FocusRequester() }
-    var hasRequestedFocus by remember { mutableStateOf(false) }
-
-    LaunchedEffect(grids) {
-        if (grids.any { it.items.isNotEmpty() } && !hasRequestedFocus) {
-            hasRequestedFocus = true
-            runCatching { firstItemFocusRequester.requestFocus() }
-        }
-    }
 
     val isLoading = state.grids.isEmpty() || state.grids.any { it.state.isInitialLoading || it.state.isLoading }
 
@@ -113,7 +105,10 @@ fun MediaListContent(
                             item = item,
                             isLoading = false,
                             onAction = onAction,
-                            modifier = if (gridIndex == 0 && index == 0) Modifier.focusRequester(firstItemFocusRequester) else Modifier
+                            modifier = Modifier.initialFocus(
+                                focusRequester = firstItemFocusRequester,
+                                enabled = gridIndex == 0 && index == 0
+                            )
                         )
                     }
                 }

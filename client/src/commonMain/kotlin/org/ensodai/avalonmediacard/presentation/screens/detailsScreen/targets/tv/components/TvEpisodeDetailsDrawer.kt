@@ -16,6 +16,7 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.key.*
@@ -39,6 +40,7 @@ internal fun TvEpisodeDetailsDrawer(
     isOpen: Boolean,
     episode: EpisodeItem?,
     selectedSeasonNumber: Int,
+    callerFocusRequester: FocusRequester? = null,
     onDismiss: () -> Unit,
     onAction: (Action) -> Unit
 ) {
@@ -50,6 +52,7 @@ internal fun TvEpisodeDetailsDrawer(
         title = "${episode.episodeNumber}. ${episode.name}",
         subtitle = episode.airDate,
         icon = Lucide.Info,
+        callerFocusRequester = callerFocusRequester,
         onDismiss = onDismiss
     ) {
         val overviewScrollState = rememberScrollState()

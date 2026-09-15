@@ -45,6 +45,7 @@ fun SearchContent(
                     query = it
                     onSearchQueryChanged(it)
                 },
+                initialFocus = true,
                 placeholder = stringResource(Res.string.search_placeholder),
                 leadingIcon = {
                     Icon(
@@ -66,7 +67,8 @@ fun SearchContent(
                 MediaGridSlot(
                     state = gridUpdate.state,
                     onAction = onAction,
-                    modifier = Modifier.fillMaxSize()
+                    modifier = Modifier.fillMaxSize(),
+                    autoFocusFirstItem = false
                 )
             }
         }

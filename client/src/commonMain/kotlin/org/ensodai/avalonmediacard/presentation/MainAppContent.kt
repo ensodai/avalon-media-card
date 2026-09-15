@@ -9,6 +9,7 @@ import androidx.compose.runtime.saveable.rememberSaveableStateHolder
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusDirection
+import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusProperties
 import androidx.compose.ui.input.key.*
 import androidx.compose.ui.platform.LocalFocusManager
@@ -95,6 +96,8 @@ fun MainAppContent(
     val isSidebarExpandedState = remember { mutableStateOf(false) }
     val tvDrawerState = remember { TvDrawerState() }
     val tabNavControllers = remember { mutableMapOf<String, AvalonNavController<ScreenKey>>() }
+    val contentFocusRequester = remember { FocusRequester() }
+    val sidebarFocusRequester = remember { FocusRequester() }
 
     val deviceTarget = LocalDeviceTarget.current
 
@@ -110,7 +113,8 @@ fun MainAppContent(
                 Box(
                     modifier = Modifier
                         .fillMaxSize()
-                        .padding(start = 104.dp, top = 8.dp, end = 24.dp, bottom = 0.dp),
+                        .padding(start = 104.dp, top = 8.dp, end = 24.dp, bottom = 0.dp)
+                        .focusDomain(domainRequester = contentFocusRequester),
                     contentAlignment = Alignment.TopStart
                 ) {
                     val isSystemScreen =
@@ -335,6 +339,10 @@ fun MainAppContent(
                 }
 
                 Sidebar(
+                    modifier = Modifier.navigationDomain(
+                        sidebarRequester = sidebarFocusRequester,
+                        contentRequester = contentFocusRequester
+                    ),
                     sidebarItems = currentSidebarItems,
                     selectedItem = (activeTabState.value as? RootTab.Plugin)?.item,
                     onSelected = { item ->
@@ -384,7 +392,8 @@ fun MainAppContent(
 
     CompositionLocalProvider(
         LocalTvDrawerState provides tvDrawerState,
-        LocalRootOverlay provides rootOverlayState
+        LocalRootOverlay provides rootOverlayState,
+        LocalContentFocusRequester provides contentFocusRequester
     ) {
         Box(
             modifier = Modifier.fillMaxSize()
@@ -396,11 +405,7 @@ fun MainAppContent(
                 }
             }
 
-            if (deviceTarget.isTv) {
-                TvFocusManagerProvider {
-                    appContent()
-                }
-            } else {
+            TvFocusManagerProvider {
                 appContent()
             }
         }

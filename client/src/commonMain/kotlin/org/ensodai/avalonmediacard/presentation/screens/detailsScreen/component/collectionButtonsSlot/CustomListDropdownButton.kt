@@ -113,6 +113,7 @@ fun CustomListDropdownButton(
             org.ensodai.avalonmediacard.presentation.screens.commonComponents.TvDrawerEffect(
                 title = stringResource(Res.string.details_custom_lists),
                 icon = IconManager.getIcon(button.icon),
+                callerFocusRequester = buttonFocusRequester,
                 onDismiss = { currentTvMenu = ListDrawerMenu.NONE }
             ) {
                 LazyColumn(
@@ -146,6 +147,7 @@ fun CustomListDropdownButton(
                 org.ensodai.avalonmediacard.presentation.screens.commonComponents.TvDrawerEffect(
                     title = stringResource(Res.string.details_custom_list_creation),
                     icon = Lucide.Plus,
+                    callerFocusRequester = buttonFocusRequester,
                     onDismiss = { currentTvMenu = ListDrawerMenu.LISTS }
                 ) {
                     val inputFocusRequester = remember { FocusRequester() }

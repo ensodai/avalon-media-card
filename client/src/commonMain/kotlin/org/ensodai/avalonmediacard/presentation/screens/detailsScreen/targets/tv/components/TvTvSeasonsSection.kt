@@ -90,26 +90,6 @@ fun TvTvSeasonsSection(
     var drawerEpisodeId by remember { mutableStateOf<String?>(null) }
     val seasonButtonFocusRequester = remember { FocusRequester() }
     val bannerFocusRequester = remember { FocusRequester() }
-    var wasSeasonDrawerOpen by remember { mutableStateOf(false) }
-    var wasBannerDrawerOpen by remember { mutableStateOf(false) }
-
-    LaunchedEffect(isSeasonDrawerOpen) {
-        if (isSeasonDrawerOpen) {
-            wasSeasonDrawerOpen = true
-        } else if (wasSeasonDrawerOpen) {
-            wasSeasonDrawerOpen = false
-            runCatching { seasonButtonFocusRequester.requestFocus() }
-        }
-    }
-
-    LaunchedEffect(isEpisodeDescriptionDrawerOpen) {
-        if (isEpisodeDescriptionDrawerOpen) {
-            wasBannerDrawerOpen = true
-        } else if (wasBannerDrawerOpen) {
-            wasBannerDrawerOpen = false
-            runCatching { bannerFocusRequester.requestFocus() }
-        }
-    }
 
     // Modal dialog for episode options (play, toggle watch)
     var episodeMenuTarget by remember { mutableStateOf<EpisodeItem?>(null) }
@@ -228,6 +208,7 @@ fun TvTvSeasonsSection(
         isOpen = isSeasonDrawerOpen,
         seasons = component.seasons,
         selectedSeasonNumber = component.selectedSeasonNumber,
+        callerFocusRequester = seasonButtonFocusRequester,
         onDismiss = { isSeasonDrawerOpen = false },
         onAction = onAction
     )
@@ -244,6 +225,7 @@ fun TvTvSeasonsSection(
         isOpen = isEpisodeDescriptionDrawerOpen,
         episode = drawerEpisode,
         selectedSeasonNumber = component.selectedSeasonNumber,
+        callerFocusRequester = bannerFocusRequester,
         onDismiss = {
             isEpisodeDescriptionDrawerOpen = false
             drawerEpisodeId = null

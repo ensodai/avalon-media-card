@@ -24,13 +24,12 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.compose.ui.window.Dialog
-import androidx.compose.ui.window.DialogProperties
 import avalonmediacard.client.generated.resources.*
 import com.composables.icons.lucide.CheckCheck
 import com.composables.icons.lucide.Eye
@@ -41,10 +40,12 @@ import com.composables.icons.lucide.X
 import org.ensodai.avalonmediacard.contract.slot.EpisodeItem
 import org.ensodai.avalonmediacard.contract.slot.NewEpisodeCardItem
 import org.ensodai.avalonmediacard.presentation.components.ShimmerImage
+import org.ensodai.avalonmediacard.presentation.overlay.TvModalSurface
 import org.jetbrains.compose.resources.stringResource
 
 @Composable
 fun EpisodeDetailsDialog(
+    modifier: Modifier = Modifier,
     title: String,
     seasonNumber: Int?,
     episodeNumber: Int?,
@@ -57,30 +58,24 @@ fun EpisodeDetailsDialog(
     onPlay: (() -> Unit)?,
     onToggleWatch: (() -> Unit)?,
     onDismiss: () -> Unit,
-    modifier: Modifier = Modifier
+    callerFocusRequester: FocusRequester? = null,
+
 ) {
-    Dialog(
+    TvModalSurface(
+        isOpen = true,
         onDismissRequest = onDismiss,
-        properties = DialogProperties(usePlatformDefaultWidth = false)
+        callerFocusRequester = callerFocusRequester,
+        scrimColor = Color.Black.copy(alpha = 0.8f)
     ) {
         Box(
-            modifier = Modifier
-                .fillMaxSize()
-                .background(Color.Black.copy(alpha = 0.8f))
-                .clickable { onDismiss() }
-                .padding(24.dp),
-            contentAlignment = Alignment.Center
+            modifier = modifier
+                .widthIn(max = 640.dp)
+                .fillMaxWidth()
+                .clip(RoundedCornerShape(16.dp))
+                .background(Color(0xFF16161A))
+                .border(1.dp, Color.White.copy(alpha = 0.15f), RoundedCornerShape(16.dp))
+                .padding(24.dp)
         ) {
-            Box(
-                modifier = modifier
-                    .widthIn(max = 640.dp)
-                    .fillMaxWidth()
-                    .clip(RoundedCornerShape(16.dp))
-                    .background(Color(0xFF16161A))
-                    .border(1.dp, Color.White.copy(alpha = 0.15f), RoundedCornerShape(16.dp))
-                    .clickable(enabled = false) {}
-                    .padding(24.dp)
-            ) {
                 Column(
                     modifier = Modifier
                         .fillMaxWidth()
@@ -320,7 +315,6 @@ fun EpisodeDetailsDialog(
             }
         }
     }
-}
 
 @Composable
 fun EpisodeDetailsDialog(
@@ -329,6 +323,7 @@ fun EpisodeDetailsDialog(
     onDismiss: () -> Unit,
     onPlay: () -> Unit,
     onToggleWatch: () -> Unit,
+    callerFocusRequester: FocusRequester? = null,
     modifier: Modifier = Modifier
 ) = EpisodeDetailsDialog(
     title = episode.name,
@@ -343,6 +338,7 @@ fun EpisodeDetailsDialog(
     onPlay = onPlay,
     onToggleWatch = onToggleWatch,
     onDismiss = onDismiss,
+    callerFocusRequester = callerFocusRequester,
     modifier = modifier
 )
 
@@ -352,6 +348,7 @@ fun EpisodeDetailsDialog(
     onDismiss: () -> Unit,
     onPlay: (() -> Unit)?,
     onToggleWatch: (() -> Unit)?,
+    callerFocusRequester: FocusRequester? = null,
     modifier: Modifier = Modifier
 ) = EpisodeDetailsDialog(
     title = item.episodeTitle ?: item.showTitle,
@@ -366,5 +363,6 @@ fun EpisodeDetailsDialog(
     onPlay = onPlay,
     onToggleWatch = onToggleWatch,
     onDismiss = onDismiss,
+    callerFocusRequester = callerFocusRequester,
     modifier = modifier
 )

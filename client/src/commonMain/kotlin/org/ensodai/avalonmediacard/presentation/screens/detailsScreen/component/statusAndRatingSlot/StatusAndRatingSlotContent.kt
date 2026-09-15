@@ -11,6 +11,8 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.focus.FocusRequester
+import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.text.font.FontWeight
@@ -74,6 +76,7 @@ fun StatusDropdownButton(
     onAction: (Action) -> Unit
 ) {
     var expanded by remember { mutableStateOf(false) }
+    val buttonFocusRequester = remember { FocusRequester() }
     val currentStatusOption = DefaultStatusOptionList.find { it.status == component.currentStatus }
     val label = if (currentStatusOption != null) {
         stringResource(currentStatusOption.labelRes)
@@ -82,10 +85,16 @@ fun StatusDropdownButton(
     }
     val iconTint = if (currentStatusOption != null) MaterialTheme.colorScheme.primary else Color.White.copy(alpha = 0.7f)
 
+    fun safeDismiss() {
+        expanded = false
+        runCatching { buttonFocusRequester.requestFocus() }
+    }
+
     Box {
         // Сама кнопка
         Row(
             modifier = Modifier
+                .focusRequester(buttonFocusRequester)
                 .shimmerPlaceholder(isLoading, RoundedCornerShape(8.dp))
                 .tvAndWebHoverEffect(
                     scaleTarget = 1.04f,
@@ -128,7 +137,8 @@ fun StatusDropdownButton(
                 TvDrawerEffect(
                     title = stringResource(Res.string.details_status_my),
                     icon = Lucide.Eye,
-                    onDismiss = { expanded = false }
+                    callerFocusRequester = buttonFocusRequester,
+                    onDismiss = { safeDismiss() }
                 ) {
                     LazyColumn(
                         contentPadding = PaddingValues(bottom = 24.dp)
@@ -141,7 +151,7 @@ fun StatusDropdownButton(
                                 onClick = {
                                     val action = component.statusOptions[MediaStatus.NONE]
                                     if (action != null) onAction(action)
-                                    expanded = false
+                                    safeDismiss()
                                 }
                             )
                         }
@@ -153,7 +163,7 @@ fun StatusDropdownButton(
                                 onClick = {
                                     val action = component.statusOptions[option.status]
                                     if (action != null) onAction(action)
-                                    expanded = false
+                                    safeDismiss()
                                 }
                             )
                         }
@@ -165,7 +175,7 @@ fun StatusDropdownButton(
                     expanded = expanded,
                     alignment = Alignment.TopStart,
                     offset = IntOffset(0, with(density) { 40.dp.roundToPx() }),
-                    onDismissRequest = { expanded = false }
+                    onDismissRequest = { safeDismiss() }
                 ) {
                     DefaultStatusOptionList.forEach { option ->
                         val isSelected = component.currentStatus == option.status
@@ -181,7 +191,7 @@ fun StatusDropdownButton(
                                 if (action != null) {
                                     onAction(action)
                                 }
-                                expanded = false
+                                safeDismiss()
                             }
                         )
                     }
@@ -198,6 +208,7 @@ fun RatingDropdownButton(
     onAction: (Action) -> Unit
 ) {
     var expanded by remember { mutableStateOf(false) }
+    val buttonFocusRequester = remember { FocusRequester() }
     val currentRating = component.currentRating
     val label = if (currentRating != null) {
         stringResource(Res.string.details_rating_my, currentRating)
@@ -206,10 +217,16 @@ fun RatingDropdownButton(
     }
     val iconTint = if (currentRating != null) Color(0xFFFFC107) else Color.White.copy(alpha = 0.7f)
 
+    fun safeDismiss() {
+        expanded = false
+        runCatching { buttonFocusRequester.requestFocus() }
+    }
+
     Box {
         // Сама кнопка
         Row(
             modifier = Modifier
+                .focusRequester(buttonFocusRequester)
                 .shimmerPlaceholder(isLoading, RoundedCornerShape(8.dp))
                 .tvAndWebHoverEffect(
                     scaleTarget = 1.04f,
@@ -252,13 +269,14 @@ fun RatingDropdownButton(
                 TvEpisodeRatingPopup(
                     currentRating = currentRating,
                     maxRating = component.maxRating,
-                    onDismiss = { expanded = false },
+                    callerFocusRequester = buttonFocusRequester,
+                    onDismiss = { safeDismiss() },
                     onRate = { rating ->
                         val action = component.ratingOptions[rating]
                         if (action != null) {
                             onAction(action)
                         }
-                        expanded = false
+                        safeDismiss()
                     }
                 )
             } else {
@@ -268,13 +286,13 @@ fun RatingDropdownButton(
                     maxRating = component.maxRating,
                     alignment = Alignment.TopStart,
                     offset = IntOffset(0, with(density) { 40.dp.roundToPx() }),
-                    onDismiss = { expanded = false },
+                    onDismiss = { safeDismiss() },
                     onRate = { rating ->
                         val action = component.ratingOptions[rating]
                         if (action != null) {
                             onAction(action)
                         }
-                        expanded = false
+                        safeDismiss()
                     }
                 )
             }

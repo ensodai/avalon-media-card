@@ -34,6 +34,14 @@ sealed interface FeedItem {
     ) : FeedItem
 }
 
+fun FeedItem.isReadyForInteraction(): Boolean = when (this) {
+    is FeedItem.HeroBanner -> state.data != null
+    is FeedItem.Banner -> state.data != null
+    is FeedItem.Carousel -> (state.data != null && state.data.items.isNotEmpty()) || (state.hasError && state.error != null)
+    is FeedItem.Backdrops -> (state.data != null && state.data.items.isNotEmpty()) || (state.hasError && state.error != null)
+    is FeedItem.Exploration -> (state.data != null && state.data.items.isNotEmpty()) || (state.hasError && state.error != null)
+}
+
 data class DashboardViewState(
     override val loadingActions: Set<ServerAction> = emptySet(),
     val feedItems: List<FeedItem> = emptyList()

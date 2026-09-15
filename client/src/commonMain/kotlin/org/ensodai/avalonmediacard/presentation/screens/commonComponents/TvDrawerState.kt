@@ -1,6 +1,7 @@
 package org.ensodai.avalonmediacard.presentation.screens.commonComponents
 
 import androidx.compose.runtime.*
+import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.graphics.vector.ImageVector
 
 /**
@@ -15,12 +16,14 @@ class TvDrawerEntry(
     initialTitle: String,
     initialSubtitle: String?,
     initialIcon: ImageVector?,
+    initialCallerFocusRequester: FocusRequester?,
     initialOnDismiss: () -> Unit,
     initialContent: @Composable () -> Unit
 ) {
     var title by mutableStateOf(initialTitle)
     var subtitle by mutableStateOf(initialSubtitle)
     var icon by mutableStateOf(initialIcon)
+    var callerFocusRequester by mutableStateOf(initialCallerFocusRequester)
     var onDismiss by mutableStateOf(initialOnDismiss)
     var content by mutableStateOf(initialContent)
 }
@@ -51,6 +54,7 @@ class TvDrawerState {
         title: String,
         subtitle: String?,
         icon: ImageVector?,
+        callerFocusRequester: FocusRequester? = null,
         onDismiss: () -> Unit,
         content: @Composable () -> Unit
     ) {
@@ -59,10 +63,11 @@ class TvDrawerState {
             existing.title = title
             existing.subtitle = subtitle
             existing.icon = icon
+            existing.callerFocusRequester = callerFocusRequester
             existing.onDismiss = onDismiss
             existing.content = content
         } else {
-            entries = entries + TvDrawerEntry(id, title, subtitle, icon, onDismiss, content)
+            entries = entries + TvDrawerEntry(id, title, subtitle, icon, callerFocusRequester, onDismiss, content)
         }
     }
 
@@ -113,6 +118,7 @@ fun TvDrawerEffect(
     title: String,
     subtitle: String? = null,
     icon: ImageVector? = null,
+    callerFocusRequester: FocusRequester? = null,
     onDismiss: () -> Unit,
     content: @Composable () -> Unit
 ) {
@@ -129,6 +135,7 @@ fun TvDrawerEffect(
             title = title,
             subtitle = subtitle,
             icon = icon,
+            callerFocusRequester = callerFocusRequester,
             onDismiss = { currentOnDismiss() },
             content = { currentContent() }
         )
@@ -141,6 +148,7 @@ fun TvDrawerEffect(
             title = title,
             subtitle = subtitle,
             icon = icon,
+            callerFocusRequester = callerFocusRequester,
             onDismiss = { currentOnDismiss() },
             content = { currentContent() }
         )

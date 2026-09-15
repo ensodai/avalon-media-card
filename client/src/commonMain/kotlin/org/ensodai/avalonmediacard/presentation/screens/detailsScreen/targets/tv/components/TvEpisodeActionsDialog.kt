@@ -11,83 +11,77 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.compose.ui.window.Dialog
-import androidx.compose.ui.window.DialogProperties
 import avalonmediacard.client.generated.resources.*
 import com.composables.icons.lucide.*
 import org.ensodai.avalonmediacard.contract.slot.Action
 import org.ensodai.avalonmediacard.contract.slot.EpisodeItem
+import org.ensodai.avalonmediacard.presentation.overlay.TvModalSurface
 import org.ensodai.avalonmediacard.presentation.screens.commonComponents.tvAndWebHoverEffect
 import org.jetbrains.compose.resources.stringResource
 
 @Composable
 internal fun TvEpisodeActionsDialog(
     targetEpisode: EpisodeItem?,
+    callerFocusRequester: FocusRequester? = null,
     onDismiss: () -> Unit,
     onAction: (Action) -> Unit
 ) {
-    if (targetEpisode == null) return
-
-    Dialog(
+    TvModalSurface(
+        isOpen = targetEpisode != null,
         onDismissRequest = onDismiss,
-        properties = DialogProperties(usePlatformDefaultWidth = false)
+        callerFocusRequester = callerFocusRequester,
+        scrimColor = Color.Black.copy(alpha = 0.75f)
     ) {
-        Box(
+        if (targetEpisode == null) return@TvModalSurface
+
+        Column(
             modifier = Modifier
-                .fillMaxSize()
-                .background(Color.Black.copy(alpha = 0.75f))
-                .clickable(onClick = onDismiss),
-            contentAlignment = Alignment.Center
+                .width(380.dp)
+                .clip(RoundedCornerShape(16.dp))
+                .background(Color(0xFF141418))
+                .border(1.dp, Color.White.copy(alpha = 0.2f), RoundedCornerShape(16.dp))
+                .padding(24.dp),
+            verticalArrangement = Arrangement.spacedBy(12.dp)
         ) {
-            Column(
-                modifier = Modifier
-                    .width(380.dp)
-                    .clip(RoundedCornerShape(16.dp))
-                    .background(Color(0xFF141418))
-                    .border(1.dp, Color.White.copy(alpha = 0.2f), RoundedCornerShape(16.dp))
-                    .clickable(enabled = false) {}
-                    .padding(24.dp),
-                verticalArrangement = Arrangement.spacedBy(12.dp)
-            ) {
-                Text(
-                    text = "${targetEpisode.episodeNumber}. ${targetEpisode.name}",
-                    fontSize = 17.sp,
-                    fontWeight = FontWeight.Bold,
-                    color = Color.White,
-                    maxLines = 1,
-                    overflow = TextOverflow.Ellipsis
-                )
+            Text(
+                text = "${targetEpisode.episodeNumber}. ${targetEpisode.name}",
+                fontSize = 17.sp,
+                fontWeight = FontWeight.Bold,
+                color = Color.White,
+                maxLines = 1,
+                overflow = TextOverflow.Ellipsis
+            )
 
-                Spacer(modifier = Modifier.height(4.dp))
+            Spacer(modifier = Modifier.height(4.dp))
 
-                // 1. Play Action Button
-                TvActionItem(
-                    icon = Lucide.Play,
-                    label = stringResource(Res.string.details_episodes_play),
-                    iconTint = Color.White,
-                    onClick = {
-                        targetEpisode.playAction?.let(onAction)
-                        onDismiss()
-                    }
-                )
+            // 1. Play Action Button
+            TvActionItem(
+                icon = Lucide.Play,
+                label = stringResource(Res.string.details_episodes_play),
+                iconTint = Color.White,
+                onClick = {
+                    targetEpisode.playAction?.let(onAction)
+                    onDismiss()
+                }
+            )
 
-                // 2. Toggle Watch Action Button
-                TvActionItem(
-                    icon = if (targetEpisode.isWatched) Lucide.EyeOff else Lucide.CheckCheck,
-                    label = if (targetEpisode.isWatched) stringResource(Res.string.details_episodes_unmark_watched) else stringResource(Res.string.details_episodes_mark_watched),
-                    iconTint = if (targetEpisode.isWatched) Color.White.copy(alpha = 0.7f) else Color(0xFF4CAF50),
-                    onClick = {
-                        targetEpisode.toggleWatchedAction?.let(onAction)
-                        onDismiss()
-                    }
-                )
-            }
+            // 2. Toggle Watch Action Button
+            TvActionItem(
+                icon = if (targetEpisode.isWatched) Lucide.EyeOff else Lucide.CheckCheck,
+                label = if (targetEpisode.isWatched) stringResource(Res.string.details_episodes_unmark_watched) else stringResource(Res.string.details_episodes_mark_watched),
+                iconTint = if (targetEpisode.isWatched) Color.White.copy(alpha = 0.7f) else Color(0xFF4CAF50),
+                onClick = {
+                    targetEpisode.toggleWatchedAction?.let(onAction)
+                    onDismiss()
+                }
+            )
         }
     }
 }

@@ -44,6 +44,10 @@ import org.ensodai.avalonmediacard.presentation.core.SlotUiState
 import org.ensodai.avalonmediacard.presentation.screens.commonComponents.tvAndWebHoverEffect
 import org.jetbrains.compose.resources.stringResource
 import kotlin.time.Duration.Companion.milliseconds
+import org.ensodai.avalonmediacard.contract.logging.AppLogging
+import org.ensodai.avalonmediacard.presentation.screens.commonComponents.logFocus
+
+private val logger = AppLogging.logger("HeroBanner")
 
 @Composable
 fun HeroBannerWidget(
@@ -88,6 +92,7 @@ fun HeroBannerWidget(
             .clipToBounds()
             .onKeyEvent { event ->
                 if (event.type == KeyEventType.KeyDown) {
+                    logger.d { "⌨️ [HERO_KEY] key=${event.key}" }
                     when (event.key) {
                         Key.DirectionRight -> {
                             scope.launch { pagerState.animateScrollToPage(pagerState.currentPage + 1) }
@@ -105,6 +110,7 @@ fun HeroBannerWidget(
                     }
                 } else false
             }
+            .logFocus("HeroBannerWidget")
             .tvAndWebHoverEffect(
                 scaleTarget = 1.0f,
                 activeBorderWidth = 0.dp,

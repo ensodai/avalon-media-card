@@ -2237,7 +2237,6 @@ media-typer@0.3.0:
 
 "mediabunny@file:../../libs/mediabunny-local.tgz":
   version "1.38.1-f0.5"
-  uid "4c33690342703b2af0c0524883cb18d8c3691fde"
   resolved "file:../../libs/mediabunny-local.tgz#4c33690342703b2af0c0524883cb18d8c3691fde"
   dependencies:
     "@types/dom-mediacapture-transform" "^0.1.11"
@@ -2606,11 +2605,10 @@ pkijs@^3.3.3:
 
 "playsvideo@file:../../libs/playsvideo-0.4.7-f2.15.tgz":
   version "0.4.7-f2.15"
-  uid b06b306c367425361d6810e8b6b80f4fe3c2a09b
   resolved "file:../../libs/playsvideo-0.4.7-f2.15.tgz#b06b306c367425361d6810e8b6b80f4fe3c2a09b"
   dependencies:
     hls.js "^1.5.0"
-    mediabunny "file:../../../../../.cache/yarn/v6/.tmp/8213c0e6eabe340f9a7a9e4434ecf3c2/vendor/mediabunny-1.38.1-f0.5.tgz"
+    mediabunny "file:../../../../../.cache/yarn/v6/npm-playsvideo-0.4.7-f2.15-b06b306c367425361d6810e8b6b80f4fe3c2a09b/node_modules/playsvideo/vendor/mediabunny-1.38.1-f0.5.tgz"
 
 process-nextick-args@~2.0.0:
   version "2.0.1"

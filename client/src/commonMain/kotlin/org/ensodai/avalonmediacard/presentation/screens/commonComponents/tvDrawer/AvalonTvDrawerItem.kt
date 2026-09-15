@@ -1,4 +1,4 @@
-package org.ensodai.avalonmediacard.presentation.screens.commonComponents
+package org.ensodai.avalonmediacard.presentation.screens.commonComponents.tvDrawer
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
@@ -17,6 +17,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.composables.icons.lucide.Check
 import com.composables.icons.lucide.Lucide
+import org.ensodai.avalonmediacard.presentation.screens.commonComponents.tvAndWebHoverEffect
 
 /**
  * Типовая плашка (кнопка) списка внутри ТВ-шторки.

@@ -63,8 +63,8 @@ import kotlinx.coroutines.launch
 import org.ensodai.avalonmediacard.contract.slot.Action
 import org.ensodai.avalonmediacard.contract.slot.NewEpisodeCardItem
 import org.ensodai.avalonmediacard.contract.slot.RateEpisodeCommand
-import org.ensodai.avalonmediacard.presentation.screens.commonComponents.AvalonTvDrawerItem
-import org.ensodai.avalonmediacard.presentation.screens.commonComponents.TvDrawerEffect
+import org.ensodai.avalonmediacard.presentation.screens.commonComponents.tvDrawer.AvalonTvDrawerItem
+import org.ensodai.avalonmediacard.presentation.screens.commonComponents.tvDrawer.TvDrawerEffect
 import org.ensodai.avalonmediacard.presentation.screens.commonComponents.TvEpisodeRatingPopup
 import org.jetbrains.compose.resources.stringResource
 

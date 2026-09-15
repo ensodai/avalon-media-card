@@ -28,8 +28,8 @@ import org.ensodai.avalonmediacard.contract.model.UserRole
 import org.ensodai.avalonmediacard.data.selectAndUploadPlugin
 import org.ensodai.avalonmediacard.presentation.screens.commonComponents.AvalonDropdownMenu
 import org.ensodai.avalonmediacard.presentation.screens.commonComponents.AvalonDropdownMenuItem
-import org.ensodai.avalonmediacard.presentation.screens.commonComponents.TvDrawerEffect
-import org.ensodai.avalonmediacard.presentation.screens.commonComponents.AvalonTvDrawerItem
+import org.ensodai.avalonmediacard.presentation.screens.commonComponents.tvDrawer.TvDrawerEffect
+import org.ensodai.avalonmediacard.presentation.screens.commonComponents.tvDrawer.AvalonTvDrawerItem
 import org.ensodai.avalonmediacard.presentation.screens.commonComponents.LocalContentFocusRequester
 import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.animation.core.animateFloatAsState

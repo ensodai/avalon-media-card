@@ -35,8 +35,9 @@ import kotlinx.coroutines.delay
 import org.ensodai.avalonmediacard.contract.model.EntityType
 import org.ensodai.avalonmediacard.contract.plugins.MediaStream
 import org.ensodai.avalonmediacard.core.PlaybackController
-import org.ensodai.avalonmediacard.presentation.screens.commonComponents.AvalonTvDrawerItem
-import org.ensodai.avalonmediacard.presentation.screens.commonComponents.LocalTvDrawerState
+import org.ensodai.avalonmediacard.presentation.screens.commonComponents.tvDrawer.AvalonTvDrawerItem
+import org.ensodai.avalonmediacard.presentation.screens.commonComponents.tvDrawer.LocalTvDrawerState
+import org.ensodai.avalonmediacard.presentation.screens.commonComponents.tvDrawer.TvDrawerEffect
 import org.ensodai.avalonmediacard.presentation.screens.commonComponents.TvEpisodeRatingPopup
 import org.ensodai.avalonmediacard.presentation.screens.commonComponents.tvAndWebHoverEffect
 import org.ensodai.avalonmediacard.presentation.screens.player.action.PlayerActions
@@ -321,7 +322,7 @@ fun TvPlayerLayout(
             }
 
             if (currentDrawerMenu != TvDrawerMenu.NONE) {
-                org.ensodai.avalonmediacard.presentation.screens.commonComponents.TvDrawerEffect(
+                TvDrawerEffect(
                     title = stringResource(Res.string.player_settings_title),
                     icon = Lucide.Settings,
                     onDismiss = { currentDrawerMenu = TvDrawerMenu.NONE }
@@ -393,7 +394,7 @@ fun TvPlayerLayout(
                 }
 
                 if (currentDrawerMenu == TvDrawerMenu.QUALITY) {
-                    org.ensodai.avalonmediacard.presentation.screens.commonComponents.TvDrawerEffect(
+                    TvDrawerEffect(
                         title = stringResource(Res.string.player_quality),
                         icon = Lucide.Sparkles,
                         onDismiss = { currentDrawerMenu = TvDrawerMenu.MAIN }
@@ -436,7 +437,7 @@ fun TvPlayerLayout(
                 }
 
                 if (currentDrawerMenu == TvDrawerMenu.AUDIO) {
-                    org.ensodai.avalonmediacard.presentation.screens.commonComponents.TvDrawerEffect(
+                    TvDrawerEffect(
                         title = stringResource(Res.string.player_audio_select),
                         icon = Lucide.Languages,
                         onDismiss = { currentDrawerMenu = TvDrawerMenu.MAIN }
@@ -487,7 +488,7 @@ fun TvPlayerLayout(
                 }
 
                 if (currentDrawerMenu == TvDrawerMenu.SUBTITLES) {
-                    org.ensodai.avalonmediacard.presentation.screens.commonComponents.TvDrawerEffect(
+                    TvDrawerEffect(
                         title = stringResource(Res.string.player_subtitles_select),
                         icon = Lucide.Captions,
                         onDismiss = { currentDrawerMenu = TvDrawerMenu.MAIN }
@@ -534,7 +535,7 @@ fun TvPlayerLayout(
                 }
 
                 if (currentDrawerMenu == TvDrawerMenu.PLAYER) {
-                    org.ensodai.avalonmediacard.presentation.screens.commonComponents.TvDrawerEffect(
+                    TvDrawerEffect(
                         title = stringResource(Res.string.player_engine_select),
                         icon = Lucide.Play,
                         onDismiss = { currentDrawerMenu = TvDrawerMenu.MAIN }

@@ -1,4 +1,4 @@
-package org.ensodai.avalonmediacard.presentation.screens.commonComponents
+package org.ensodai.avalonmediacard.presentation.screens.commonComponents.tvDrawer
 
 import androidx.compose.animation.*
 import androidx.compose.animation.core.MutableTransitionState
@@ -21,6 +21,7 @@ import androidx.compose.ui.focus.focusRestorer
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.key.*
 import androidx.compose.ui.input.pointer.pointerInput
+import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.Dp
@@ -28,21 +29,24 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Popup
 import androidx.compose.ui.window.PopupProperties
+import kotlinx.coroutines.yield
 import org.ensodai.avalonmediacard.presentation.overlay.FullscreenPopupPositionProvider
+import org.ensodai.avalonmediacard.presentation.screens.commonComponents.LocalContentFocusRequester
+import org.ensodai.avalonmediacard.presentation.screens.commonComponents.TvFocusManagerProvider
 
 /**
  * Главный хост выезжающей правой ТВ-шторки. 
- * Должен располагаться на верхнем уровне экрана (например, в корне Box плеера).
+ * Располагается на верхнем уровне экрана (например, в корне [MainAppContent]).
  * 
- * Читает стейт из [LocalTvDrawerState]. При добавлении экранов (вложенных меню)
- * автоматически анимирует переход с помощью [AnimatedContent].
+ * Читает навигатор из [LocalTvDrawerNavigator]. При переходах между экранами в стеке
+ * автоматически анимирует переход с помощью [AnimatedContent] с учетом направления навигации.
  *
- * Обрабатывает нажатия кнопок Назад/Escape, пробрасывая их в `dismissCurrent()`.
+ * Обрабатывает нажатия кнопок Назад/Escape и D-Pad влево, пробрасывая их в `dismissCurrent()`.
  */
 @OptIn(ExperimentalComposeUiApi::class)
 @Composable
 fun AvalonTvRightDrawerHost(
-    state: TvDrawerState = LocalTvDrawerState.current,
+    state: TvDrawerNavigator = LocalTvDrawerNavigator.current,
     drawerWidth: Dp = 380.dp,
     content: @Composable () -> Unit
 ) {
@@ -54,19 +58,21 @@ fun AvalonTvRightDrawerHost(
     val contentFocusRequester = LocalContentFocusRequester.current
 
     fun safeDismiss() {
-        val caller = state.current?.callerFocusRequester ?: contentFocusRequester
+        val caller = state.callerFocusRequester
+            ?: state.currentScreen?.callerFocusRequester
+            ?: contentFocusRequester
         runCatching { caller.requestFocus() }
         state.dismissCurrent()
     }
 
     LaunchedEffect(state.isOpen) {
         if (!state.isOpen) {
-            val caller = state.current?.callerFocusRequester ?: contentFocusRequester
+            val caller = state.callerFocusRequester ?: contentFocusRequester
             runCatching { caller.requestFocus() }
         }
     }
 
-    val currentScreen = state.current
+    val currentScreen = state.currentScreen
     val drawerRootRequester = remember { FocusRequester() }
 
     Box(modifier = Modifier.fillMaxSize()) {
@@ -84,8 +90,6 @@ fun AvalonTvRightDrawerHost(
             ) {
                 TvFocusManagerProvider {
                     // Корневой контейнер Popup — изолированный фокусный домен.
-                    // focusRequester + focusProperties + focusGroup на КОРНЕ,
-                    // а не глубоко внутри AnimatedContent.
                     Box(
                         modifier = Modifier
                             .fillMaxSize()
@@ -93,11 +97,7 @@ fun AvalonTvRightDrawerHost(
                             .focusProperties {
                                 onExit = {
                                     if (requestedFocusDirection == FocusDirection.Left) {
-                                        // Нажатие «Влево» — закрываем шторку,
-                                        // возвращаем фокус вызвавшему элементу
-                                        val caller = state.current?.callerFocusRequester
-                                            ?: contentFocusRequester
-                                        runCatching { caller.requestFocus() }
+                                        // Нажатие «Влево» — переход назад в стеке или закрытие шторки
                                         state.dismissCurrent()
                                     }
                                     // Блокируем любой выход фокуса за пределы шторки
@@ -107,7 +107,6 @@ fun AvalonTvRightDrawerHost(
                             .focusGroup()
                     ) {
                         // Scrim (затемнение фона) — НЕ фокусируемый.
-                        // pointerInput вместо clickable: не создаёт focusable-ноду.
                         AnimatedVisibility(
                             visible = state.isOpen,
                             enter = fadeIn(),
@@ -148,15 +147,40 @@ fun AvalonTvRightDrawerHost(
                                     AnimatedContent(
                                         targetState = currentScreen,
                                         transitionSpec = {
-                                            (slideInHorizontally { width -> width / 2 } + fadeIn()) togetherWith
-                                                    (slideOutHorizontally { width -> -width / 2 } + fadeOut())
+                                            if (state.isMovingForward) {
+                                                (slideInHorizontally { width -> width / 2 } + fadeIn()) togetherWith
+                                                        (slideOutHorizontally { width -> -width / 2 } + fadeOut())
+                                            } else {
+                                                (slideInHorizontally { width -> -width / 2 } + fadeIn()) togetherWith
+                                                        (slideOutHorizontally { width -> width / 2 } + fadeOut())
+                                            }
                                         },
+                                        contentKey = { it.key },
                                         label = "TvDrawerTransition"
                                     ) { screen ->
+                                        val screenFocusRequester = remember(screen.key) { FocusRequester() }
+                                        val focusManager = LocalFocusManager.current
+
+                                        LaunchedEffect(screen.key) {
+                                            yield()
+                                            val target = screen.initialFocusRequester ?: screenFocusRequester
+                                            val isFocused = runCatching { target.requestFocus() }.isSuccess
+                                            if (!isFocused) {
+                                                runCatching { focusManager.moveFocus(FocusDirection.Enter) }
+                                            }
+                                        }
+
                                         Column(
                                             modifier = Modifier
                                                 .fillMaxSize()
-                                                .focusRestorer()
+                                                .focusRequester(screenFocusRequester)
+                                                .then(
+                                                    if (screen.initialFocusRequester != null) {
+                                                        Modifier.focusRestorer(screen.initialFocusRequester!!)
+                                                    } else {
+                                                        Modifier.focusRestorer()
+                                                    }
+                                                )
                                                 .focusGroup()
                                         ) {
                                             // Header шторки
@@ -207,23 +231,15 @@ fun AvalonTvRightDrawerHost(
 
                                             Spacer(modifier = Modifier.height(12.dp))
 
-                                            // Содержимое шторки
+                                            // Содержимое экрана
                                             Box(modifier = Modifier.weight(1f).fillMaxWidth()) {
-                                                screen.content()
+                                                screen.Content(navigator = state)
                                             }
                                         }
                                     }
                                 }
                             }
                         }
-                    }
-
-                    // Захват фокуса в шторку.
-                    // LaunchedEffect запускается ПОСЛЕ первого фрейма композиции,
-                    // когда Popup уже зарегистрировал свой FocusOwner в Wasm.
-                    // При смене экрана (currentScreen?.id) — перезахватывает фокус.
-                    LaunchedEffect(currentScreen?.id) {
-                        drawerRootRequester.requestFocus()
                     }
                 }
             }

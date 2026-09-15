@@ -35,9 +35,9 @@ import org.ensodai.avalonmediacard.data.LanguageDescriptor
 import org.ensodai.avalonmediacard.data.UiModeOverride
 import org.ensodai.avalonmediacard.presentation.screens.commonComponents.AvalonDropdownMenu
 import org.ensodai.avalonmediacard.presentation.screens.commonComponents.AvalonDropdownMenuItem
-import org.ensodai.avalonmediacard.presentation.screens.commonComponents.AvalonTvDrawerItem
+import org.ensodai.avalonmediacard.presentation.screens.commonComponents.tvDrawer.AvalonTvDrawerItem
 import org.ensodai.avalonmediacard.presentation.screens.commonComponents.LocalDeviceTarget
-import org.ensodai.avalonmediacard.presentation.screens.commonComponents.TvDrawerEffect
+import org.ensodai.avalonmediacard.presentation.screens.commonComponents.tvDrawer.TvDrawerEffect
 import org.ensodai.avalonmediacard.presentation.screens.commonComponents.tvAndWebHoverEffect
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.koinInject

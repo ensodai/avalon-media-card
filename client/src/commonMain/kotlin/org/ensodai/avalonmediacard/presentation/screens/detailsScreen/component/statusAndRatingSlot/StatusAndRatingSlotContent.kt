@@ -27,10 +27,10 @@ import org.ensodai.avalonmediacard.contract.slot.SlotData
 import org.ensodai.avalonmediacard.presentation.components.shimmerPlaceholder
 import org.ensodai.avalonmediacard.presentation.screens.commonComponents.AvalonDropdownMenu
 import org.ensodai.avalonmediacard.presentation.screens.commonComponents.AvalonDropdownMenuItem
-import org.ensodai.avalonmediacard.presentation.screens.commonComponents.AvalonTvDrawerItem
+import org.ensodai.avalonmediacard.presentation.screens.commonComponents.tvDrawer.AvalonTvDrawerItem
 import org.ensodai.avalonmediacard.presentation.screens.commonComponents.EpisodeRatingPopup
 import org.ensodai.avalonmediacard.presentation.screens.commonComponents.LocalDeviceTarget
-import org.ensodai.avalonmediacard.presentation.screens.commonComponents.TvDrawerEffect
+import org.ensodai.avalonmediacard.presentation.screens.commonComponents.tvDrawer.TvDrawerEffect
 import org.ensodai.avalonmediacard.presentation.screens.commonComponents.TvEpisodeRatingPopup
 import org.ensodai.avalonmediacard.presentation.screens.commonComponents.tvAndWebHoverEffect
 import org.jetbrains.compose.resources.StringResource

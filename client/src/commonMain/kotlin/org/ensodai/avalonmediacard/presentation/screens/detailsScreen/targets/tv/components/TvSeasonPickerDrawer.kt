@@ -12,8 +12,8 @@ import com.composables.icons.lucide.Film
 import com.composables.icons.lucide.Lucide
 import org.ensodai.avalonmediacard.contract.slot.Action
 import org.ensodai.avalonmediacard.contract.slot.SeasonItem
-import org.ensodai.avalonmediacard.presentation.screens.commonComponents.AvalonTvDrawerItem
-import org.ensodai.avalonmediacard.presentation.screens.commonComponents.TvDrawerEffect
+import org.ensodai.avalonmediacard.presentation.screens.commonComponents.tvDrawer.AvalonTvDrawerItem
+import org.ensodai.avalonmediacard.presentation.screens.commonComponents.tvDrawer.TvDrawerEffect
 import org.jetbrains.compose.resources.stringResource
 
 @Composable

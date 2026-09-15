@@ -44,8 +44,8 @@ import org.ensodai.avalonmediacard.core.PlaybackController
 import org.ensodai.avalonmediacard.core.PlaybackState
 import org.ensodai.avalonmediacard.presentation.screens.commonComponents.DeviceTarget
 import org.ensodai.avalonmediacard.presentation.screens.commonComponents.LocalDeviceTarget
-import org.ensodai.avalonmediacard.presentation.screens.commonComponents.LocalTvDrawerState
-import org.ensodai.avalonmediacard.presentation.screens.commonComponents.TvDrawerState
+import org.ensodai.avalonmediacard.presentation.screens.commonComponents.tvDrawer.LocalTvDrawerState
+import org.ensodai.avalonmediacard.presentation.screens.commonComponents.tvDrawer.TvDrawerState
 import org.ensodai.avalonmediacard.presentation.screens.player.action.PlayerActions
 import org.ensodai.avalonmediacard.presentation.screens.player.component.UnifiedVideoPlayer
 import org.ensodai.avalonmediacard.presentation.screens.player.component.tv.TvPlayerLayout

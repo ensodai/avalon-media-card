@@ -9,6 +9,8 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.focus.FocusRequester
+import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import avalonmediacard.client.generated.resources.*
@@ -38,7 +40,8 @@ fun TvPlayerTopBar(
     hasCustomAudioOrSubtitle: Boolean = false,
     currentEpisode: MediaStream? = null,
     onToggleEpisodeWatched: (() -> Unit)? = null,
-    onRateEpisode: (() -> Unit)? = null
+    onRateEpisode: (() -> Unit)? = null,
+    settingsFocusRequester: FocusRequester? = null
 ) {
     Row(
         modifier = modifier
@@ -105,7 +108,8 @@ fun TvPlayerTopBar(
                 icon = Lucide.Settings,
                 contentDescription = stringResource(Res.string.player_settings_title),
                 tint = if (hasCustomAudioOrSubtitle) Color(0xFF4CAF50) else Color.White,
-                onClick = onOpenSettings
+                onClick = onOpenSettings,
+                modifier = if (settingsFocusRequester != null) Modifier.focusRequester(settingsFocusRequester) else Modifier
             )
         }
     }

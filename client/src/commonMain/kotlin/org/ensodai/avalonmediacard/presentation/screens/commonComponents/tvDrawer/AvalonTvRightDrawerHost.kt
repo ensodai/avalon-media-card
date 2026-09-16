@@ -62,9 +62,21 @@ fun AvalonTvRightDrawerHost(
     val showPopup = drawerTransition.currentState || drawerTransition.targetState
 
     val contentFocusRequester = LocalContentFocusRequester.current
+    var activeCallerFocusRequester by remember { mutableStateOf<FocusRequester?>(null) }
+
+    LaunchedEffect(state.isOpen, state.callerFocusRequester, state.currentScreen) {
+        if (state.isOpen) {
+            val caller = state.callerFocusRequester
+                ?: state.currentScreen?.callerFocusRequester
+            if (caller != null) {
+                activeCallerFocusRequester = caller
+            }
+        }
+    }
 
     fun safeDismiss() {
-        val caller = state.callerFocusRequester
+        val caller = activeCallerFocusRequester
+            ?: state.callerFocusRequester
             ?: state.currentScreen?.callerFocusRequester
             ?: contentFocusRequester
         runCatching { caller.requestFocus() }
@@ -73,8 +85,17 @@ fun AvalonTvRightDrawerHost(
 
     LaunchedEffect(state.isOpen) {
         if (!state.isOpen) {
-            val caller = state.callerFocusRequester ?: contentFocusRequester
+            val caller = activeCallerFocusRequester ?: state.callerFocusRequester ?: contentFocusRequester
             runCatching { caller.requestFocus() }
+        }
+    }
+
+    LaunchedEffect(showPopup) {
+        if (!showPopup) {
+            yield()
+            val caller = activeCallerFocusRequester ?: state.callerFocusRequester ?: contentFocusRequester
+            runCatching { caller.requestFocus() }
+            activeCallerFocusRequester = null
         }
     }
 

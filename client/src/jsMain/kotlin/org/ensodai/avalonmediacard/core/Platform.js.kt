@@ -9,7 +9,6 @@ import androidx.compose.ui.graphics.BlendMode
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.layout.positionInWindow
-import androidx.compose.ui.platform.LocalDensity
 import kotlinx.browser.document
 import kotlinx.browser.window
 import kotlinx.coroutines.delay
@@ -21,6 +20,7 @@ import org.ensodai.avalonmediacard.core.player.CommonPlaybackController
 import org.ensodai.avalonmediacard.presentation.screens.player.action.PlayerActions
 import org.ensodai.avalonmediacard.presentation.screens.player.component.UnifiedVideoPlayer
 import org.ensodai.avalonmediacard.presentation.screens.player.viewState.PlayerViewState
+import org.w3c.dom.HTMLCanvasElement
 import org.w3c.dom.HTMLVideoElement
 import web.navigator.navigator
 import kotlin.js.json
@@ -108,7 +108,6 @@ fun VideoUnderlay(
     element: org.w3c.dom.HTMLElement,
     modifier: Modifier = Modifier
 ) {
-    val density = LocalDensity.current
     var xOffset by remember { mutableStateOf(0f) }
     var yOffset by remember { mutableStateOf(0f) }
     var width by remember { mutableStateOf(0f) }
@@ -125,17 +124,37 @@ fun VideoUnderlay(
                 width = size.width.toFloat()
                 height = size.height.toFloat()
 
-                with(density) {
-                    val cssLeft = "${xOffset / density.density}px"
-                    val cssTop = "${yOffset / density.density}px"
-                    val cssWidth = "${width / density.density}px"
-                    val cssHeight = "${height / density.density}px"
+                val canvas = document.querySelector("canvas") as? HTMLCanvasElement
+                val rect = canvas?.getBoundingClientRect()
+                val canvasClientW = rect?.width ?: canvas?.clientWidth?.toDouble() ?: 0.0
+                val canvasClientH = rect?.height ?: canvas?.clientHeight?.toDouble() ?: 0.0
 
-                    element.setAttribute(
-                        "style",
-                        "position: absolute; left: $cssLeft; top: $cssTop; width: $cssWidth; height: $cssHeight; z-index: 0; border-radius: 12px;"
-                    )
+                val scaleX = if (canvas != null && canvas.width > 0 && canvasClientW > 0.0) {
+                    canvasClientW / canvas.width.toDouble()
+                } else {
+                    val dpr = window.devicePixelRatio.takeIf { it > 0.0 } ?: 1.0
+                    1.0 / dpr
                 }
+
+                val scaleY = if (canvas != null && canvas.height > 0 && canvasClientH > 0.0) {
+                    canvasClientH / canvas.height.toDouble()
+                } else {
+                    val dpr = window.devicePixelRatio.takeIf { it > 0.0 } ?: 1.0
+                    1.0 / dpr
+                }
+
+                val canvasLeft = rect?.left ?: 0.0
+                val canvasTop = rect?.top ?: 0.0
+
+                val cssLeft = "${canvasLeft + (xOffset * scaleX)}px"
+                val cssTop = "${canvasTop + (yOffset * scaleY)}px"
+                val cssWidth = "${width * scaleX}px"
+                val cssHeight = "${height * scaleY}px"
+
+                element.setAttribute(
+                    "style",
+                    "position: absolute; left: $cssLeft; top: $cssTop; width: $cssWidth; height: $cssHeight; z-index: 0; border-radius: 12px;"
+                )
             }
             .drawBehind {
                 drawRect(

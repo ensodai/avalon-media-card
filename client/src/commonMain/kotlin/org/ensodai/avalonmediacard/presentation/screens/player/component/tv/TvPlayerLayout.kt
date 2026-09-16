@@ -9,8 +9,6 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.focusGroup
 import androidx.compose.foundation.gestures.detectVerticalDragGestures
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Icon
@@ -35,16 +33,13 @@ import kotlinx.coroutines.delay
 import org.ensodai.avalonmediacard.contract.model.EntityType
 import org.ensodai.avalonmediacard.contract.plugins.MediaStream
 import org.ensodai.avalonmediacard.core.PlaybackController
-import org.ensodai.avalonmediacard.presentation.screens.commonComponents.tvDrawer.AvalonTvDrawerItem
 import org.ensodai.avalonmediacard.presentation.screens.commonComponents.tvDrawer.LocalTvDrawerState
-import org.ensodai.avalonmediacard.presentation.screens.commonComponents.tvDrawer.TvDrawerEffect
 import org.ensodai.avalonmediacard.presentation.screens.commonComponents.TvEpisodeRatingPopup
 import org.ensodai.avalonmediacard.presentation.screens.commonComponents.tvAndWebHoverEffect
 import org.ensodai.avalonmediacard.presentation.screens.player.action.PlayerActions
 import org.ensodai.avalonmediacard.presentation.screens.player.component.PlayerCenterOverlays
 import org.ensodai.avalonmediacard.presentation.screens.player.component.PremiumSeekBar
 import org.ensodai.avalonmediacard.presentation.screens.player.component.pc.formatTime
-import org.ensodai.avalonmediacard.presentation.screens.player.model.PlayerEngine
 import org.ensodai.avalonmediacard.presentation.screens.player.viewState.PlayerViewState
 import avalonmediacard.client.generated.resources.*
 import org.jetbrains.compose.resources.stringResource
@@ -62,8 +57,6 @@ enum class TvShelfState {
 /**
  * Специализированная верстка плеера под ТВ-таргет (D-Pad и выезжающие ТВ-шторки).
  */
-private enum class TvDrawerMenu { NONE, MAIN, QUALITY, AUDIO, SUBTITLES, PLAYER }
-
 @Composable
 fun TvPlayerLayout(
     state: PlayerViewState,
@@ -76,10 +69,7 @@ fun TvPlayerLayout(
     var isUiVisible by remember { mutableStateOf(true) }
     var shelfState by remember { mutableStateOf(TvShelfState.COLLAPSED) }
     val isShelfExpanded = shelfState == TvShelfState.EXPANDED
-    var currentDrawerMenu by remember { mutableStateOf(TvDrawerMenu.NONE) }
     var showRatingPopup by remember { mutableStateOf(false) }
-    
-    val currentEngine = state.defaultPlayerEngine
 
     var shelfHeightPx by remember { mutableIntStateOf(0) }
     val density = LocalDensity.current
@@ -97,6 +87,7 @@ fun TvPlayerLayout(
     )
 
     val playPauseFocusRequester = remember { FocusRequester() }
+    val settingsButtonFocusRequester = remember { FocusRequester() }
     val mainInputFocusRequester = remember { FocusRequester() }
     var lastInteractionTrigger by remember { mutableLongStateOf(0L) }
 
@@ -110,6 +101,13 @@ fun TvPlayerLayout(
         if (isUiVisible && controller.state.isPlaying && !tvDrawerState.isOpen && !isShelfExpanded) {
             delay(5000.milliseconds)
             isUiVisible = false
+        }
+    }
+
+    // При закрытии ТВ-шторки пробуждаем интерфейс плеера, чтобы фокус вернулся на активную кнопку
+    LaunchedEffect(tvDrawerState.isOpen) {
+        if (!tvDrawerState.isOpen) {
+            wakeUpUi()
         }
     }
 
@@ -185,15 +183,29 @@ fun TvPlayerLayout(
             ) {
                 val titleData = state.displayTitleData
                 val currentEpisode = state.currentEpisode
+                val settingsTitle = stringResource(Res.string.player_settings_title)
                 TvPlayerTopBar(
                     topText = titleData.topText,
                     bottomText = titleData.bottomText,
                     onClose = { actions.onCloseClicked() },
-                    onOpenSettings = { currentDrawerMenu = TvDrawerMenu.MAIN },
+                    onOpenSettings = {
+                        wakeUpUi()
+                        tvDrawerState.open(
+                            screen = PlayerSettingsDrawerScreen(
+                                title = settingsTitle,
+                                callerFocusRequester = settingsButtonFocusRequester,
+                                state = state,
+                                controller = controller,
+                                actions = actions
+                            ),
+                            caller = settingsButtonFocusRequester
+                        )
+                    },
                     hasCustomAudioOrSubtitle = controller.selectedAudioTrack != null || controller.selectedSubtitleTrack != null,
                     currentEpisode = currentEpisode,
                     onToggleEpisodeWatched = currentEpisode?.let { ep -> { actions.onToggleEpisodeWatched(ep) } },
-                    onRateEpisode = { showRatingPopup = true }
+                    onRateEpisode = { showRatingPopup = true },
+                    settingsFocusRequester = settingsButtonFocusRequester
                 )
             }
 
@@ -321,261 +333,6 @@ fun TvPlayerLayout(
             }
             }
 
-            if (currentDrawerMenu != TvDrawerMenu.NONE) {
-                TvDrawerEffect(
-                    title = stringResource(Res.string.player_settings_title),
-                    icon = Lucide.Settings,
-                    onDismiss = { currentDrawerMenu = TvDrawerMenu.NONE }
-                ) {
-                    val focusRequester = remember { FocusRequester() }
-                    LaunchedEffect(currentDrawerMenu) { 
-                        if (currentDrawerMenu == TvDrawerMenu.MAIN) {
-                            runCatching { focusRequester.requestFocus() } 
-                        }
-                    }
-
-                    val autoQuality = stringResource(Res.string.player_quality_auto)
-                    val defaultAudio = stringResource(Res.string.player_audio_default)
-                    val subtitlesOff = stringResource(Res.string.player_subtitles_off)
-
-                    LazyColumn(
-                        contentPadding = PaddingValues(bottom = 24.dp)
-                    ) {
-                        if (state.qualityVariants.isNotEmpty()) {
-                            item {
-                                AvalonTvDrawerItem(
-                                    modifier = Modifier.focusRequester(focusRequester),
-                                    title = stringResource(Res.string.player_quality),
-                                    subtitle = state.currentQuality ?: state.qualityVariants.firstOrNull()?.label ?: autoQuality,
-                                    icon = Lucide.Sparkles,
-                                    onClick = { currentDrawerMenu = TvDrawerMenu.QUALITY }
-                                )
-                            }
-                        }
-                        item {
-                            AvalonTvDrawerItem(
-                                modifier = if (state.qualityVariants.isEmpty()) Modifier.focusRequester(focusRequester) else Modifier,
-                                title = stringResource(Res.string.player_audio_tracks),
-                                subtitle = controller.selectedAudioTrack?.name ?: defaultAudio,
-                                icon = Lucide.Languages,
-                                onClick = { currentDrawerMenu = TvDrawerMenu.AUDIO }
-                            )
-                        }
-                        item {
-                            AvalonTvDrawerItem(
-                                title = stringResource(Res.string.player_subtitles),
-                                subtitle = controller.selectedSubtitleTrack?.name ?: subtitlesOff,
-                                icon = Lucide.Captions,
-                                onClick = { currentDrawerMenu = TvDrawerMenu.SUBTITLES }
-                            )
-                        }
-                        item {
-                            AvalonTvDrawerItem(
-                                title = stringResource(Res.string.player_engine_select),
-                                subtitle = when (currentEngine) {
-                                    PlayerEngine.MEDIA3 -> stringResource(Res.string.player_engine_media3_title)
-                                    PlayerEngine.MPV -> stringResource(Res.string.player_engine_mpv_title)
-                                },
-                                icon = Lucide.Play,
-                                onClick = { currentDrawerMenu = TvDrawerMenu.PLAYER }
-                            )
-                        }
-                        item {
-                            AvalonTvDrawerItem(
-                                title = stringResource(Res.string.player_btn_select_other_source),
-                                icon = Lucide.RefreshCcw,
-                                onClick = {
-                                    currentDrawerMenu = TvDrawerMenu.NONE
-                                    actions.onRequestOtherSource()
-                                }
-                            )
-                        }
-                    }
-                }
-
-                if (currentDrawerMenu == TvDrawerMenu.QUALITY) {
-                    TvDrawerEffect(
-                        title = stringResource(Res.string.player_quality),
-                        icon = Lucide.Sparkles,
-                        onDismiss = { currentDrawerMenu = TvDrawerMenu.MAIN }
-                    ) {
-                        val activeQuality = state.currentQuality ?: state.qualityVariants.firstOrNull()?.label ?: "HD"
-
-                        LazyColumn(
-                            contentPadding = PaddingValues(bottom = 24.dp)
-                        ) {
-                            item {
-                                AvalonTvDrawerItem(
-                                    title = stringResource(Res.string.player_btn_back),
-                                    icon = Lucide.ArrowLeft,
-                                    onClick = { currentDrawerMenu = TvDrawerMenu.MAIN }
-                                )
-                            }
-                            items(state.qualityVariants) { variant ->
-                                val isSelected = variant.url == state.currentStreamUrl || variant.label == activeQuality
-                                val desc = when (variant.label.lowercase()) {
-                                    "1080p", "fhd" -> "Full High Definition"
-                                    "720p", "hd" -> "High Definition"
-                                    "480p", "sd" -> "Standard Definition"
-                                    "4k", "2160p" -> "Ultra High Definition"
-                                    else -> null
-                                }
-                                AvalonTvDrawerItem(
-                                    title = variant.label,
-                                    subtitle = desc,
-                                    isSelected = isSelected,
-                                    onClick = {
-                                        if (!isSelected) {
-                                            actions.onQualitySelected(variant)
-                                        }
-                                        currentDrawerMenu = TvDrawerMenu.NONE
-                                    }
-                                )
-                            }
-                        }
-                    }
-                }
-
-                if (currentDrawerMenu == TvDrawerMenu.AUDIO) {
-                    TvDrawerEffect(
-                        title = stringResource(Res.string.player_audio_select),
-                        icon = Lucide.Languages,
-                        onDismiss = { currentDrawerMenu = TvDrawerMenu.MAIN }
-                    ) {
-                        val tracks = if (controller.audioTracks.isNotEmpty()) controller.audioTracks else state.audioTracks
-
-                        LazyColumn(
-                            contentPadding = PaddingValues(bottom = 24.dp)
-                        ) {
-                            item {
-                                AvalonTvDrawerItem(
-                                    title = stringResource(Res.string.player_btn_back),
-                                    icon = Lucide.ArrowLeft,
-                                    onClick = { currentDrawerMenu = TvDrawerMenu.MAIN }
-                                )
-                            }
-                            if (tracks.isEmpty()) {
-                                item {
-                                    Text(
-                                        text = stringResource(Res.string.player_audio_empty),
-                                        color = Color.White.copy(alpha = 0.6f),
-                                        modifier = Modifier.padding(16.dp)
-                                    )
-                                }
-                            } else {
-                                items(tracks) { track ->
-                                    val currentSelected = controller.selectedAudioTrack
-                                    val isSelected = if (currentSelected != null) {
-                                        track.id == currentSelected.id
-                                    } else if (state.selectedAudioTrackIndex != null) {
-                                        track.id == state.selectedAudioTrackIndex.toString()
-                                    } else {
-                                        track.isDefault
-                                    }
-                                    AvalonTvDrawerItem(
-                                        title = track.name,
-                                        isSelected = isSelected,
-                                        onClick = {
-                                            controller.selectAudioTrack(track)
-                                            actions.onAudioTrackSelected(track)
-                                            currentDrawerMenu = TvDrawerMenu.NONE
-                                        }
-                                    )
-                                }
-                            }
-                        }
-                    }
-                }
-
-                if (currentDrawerMenu == TvDrawerMenu.SUBTITLES) {
-                    TvDrawerEffect(
-                        title = stringResource(Res.string.player_subtitles_select),
-                        icon = Lucide.Captions,
-                        onDismiss = { currentDrawerMenu = TvDrawerMenu.MAIN }
-                    ) {
-                        val subs = if (controller.subtitleTracks.isNotEmpty()) controller.subtitleTracks else state.subtitleTracks
-
-                        val currentSub = controller.selectedSubtitleTrack ?: state.selectedSubtitleTrack
-
-                        LazyColumn(
-                            contentPadding = PaddingValues(bottom = 24.dp)
-                        ) {
-                            item {
-                                AvalonTvDrawerItem(
-                                    title = stringResource(Res.string.player_btn_back),
-                                    icon = Lucide.ArrowLeft,
-                                    onClick = { currentDrawerMenu = TvDrawerMenu.MAIN }
-                                )
-                            }
-                            item {
-                                AvalonTvDrawerItem(
-                                    title = stringResource(Res.string.player_subtitles_off),
-                                    isSelected = currentSub == null,
-                                    onClick = {
-                                        controller.selectSubtitleTrack(null)
-                                        actions.onSubtitleTrackSelected(null)
-                                        currentDrawerMenu = TvDrawerMenu.NONE
-                                    }
-                                )
-                            }
-                            items(subs) { sub ->
-                                val isSelected = currentSub?.id == sub.id
-                                AvalonTvDrawerItem(
-                                    title = sub.name,
-                                    isSelected = isSelected,
-                                    onClick = {
-                                        controller.selectSubtitleTrack(sub)
-                                        actions.onSubtitleTrackSelected(sub)
-                                        currentDrawerMenu = TvDrawerMenu.NONE
-                                    }
-                                )
-                            }
-                        }
-                    }
-                }
-
-                if (currentDrawerMenu == TvDrawerMenu.PLAYER) {
-                    TvDrawerEffect(
-                        title = stringResource(Res.string.player_engine_select),
-                        icon = Lucide.Play,
-                        onDismiss = { currentDrawerMenu = TvDrawerMenu.MAIN }
-                    ) {
-                        LazyColumn(
-                            contentPadding = PaddingValues(bottom = 24.dp)
-                        ) {
-                            item {
-                                AvalonTvDrawerItem(
-                                    title = stringResource(Res.string.player_btn_back),
-                                    icon = Lucide.ArrowLeft,
-                                    onClick = { currentDrawerMenu = TvDrawerMenu.MAIN }
-                                )
-                            }
-                            item {
-                                AvalonTvDrawerItem(
-                                    title = stringResource(Res.string.player_engine_media3_title),
-                                    subtitle = stringResource(Res.string.player_engine_media3_desc),
-                                    isSelected = currentEngine == PlayerEngine.MEDIA3,
-                                    onClick = {
-                                        actions.onChangeDefaultPlayer(PlayerEngine.MEDIA3)
-                                        currentDrawerMenu = TvDrawerMenu.NONE
-                                    }
-                                )
-                            }
-                            item {
-                                AvalonTvDrawerItem(
-                                    title = stringResource(Res.string.player_engine_mpv_title),
-                                    subtitle = stringResource(Res.string.player_engine_mpv_desc),
-                                    isSelected = currentEngine == PlayerEngine.MPV,
-                                    onClick = {
-                                        actions.onChangeDefaultPlayer(PlayerEngine.MPV)
-                                        currentDrawerMenu = TvDrawerMenu.NONE
-                                    }
-                                )
-                            }
-                        }
-                    }
-                }
-            }
 
             // 6. ТВ-попап оценки звездами
             val currentEpisode = state.currentEpisode

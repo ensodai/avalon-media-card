@@ -12,8 +12,8 @@ import org.ensodai.avalonmediacard.contract.plugins.PluginContext
 class MyTestPlugin : AvalonPlugin {
     override val id: String = "org.ensodai.testplugin"
     override val name: String = "Тестовый Плагин"
-    override val version: String = "1.0.0"
-    override val author: String = "Antigravity"
+    override val version: String = "1.1.0"
+    override val author: String = "Avalon Media Card"
 
     override fun onInitialize(context: PluginContext) {
         val logger = context.logger

@@ -34,8 +34,8 @@ data class CommentsState(
 class TraktMetadataPlugin : AvalonPlugin {
     override val id: String = "org.ensodai.traktmetadata"
     override val name: String = "Интеграция метаданных Trakt"
-    override val version: String = "1.0.0"
-    override val author: String = "Antigravity"
+    override val version: String = "1.1.0"
+    override val author: String = "Avalon Media Card"
 
     private val commentsStateMap = java.util.concurrent.ConcurrentHashMap<MediaKey, MutableStateFlow<CommentsState>>()
     private fun getCommentsState(key: MediaKey): kotlinx.coroutines.flow.MutableStateFlow<CommentsState> {

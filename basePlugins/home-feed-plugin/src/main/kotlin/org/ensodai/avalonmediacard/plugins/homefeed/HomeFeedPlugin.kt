@@ -47,8 +47,8 @@ sealed interface FeedSectionState {
 class HomeFeedPlugin : AvalonPlugin {
     override val id: String = "org.ensodai.homefeed"
     override val name: String = "Главный экран и Оркестрация"
-    override val version: String = "2.0.0"
-    override val author: String = "Antigravity"
+    override val version: String = "2.1.0"
+    override val author: String = "Avalon Media Card"
 
     private val dynamicSectionStatesMap =
         java.util.concurrent.ConcurrentHashMap<String, MutableStateFlow<FeedSectionState>>()

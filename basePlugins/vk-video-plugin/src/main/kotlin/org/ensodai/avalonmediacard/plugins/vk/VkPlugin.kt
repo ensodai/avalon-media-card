@@ -25,7 +25,7 @@ class VkPlugin : AvalonPlugin {
 
     override val id: String = "vk-video-plugin"
     override val name: String = "VK Video"
-    override val version: String = "1.1.0"
+    override val version: String = "1.2.0"
     override val author: String = "Avalon Media Card"
 
     private lateinit var logger: PluginLogger

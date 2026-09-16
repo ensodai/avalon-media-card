@@ -18,8 +18,8 @@ import org.ensodai.avalonmediacard.plugins.persondetails.domain.PersonDetailsSta
 class PersonDetailsPlugin : AvalonPlugin {
     override val id: String = "org.ensodai.persondetails"
     override val name: String = "Детали Персоны и Фильмография"
-    override val version: String = "1.0.0"
-    override val author: String = "Antigravity"
+    override val version: String = "1.1.0"
+    override val author: String = "Avalon Media Card"
 
     private val personDetailsStatesMap =
         java.util.concurrent.ConcurrentHashMap<MediaKey, MutableStateFlow<PersonDetailsState>>()

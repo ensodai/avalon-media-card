@@ -32,7 +32,7 @@ class AniLibriaPlugin : AvalonPlugin {
 
     override val id: String = "anilibria-plugin"
     override val name: String = "AniLibria"
-    override val version: String = "1.0.0"
+    override val version: String = "1.1.0"
     override val author: String = "Avalon Media Card"
 
     private lateinit var logger: PluginLogger

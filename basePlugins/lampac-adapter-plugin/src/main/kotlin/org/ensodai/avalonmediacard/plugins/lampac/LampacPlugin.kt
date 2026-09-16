@@ -29,7 +29,7 @@ class LampacPlugin : AvalonPlugin {
 
     override val id: String = "lampac-adapter-plugin"
     override val name: String = "Адаптер Lampac"
-    override val version: String = "1.0.0"
+    override val version: String = "1.1.0"
     override val author: String = "Avalon Media Card"
 
     private lateinit var logger: PluginLogger

@@ -23,7 +23,7 @@ import org.ensodai.avalonmediacard.plugins.samsungtv.presentation.SamsungTvSetti
 class SamsungTvPlugin : AvalonPlugin {
     override val id: String = SamsungTvPaths.PLUGIN_ID
     override val name: String = "Samsung TV Widget"
-    override val version: String = "1.0.0"
+    override val version: String = "1.1.0"
     override val author: String = "Avalon Media Card"
 
     override fun provideSerializers(): SerializersModule = SerializersModule {

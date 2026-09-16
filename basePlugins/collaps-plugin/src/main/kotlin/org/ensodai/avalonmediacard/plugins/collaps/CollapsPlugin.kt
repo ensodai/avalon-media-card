@@ -34,7 +34,7 @@ class CollapsPlugin : AvalonPlugin {
 
     override val id: String = "collaps-plugin"
     override val name: String = "Collaps CDN"
-    override val version: String = "1.0.0"
+    override val version: String = "1.1.0"
     override val author: String = "Avalon Media Card"
 
     private lateinit var logger: PluginLogger

@@ -49,10 +49,6 @@ jobs:
         with:
           distribution: 'temurin'
           java-version: '21'
-
-      - name: Setup Android SDK
-        uses: android-actions/setup-android@v4
-
       - name: Setup Gradle with Caching
         uses: gradle/actions/setup-gradle@v4
         with:

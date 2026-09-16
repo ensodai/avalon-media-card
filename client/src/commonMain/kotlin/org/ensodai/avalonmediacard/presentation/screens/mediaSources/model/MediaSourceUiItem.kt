@@ -1,4 +1,4 @@
-package org.ensodai.avalonmediacard.presentation.screens.detailsScreen.component.mediaSourcesSlot.model
+package org.ensodai.avalonmediacard.presentation.screens.mediaSources.model
 
 import androidx.compose.runtime.Immutable
 import org.ensodai.avalonmediacard.contract.plugins.MediaStream

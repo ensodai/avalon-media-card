@@ -15,6 +15,7 @@ private val logger = AppLogging.logger("DetailsContent")
 
 @Composable
 fun DetailsContent(
+    modifier: Modifier = Modifier,
     state: DetailsViewState,
     onAction: (Action) -> Unit,
     onClosePlayer: (() -> Unit)? = null,
@@ -22,7 +23,6 @@ fun DetailsContent(
     onCloseSources: (() -> Unit)? = null,
     onSelectSource: ((providerId: String, sourceId: String, seasonNumber: Int?, episodeNumber: Int?, onComplete: () -> Unit) -> Unit)? = null,
     onRefreshSources: (() -> Unit)? = null,
-    modifier: Modifier = Modifier
 ) {
     logger.d { "[PROFILING] DetailsContent RECOMPOSE (Header state: ${state.header?.state?.let { it::class.simpleName }}): ${Clock.System.now()}" }
 

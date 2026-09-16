@@ -28,6 +28,8 @@ import org.ensodai.avalonmediacard.contract.model.UserRole
 import org.ensodai.avalonmediacard.data.selectAndUploadPlugin
 import org.ensodai.avalonmediacard.presentation.screens.commonComponents.AvalonDropdownMenu
 import org.ensodai.avalonmediacard.presentation.screens.commonComponents.AvalonDropdownMenuItem
+import org.ensodai.avalonmediacard.presentation.screens.commonComponents.PopupAnchorSide
+import org.ensodai.avalonmediacard.presentation.screens.commonComponents.rememberSideAnchorPopupPositionProvider
 import org.ensodai.avalonmediacard.presentation.screens.commonComponents.tvDrawer.TvDrawerEffect
 import org.ensodai.avalonmediacard.presentation.screens.commonComponents.tvDrawer.AvalonTvDrawerItem
 import org.ensodai.avalonmediacard.presentation.screens.commonComponents.LocalContentFocusRequester
@@ -149,15 +151,15 @@ fun Sidebar(
                         onClick = { isProfileMenuExpanded = true }
                     )
 
-                    val density = androidx.compose.ui.platform.LocalDensity.current
                     val deviceTarget = LocalDeviceTarget.current
 
-                    if (deviceTarget.isDesktop) {
+                    if (!deviceTarget.isTv) {
+                        val positionProvider = rememberSideAnchorPopupPositionProvider(preferredSide = PopupAnchorSide.RIGHT)
                         AvalonDropdownMenu(
                             expanded = isProfileMenuExpanded,
                             onDismissRequest = { isProfileMenuExpanded = false },
-                            alignment = Alignment.TopStart,
-                            offset = androidx.compose.ui.unit.IntOffset(0, with(density) { 8.dp.roundToPx() })
+                            popupPositionProvider = positionProvider,
+                            width = 250.dp
                         ) {
                             AvalonDropdownMenuItem(
                                 text = stringResource(Res.string.nav_settings),

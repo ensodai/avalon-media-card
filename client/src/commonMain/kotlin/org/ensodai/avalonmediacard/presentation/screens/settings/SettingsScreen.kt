@@ -1,28 +1,23 @@
 package org.ensodai.avalonmediacard.presentation.screens.settings
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.focusGroup
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material3.*
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
+import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalDensity
-import androidx.compose.ui.semantics.clearAndSetSemantics
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
@@ -33,12 +28,17 @@ import org.ensodai.avalonmediacard.contract.model.TitleDisplayMode
 import org.ensodai.avalonmediacard.data.AppLocales
 import org.ensodai.avalonmediacard.data.LanguageDescriptor
 import org.ensodai.avalonmediacard.data.UiModeOverride
+import org.ensodai.avalonmediacard.presentation.screens.commonComponents.AvalonButton
 import org.ensodai.avalonmediacard.presentation.screens.commonComponents.AvalonDropdownMenu
 import org.ensodai.avalonmediacard.presentation.screens.commonComponents.AvalonDropdownMenuItem
-import org.ensodai.avalonmediacard.presentation.screens.commonComponents.tvDrawer.AvalonTvDrawerItem
+import org.ensodai.avalonmediacard.presentation.screens.commonComponents.AvalonTextField
 import org.ensodai.avalonmediacard.presentation.screens.commonComponents.LocalDeviceTarget
-import org.ensodai.avalonmediacard.presentation.screens.commonComponents.tvDrawer.TvDrawerEffect
+import org.ensodai.avalonmediacard.presentation.screens.commonComponents.PopupAnchorSide
+import org.ensodai.avalonmediacard.presentation.screens.commonComponents.rememberSideAnchorPopupPositionProvider
 import org.ensodai.avalonmediacard.presentation.screens.commonComponents.tvAndWebHoverEffect
+import org.ensodai.avalonmediacard.presentation.screens.commonComponents.tvDrawer.LocalTvDrawerState
+import org.ensodai.avalonmediacard.presentation.screens.settings.components.SettingsLanguageDrawerScreen
+import org.ensodai.avalonmediacard.presentation.screens.settings.components.getSettingsLanguageLabel
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.koinInject
 
@@ -49,554 +49,586 @@ fun SettingsScreen(
     val state by viewModel.viewState.collectAsState()
     val actions = viewModel.actions
     val deviceTarget = LocalDeviceTarget.current
+    val tvDrawerState = LocalTvDrawerState.current
 
-    var isSelectingTarget by remember { mutableStateOf(false) }
-    var isSelectingAppLanguage by remember { mutableStateOf(false) }
-    var isSelectingPosterLanguage by remember { mutableStateOf(false) }
-    var isSelectingTitleMode by remember { mutableStateOf(false) }
-    var isSelectingOverviewLanguage by remember { mutableStateOf(false) }
+    val appLanguageFocusRequester = remember { FocusRequester() }
+    val uiModeFocusRequester = remember { FocusRequester() }
+    val posterLanguageFocusRequester = remember { FocusRequester() }
+    val titleModeFocusRequester = remember { FocusRequester() }
+    val overviewLanguageFocusRequester = remember { FocusRequester() }
+    val tmdbTokenFocusRequester = remember { FocusRequester() }
+    val saveButtonFocusRequester = remember { FocusRequester() }
 
-    val focusRequester = remember { FocusRequester() }
+    var isSelectingAppLanguageDropdown by remember { mutableStateOf(false) }
+    var isSelectingPosterLanguageDropdown by remember { mutableStateOf(false) }
+    var isSelectingTitleModeDropdown by remember { mutableStateOf(false) }
+    var isSelectingOverviewLanguageDropdown by remember { mutableStateOf(false) }
+
     val scrollState = rememberScrollState()
 
     LaunchedEffect(Unit) {
-        runCatching { focusRequester.requestFocus() }
+        runCatching { appLanguageFocusRequester.requestFocus() }
     }
 
-    val selectedTargetModeText = when (state.uiModeOverride) {
-        UiModeOverride.AUTO -> stringResource(Res.string.settings_ui_mode_auto)
-        UiModeOverride.TV -> stringResource(Res.string.settings_ui_mode_tv)
-        UiModeOverride.PC -> stringResource(Res.string.settings_ui_mode_pc)
-    }
-
-    val selectedAppLanguageText = getLanguageLabel(state.uiLocale, isMediaOption = false)
-
-    val selectedPosterLanguageText = getLanguageLabel(state.posterLanguage ?: "auto", isMediaOption = true)
-
-    val selectedTitleModeText = getLanguageLabel(
+    val selectedAppLanguageText = getSettingsLanguageLabel(state.uiLocale, isMediaOption = false)
+    val selectedPosterLanguageText = getSettingsLanguageLabel(state.posterLanguage ?: "auto", isMediaOption = true)
+    val selectedTitleModeText = getSettingsLanguageLabel(
         state.titleLanguage ?: if (state.titleMode == TitleDisplayMode.ORIGINAL) "original" else "auto",
         isMediaOption = true
     )
+    val selectedOverviewLanguageText = getSettingsLanguageLabel(state.overviewLanguage ?: "auto", isMediaOption = true)
 
-    val selectedOverviewLanguageText = getLanguageLabel(state.overviewLanguage ?: "auto", isMediaOption = true)
+    val posterOptions = remember {
+        listOf(
+            LanguageDescriptor("auto", "As in app", "Auto"),
+            LanguageDescriptor("original", "Original / Textless", "Original")
+        ) + AppLocales.supported.filter { it.code != "auto" }
+    }
 
-    BoxWithConstraints(
+    val titleOptions = remember {
+        listOf(
+            LanguageDescriptor("auto", "As in app", "Auto"),
+            LanguageDescriptor("original", "Original", "Original")
+        ) + AppLocales.supported.filter { it.code != "auto" }
+    }
+
+    val overviewOptions = remember {
+        listOf(
+            LanguageDescriptor("auto", "As in app", "Auto")
+        ) + AppLocales.supported.filter { it.code != "auto" }
+    }
+
+    val appLangTitle = stringResource(Res.string.settings_language)
+    val uiModeTitle = stringResource(Res.string.settings_ui_mode)
+    val posterLangTitle = stringResource(Res.string.settings_poster_language)
+    val titleModeTitle = stringResource(Res.string.settings_title_mode)
+    val overviewLangTitle = stringResource(Res.string.settings_overview_language)
+
+    Box(
         modifier = Modifier
             .fillMaxSize()
             .background(MaterialTheme.colorScheme.background)
     ) {
-        Box(
+        Column(
             modifier = Modifier
-                .fillMaxWidth()
-                .defaultMinSize(minHeight = maxHeight)
+                .fillMaxSize()
                 .verticalScroll(scrollState)
-                .padding(vertical = 24.dp, horizontal = 16.dp),
-            contentAlignment = Alignment.Center
+                .padding(horizontal = 24.dp, vertical = 24.dp),
+            horizontalAlignment = Alignment.CenterHorizontally
         ) {
             Column(
                 modifier = Modifier
-                    .widthIn(max = 480.dp)
-                    .fillMaxWidth()
-                    .focusGroup()
-                    .clip(RoundedCornerShape(16.dp))
-                    .background(MaterialTheme.colorScheme.surfaceVariant)
-                    .padding(24.dp),
-                horizontalAlignment = Alignment.CenterHorizontally
+                    .widthIn(max = 840.dp)
+                    .fillMaxWidth(),
+                verticalArrangement = Arrangement.spacedBy(20.dp)
             ) {
-                Icon(
-                    imageVector = Lucide.Settings,
-                    contentDescription = null,
-                    modifier = Modifier.size(40.dp),
-                    tint = MaterialTheme.colorScheme.primary
+                // Header
+                Column(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(bottom = 8.dp)
+                ) {
+                    Text(
+                        text = stringResource(Res.string.settings_title),
+                        fontSize = 28.sp,
+                        fontWeight = FontWeight.Bold,
+                        color = MaterialTheme.colorScheme.onBackground
+                    )
+                    Spacer(modifier = Modifier.height(4.dp))
+                    Text(
+                        text = stringResource(Res.string.settings_subtitle),
+                        fontSize = 14.sp,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                    )
+                }
+
+                // Card 1: Основные настройки (General Settings)
+                Column(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .clip(RoundedCornerShape(16.dp))
+                        .background(MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.2f))
+                        .border(1.dp, MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.3f), RoundedCornerShape(16.dp))
+                        .padding(24.dp),
+                    verticalArrangement = Arrangement.spacedBy(16.dp)
+                ) {
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.spacedBy(12.dp)
+                    ) {
+                        Icon(
+                            imageVector = Lucide.Settings,
+                            contentDescription = null,
+                            tint = MaterialTheme.colorScheme.primary,
+                            modifier = Modifier.size(24.dp)
+                        )
+                        Text(
+                            text = stringResource(Res.string.settings_section_general),
+                            fontSize = 18.sp,
+                            fontWeight = FontWeight.Bold,
+                            color = MaterialTheme.colorScheme.onSurface
+                        )
+                    }
+
+                    // Язык интерфейса
+                    SettingsRowItem(
+                        title = appLangTitle,
+                        value = selectedAppLanguageText,
+                        icon = Lucide.Languages,
+                        focusRequester = appLanguageFocusRequester,
+                        onClick = {
+                            if (deviceTarget.isTv) {
+                                tvDrawerState.open(
+                                    SettingsLanguageDrawerScreen(
+                                        key = "settings_app_language",
+                                        title = appLangTitle,
+                                        icon = Lucide.Languages,
+                                        callerFocusRequester = appLanguageFocusRequester,
+                                        options = AppLocales.supported,
+                                        selectedCode = state.uiLocale,
+                                        isMediaOption = false,
+                                        onSelected = actions.onLanguageSelected
+                                    ),
+                                    caller = appLanguageFocusRequester
+                                )
+                            } else {
+                                isSelectingAppLanguageDropdown = true
+                            }
+                        },
+                        dropdownContent = {
+                            if (!deviceTarget.isTv) {
+                                SettingsLanguageDropdown(
+                                    expanded = isSelectingAppLanguageDropdown,
+                                    options = AppLocales.supported,
+                                    isMediaOption = false,
+                                    onDismiss = { isSelectingAppLanguageDropdown = false },
+                                    onSelected = actions.onLanguageSelected
+                                )
+                            }
+                        }
+                    )
+
+                    // Режим интерфейса (Сегментированный селектор)
+                    Column(
+                        modifier = Modifier.fillMaxWidth(),
+                        verticalArrangement = Arrangement.spacedBy(10.dp)
+                    ) {
+                        Text(
+                            text = uiModeTitle,
+                            fontSize = 15.sp,
+                            fontWeight = FontWeight.Medium,
+                            color = MaterialTheme.colorScheme.onSurface
+                        )
+                        UiModeSegmentedSelector(
+                            currentMode = state.uiModeOverride,
+                            onSelect = actions.onUiModeSelected,
+                            focusRequester = uiModeFocusRequester
+                        )
+                    }
+                }
+
+                // Card 2: TMDB и локализация контента (Media Settings)
+                Column(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .clip(RoundedCornerShape(16.dp))
+                        .background(MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.2f))
+                        .border(1.dp, MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.3f), RoundedCornerShape(16.dp))
+                        .padding(24.dp),
+                    verticalArrangement = Arrangement.spacedBy(16.dp)
+                ) {
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.spacedBy(12.dp)
+                    ) {
+                        Icon(
+                            imageVector = Lucide.Globe,
+                            contentDescription = null,
+                            tint = MaterialTheme.colorScheme.primary,
+                            modifier = Modifier.size(24.dp)
+                        )
+                        Text(
+                            text = stringResource(Res.string.settings_section_media),
+                            fontSize = 18.sp,
+                            fontWeight = FontWeight.Bold,
+                            color = MaterialTheme.colorScheme.onSurface
+                        )
+                    }
+
+                    // Язык постеров
+                    SettingsRowItem(
+                        title = posterLangTitle,
+                        value = selectedPosterLanguageText,
+                        icon = Lucide.Image,
+                        focusRequester = posterLanguageFocusRequester,
+                        onClick = {
+                            if (deviceTarget.isTv) {
+                                tvDrawerState.open(
+                                    SettingsLanguageDrawerScreen(
+                                        key = "settings_poster_language",
+                                        title = posterLangTitle,
+                                        icon = Lucide.Image,
+                                        callerFocusRequester = posterLanguageFocusRequester,
+                                        options = posterOptions,
+                                        selectedCode = state.posterLanguage ?: "auto",
+                                        isMediaOption = true,
+                                        onSelected = { code ->
+                                            actions.onPosterLanguageSelected(if (code == "auto") null else code)
+                                        }
+                                    ),
+                                    caller = posterLanguageFocusRequester
+                                )
+                            } else {
+                                isSelectingPosterLanguageDropdown = true
+                            }
+                        },
+                        dropdownContent = {
+                            if (!deviceTarget.isTv) {
+                                SettingsLanguageDropdown(
+                                    expanded = isSelectingPosterLanguageDropdown,
+                                    options = posterOptions,
+                                    isMediaOption = true,
+                                    onDismiss = { isSelectingPosterLanguageDropdown = false },
+                                    onSelected = { code ->
+                                        actions.onPosterLanguageSelected(if (code == "auto") null else code)
+                                    }
+                                )
+                            }
+                        }
+                    )
+
+                    // Язык названий
+                    SettingsRowItem(
+                        title = titleModeTitle,
+                        value = selectedTitleModeText,
+                        icon = Lucide.Film,
+                        focusRequester = titleModeFocusRequester,
+                        onClick = {
+                            if (deviceTarget.isTv) {
+                                tvDrawerState.open(
+                                    SettingsLanguageDrawerScreen(
+                                        key = "settings_title_mode",
+                                        title = titleModeTitle,
+                                        icon = Lucide.Film,
+                                        callerFocusRequester = titleModeFocusRequester,
+                                        options = titleOptions,
+                                        selectedCode = state.titleLanguage ?: if (state.titleMode == TitleDisplayMode.ORIGINAL) "original" else "auto",
+                                        isMediaOption = true,
+                                        onSelected = { code ->
+                                            actions.onTitleLanguageSelected(if (code == "auto") null else code)
+                                        }
+                                    ),
+                                    caller = titleModeFocusRequester
+                                )
+                            } else {
+                                isSelectingTitleModeDropdown = true
+                            }
+                        },
+                        dropdownContent = {
+                            if (!deviceTarget.isTv) {
+                                SettingsLanguageDropdown(
+                                    expanded = isSelectingTitleModeDropdown,
+                                    options = titleOptions,
+                                    isMediaOption = true,
+                                    onDismiss = { isSelectingTitleModeDropdown = false },
+                                    onSelected = { code ->
+                                        actions.onTitleLanguageSelected(if (code == "auto") null else code)
+                                    }
+                                )
+                            }
+                        }
+                    )
+
+                    // Язык описания (синопсиса)
+                    SettingsRowItem(
+                        title = overviewLangTitle,
+                        value = selectedOverviewLanguageText,
+                        icon = Lucide.BookOpen,
+                        focusRequester = overviewLanguageFocusRequester,
+                        onClick = {
+                            if (deviceTarget.isTv) {
+                                tvDrawerState.open(
+                                    SettingsLanguageDrawerScreen(
+                                        key = "settings_overview_language",
+                                        title = overviewLangTitle,
+                                        icon = Lucide.BookOpen,
+                                        callerFocusRequester = overviewLanguageFocusRequester,
+                                        options = overviewOptions,
+                                        selectedCode = state.overviewLanguage ?: "auto",
+                                        isMediaOption = true,
+                                        onSelected = { code ->
+                                            actions.onOverviewLanguageSelected(if (code == "auto") null else code)
+                                        }
+                                    ),
+                                    caller = overviewLanguageFocusRequester
+                                )
+                            } else {
+                                isSelectingOverviewLanguageDropdown = true
+                            }
+                        },
+                        dropdownContent = {
+                            if (!deviceTarget.isTv) {
+                                SettingsLanguageDropdown(
+                                    expanded = isSelectingOverviewLanguageDropdown,
+                                    options = overviewOptions,
+                                    isMediaOption = true,
+                                    onDismiss = { isSelectingOverviewLanguageDropdown = false },
+                                    onSelected = { code ->
+                                        actions.onOverviewLanguageSelected(if (code == "auto") null else code)
+                                    }
+                                )
+                            }
+                        }
+                    )
+                }
+
+                // Card 3: API-токен TMDB
+                Column(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .clip(RoundedCornerShape(16.dp))
+                        .background(MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.2f))
+                        .border(1.dp, MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.3f), RoundedCornerShape(16.dp))
+                        .padding(24.dp),
+                    verticalArrangement = Arrangement.spacedBy(16.dp)
+                ) {
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.SpaceBetween,
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Row(
+                            verticalAlignment = Alignment.CenterVertically,
+                            horizontalArrangement = Arrangement.spacedBy(12.dp)
+                        ) {
+                            Icon(
+                                imageVector = Lucide.Key,
+                                contentDescription = null,
+                                tint = MaterialTheme.colorScheme.primary,
+                                modifier = Modifier.size(24.dp)
+                            )
+                            Text(
+                                text = stringResource(Res.string.settings_tmdb_token_title),
+                                fontSize = 18.sp,
+                                fontWeight = FontWeight.Bold,
+                                color = MaterialTheme.colorScheme.onSurface
+                            )
+                        }
+
+                        val isConfigured = !state.tmdbReadToken.isNullOrBlank()
+                        Box(
+                            modifier = Modifier
+                                .clip(RoundedCornerShape(6.dp))
+                                .background(
+                                    if (isConfigured) Color(0xFF10B981).copy(alpha = 0.15f)
+                                    else MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.5f)
+                                )
+                                .border(
+                                    1.dp,
+                                    if (isConfigured) Color(0xFF10B981).copy(alpha = 0.4f)
+                                    else MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.3f),
+                                    RoundedCornerShape(6.dp)
+                                )
+                                .padding(horizontal = 8.dp, vertical = 4.dp)
+                        ) {
+                            Text(
+                                text = if (isConfigured) stringResource(Res.string.admin_integrations_configured) else stringResource(Res.string.admin_integrations_not_set),
+                                fontSize = 12.sp,
+                                fontWeight = FontWeight.SemiBold,
+                                color = if (isConfigured) Color(0xFF10B981) else MaterialTheme.colorScheme.onSurfaceVariant
+                            )
+                        }
+                    }
+
+                    Text(
+                        text = stringResource(Res.string.settings_tmdb_token_description),
+                        fontSize = 13.sp,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                    )
+
+                    AvalonTextField(
+                        value = state.tmdbReadToken ?: "",
+                        onValueChange = { actions.onTmdbTokenChanged(it.ifBlank { null }) },
+                        placeholder = stringResource(Res.string.settings_tmdb_token_placeholder),
+                        leadingIcon = {
+                            Icon(
+                                imageVector = Lucide.Key,
+                                contentDescription = null,
+                                tint = MaterialTheme.colorScheme.onSurfaceVariant,
+                                modifier = Modifier.size(20.dp)
+                            )
+                        },
+                        focusRequester = tmdbTokenFocusRequester,
+                        modifier = Modifier.fillMaxWidth()
+                    )
+
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.End,
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        AvalonButton(
+                            text = stringResource(Res.string.settings_btn_save),
+                            onClick = actions.onSaveClicked,
+                            isLoading = state.isLoading,
+                            modifier = Modifier.focusRequester(saveButtonFocusRequester)
+                        )
+                    }
+
+                    if (state.error != null) {
+                        Text(text = state.error!!, color = MaterialTheme.colorScheme.error, fontSize = 13.sp)
+                    }
+                    if (state.successMessage != null) {
+                        Text(text = state.successMessage!!, color = Color(0xFF10B981), fontSize = 13.sp)
+                    }
+                }
+            }
+        }
+    }
+}
+
+@Composable
+private fun SettingsRowItem(
+    title: String,
+    value: String,
+    icon: ImageVector,
+    focusRequester: FocusRequester,
+    onClick: () -> Unit,
+    modifier: Modifier = Modifier,
+    dropdownContent: (@Composable () -> Unit)? = null
+) {
+    Box(modifier = modifier.fillMaxWidth()) {
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .focusRequester(focusRequester)
+                .tvAndWebHoverEffect(
+                    shape = RoundedCornerShape(12.dp),
+                    clickEnabled = true,
+                    onClick = onClick,
+                    activeBorderColor = Color.White,
+                    activeBorderWidth = 1.5.dp
                 )
-                Spacer(modifier = Modifier.height(12.dp))
+                .clip(RoundedCornerShape(12.dp))
+                .background(MaterialTheme.colorScheme.surface.copy(alpha = 0.4f))
+                .padding(horizontal = 16.dp, vertical = 14.dp),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.SpaceBetween
+        ) {
+            Column(modifier = Modifier.weight(1f)) {
                 Text(
-                    text = stringResource(Res.string.settings_title),
-                    fontSize = 22.sp,
-                    fontWeight = FontWeight.Bold,
+                    text = title,
+                    fontSize = 15.sp,
+                    fontWeight = FontWeight.Medium,
                     color = MaterialTheme.colorScheme.onSurface
                 )
-                Spacer(modifier = Modifier.height(4.dp))
+                Spacer(modifier = Modifier.height(2.dp))
                 Text(
-                    text = stringResource(Res.string.settings_subtitle),
+                    text = value,
                     fontSize = 13.sp,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant
-                )
-                Spacer(modifier = Modifier.height(24.dp))
-
-                // === GENERAL SETTINGS === //
-                Text(
-                    text = stringResource(Res.string.settings_section_general),
-                    fontSize = 12.sp,
-                    fontWeight = FontWeight.SemiBold,
-                    color = MaterialTheme.colorScheme.primary,
-                    modifier = Modifier.fillMaxWidth().padding(start = 4.dp, bottom = 8.dp)
-                )
-
-                Spacer(modifier = Modifier.height(8.dp))
-
-                // Язык интерфейса
-                Row(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .focusRequester(focusRequester)
-                        .tvAndWebHoverEffect(
-                            shape = RoundedCornerShape(8.dp),
-                            onClick = { isSelectingAppLanguage = true }
-                        )
-                        .padding(vertical = 10.dp, horizontal = 8.dp),
-                    verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.SpaceBetween
-                ) {
-                Column {
-                    Text(
-                        text = stringResource(Res.string.settings_language),
-                        fontSize = 15.sp,
-                        color = MaterialTheme.colorScheme.onSurface
-                    )
-                    Text(
-                        text = selectedAppLanguageText,
-                        fontSize = 12.sp,
-                        color = MaterialTheme.colorScheme.primary
-                    )
-                }
-                Icon(
-                    imageVector = Lucide.Languages,
-                    contentDescription = null,
-                    tint = MaterialTheme.colorScheme.onSurfaceVariant
+                    color = MaterialTheme.colorScheme.primary
                 )
             }
-
-            Spacer(modifier = Modifier.height(8.dp))
-
-            // Режим таргета UI
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .tvAndWebHoverEffect(
-                        shape = RoundedCornerShape(8.dp),
-                        onClick = { isSelectingTarget = true }
-                    )
-                    .padding(vertical = 10.dp, horizontal = 8.dp),
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.SpaceBetween
-            ) {
-                Column {
-                    Text(
-                        text = stringResource(Res.string.settings_ui_mode),
-                        fontSize = 15.sp,
-                        color = MaterialTheme.colorScheme.onSurface
-                    )
-                    Text(
-                        text = selectedTargetModeText,
-                        fontSize = 12.sp,
-                        color = MaterialTheme.colorScheme.primary
-                    )
-                }
-                Icon(
-                    imageVector = Lucide.ChevronRight,
-                    contentDescription = null,
-                    tint = MaterialTheme.colorScheme.onSurfaceVariant
-                )
-            }
-
-            Spacer(modifier = Modifier.height(20.dp))
-
-            // === TMDB & MEDIA SETTINGS === //
-            Text(
-                text = stringResource(Res.string.settings_section_media),
-                fontSize = 12.sp,
-                fontWeight = FontWeight.SemiBold,
-                color = MaterialTheme.colorScheme.primary,
-                modifier = Modifier.fillMaxWidth().padding(start = 4.dp, bottom = 8.dp)
-            )
-
-            // Язык постеров
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .tvAndWebHoverEffect(
-                        shape = RoundedCornerShape(8.dp),
-                        onClick = { isSelectingPosterLanguage = true }
-                    )
-                    .padding(vertical = 10.dp, horizontal = 8.dp),
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.SpaceBetween
-            ) {
-                Column(modifier = Modifier.weight(1f)) {
-                    Text(
-                        text = stringResource(Res.string.settings_poster_language),
-                        fontSize = 15.sp,
-                        color = MaterialTheme.colorScheme.onSurface
-                    )
-                    Text(
-                        text = selectedPosterLanguageText,
-                        fontSize = 12.sp,
-                        color = MaterialTheme.colorScheme.primary
-                    )
-                }
-                Icon(
-                    imageVector = Lucide.Image,
-                    contentDescription = null,
-                    tint = MaterialTheme.colorScheme.onSurfaceVariant
-                )
-            }
-
-            Spacer(modifier = Modifier.height(8.dp))
-
-            // Режим названий
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .tvAndWebHoverEffect(
-                        shape = RoundedCornerShape(8.dp),
-                        onClick = { isSelectingTitleMode = true }
-                    )
-                    .padding(vertical = 10.dp, horizontal = 8.dp),
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.SpaceBetween
-            ) {
-                Column(modifier = Modifier.weight(1f)) {
-                    Text(
-                        text = stringResource(Res.string.settings_title_mode),
-                        fontSize = 15.sp,
-                        color = MaterialTheme.colorScheme.onSurface
-                    )
-                    Text(
-                        text = selectedTitleModeText,
-                        fontSize = 12.sp,
-                        color = MaterialTheme.colorScheme.primary
-                    )
-                }
-                Icon(
-                    imageVector = Lucide.Film,
-                    contentDescription = null,
-                    tint = MaterialTheme.colorScheme.onSurfaceVariant
-                )
-            }
-
-            Spacer(modifier = Modifier.height(8.dp))
-
-            // Язык синопсиса
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .tvAndWebHoverEffect(
-                        shape = RoundedCornerShape(8.dp),
-                        onClick = { isSelectingOverviewLanguage = true }
-                    )
-                    .padding(vertical = 10.dp, horizontal = 8.dp),
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.SpaceBetween
-            ) {
-                Column(modifier = Modifier.weight(1f)) {
-                    Text(
-                        text = stringResource(Res.string.settings_overview_language),
-                        fontSize = 15.sp,
-                        color = MaterialTheme.colorScheme.onSurface
-                    )
-                    Text(
-                        text = selectedOverviewLanguageText,
-                        fontSize = 12.sp,
-                        color = MaterialTheme.colorScheme.primary
-                    )
-                }
-                Icon(
-                    imageVector = Lucide.BookOpen,
-                    contentDescription = null,
-                    tint = MaterialTheme.colorScheme.onSurfaceVariant
-                )
-            }
-
-            Spacer(modifier = Modifier.height(16.dp))
-
-            // TMDB Token
-            Text(
-                text = stringResource(Res.string.settings_tmdb_token_title),
-                fontSize = 12.sp,
-                fontWeight = FontWeight.SemiBold,
-                color = MaterialTheme.colorScheme.primary,
-                modifier = Modifier.fillMaxWidth().padding(start = 4.dp, bottom = 4.dp)
-            )
-
-            Text(
-                text = stringResource(Res.string.settings_tmdb_token_description),
-                fontSize = 12.sp,
-                color = MaterialTheme.colorScheme.onSurfaceVariant,
-                modifier = Modifier.fillMaxWidth().padding(start = 4.dp, bottom = 8.dp)
-            )
-
-            OutlinedTextField(
-                value = state.tmdbReadToken ?: "",
-                onValueChange = { actions.onTmdbTokenChanged(it.ifBlank { null }) },
-                placeholder = { Text(stringResource(Res.string.settings_tmdb_token_placeholder), fontSize = 13.sp) },
-                singleLine = true,
-                modifier = Modifier.fillMaxWidth(),
-                shape = RoundedCornerShape(8.dp),
-                colors = OutlinedTextFieldDefaults.colors(
-                    focusedBorderColor = MaterialTheme.colorScheme.primary,
-                    unfocusedBorderColor = MaterialTheme.colorScheme.outlineVariant
-                )
-            )
-
-            Spacer(modifier = Modifier.height(24.dp))
-
-            if (state.isLoading) {
-                CircularProgressIndicator(color = MaterialTheme.colorScheme.primary)
-            } else {
-                Box(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(44.dp)
-                        .tvAndWebHoverEffect(
-                            shape = RoundedCornerShape(8.dp),
-                            onClick = actions.onSaveClicked,
-                            activeBorderColor = Color.White
-                        )
-                        .background(MaterialTheme.colorScheme.primary, RoundedCornerShape(8.dp)),
-                    contentAlignment = Alignment.Center
-                ) {
-                    Row(verticalAlignment = Alignment.CenterVertically) {
-                        Icon(imageVector = Lucide.Save, contentDescription = null, modifier = Modifier.size(18.dp), tint = MaterialTheme.colorScheme.onPrimary)
-                        Spacer(modifier = Modifier.width(8.dp))
-                        Text(
-                            text = stringResource(Res.string.settings_btn_save),
-                            fontWeight = FontWeight.SemiBold,
-                            color = MaterialTheme.colorScheme.onPrimary
-                        )
-                    }
-                }
-            }
-
-            if (state.error != null) {
-                Spacer(modifier = Modifier.height(12.dp))
-                Text(text = state.error!!, color = MaterialTheme.colorScheme.error, fontSize = 13.sp)
-            }
-            if (state.successMessage != null) {
-                Spacer(modifier = Modifier.height(12.dp))
-                Text(text = state.successMessage!!, color = MaterialTheme.colorScheme.primary, fontSize = 13.sp)
-            }
-        }
-    }
-
-        // --- ВЫБОР ЯЗЫКА ИНТЕРФЕЙСА --- //
-        if (isSelectingAppLanguage) {
-            LanguageSelectionModal(
-                title = stringResource(Res.string.settings_language),
-                options = AppLocales.supported,
-                selectedCode = state.uiLocale,
-                isTv = deviceTarget.isTv,
-                isMediaOption = false,
-                onDismiss = { isSelectingAppLanguage = false },
-                onSelected = { code ->
-                    actions.onLanguageSelected(code)
-                    isSelectingAppLanguage = false
-                }
+            Icon(
+                imageVector = icon,
+                contentDescription = null,
+                tint = MaterialTheme.colorScheme.onSurfaceVariant,
+                modifier = Modifier.size(20.dp)
             )
         }
 
-        // --- ВЫБОР ЯЗЫКА ПОСТЕРОВ --- //
-        if (isSelectingPosterLanguage) {
-            val posterOptions = remember {
-                listOf(
-                    LanguageDescriptor("auto", "As in app", "Auto"),
-                    LanguageDescriptor("original", "Original / Textless", "Original")
-                ) + AppLocales.supported.filter { it.code != "auto" }
-            }
-            LanguageSelectionModal(
-                title = stringResource(Res.string.settings_poster_language),
-                options = posterOptions,
-                selectedCode = state.posterLanguage ?: "auto",
-                isTv = deviceTarget.isTv,
-                isMediaOption = true,
-                onDismiss = { isSelectingPosterLanguage = false },
-                onSelected = { code ->
-                    actions.onPosterLanguageSelected(if (code == "auto") null else code)
-                    isSelectingPosterLanguage = false
-                }
-            )
-        }
-
-        // --- ВЫБОР ЯЗЫКА НАЗВАНИЙ --- //
-        if (isSelectingTitleMode) {
-            val titleOptions = remember {
-                listOf(
-                    LanguageDescriptor("auto", "As in app", "Auto"),
-                    LanguageDescriptor("original", "Original", "Original")
-                ) + AppLocales.supported.filter { it.code != "auto" }
-            }
-            LanguageSelectionModal(
-                title = stringResource(Res.string.settings_title_mode),
-                options = titleOptions,
-                selectedCode = state.titleLanguage ?: if (state.titleMode == TitleDisplayMode.ORIGINAL) "original" else "auto",
-                isTv = deviceTarget.isTv,
-                isMediaOption = true,
-                onDismiss = { isSelectingTitleMode = false },
-                onSelected = { code ->
-                    actions.onTitleLanguageSelected(if (code == "auto") null else code)
-                    isSelectingTitleMode = false
-                }
-            )
-        }
-
-        // --- ВЫБОР ЯЗЫКА СИНОПСИСА --- //
-        if (isSelectingOverviewLanguage) {
-            val overviewOptions = remember {
-                listOf(
-                    LanguageDescriptor("auto", "As in app", "Auto")
-                ) + AppLocales.supported.filter { it.code != "auto" }
-            }
-            LanguageSelectionModal(
-                title = stringResource(Res.string.settings_overview_language),
-                options = overviewOptions,
-                selectedCode = state.overviewLanguage ?: "auto",
-                isTv = deviceTarget.isTv,
-                isMediaOption = true,
-                onDismiss = { isSelectingOverviewLanguage = false },
-                onSelected = { code ->
-                    actions.onOverviewLanguageSelected(if (code == "auto") null else code)
-                    isSelectingOverviewLanguage = false
-                }
-            )
-        }
-
-        // --- ВЫБОР РЕЖИМА ИНТЕРФЕЙСА --- //
-        if (isSelectingTarget) {
-            if (deviceTarget.isTv) {
-                TvDrawerEffect(
-                    title = stringResource(Res.string.settings_ui_mode),
-                    icon = Lucide.Monitor,
-                    onDismiss = { isSelectingTarget = false }
-                ) {
-                    LazyColumn(contentPadding = PaddingValues(bottom = 24.dp)) {
-                        item {
-                            AvalonTvDrawerItem(
-                                title = stringResource(Res.string.settings_ui_mode_auto),
-                                icon = Lucide.Zap,
-                                isSelected = state.uiModeOverride == UiModeOverride.AUTO,
-                                onClick = { 
-                                    actions.onUiModeSelected(UiModeOverride.AUTO)
-                                    isSelectingTarget = false 
-                                }
-                            )
-                        }
-                        item {
-                            AvalonTvDrawerItem(
-                                title = stringResource(Res.string.settings_ui_mode_tv),
-                                icon = Lucide.Tv,
-                                isSelected = state.uiModeOverride == UiModeOverride.TV,
-                                onClick = { 
-                                    actions.onUiModeSelected(UiModeOverride.TV)
-                                    isSelectingTarget = false 
-                                }
-                            )
-                        }
-                        item {
-                            AvalonTvDrawerItem(
-                                title = stringResource(Res.string.settings_ui_mode_pc),
-                                icon = Lucide.Monitor,
-                                isSelected = state.uiModeOverride == UiModeOverride.PC,
-                                onClick = { 
-                                    actions.onUiModeSelected(UiModeOverride.PC)
-                                    isSelectingTarget = false 
-                                }
-                            )
-                        }
-                    }
-                }
-            } else {
-                val density = LocalDensity.current
-                AvalonDropdownMenu(
-                    expanded = isSelectingTarget,
-                    alignment = Alignment.Center,
-                    offset = IntOffset(0, with(density) { 0.dp.roundToPx() }),
-                    onDismissRequest = { isSelectingTarget = false },
-                    width = 250.dp
-                ) {
-                    AvalonDropdownMenuItem(
-                        text = stringResource(Res.string.settings_ui_mode_auto),
-                        icon = Lucide.Zap,
-                        onClick = {
-                            actions.onUiModeSelected(UiModeOverride.AUTO)
-                            isSelectingTarget = false
-                        }
-                    )
-                    AvalonDropdownMenuItem(
-                        text = stringResource(Res.string.settings_ui_mode_tv),
-                        icon = Lucide.Tv,
-                        onClick = {
-                            actions.onUiModeSelected(UiModeOverride.TV)
-                            isSelectingTarget = false
-                        }
-                    )
-                    AvalonDropdownMenuItem(
-                        text = stringResource(Res.string.settings_ui_mode_pc),
-                        icon = Lucide.Monitor,
-                        onClick = {
-                            actions.onUiModeSelected(UiModeOverride.PC)
-                            isSelectingTarget = false
-                        }
-                    )
-                }
-            }
-        }
+        dropdownContent?.invoke()
     }
 }
 
 @Composable
-private fun getLanguageLabel(code: String, isMediaOption: Boolean = false): String {
-    return when (code) {
-        "auto" -> if (isMediaOption) stringResource(Res.string.settings_language_as_in_app) else stringResource(Res.string.settings_language_auto)
-        "original" -> stringResource(Res.string.settings_language_original)
-        "ru" -> stringResource(Res.string.settings_language_ru)
-        "en" -> stringResource(Res.string.settings_language_en)
-        else -> AppLocales.supported.firstOrNull { it.code == code }?.displayName ?: code
-    }
-}
-
-@Composable
-private fun LanguageSelectionModal(
-    title: String,
+private fun SettingsLanguageDropdown(
+    expanded: Boolean,
     options: List<LanguageDescriptor>,
-    selectedCode: String,
-    isTv: Boolean,
-    isMediaOption: Boolean = false,
+    isMediaOption: Boolean,
     onDismiss: () -> Unit,
     onSelected: (String) -> Unit
 ) {
-    if (isTv) {
-        TvDrawerEffect(
-            title = title,
-            icon = Lucide.Languages,
-            onDismiss = onDismiss
-        ) {
-            LazyColumn(contentPadding = PaddingValues(bottom = 24.dp)) {
-                options.forEach { lang ->
-                    item(key = lang.code) {
-                        AvalonTvDrawerItem(
-                            title = getLanguageLabel(lang.code, isMediaOption = isMediaOption),
-                            icon = if (lang.code == "auto") Lucide.Globe else if (lang.code == "original") Lucide.Film else Lucide.Languages,
-                            isSelected = selectedCode == lang.code,
-                            onClick = { onSelected(lang.code) }
-                        )
-                    }
-                }
+    if (!expanded) return
+    val positionProvider = rememberSideAnchorPopupPositionProvider(preferredSide = PopupAnchorSide.RIGHT)
+    AvalonDropdownMenu(
+        expanded = true,
+        popupPositionProvider = positionProvider,
+        onDismissRequest = onDismiss,
+        width = 260.dp
+    ) {
+        options.forEach { lang ->
+            val icon = when (lang.code) {
+                "auto" -> Lucide.Globe
+                "original" -> Lucide.Film
+                else -> Lucide.Languages
             }
+            AvalonDropdownMenuItem(
+                text = getSettingsLanguageLabel(lang.code, isMediaOption = isMediaOption),
+                icon = icon,
+                onClick = {
+                    onSelected(lang.code)
+                    onDismiss()
+                }
+            )
         }
-    } else {
-        val density = LocalDensity.current
-        AvalonDropdownMenu(
-            expanded = true,
-            alignment = Alignment.Center,
-            offset = IntOffset(0, with(density) { 0.dp.roundToPx() }),
-            onDismissRequest = onDismiss,
-            width = 260.dp
-        ) {
-            options.forEach { lang ->
-                AvalonDropdownMenuItem(
-                    text = getLanguageLabel(lang.code, isMediaOption = isMediaOption),
-                    icon = if (lang.code == "auto") Lucide.Globe else if (lang.code == "original") Lucide.Film else Lucide.Languages,
-                    onClick = { onSelected(lang.code) }
+    }
+}
+
+@Composable
+private fun UiModeSegmentedSelector(
+    currentMode: UiModeOverride,
+    onSelect: (UiModeOverride) -> Unit,
+    focusRequester: FocusRequester,
+    modifier: Modifier = Modifier
+) {
+    val modes = listOf(
+        Triple(UiModeOverride.AUTO, Res.string.settings_ui_mode_auto, Lucide.Zap),
+        Triple(UiModeOverride.TV, Res.string.settings_ui_mode_tv, Lucide.Tv),
+        Triple(UiModeOverride.PC, Res.string.settings_ui_mode_pc, Lucide.Monitor)
+    )
+
+    Row(
+        modifier = modifier
+            .fillMaxWidth()
+            .clip(RoundedCornerShape(12.dp))
+            .background(MaterialTheme.colorScheme.surface.copy(alpha = 0.4f))
+            .border(1.dp, MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.2f), RoundedCornerShape(12.dp))
+            .padding(4.dp),
+        horizontalArrangement = Arrangement.spacedBy(6.dp)
+    ) {
+        modes.forEach { (mode, titleRes, icon) ->
+            val isSelected = currentMode == mode
+            Row(
+                modifier = Modifier
+                    .weight(1f)
+                    .then(if (isSelected) Modifier.focusRequester(focusRequester) else Modifier)
+                    .clip(RoundedCornerShape(8.dp))
+                    .background(if (isSelected) Color.White else Color.Transparent)
+                    .tvAndWebHoverEffect(
+                        scaleTarget = 1.02f,
+                        shape = RoundedCornerShape(8.dp),
+                        clickEnabled = true,
+                        onClick = { onSelect(mode) },
+                        activeBorderColor = Color.White,
+                        activeBorderWidth = 1.5.dp
+                    )
+                    .padding(vertical = 12.dp, horizontal = 12.dp),
+                horizontalArrangement = Arrangement.Center,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Icon(
+                    imageVector = icon,
+                    contentDescription = null,
+                    tint = if (isSelected) Color.Black else MaterialTheme.colorScheme.onSurfaceVariant,
+                    modifier = Modifier.size(18.dp)
+                )
+                Spacer(modifier = Modifier.width(8.dp))
+                Text(
+                    text = stringResource(titleRes),
+                    fontSize = 14.sp,
+                    fontWeight = if (isSelected) FontWeight.Bold else FontWeight.Medium,
+                    color = if (isSelected) Color.Black else MaterialTheme.colorScheme.onSurfaceVariant
                 )
             }
         }

@@ -5,6 +5,7 @@ import io.ktor.client.plugins.*
 import io.ktor.client.request.*
 import io.ktor.client.statement.*
 import io.ktor.http.*
+import io.ktor.http.content.OutgoingContent
 import io.ktor.server.application.*
 import io.ktor.server.request.*
 import io.ktor.server.response.*
@@ -175,22 +176,30 @@ private suspend fun handleProxyRequest(
             }
 
             if (isHead) {
-                proxyResponse.headers.forEach { name, values ->
-                    val lowerName = name.lowercase()
-                    if (lowerName != HttpHeaders.ContentType.lowercase() &&
-                        lowerName != HttpHeaders.ContentLength.lowercase() &&
-                        lowerName != HttpHeaders.TransferEncoding.lowercase() &&
-                        lowerName != HttpHeaders.Connection.lowercase() &&
-                        !lowerName.startsWith("access-control-")
-                    ) {
-                        values.forEach { call.response.headers.append(name, it) }
+                val headContent = object : OutgoingContent.NoContent() {
+                    override val status: HttpStatusCode = proxyResponse.status
+                    override val contentLength: Long? = proxyResponse.contentLength()
+                    override val contentType: ContentType? = proxyResponse.contentType()
+                    override val headers: Headers = Headers.build {
+                        proxyResponse.headers.forEach { name, values ->
+                            val lowerName = name.lowercase()
+                            if (lowerName != HttpHeaders.ContentType.lowercase() &&
+                                lowerName != HttpHeaders.ContentLength.lowercase() &&
+                                lowerName != HttpHeaders.TransferEncoding.lowercase() &&
+                                lowerName != HttpHeaders.Connection.lowercase() &&
+                                !lowerName.startsWith("access-control-")
+                            ) {
+                                appendAll(name, values)
+                            }
+                        }
+                        append(HttpHeaders.AcceptRanges, "bytes")
+                        append(
+                            "Access-Control-Expose-Headers",
+                            "Content-Length, Content-Range, Accept-Ranges, Content-Type, ETag, Last-Modified"
+                        )
                     }
                 }
-                call.response.headers.append(HttpHeaders.AcceptRanges, "bytes")
-                call.response.headers.append("Access-Control-Expose-Headers", "Content-Length, Content-Range, Accept-Ranges, Content-Type, ETag, Last-Modified")
-                proxyResponse.contentLength()?.let { call.response.headers.append(HttpHeaders.ContentLength, it.toString()) }
-                proxyResponse.contentType()?.let { call.response.headers.append(HttpHeaders.ContentType, it.toString()) }
-                call.respond(proxyResponse.status)
+                call.respond(headContent)
                 return@execute
             }
 

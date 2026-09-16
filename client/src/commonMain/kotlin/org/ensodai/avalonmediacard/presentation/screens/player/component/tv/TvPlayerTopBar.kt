@@ -41,7 +41,9 @@ fun TvPlayerTopBar(
     currentEpisode: MediaStream? = null,
     onToggleEpisodeWatched: (() -> Unit)? = null,
     onRateEpisode: (() -> Unit)? = null,
-    settingsFocusRequester: FocusRequester? = null
+    settingsFocusRequester: FocusRequester? = null,
+    watchedFocusRequester: FocusRequester? = null,
+    ratingFocusRequester: FocusRequester? = null
 ) {
     Row(
         modifier = modifier
@@ -88,6 +90,7 @@ fun TvPlayerTopBar(
                         contentDescription = if (isWatched) stringResource(Res.string.player_watched) else stringResource(Res.string.player_mark_watched),
                         iconTint = if (isWatched) Color(0xFF4CAF50) else Color.White.copy(alpha = 0.85f),
                         textColor = if (isWatched) Color(0xFF4CAF50) else Color.White,
+                        focusRequester = watchedFocusRequester,
                         onClick = onToggleEpisodeWatched
                     )
                 }
@@ -99,6 +102,7 @@ fun TvPlayerTopBar(
                     contentDescription = if (userRating != null) stringResource(Res.string.player_rating_val, userRating.toString()) else stringResource(Res.string.player_rate),
                     iconTint = if (userRating != null) Color(0xFFFFC107) else Color.White.copy(alpha = 0.85f),
                     textColor = if (userRating != null) Color(0xFFFFC107) else Color.White,
+                    focusRequester = ratingFocusRequester,
                     onClick = { onRateEpisode?.invoke() }
                 )
             }

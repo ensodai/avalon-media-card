@@ -33,6 +33,8 @@ import kotlinx.coroutines.delay
 import org.ensodai.avalonmediacard.contract.model.EntityType
 import org.ensodai.avalonmediacard.contract.plugins.MediaStream
 import org.ensodai.avalonmediacard.core.PlaybackController
+import org.ensodai.avalonmediacard.presentation.screens.commonComponents.LocalContentFocusRequester
+import org.ensodai.avalonmediacard.presentation.screens.commonComponents.focusDomain
 import org.ensodai.avalonmediacard.presentation.screens.commonComponents.tvDrawer.LocalTvDrawerState
 import org.ensodai.avalonmediacard.presentation.screens.commonComponents.TvEpisodeRatingPopup
 import org.ensodai.avalonmediacard.presentation.screens.commonComponents.tvAndWebHoverEffect
@@ -88,6 +90,9 @@ fun TvPlayerLayout(
 
     val playPauseFocusRequester = remember { FocusRequester() }
     val settingsButtonFocusRequester = remember { FocusRequester() }
+    val watchedButtonFocusRequester = remember { FocusRequester() }
+    val ratingButtonFocusRequester = remember { FocusRequester() }
+    val playerDomainFocusRequester = remember { FocusRequester() }
     val mainInputFocusRequester = remember { FocusRequester() }
     var lastInteractionTrigger by remember { mutableLongStateOf(0L) }
 
@@ -104,10 +109,15 @@ fun TvPlayerLayout(
         }
     }
 
-    // При закрытии ТВ-шторки пробуждаем интерфейс плеера, чтобы фокус вернулся на активную кнопку
+    // При закрытии ТВ-шторки пробуждаем интерфейс плеера, чтобы фокус вернулся на кнопку настроек
+    var wasDrawerOpen by remember { mutableStateOf(false) }
     LaunchedEffect(tvDrawerState.isOpen) {
-        if (!tvDrawerState.isOpen) {
+        if (tvDrawerState.isOpen) {
+            wasDrawerOpen = true
+        } else if (wasDrawerOpen) {
+            wasDrawerOpen = false
             wakeUpUi()
+            runCatching { settingsButtonFocusRequester.requestFocus() }
         }
     }
 
@@ -122,23 +132,28 @@ fun TvPlayerLayout(
         }
     }
 
-    TvPlayerInputHandler(
-        controller = controller,
-        isUiVisible = isUiVisible,
-        isShelfVisible = isShelfExpanded,
-        onWakeUpUi = { wakeUpUi() },
-        onHideUi = { isUiVisible = false },
-        onToggleShelf = {
-            shelfState = if (isShelfExpanded) TvShelfState.COLLAPSED else TvShelfState.EXPANDED
-        },
-        onCloseShelf = { shelfState = TvShelfState.COLLAPSED },
-        onClosePlayer = { actions.onCloseClicked() },
-        focusRequester = mainInputFocusRequester,
-        modifier = modifier.fillMaxSize().background(Color.Black)
-    ) {
-        Box(modifier = Modifier.fillMaxSize()) {
-            // 1. Видео поверхность
-            videoSurface()
+    CompositionLocalProvider(LocalContentFocusRequester provides playerDomainFocusRequester) {
+        TvPlayerInputHandler(
+            controller = controller,
+            isUiVisible = isUiVisible,
+            isShelfVisible = isShelfExpanded,
+            onWakeUpUi = { wakeUpUi() },
+            onHideUi = { isUiVisible = false },
+            onToggleShelf = {
+                shelfState = if (isShelfExpanded) TvShelfState.COLLAPSED else TvShelfState.EXPANDED
+            },
+            onCloseShelf = { shelfState = TvShelfState.COLLAPSED },
+            onClosePlayer = { actions.onCloseClicked() },
+            focusRequester = mainInputFocusRequester,
+            modifier = modifier.fillMaxSize().background(Color.Black)
+        ) {
+            Box(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .focusDomain(domainRequester = playerDomainFocusRequester, fallbackRequester = playPauseFocusRequester)
+            ) {
+                // 1. Видео поверхность
+                videoSurface()
 
             // 2. Оверлеи ошибок, буферизации
             PlayerCenterOverlays(
@@ -203,9 +218,19 @@ fun TvPlayerLayout(
                     },
                     hasCustomAudioOrSubtitle = controller.selectedAudioTrack != null || controller.selectedSubtitleTrack != null,
                     currentEpisode = currentEpisode,
-                    onToggleEpisodeWatched = currentEpisode?.let { ep -> { actions.onToggleEpisodeWatched(ep) } },
-                    onRateEpisode = { showRatingPopup = true },
-                    settingsFocusRequester = settingsButtonFocusRequester
+                    onToggleEpisodeWatched = currentEpisode?.let { ep ->
+                        {
+                            wakeUpUi()
+                            actions.onToggleEpisodeWatched(ep)
+                        }
+                    },
+                    onRateEpisode = {
+                        wakeUpUi()
+                        showRatingPopup = true
+                    },
+                    settingsFocusRequester = settingsButtonFocusRequester,
+                    watchedFocusRequester = watchedButtonFocusRequester,
+                    ratingFocusRequester = ratingButtonFocusRequester
                 )
             }
 
@@ -340,14 +365,20 @@ fun TvPlayerLayout(
                 TvEpisodeRatingPopup(
                     currentRating = currentEpisode.userRating,
                     maxRating = 10,
-                    onDismiss = { showRatingPopup = false },
+                    callerFocusRequester = ratingButtonFocusRequester,
+                    onDismiss = {
+                        wakeUpUi()
+                        showRatingPopup = false
+                    },
                     onRate = { newRating ->
+                        wakeUpUi()
                         actions.onRateEpisode(currentEpisode, newRating)
                         showRatingPopup = false
                     }
                 )
             }
         }
+    }
     }
 }
 

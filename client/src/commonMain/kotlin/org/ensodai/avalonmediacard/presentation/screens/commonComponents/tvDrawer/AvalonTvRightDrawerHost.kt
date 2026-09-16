@@ -2,6 +2,7 @@ package org.ensodai.avalonmediacard.presentation.screens.commonComponents.tvDraw
 
 import androidx.compose.animation.*
 import androidx.compose.animation.core.FastOutSlowInEasing
+import androidx.compose.animation.core.LinearEasing
 import androidx.compose.animation.core.MutableTransitionState
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
@@ -64,42 +65,48 @@ fun AvalonTvRightDrawerHost(
     val contentFocusRequester = LocalContentFocusRequester.current
     var activeCallerFocusRequester by remember { mutableStateOf<FocusRequester?>(null) }
 
+    var lastDisplayedScreen by remember { mutableStateOf<TvDrawerScreen?>(null) }
+    if (state.currentScreen != null) {
+        lastDisplayedScreen = state.currentScreen
+    }
+    val screenToDisplay = state.currentScreen ?: lastDisplayedScreen
+
+    LaunchedEffect(showPopup) {
+        if (!showPopup) {
+            lastDisplayedScreen = null
+        }
+    }
+
     LaunchedEffect(state.isOpen, state.callerFocusRequester, state.currentScreen) {
         if (state.isOpen) {
             val caller = state.callerFocusRequester
                 ?: state.currentScreen?.callerFocusRequester
+                ?: state.lastCallerFocusRequester
             if (caller != null) {
                 activeCallerFocusRequester = caller
             }
         }
     }
 
-    fun safeDismiss() {
-        val caller = activeCallerFocusRequester
-            ?: state.callerFocusRequester
+    fun getBestCaller(): FocusRequester {
+        return state.callerFocusRequester
+            ?: state.lastCallerFocusRequester
+            ?: activeCallerFocusRequester
             ?: state.currentScreen?.callerFocusRequester
             ?: contentFocusRequester
-        runCatching { caller.requestFocus() }
+    }
+
+    fun safeDismiss() {
         state.dismissCurrent()
     }
 
     LaunchedEffect(state.isOpen) {
         if (!state.isOpen) {
-            val caller = activeCallerFocusRequester ?: state.callerFocusRequester ?: contentFocusRequester
+            val caller = getBestCaller()
             runCatching { caller.requestFocus() }
         }
     }
 
-    LaunchedEffect(showPopup) {
-        if (!showPopup) {
-            yield()
-            val caller = activeCallerFocusRequester ?: state.callerFocusRequester ?: contentFocusRequester
-            runCatching { caller.requestFocus() }
-            activeCallerFocusRequester = null
-        }
-    }
-
-    val currentScreen = state.currentScreen
     val drawerRootRequester = remember { FocusRequester() }
 
     Box(modifier = Modifier.fillMaxSize()) {
@@ -110,7 +117,7 @@ fun AvalonTvRightDrawerHost(
                 alignment = Alignment.TopStart,
                 onDismissRequest = { safeDismiss() },
                 properties = PopupProperties(
-                    focusable = true,
+                    focusable = state.isOpen,
                     dismissOnClickOutside = false,
                     clippingEnabled = false
                 )
@@ -125,7 +132,7 @@ fun AvalonTvRightDrawerHost(
                                 onExit = {
                                     if (requestedFocusDirection == FocusDirection.Left) {
                                         // Нажатие «Влево» — переход назад в стеке или закрытие шторки
-                                        state.dismissCurrent()
+                                        safeDismiss()
                                     }
                                     // Блокируем любой выход фокуса за пределы шторки
                                     cancelFocusChange()
@@ -136,8 +143,8 @@ fun AvalonTvRightDrawerHost(
                         // Scrim (затемнение фона) — НЕ фокусируемый.
                         AnimatedVisibility(
                             visible = state.isOpen,
-                            enter = fadeIn(),
-                            exit = fadeOut()
+                            enter = fadeIn(animationSpec = tween(durationMillis = 280, easing = LinearEasing)),
+                            exit = fadeOut(animationSpec = tween(durationMillis = 250, easing = LinearEasing))
                         ) {
                             Box(
                                 modifier = Modifier
@@ -150,8 +157,14 @@ fun AvalonTvRightDrawerHost(
                         // Сама правая шторка
                         AnimatedVisibility(
                             visibleState = drawerTransition,
-                            enter = slideInHorizontally(initialOffsetX = { it }) + fadeIn(),
-                            exit = slideOutHorizontally(targetOffsetX = { it }) + fadeOut(),
+                            enter = slideInHorizontally(
+                                animationSpec = tween(durationMillis = 280, easing = FastOutSlowInEasing),
+                                initialOffsetX = { it }
+                            ),
+                            exit = slideOutHorizontally(
+                                animationSpec = tween(durationMillis = 250, easing = FastOutSlowInEasing),
+                                targetOffsetX = { it }
+                            ),
                             modifier = Modifier.align(Alignment.CenterEnd)
                         ) {
                             Box(
@@ -181,9 +194,9 @@ fun AvalonTvRightDrawerHost(
                                     }
                                     .padding(start = 20.dp, top = 22.dp, end = 20.dp, bottom = 0.dp)
                             ) {
-                                if (currentScreen != null) {
+                                if (screenToDisplay != null) {
                                     AnimatedContent(
-                                        targetState = currentScreen,
+                                        targetState = screenToDisplay,
                                         transitionSpec = {
                                             val animationSpec = tween<IntOffset>(durationMillis = 280, easing = FastOutSlowInEasing)
                                             val fadeSpec = tween<Float>(durationMillis = 220)

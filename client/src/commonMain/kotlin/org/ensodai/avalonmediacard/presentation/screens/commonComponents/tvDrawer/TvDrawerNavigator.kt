@@ -27,6 +27,10 @@ class TvDrawerNavigator {
     var callerFocusRequester by mutableStateOf<FocusRequester?>(null)
         private set
 
+    /** Последняя известная точка возврата фокуса (не сбрасывается при clear для надежности при быстрых анимациях) */
+    var lastCallerFocusRequester by mutableStateOf<FocusRequester?>(null)
+        private set
+
     val isOpen: Boolean
         get() = backStack.isNotEmpty()
 
@@ -38,7 +42,11 @@ class TvDrawerNavigator {
      */
     fun open(screen: TvDrawerScreen, caller: FocusRequester? = null) {
         isMovingForward = true
-        callerFocusRequester = caller ?: screen.callerFocusRequester
+        val targetCaller = caller ?: screen.callerFocusRequester
+        callerFocusRequester = targetCaller
+        if (targetCaller != null) {
+            lastCallerFocusRequester = targetCaller
+        }
         backStack = listOf(screen)
     }
 
@@ -76,7 +84,7 @@ class TvDrawerNavigator {
      */
     fun clear() {
         isMovingForward = false
-        val previousCaller = callerFocusRequester
+        val previousCaller = callerFocusRequester ?: lastCallerFocusRequester
         backStack.asReversed().forEach { it.onDismiss?.invoke() }
         backStack = emptyList()
         callerFocusRequester = null
@@ -110,8 +118,11 @@ class TvDrawerNavigator {
                 initialOnDismiss = onDismiss,
                 initialContent = content
             )
-            if (callerFocusRequester != null && this.callerFocusRequester == null) {
-                this.callerFocusRequester = callerFocusRequester
+            if (callerFocusRequester != null) {
+                if (this.callerFocusRequester == null) {
+                    this.callerFocusRequester = callerFocusRequester
+                }
+                this.lastCallerFocusRequester = callerFocusRequester
             }
             isMovingForward = true
             backStack = backStack + newScreen
@@ -123,7 +134,8 @@ class TvDrawerNavigator {
             isMovingForward = false
             backStack = backStack.filter { it.key != id }
             if (backStack.isEmpty()) {
-                callerFocusRequester?.requestFocus()
+                val caller = callerFocusRequester ?: lastCallerFocusRequester
+                caller?.requestFocus()
                 callerFocusRequester = null
             }
         }

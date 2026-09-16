@@ -21,6 +21,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.focus.FocusRequester
+import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.graphics.vector.ImageVector
@@ -200,6 +202,7 @@ fun PlayerIslandDynamicButton(
     text: String?,
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
+    focusRequester: FocusRequester? = null,
     contentDescription: String? = null,
     iconTint: Color = Color.White,
     textColor: Color = Color.White,
@@ -212,6 +215,9 @@ fun PlayerIslandDynamicButton(
 
     Box(
         modifier = modifier
+            .then(
+                if (focusRequester != null) Modifier.focusRequester(focusRequester) else Modifier
+            )
             .then(
                 if (hasText) Modifier else Modifier.size(44.dp)
             )

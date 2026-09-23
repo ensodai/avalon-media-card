@@ -16,17 +16,21 @@ class PlaybackRepositoryImpl(
     override suspend fun getPlaybackMetadata(
         key: MediaKey,
         seasonNumber: Int?,
-        episodeNumber: Int?
+        episodeNumber: Int?,
+        sourceType: String?,
+        sourceId: String?
     ): PlaybackMetadataResult {
-        return playbackRpcService.getPlaybackMetadata(key, seasonNumber, episodeNumber)
+        return playbackRpcService.getPlaybackMetadata(key, seasonNumber, episodeNumber, sourceType, sourceId)
     }
 
     override suspend fun getStreamUrl(
         key: MediaKey,
         seasonNumber: Int?,
-        episodeNumber: Int?
+        episodeNumber: Int?,
+        sourceType: String?,
+        sourceId: String?
     ): StreamPlaybackResult {
-        return playbackRpcService.getStreamUrl(key, seasonNumber, episodeNumber)
+        return playbackRpcService.getStreamUrl(key, seasonNumber, episodeNumber, sourceType, sourceId)
     }
 
     override suspend fun selectSource(

@@ -37,5 +37,7 @@ val AllDatabaseTables: Array<Table> = arrayOf(
     UserShowProgressTable,
     UserSettingsTable,
     UserTable,
+    WatchRoomTable,
+    WatchRoomParticipantTable,
     WidgetSettingsTable
 )

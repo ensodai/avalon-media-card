@@ -19,20 +19,23 @@ fun PlayerScreen(
     params: PlayerInitParams,
     onClose: () -> Unit,
     onRequestOtherSource: (() -> Unit)? = null,
+    onConfirmSource: (() -> Unit)? = null,
     modifier: Modifier = Modifier,
-    viewModel: PlayerViewModel = koinViewModel(key = "${params.mediaKey}_${params.targetSeason}_${params.targetEpisode}_${params.streamId}_${params.streamUrl?.hashCode()}") { parametersOf(params) }
+    viewModel: PlayerViewModel = koinViewModel(key = "${params.mediaKey}_${params.targetSeason}_${params.targetEpisode}_${params.streamId}_${params.sourceType}_${params.sourceId}_${params.streamUrl?.hashCode()}_${params.mode}") { parametersOf(params) }
 ) {
-    DisposableEffect(onClose, onRequestOtherSource) {
+    DisposableEffect(onClose, onRequestOtherSource, onConfirmSource) {
         viewModel.onCloseCallback = onClose
         viewModel.onRequestOtherSourceCallback = onRequestOtherSource
+        viewModel.onConfirmSourceCallback = onConfirmSource
         onDispose {
             viewModel.onCloseCallback = null
             viewModel.onRequestOtherSourceCallback = null
+            viewModel.onConfirmSourceCallback = null
         }
     }
     val viewState by viewModel.viewState.collectAsState()
 
-    androidx.compose.runtime.LaunchedEffect(params.streamUrl, params.streamId, params.targetSeason, params.targetEpisode, params.playlist) {
+    androidx.compose.runtime.LaunchedEffect(params.streamUrl, params.streamId, params.sourceType, params.sourceId, params.targetSeason, params.targetEpisode, params.playlist) {
         viewModel.updateStream(params)
     }
 

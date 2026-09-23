@@ -18,17 +18,21 @@ class ReconnectingPlaybackRpcService(
     override suspend fun getPlaybackMetadata(
         key: MediaKey,
         seasonNumber: Int?,
-        episodeNumber: Int?
+        episodeNumber: Int?,
+        sourceType: String?,
+        sourceId: String?
     ): PlaybackMetadataResult = executor.execute("getPlaybackMetadata", getService = { getService() }) {
-        getPlaybackMetadata(key, seasonNumber, episodeNumber)
+        getPlaybackMetadata(key, seasonNumber, episodeNumber, sourceType, sourceId)
     }
 
     override suspend fun getStreamUrl(
         key: MediaKey,
         seasonNumber: Int?,
-        episodeNumber: Int?
+        episodeNumber: Int?,
+        sourceType: String?,
+        sourceId: String?
     ): StreamPlaybackResult = executor.execute("getStreamUrl", getService = { getService() }) {
-        getStreamUrl(key, seasonNumber, episodeNumber)
+        getStreamUrl(key, seasonNumber, episodeNumber, sourceType, sourceId)
     }
 
     override suspend fun selectSource(

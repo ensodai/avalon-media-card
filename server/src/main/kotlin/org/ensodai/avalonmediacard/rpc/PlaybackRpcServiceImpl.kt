@@ -43,7 +43,9 @@ class PlaybackRpcServiceImpl(
     override suspend fun getPlaybackMetadata(
         key: MediaKey,
         seasonNumber: Int?,
-        episodeNumber: Int?
+        episodeNumber: Int?,
+        sourceType: String?,
+        sourceId: String?
     ): PlaybackMetadataResult {
         val userId = currentUserId()
             ?: return PlaybackMetadataResult.Error("Пользователь не авторизован")
@@ -52,14 +54,24 @@ class PlaybackRpcServiceImpl(
         val targetEpisode = episodeNumber?.takeIf { it > 0 }
 
         try {
-            val activeBinding = userMediaBindings.getActiveBinding(userId, key.id)
-                ?: return PlaybackMetadataResult.NoSourceBound
+            val resolvedProviderId: String
+            val resolvedSourceId: String
+
+            if (!sourceType.isNullOrBlank() && !sourceId.isNullOrBlank()) {
+                resolvedProviderId = sourceType
+                resolvedSourceId = sourceId
+            } else {
+                val activeBinding = userMediaBindings.getActiveBinding(userId, key.id)
+                    ?: return PlaybackMetadataResult.NoSourceBound
+                resolvedProviderId = activeBinding.sourceType
+                resolvedSourceId = activeBinding.sourceId
+            }
 
             val mappedStreams = pluginManager.getPlaylistForMedia(
                 key = key,
-                sourceId = activeBinding.sourceId,
+                sourceId = resolvedSourceId,
                 userId = userId,
-                providerId = activeBinding.sourceType
+                providerId = resolvedProviderId
             ) ?: emptyList()
 
             if (mappedStreams.isEmpty()) {
@@ -87,7 +99,7 @@ class PlaybackRpcServiceImpl(
                 durationSeconds = targetStream.durationSeconds,
                 startPositionSeconds = targetStream.watchedProgressSeconds ?: targetCursor?.progressSeconds,
                 playlist = mappedStreams,
-                boundSourceTitle = targetStream.sourceName.ifBlank { activeBinding.sourceType }
+                boundSourceTitle = targetStream.sourceName.ifBlank { resolvedProviderId }
             )
         } catch (e: Exception) {
             if (e is CancellationException) throw e
@@ -99,7 +111,9 @@ class PlaybackRpcServiceImpl(
     override suspend fun getStreamUrl(
         key: MediaKey,
         seasonNumber: Int?,
-        episodeNumber: Int?
+        episodeNumber: Int?,
+        sourceType: String?,
+        sourceId: String?
     ): StreamPlaybackResult {
         val userId = currentUserId()
             ?: return StreamPlaybackResult.Error("Пользователь не авторизован")
@@ -108,14 +122,24 @@ class PlaybackRpcServiceImpl(
         val targetEpisode = episodeNumber?.takeIf { it > 0 }
 
         try {
-            val activeBinding = userMediaBindings.getActiveBinding(userId, key.id)
-                ?: return StreamPlaybackResult.NoSourceBound("Источник не выбран")
+            val resolvedProviderId: String
+            val resolvedSourceId: String
+
+            if (!sourceType.isNullOrBlank() && !sourceId.isNullOrBlank()) {
+                resolvedProviderId = sourceType
+                resolvedSourceId = sourceId
+            } else {
+                val activeBinding = userMediaBindings.getActiveBinding(userId, key.id)
+                    ?: return StreamPlaybackResult.NoSourceBound("Источник не выбран")
+                resolvedProviderId = activeBinding.sourceType
+                resolvedSourceId = activeBinding.sourceId
+            }
 
             val mappedStreams = pluginManager.getPlaylistForMedia(
                 key = key,
-                sourceId = activeBinding.sourceId,
+                sourceId = resolvedSourceId,
                 userId = userId,
-                providerId = activeBinding.sourceType
+                providerId = resolvedProviderId
             ) ?: emptyList()
 
             val targetPair = resolveTargetStream(mappedStreams, targetSeason, targetEpisode)

@@ -173,7 +173,6 @@ localforage@^1.10.0:
 
 "mediabunny@file:../../libs/mediabunny-local.tgz":
   version "1.38.1-f0.5"
-  uid "4c33690342703b2af0c0524883cb18d8c3691fde"
   resolved "file:../../libs/mediabunny-local.tgz#4c33690342703b2af0c0524883cb18d8c3691fde"
   dependencies:
     "@types/dom-mediacapture-transform" "^0.1.11"
@@ -194,11 +193,10 @@ path-browserify@^1.0.1:
 
 "playsvideo@file:../../libs/playsvideo-0.4.7-f2.15.tgz":
   version "0.4.7-f2.15"
-  uid b06b306c367425361d6810e8b6b80f4fe3c2a09b
   resolved "file:../../libs/playsvideo-0.4.7-f2.15.tgz#b06b306c367425361d6810e8b6b80f4fe3c2a09b"
   dependencies:
     hls.js "^1.5.0"
-    mediabunny "file:../../../../../.cache/yarn/v6/.tmp/8213c0e6eabe340f9a7a9e4434ecf3c2/vendor/mediabunny-1.38.1-f0.5.tgz"
+    mediabunny "file:../../../../../.cache/yarn/v6/npm-playsvideo-0.4.7-f2.15-b06b306c367425361d6810e8b6b80f4fe3c2a09b/node_modules/playsvideo/vendor/mediabunny-1.38.1-f0.5.tgz"
 
 sax@1.2.1:
   version "1.2.1"
@@ -208,11 +206,6 @@ sax@1.2.1:
 webworkify-webpack@xqq/webworkify-webpack:
   version "2.1.5"
   resolved "https://codeload.github.com/xqq/webworkify-webpack/tar.gz/24d1e719b4a6cac37a518b2bb10fe124527ef4ef"
-
-ws@8.18.0:
-  version "8.18.0"
-  resolved "https://registry.yarnpkg.com/ws/-/ws-8.18.0.tgz#0d7505a6eafe2b0e712d232b42279f53bc289bbc"
-  integrity sha512-8VbfWfHLbbwu3+N6OKsOMpBdT4kXPDDB9cJk2bJ6mh9ucxdlnNvH1e+roYkKmN9Nxw2yjz7VzeO9oOz2zJ04Pw==
 
 ws@8.18.3:
   version "8.18.3"

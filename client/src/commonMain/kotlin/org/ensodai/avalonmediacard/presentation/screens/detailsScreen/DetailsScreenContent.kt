@@ -23,6 +23,8 @@ fun DetailsContent(
     onCloseSources: (() -> Unit)? = null,
     onSelectSource: ((providerId: String, sourceId: String, seasonNumber: Int?, episodeNumber: Int?, onComplete: () -> Unit) -> Unit)? = null,
     onRefreshSources: (() -> Unit)? = null,
+    onOpenWatchParty: (() -> Unit)? = null,
+    onCloseWatchParty: (() -> Unit)? = null,
 ) {
     logger.d { "[PROFILING] DetailsContent RECOMPOSE (Header state: ${state.header?.state?.let { it::class.simpleName }}): ${Clock.System.now()}" }
 
@@ -60,6 +62,8 @@ fun DetailsContent(
                 onCloseSources = onCloseSources,
                 onSelectSource = onSelectSource,
                 onRefreshSources = onRefreshSources,
+                onOpenWatchParty = onOpenWatchParty,
+                onCloseWatchParty = onCloseWatchParty,
                 modifier = modifier
             )
         }

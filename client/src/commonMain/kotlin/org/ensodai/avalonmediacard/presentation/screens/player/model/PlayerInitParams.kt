@@ -18,5 +18,8 @@ data class PlayerInitParams(
     val playlist: List<MediaStream> = emptyList(),
     val audioTracks: List<AudioTrack> = emptyList(),
     val subtitleTracks: List<SubtitleTrack> = emptyList(),
-    val audioTrackIndex: Int? = null
+    val audioTrackIndex: Int? = null,
+    val mode: PlayerMode = PlayerMode.STANDARD,
+    val sourceType: String? = null,
+    val sourceId: String? = null
 )

@@ -402,16 +402,28 @@ class DetailsViewModel(
         updateViewState { it.copy(isSourcesExpanded = expanded) }
     }
 
+    fun openWatchParty() {
+        updateViewState { it.copy(isWatchPartyOpen = true) }
+    }
+
+    fun closeWatchParty() {
+        updateViewState { it.copy(isWatchPartyOpen = false) }
+    }
+
     fun closePlayer() {
         setPlayerState(DetailsViewState.PlayerState.Idle)
+    }
+
+    fun refreshSources(forceRefresh: Boolean = false) {
+        viewModelScope.launch {
+            searchMediaSources(mediaKey, forceRefresh)
+        }
     }
 
     fun openSourcesSheet(forceRefresh: Boolean = false) {
         setPlayerState(DetailsViewState.PlayerState.Idle)
         toggleSources(true)
-        viewModelScope.launch {
-            searchMediaSources(mediaKey, forceRefresh)
-        }
+        refreshSources(forceRefresh)
     }
 
     fun selectSource(

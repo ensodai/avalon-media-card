@@ -41,7 +41,9 @@ fun DetailsScreen(
             onSelectSource = { providerId, sourceId, season, episode, onComplete ->
                 viewModel.selectSource(providerId, sourceId, season, episode, onComplete)
             },
-            onRefreshSources = { viewModel.openSourcesSheet(forceRefresh = true) }
+            onRefreshSources = { viewModel.refreshSources(forceRefresh = true) },
+            onOpenWatchParty = { viewModel.openWatchParty() },
+            onCloseWatchParty = { viewModel.closeWatchParty() }
         )
 
     }

@@ -20,6 +20,7 @@ import org.ensodai.avalonmediacard.presentation.screens.detailsScreen.targets.we
 import org.ensodai.avalonmediacard.presentation.screens.detailsScreen.targets.web.components.WebHeroSection
 import org.ensodai.avalonmediacard.presentation.screens.detailsScreen.targets.web.components.WebTvSeasonsSection
 import org.ensodai.avalonmediacard.presentation.screens.detailsScreen.viewState.DetailsViewState
+import org.ensodai.avalonmediacard.presentation.screens.watchParty.WatchPartyScreen
 
 @Composable
 fun MediaDetailsLayoutWeb(
@@ -30,6 +31,8 @@ fun MediaDetailsLayoutWeb(
     onCloseSources: (() -> Unit)? = null,
     onSelectSource: ((providerId: String, sourceId: String, seasonNumber: Int?, episodeNumber: Int?, onComplete: () -> Unit) -> Unit)? = null,
     onRefreshSources: (() -> Unit)? = null,
+    onOpenWatchParty: (() -> Unit)? = null,
+    onCloseWatchParty: (() -> Unit)? = null,
     modifier: Modifier = Modifier
 ) {
     val isPlayerOpen = state.playerState !is DetailsViewState.PlayerState.Idle
@@ -64,7 +67,8 @@ fun MediaDetailsLayoutWeb(
                 onAction = onAction,
                 scrollOffset = scrollState.value,
                 heroHeight = heroHeight,
-                onRequestOtherSource = onRequestOtherSource
+                onRequestOtherSource = onRequestOtherSource,
+                onOpenWatchParty = onOpenWatchParty
             )
 
             // 2. Centered Content Body (max-width: 1320dp)
@@ -131,5 +135,20 @@ fun MediaDetailsLayoutWeb(
                 onAction = onAction
             )
         }
+
+        // 4. Watch Party Modal (if open)
+        WatchPartyScreen(
+            isVisible = state.isWatchPartyOpen,
+            mediaKey = state.mediaKey,
+            mediaTitle = state.header?.state?.data?.title,
+            mediaSourcesList = state.mediaSourcesList,
+            torrentInspectorState = state.torrentInspector?.state,
+            onRefreshSources = onRefreshSources,
+            onAction = onAction,
+            onClose = { onCloseWatchParty?.invoke() },
+            onStartPlayback = { _, _, _ ->
+                onCloseWatchParty?.invoke()
+            }
+        )
     }
 }

@@ -123,12 +123,18 @@ fun MediaSourcesViewModel.onItemClick(item: MediaSourceUiItem) {
         else -> item.stream.episodeNumber
     }
 
-    val selectSourceCallback = onSelectSource
-    if (selectSourceCallback != null) {
-        selectSourceCallback(pId, sId, targetSeason, targetEpisode) {
+    val selectSourceItemCallback = onSelectSourceItem
+    if (selectSourceItemCallback != null) {
+        selectSourceItemCallback(item, pId, sId, targetSeason, targetEpisode) {
             updateViewState { it.copy(loadingSourceId = null, loadingTorrentUrl = null) }
         }
     } else {
+        val selectSourceCallback = onSelectSource
+        if (selectSourceCallback != null) {
+            selectSourceCallback(pId, sId, targetSeason, targetEpisode) {
+                updateViewState { it.copy(loadingSourceId = null, loadingTorrentUrl = null) }
+            }
+        } else {
         val clickAction = item.clickAction
         if (clickAction != null) {
             onAction?.invoke(clickAction)
@@ -170,6 +176,7 @@ fun MediaSourcesViewModel.onItemClick(item: MediaSourceUiItem) {
             }
         }
     }
+}
 }
 
 fun MediaSourcesViewModel.onToggleAddTorrent() {

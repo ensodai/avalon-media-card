@@ -14,6 +14,7 @@ import org.ensodai.avalonmediacard.presentation.screens.mediaSources.action.onSe
 import org.ensodai.avalonmediacard.presentation.screens.mediaSources.action.onSelectTab
 import org.ensodai.avalonmediacard.presentation.screens.mediaSources.action.onToggleAddTorrent
 import org.ensodai.avalonmediacard.presentation.screens.mediaSources.action.onUploadTorrentFile
+import org.ensodai.avalonmediacard.presentation.screens.mediaSources.model.MediaSourceUiItem
 import org.ensodai.avalonmediacard.presentation.screens.mediaSources.viewState.MediaSourcesViewState
 import org.koin.core.annotation.Factory
 
@@ -27,6 +28,7 @@ class MediaSourcesViewModel(
 ) {
     var onPlayVideo: ((ActionPlayVideo) -> Unit)? = null
     var onSelectSource: ((providerId: String, sourceId: String, seasonNumber: Int?, episodeNumber: Int?, onComplete: () -> Unit) -> Unit)? = null
+    var onSelectSourceItem: ((item: MediaSourceUiItem, providerId: String, sourceId: String, seasonNumber: Int?, episodeNumber: Int?, onComplete: () -> Unit) -> Unit)? = null
     var onAction: ((Action) -> Unit)? = null
     var onRefreshSources: (() -> Unit)? = null
     var onCloseRequested: (() -> Unit)? = null

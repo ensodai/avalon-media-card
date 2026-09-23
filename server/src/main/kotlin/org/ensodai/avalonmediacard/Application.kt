@@ -27,6 +27,7 @@ import org.ensodai.avalonmediacard.contract.rpc.PlaybackRpcService
 import org.ensodai.avalonmediacard.contract.rpc.SduiRpcService
 import org.ensodai.avalonmediacard.contract.rpc.TelemetryRpcService
 import org.ensodai.avalonmediacard.contract.rpc.UserSettingsRpcService
+import org.ensodai.avalonmediacard.contract.rpc.WatchPartyRpcService
 import org.ensodai.avalonmediacard.database.DatabaseFactory
 import org.ensodai.avalonmediacard.di.koinPlugin
 import org.ensodai.avalonmediacard.plugin.PluginManager
@@ -180,6 +181,9 @@ fun Application.module() {
             }
             registerService<UserSettingsRpcService> {
                 call.application.getKoin().get<UserSettingsRpcServiceImpl> { parametersOf(sessionContext) }
+            }
+            registerService<WatchPartyRpcService> {
+                call.application.getKoin().get<WatchPartyRpcServiceImpl> { parametersOf(sessionContext) }
             }
         }
     }

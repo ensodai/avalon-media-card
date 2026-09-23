@@ -54,7 +54,7 @@ class TraktMetadataRepositoryImpl(
                     )
                 }
 
-                rawComments.map { comment ->
+                rawComments.items.map { comment ->
                     CommentItem(
                         id = comment.id.toString(),
                         authorName = comment.displayUserName ?: "Аноним",

@@ -5,6 +5,8 @@ import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
+import org.ensodai.avalonmediacard.contract.plugins.MediaStream
+import org.ensodai.avalonmediacard.contract.plugins.StreamType
 import org.ensodai.avalonmediacard.contract.plugins.VideoQuality
 import org.ensodai.avalonmediacard.contract.rpc.PlaybackMetadataResult
 import org.ensodai.avalonmediacard.contract.rpc.StreamPlaybackResult
@@ -19,6 +21,7 @@ import org.ensodai.avalonmediacard.presentation.core.mvi.BaseViewModel
 import org.ensodai.avalonmediacard.presentation.screens.player.action.*
 import org.ensodai.avalonmediacard.presentation.screens.player.model.PlaybackStatus
 import org.ensodai.avalonmediacard.presentation.screens.player.model.PlayerInitParams
+import org.ensodai.avalonmediacard.presentation.screens.player.model.PlayerMode
 import org.ensodai.avalonmediacard.presentation.screens.player.viewState.PlayerViewState
 import org.koin.core.annotation.InjectedParam
 import org.koin.core.annotation.KoinViewModel
@@ -47,11 +50,13 @@ class PlayerViewModel(
         subtitleTracks = params.subtitleTracks,
         selectedAudioTrackIndex = params.audioTrackIndex,
         defaultPlayerEngine = appSettings.cachedDefaultPlayer,
+        mode = params.mode,
         status = PlaybackStatus.BUFFERING
     )
 ) {
     var onCloseCallback: (() -> Unit)? = null
     var onRequestOtherSourceCallback: (() -> Unit)? = null
+    var onConfirmSourceCallback: (() -> Unit)? = null
     var lastPersistedSeconds: Long = -1L
     private var syncJob: Job? = null
     private var metadataJob: Job? = null
@@ -63,11 +68,46 @@ class PlayerViewModel(
                 updateViewState { it.copy(defaultPlayerEngine = engine) }
             }
         }
-        loadPlaybackSession(params.targetSeason, params.targetEpisode)
+        if (params.mode == PlayerMode.TEST_PREVIEW && !params.streamUrl.isNullOrBlank()) {
+            val fullUrl = resolveAbsoluteUrl(params.streamUrl)
+            updateViewState {
+                it.copy(
+                    currentStreamUrl = fullUrl,
+                    currentStreamId = params.streamId ?: it.currentStreamId,
+                    playlist = if (params.playlist.isNotEmpty()) params.playlist else listOf(
+                        MediaStream(
+                            id = params.streamId ?: "",
+                            title = params.title,
+                            url = fullUrl,
+                            type = StreamType.DirectUrl,
+                            sourceName = params.title
+                        )
+                    ),
+                    audioTracks = params.audioTracks,
+                    subtitleTracks = params.subtitleTracks,
+                    selectedAudioTrackIndex = params.audioTrackIndex,
+                    status = PlaybackStatus.BUFFERING
+                )
+            }
+        } else {
+            loadPlaybackSession(params.targetSeason, params.targetEpisode)
+        }
     }
 
     fun updateStream(newParams: PlayerInitParams) {
-        loadPlaybackSession(newParams.targetSeason, newParams.targetEpisode)
+        if (newParams.mode == PlayerMode.TEST_PREVIEW && !newParams.streamUrl.isNullOrBlank()) {
+            val fullUrl = resolveAbsoluteUrl(newParams.streamUrl)
+            updateViewState {
+                it.copy(
+                    currentStreamUrl = fullUrl,
+                    currentStreamId = newParams.streamId ?: it.currentStreamId,
+                    mode = newParams.mode,
+                    status = PlaybackStatus.BUFFERING
+                )
+            }
+        } else {
+            loadPlaybackSession(newParams.targetSeason, newParams.targetEpisode)
+        }
     }
 
     fun resolveAbsoluteUrl(url: String): String {
@@ -100,7 +140,9 @@ class PlayerViewModel(
             val metaResult = getPlaybackMetadata(
                 key = params.mediaKey,
                 seasonNumber = targetSeason,
-                episodeNumber = targetEpisode
+                episodeNumber = targetEpisode,
+                sourceType = params.sourceType,
+                sourceId = params.sourceId
             )
             when (metaResult) {
                 is PlaybackMetadataResult.Ready -> {
@@ -148,7 +190,9 @@ class PlayerViewModel(
             val result = getPlaybackStream(
                 key = params.mediaKey,
                 seasonNumber = season ?: params.targetSeason,
-                episodeNumber = episode ?: params.targetEpisode
+                episodeNumber = episode ?: params.targetEpisode,
+                sourceType = params.sourceType,
+                sourceId = params.sourceId
             )
             when (result) {
                 is StreamPlaybackResult.Ready -> {
@@ -198,6 +242,7 @@ class PlayerViewModel(
 
     fun checkAndStartSyncLoop() {
         val state = viewState.value
+        if (state.mode == PlayerMode.TEST_PREVIEW) return
         if (state.status == PlaybackStatus.PLAYING || state.isPlaying) {
             if (syncJob?.isActive == true) return
             syncJob = viewModelScope.launch {
@@ -218,7 +263,9 @@ class PlayerViewModel(
     fun stopPlaybackAndDispose() {
         syncJob?.cancel()
         syncJob = null
-        persistProgress(viewState.value, force = true)
+        if (viewState.value.mode != PlayerMode.TEST_PREVIEW) {
+            persistProgress(viewState.value, force = true)
+        }
         updateViewState { it.copy(status = PlaybackStatus.IDLE, currentStreamUrl = null) }
     }
 
@@ -264,6 +311,10 @@ class PlayerViewModel(
         },
         onToggleEpisodeWatched = ::onToggleEpisodeWatched,
         onRateEpisode = ::onRateEpisode,
-        onChangeDefaultPlayer = ::onChangeDefaultPlayer
+        onChangeDefaultPlayer = ::onChangeDefaultPlayer,
+        onConfirmSource = {
+            stopPlaybackAndDispose()
+            onConfirmSourceCallback?.invoke()
+        }
     )
 }

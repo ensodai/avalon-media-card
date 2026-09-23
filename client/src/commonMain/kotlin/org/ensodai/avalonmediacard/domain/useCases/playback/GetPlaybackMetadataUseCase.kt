@@ -12,8 +12,10 @@ class GetPlaybackMetadataUseCase(
     suspend operator fun invoke(
         key: MediaKey,
         seasonNumber: Int? = null,
-        episodeNumber: Int? = null
+        episodeNumber: Int? = null,
+        sourceType: String? = null,
+        sourceId: String? = null
     ): PlaybackMetadataResult {
-        return repository.getPlaybackMetadata(key, seasonNumber, episodeNumber)
+        return repository.getPlaybackMetadata(key, seasonNumber, episodeNumber, sourceType, sourceId)
     }
 }

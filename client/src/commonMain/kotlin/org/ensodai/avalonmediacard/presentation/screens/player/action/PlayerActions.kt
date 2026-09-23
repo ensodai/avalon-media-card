@@ -26,5 +26,6 @@ data class PlayerActions(
     val onToggleEpisodeWatched: (MediaStream) -> Unit = {},
     val onRateEpisode: (MediaStream, Int) -> Unit = { _, _ -> },
     val onChangeDefaultPlayer: (PlayerEngine) -> Unit = {},
-    val onRequestOtherSource: () -> Unit = {}
+    val onRequestOtherSource: () -> Unit = {},
+    val onConfirmSource: (() -> Unit)? = null
 ) : BaseActions()

@@ -58,13 +58,14 @@ import org.jetbrains.compose.resources.stringResource
 
 @Composable
 fun WebActionToolbar(
+    modifier: Modifier = Modifier,
     playButtons: SlotData.ButtonGroup?,
     collectionButtons: SlotData.ButtonGroup?,
     userActions: SlotData.UserActions?,
     isLoading: Boolean = false,
     onAction: (Action) -> Unit,
     onRequestOtherSource: (() -> Unit)? = null,
-    modifier: Modifier = Modifier
+    onOpenWatchParty: (() -> Unit)? = null
 ) {
     Crossfade(
         targetState = isLoading,
@@ -118,6 +119,14 @@ fun WebActionToolbar(
                         .height(40.dp)
                         .shimmerPlaceholder(true, RoundedCornerShape(20.dp))
                 )
+                // Settings button skeleton
+                if (onOpenWatchParty != null) {
+                    Box(
+                        modifier = Modifier
+                            .size(40.dp)
+                            .shimmerPlaceholder(true, CircleShape)
+                    )
+                }
             }
         } else {
             Row(
@@ -235,6 +244,66 @@ fun WebActionToolbar(
                         )
                     }
                 }
+
+                // 7. Settings Dropdown (Шестеренка: совместный просмотр и др.)
+                if (onOpenWatchParty != null) {
+                    WebSettingsMenuButton(
+                        onOpenWatchParty = onOpenWatchParty
+                    )
+                }
+            }
+        }
+    }
+}
+
+@Composable
+private fun WebSettingsMenuButton(
+    onOpenWatchParty: () -> Unit
+) {
+    var expanded by remember { mutableStateOf(false) }
+    val density = LocalDensity.current
+
+    Box {
+        Box(
+            modifier = Modifier
+                .size(40.dp)
+                .tvAndWebHoverEffect(
+                    scaleTarget = 1.08f,
+                    defaultBorderWidth = 1.dp,
+                    defaultBorderColor = Color.White.copy(alpha = 0.12f),
+                    activeBorderWidth = 1.dp,
+                    activeBorderColor = Color.White.copy(alpha = 0.6f),
+                    shape = CircleShape,
+                    onClick = { expanded = !expanded }
+                )
+                .background(Color.White.copy(alpha = 0.05f), CircleShape),
+            contentAlignment = Alignment.Center
+        ) {
+            Icon(
+                imageVector = Lucide.Settings,
+                contentDescription = stringResource(Res.string.settings_title),
+                tint = if (expanded) MaterialTheme.colorScheme.primary else Color.White.copy(alpha = 0.85f),
+                modifier = Modifier.size(17.dp)
+            )
+        }
+
+        if (expanded) {
+            AvalonDropdownMenu(
+                expanded = expanded,
+                alignment = Alignment.TopStart,
+                offset = IntOffset(0, with(density) { 46.dp.roundToPx() }),
+                onDismissRequest = { expanded = false }
+            ) {
+                AvalonDropdownMenuItem(
+                    text = stringResource(Res.string.watch_party_title),
+                    icon = Lucide.Users,
+                    textColor = Color.White,
+                    iconColor = MaterialTheme.colorScheme.primary,
+                    onClick = {
+                        expanded = false
+                        onOpenWatchParty()
+                    }
+                )
             }
         }
     }

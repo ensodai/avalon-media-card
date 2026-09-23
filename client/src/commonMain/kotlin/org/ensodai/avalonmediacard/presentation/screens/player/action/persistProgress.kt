@@ -10,11 +10,13 @@ import org.ensodai.avalonmediacard.contract.slot.SaveEpisodeProgressCommand
 import org.ensodai.avalonmediacard.contract.slot.SaveMovieProgressCommand
 import org.ensodai.avalonmediacard.presentation.screens.player.PlayerViewModel
 import org.ensodai.avalonmediacard.presentation.screens.player.model.PlaybackStatus
+import org.ensodai.avalonmediacard.presentation.screens.player.model.PlayerMode
 import org.ensodai.avalonmediacard.presentation.screens.player.viewState.PlayerViewState
 
 private val logger = AppLogging.logger("PlayerProgress")
 
 fun PlayerViewModel.persistProgress(state: PlayerViewState, force: Boolean = false) {
+    if (state.mode == PlayerMode.TEST_PREVIEW) return
     if (!force && state.status == PlaybackStatus.IDLE) return
     val mediaKey = state.mediaKey ?: return
     val current = state.currentTime

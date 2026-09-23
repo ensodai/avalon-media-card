@@ -44,6 +44,8 @@ node_modules/
 web/widgets/
 web/samsung-widget/
 **/samsung-widget/
+server/plugins/
+**/widgets/
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
@@ -78,6 +80,7 @@ repomix-output*
 *.7z
 scratch/
 temp/
+md/
 *движок рекомендаций мок данные*
 
 # ==========================================

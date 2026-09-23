@@ -39,6 +39,7 @@ fun WebHeroSection(
     scrollOffset: Int = 0,
     heroHeight: Dp = 760.dp,
     onRequestOtherSource: (() -> Unit)? = null,
+    onOpenWatchParty: (() -> Unit)? = null,
     modifier: Modifier = Modifier
 ) {
     val backdropUrl = headerData?.backgroundUrl ?: headerData?.posterUrl
@@ -239,7 +240,8 @@ fun WebHeroSection(
                     userActions = userActions,
                     isLoading = isPlayButtonsLoading,
                     onAction = onAction,
-                    onRequestOtherSource = onRequestOtherSource
+                    onRequestOtherSource = onRequestOtherSource,
+                    onOpenWatchParty = onOpenWatchParty
                 )
             }
         }

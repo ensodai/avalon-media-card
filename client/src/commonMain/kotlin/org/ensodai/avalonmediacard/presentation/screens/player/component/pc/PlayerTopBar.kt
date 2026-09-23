@@ -28,6 +28,7 @@ import org.ensodai.avalonmediacard.presentation.screens.player.component.PlayerI
 import org.ensodai.avalonmediacard.presentation.screens.player.component.PlayerIslandDynamicButton
 import org.ensodai.avalonmediacard.presentation.screens.player.component.PlayerIslandIconButton
 import org.ensodai.avalonmediacard.presentation.screens.player.component.PlayerIslandTitle
+import org.ensodai.avalonmediacard.presentation.screens.player.model.PlayerMode
 import org.ensodai.avalonmediacard.presentation.screens.player.viewState.PlayerViewState
 import org.jetbrains.compose.resources.stringResource
 
@@ -72,7 +73,32 @@ fun PlayerTopBar(
         }
 
         // Остров 3 и 4: Правая часть (Действия)
-        if (currentEpisode != null) {
+        if (state.mode == PlayerMode.TEST_PREVIEW) {
+            Row(
+                verticalAlignment = Alignment.Top,
+                horizontalArrangement = Arrangement.spacedBy(12.dp)
+            ) {
+                // Островок: Статус тестового режима
+                PlayerIslandDynamicButton(
+                    icon = Lucide.Wrench,
+                    text = stringResource(Res.string.player_test_mode_badge),
+                    contentDescription = stringResource(Res.string.player_test_mode_badge),
+                    iconTint = Color(0xFFFFB74D),
+                    textColor = Color(0xFFFFB74D),
+                    onClick = {}
+                )
+
+                // Островок: Подтвердить источник
+                PlayerIslandDynamicButton(
+                    icon = Lucide.Check,
+                    text = stringResource(Res.string.player_btn_confirm_source),
+                    contentDescription = stringResource(Res.string.player_btn_confirm_source),
+                    iconTint = Color(0xFF4CAF50),
+                    textColor = Color(0xFF4CAF50),
+                    onClick = { actions.onConfirmSource?.invoke() }
+                )
+            }
+        } else if (currentEpisode != null) {
             var showRatingPopup by remember { mutableStateOf(false) }
 
             Row(

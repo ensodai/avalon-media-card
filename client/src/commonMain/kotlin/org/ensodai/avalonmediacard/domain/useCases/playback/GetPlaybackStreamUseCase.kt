@@ -12,8 +12,10 @@ class GetPlaybackStreamUseCase(
     suspend operator fun invoke(
         key: MediaKey,
         seasonNumber: Int? = null,
-        episodeNumber: Int? = null
+        episodeNumber: Int? = null,
+        sourceType: String? = null,
+        sourceId: String? = null
     ): StreamPlaybackResult {
-        return repository.getStreamUrl(key, seasonNumber, episodeNumber)
+        return repository.getStreamUrl(key, seasonNumber, episodeNumber, sourceType, sourceId)
     }
 }

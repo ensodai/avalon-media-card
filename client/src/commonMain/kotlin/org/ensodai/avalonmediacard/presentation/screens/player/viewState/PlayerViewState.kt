@@ -8,6 +8,8 @@ import org.ensodai.avalonmediacard.contract.plugins.SubtitleTrack
 import org.ensodai.avalonmediacard.contract.plugins.VideoQuality
 import org.ensodai.avalonmediacard.presentation.core.mvi.BaseViewState
 import org.ensodai.avalonmediacard.presentation.screens.player.model.PlaybackStatus
+import org.ensodai.avalonmediacard.presentation.screens.player.model.PlayerEngine
+import org.ensodai.avalonmediacard.presentation.screens.player.model.PlayerMode
 
 data class PlayerTitleData(
     val topText: String,
@@ -33,7 +35,8 @@ data class PlayerViewState(
     val isFullscreen: Boolean = false,
     val areControlsVisible: Boolean = true,
     val errorMessage: String? = null,
-    val defaultPlayerEngine: org.ensodai.avalonmediacard.presentation.screens.player.model.PlayerEngine = org.ensodai.avalonmediacard.presentation.screens.player.model.PlayerEngine.MEDIA3
+    val defaultPlayerEngine: PlayerEngine = PlayerEngine.MEDIA3,
+    val mode: PlayerMode = PlayerMode.STANDARD
 ) : BaseViewState() {
     val isBuffering: Boolean
         get() = status == PlaybackStatus.BUFFERING || status == PlaybackStatus.RECOVERING

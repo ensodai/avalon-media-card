@@ -24,6 +24,7 @@ data class DetailsViewState(
     val carousels: List<SduiSlot<SlotData.Carousel>> = emptyList(),
     val comments: SduiSlot<SlotData.Comments>? = null,
     val isSourcesExpanded: Boolean = false,
+    val isWatchPartyOpen: Boolean = false,
     val playerState: PlayerState = PlayerState.Idle
 ) : SduiViewState {
 

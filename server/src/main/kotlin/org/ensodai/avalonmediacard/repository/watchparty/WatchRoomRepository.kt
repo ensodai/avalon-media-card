@@ -35,7 +35,21 @@ interface WatchRoomRepository {
     /**
      * Возвращает список сохраненных активных комнат для тайтла.
      */
-    suspend fun getRoomsForMedia(mediaId: String, currentUserId: Uuid): List<WatchRoomSummaryDto>
+    suspend fun getRoomsForMedia(
+        mediaId: String,
+        currentUserId: Uuid,
+        limit: Int = 50,
+        offset: Long = 0
+    ): List<WatchRoomSummaryDto>
+
+    /**
+     * Возвращает список всех комнат пользователя (где он хост или участник).
+     */
+    suspend fun getRoomsForUser(
+        userId: Uuid,
+        limit: Int = 50,
+        offset: Long = 0
+    ): List<WatchRoomSummaryDto>
 
     /**
      * Обновляет сохраненный прогресс воспроизведения (сезон, эпизод, секунды).

@@ -307,6 +307,8 @@ fun Sidebar(
                 )
             }
 
+
+
             if (collectionItems.isNotEmpty()) {
                 item {
                     Spacer(modifier = Modifier.height(8.dp))
@@ -377,6 +379,7 @@ fun SidebarMenuItem(
         "LibraryBooks" -> Lucide.Folder
         "search" -> Lucide.Search
         "bell" -> Lucide.Bell
+        "users" -> Lucide.Users
         else -> if (isMainGroup) Lucide.LayoutGrid else Lucide.Hash
     }
 
@@ -443,6 +446,7 @@ fun getLocalizedSidebarTitle(item: SidebarItem): String {
         "search" -> stringResource(Res.string.nav_search)
         "collection" -> stringResource(Res.string.nav_my_collection)
         "episodes_notifications" -> stringResource(Res.string.episodes_notifications_title)
+        "watch_rooms" -> stringResource(Res.string.nav_watch_rooms)
         else -> item.title ?: ""
     }
 }

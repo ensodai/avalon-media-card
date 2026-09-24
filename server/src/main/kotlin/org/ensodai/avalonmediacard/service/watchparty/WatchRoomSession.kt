@@ -7,19 +7,24 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.asSharedFlow
+import kotlinx.coroutines.flow.emitAll
+import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
+import org.ensodai.avalonmediacard.contract.model.LobbyEvent
 import org.ensodai.avalonmediacard.contract.model.RoomPlaybackCommand
 import org.ensodai.avalonmediacard.contract.model.WatchParticipantIntent
 import org.ensodai.avalonmediacard.contract.model.WatchRoomControlMode
 import org.ensodai.avalonmediacard.contract.model.WatchRoomParticipantDto
 import org.ensodai.avalonmediacard.contract.model.WatchRoomParticipantRole
 import org.ensodai.avalonmediacard.contract.model.WatchRoomPlaybackState
+import org.ensodai.avalonmediacard.contract.model.WatchRoomStatus
 import org.ensodai.avalonmediacard.contract.model.WatchRoomEvent
 import org.slf4j.LoggerFactory
 import java.util.concurrent.ConcurrentHashMap
 import kotlin.time.Clock
+import kotlin.time.Duration.Companion.seconds
 import kotlin.uuid.Uuid
 
 /**
@@ -35,7 +40,17 @@ data class ActiveParticipant(
     var intent: WatchParticipantIntent = WatchParticipantIntent.WATCHING_ATTENTIVELY,
     var lastPingAt: Long = Clock.System.now().toEpochMilliseconds(),
     var isDesynced: Boolean = false
-)
+) {
+    fun toDto() = WatchRoomParticipantDto(
+        userId = userId,
+        username = username,
+        role = role,
+        isOnline = isOnline,
+        playbackState = playbackState,
+        isReady = isReady,
+        intent = intent
+    )
+}
 
 /**
  * In-Memory State Machine комнаты совместного просмотра.
@@ -77,7 +92,7 @@ class WatchRoomSession(
     private val bufferingParticipants = ConcurrentHashMap.newKeySet<Uuid>()
     private var gracePeriodJob: Job? = null
 
-    // Реактивная шина событий комнаты
+    // Реактивная шина событий комнаты (TrueSync / Плеер)
     private val _events = MutableSharedFlow<WatchRoomEvent>(
         replay = 1,
         extraBufferCapacity = 64,
@@ -85,9 +100,170 @@ class WatchRoomSession(
     )
     val events: Flow<WatchRoomEvent> = _events.asSharedFlow()
 
+    // Реактивная шина событий предстартового лобби (Snapshot + Upsert Item)
+    private val _lobbyEvents = MutableSharedFlow<LobbyEvent>(
+        extraBufferCapacity = 64,
+        onBufferOverflow = BufferOverflow.DROP_OLDEST
+    )
+    val lobbyEvents: Flow<LobbyEvent> = _lobbyEvents.asSharedFlow()
+
+    // Реестр корутин отложенного отключения (Grace-Period 20 секунд)
+    private val disconnectJobs = ConcurrentHashMap<Uuid, Job>()
+
+    // Реестр активных соединений по пользователю (userId -> Set<connectionId>)
+    private val userConnections = ConcurrentHashMap<Uuid, MutableSet<Uuid>>()
+
     init {
         // Эмитим начальный слепок состояния
         emitCurrentSyncState(null)
+    }
+
+    /**
+     * Поток событий предстартового лобби.
+     * При подключении всегда гарантированно отдает InitialSnapshot, затем шлет точечные события.
+     */
+    fun subscribeLobby(): Flow<LobbyEvent> = flow {
+        emit(LobbyEvent.InitialSnapshot(WatchRoomStatus.ACTIVE, getParticipantList()))
+        emitAll(lobbyEvents)
+    }
+
+    /**
+     * Обработка подключения клиента к лобби или плееру.
+     * Регистрирует connectionId и снимает таймер Grace-Period при переподключении.
+     */
+    suspend fun handleClientConnected(
+        userId: Uuid,
+        username: String,
+        role: WatchRoomParticipantRole,
+        connectionId: Uuid = Uuid.random()
+    ): WatchRoomParticipantDto = mutex.withLock {
+        disconnectJobs.remove(userId)?.cancel()
+        userConnections.computeIfAbsent(userId) { ConcurrentHashMap.newKeySet() }.add(connectionId)
+
+        val existing = participants[userId]
+        val p = if (existing != null) {
+            existing.isOnline = true
+            existing.lastPingAt = Clock.System.now().toEpochMilliseconds()
+            existing
+        } else {
+            val newP = ActiveParticipant(
+                userId = userId,
+                username = username,
+                role = role,
+                isOnline = true,
+                playbackState = WatchRoomPlaybackState.READY,
+                lastPingAt = Clock.System.now().toEpochMilliseconds()
+            )
+            participants[userId] = newP
+            newP
+        }
+
+        val dto = p.toDto()
+        _lobbyEvents.emit(LobbyEvent.ParticipantUpdated(dto))
+        _events.emit(WatchRoomEvent.ParticipantsUpdated(getParticipantListLocked()))
+        dto
+    }
+
+    /**
+     * Обработка потери сетевого соединения.
+     * Если у пользователя больше нет других активных соединений, помечает оффлайн и запускает Grace-Period.
+     */
+    suspend fun handleClientDisconnected(
+        userId: Uuid,
+        connectionId: Uuid? = null
+    ) = mutex.withLock {
+        if (connectionId != null) {
+            val connections = userConnections[userId]
+            if (connections != null) {
+                connections.remove(connectionId)
+                if (connections.isNotEmpty()) {
+                    logger.info("Connection {} for user {} closed, but {} other connection(s) still active.", connectionId, userId, connections.size)
+                    return@withLock
+                }
+                userConnections.remove(userId)
+            }
+        } else {
+            userConnections.remove(userId)
+        }
+
+        val p = participants[userId] ?: return@withLock
+        p.isOnline = false
+        p.playbackState = WatchRoomPlaybackState.OFFLINE
+        bufferingParticipants.remove(userId)
+
+        val dto = p.toDto()
+        _lobbyEvents.emit(LobbyEvent.ParticipantUpdated(dto))
+        _events.emit(WatchRoomEvent.ParticipantsUpdated(getParticipantListLocked()))
+    }
+
+    /**
+     * Окончательное исключение участника по истечении Grace-Period.
+     */
+    suspend fun evictParticipant(userId: Uuid) = mutex.withLock {
+        disconnectJobs.remove(userId)
+        userConnections.remove(userId)
+        val removed = participants.remove(userId) ?: return@withLock
+        bufferingParticipants.remove(userId)
+
+        _lobbyEvents.emit(LobbyEvent.ParticipantRemoved(userId))
+        _events.emit(WatchRoomEvent.ParticipantsUpdated(getParticipantListLocked()))
+
+        if (removed.role == WatchRoomParticipantRole.HOST) {
+            checkHostMigrationLocked()
+        }
+    }
+
+    /**
+     * Обновление готовности и намерения участника в лобби.
+     */
+    suspend fun setLobbyStatus(
+        userId: Uuid,
+        intent: WatchParticipantIntent,
+        isReady: Boolean
+    ): Boolean = mutex.withLock {
+        val p = participants[userId] ?: return@withLock false
+        p.intent = intent
+        p.isReady = isReady
+
+        val dto = p.toDto()
+        _lobbyEvents.emit(LobbyEvent.ParticipantUpdated(dto))
+        _events.emit(WatchRoomEvent.ParticipantsUpdated(getParticipantListLocked()))
+        true
+    }
+
+    /**
+     * Запуск воспроизведения хостом из лобби.
+     */
+    suspend fun triggerStartPlayback(userId: Uuid): Boolean = mutex.withLock {
+        val p = participants[userId] ?: return@withLock false
+        if (p.role != WatchRoomParticipantRole.HOST && controlMode == WatchRoomControlMode.HOST_ONLY) {
+            logger.warn("Non-host {} tried to trigger start playback in room {}", userId, roomId)
+            return@withLock false
+        }
+
+        gracePeriodJob?.cancel()
+        gracePeriodJob = null
+        bufferingParticipants.clear()
+
+        val now = Clock.System.now().toEpochMilliseconds()
+        val targetStartMs = now + 500L
+        isPlaying = true
+        anchorPositionMs = 0L
+        anchorServerTimestampMs = targetStartMs
+        p.playbackState = WatchRoomPlaybackState.PLAYING
+
+        emitCurrentSyncState(userId)
+        _events.emit(WatchRoomEvent.ParticipantsUpdated(getParticipantListLocked()))
+        _lobbyEvents.emit(
+            LobbyEvent.TransitionToPlayer(
+                playAtServerTimestampMs = targetStartMs,
+                season = currentSeason,
+                episode = currentEpisode
+            )
+        )
+
+        onProgressChanged(currentSeason, currentEpisode, 0L)
+        true
     }
 
     /**
@@ -108,6 +284,8 @@ class WatchRoomSession(
         username: String,
         role: WatchRoomParticipantRole
     ): List<WatchRoomParticipantDto> = mutex.withLock {
+        disconnectJobs.remove(userId)?.cancel()
+
         val existing = participants[userId]
         if (existing != null) {
             existing.isOnline = true
@@ -124,6 +302,10 @@ class WatchRoomSession(
         }
 
         val dtoList = getParticipantListLocked()
+        val p = participants[userId]
+        if (p != null) {
+            _lobbyEvents.emit(LobbyEvent.ParticipantUpdated(p.toDto()))
+        }
         _events.emit(WatchRoomEvent.ParticipantsUpdated(dtoList))
         dtoList
     }
@@ -131,27 +313,18 @@ class WatchRoomSession(
     /**
      * Отметка об отключении участника.
      */
-    suspend fun markParticipantOffline(userId: Uuid) = mutex.withLock {
-        val p = participants[userId] ?: return@withLock
-        p.isOnline = false
-        p.playbackState = WatchRoomPlaybackState.OFFLINE
-        bufferingParticipants.remove(userId)
-
-        _events.emit(WatchRoomEvent.ParticipantsUpdated(getParticipantListLocked()))
-
-        // Если отключился хост, запускаем таймер миграции прав
-        if (userId == hostUserId) {
-            checkHostMigrationLocked()
-        }
-    }
+    suspend fun markParticipantOffline(userId: Uuid) = handleClientDisconnected(userId)
 
     /**
      * Полное удаление участника из комнаты (при выходе по кнопке).
      */
     suspend fun removeParticipant(userId: Uuid) = mutex.withLock {
+        disconnectJobs.remove(userId)?.cancel()
+        userConnections.remove(userId)
         participants.remove(userId)
         bufferingParticipants.remove(userId)
 
+        _lobbyEvents.emit(LobbyEvent.ParticipantRemoved(userId))
         _events.emit(WatchRoomEvent.ParticipantsUpdated(getParticipantListLocked()))
 
         if (userId == hostUserId) {
@@ -404,6 +577,17 @@ class WatchRoomSession(
         }
     }
 
+    fun getCurrentSyncState(): WatchRoomEvent.SyncState {
+        return WatchRoomEvent.SyncState(
+            isPlaying = isPlaying,
+            anchorPositionMs = anchorPositionMs,
+            anchorServerTimestampMs = anchorServerTimestampMs,
+            season = currentSeason,
+            episode = currentEpisode,
+            triggeredByUserId = null
+        )
+    }
+
     private fun emitCurrentSyncState(triggeredByUserId: Uuid?) {
         _events.tryEmit(
             WatchRoomEvent.SyncState(
@@ -423,6 +607,10 @@ class WatchRoomSession(
     suspend fun close() = mutex.withLock {
         gracePeriodJob?.cancel()
         gracePeriodJob = null
+        disconnectJobs.values.forEach { it.cancel() }
+        disconnectJobs.clear()
+        userConnections.clear()
         _events.emit(WatchRoomEvent.SystemNotice("Комната была закрыта хостом."))
+        _lobbyEvents.emit(LobbyEvent.SystemNotice("Комната была закрыта хостом."))
     }
 }

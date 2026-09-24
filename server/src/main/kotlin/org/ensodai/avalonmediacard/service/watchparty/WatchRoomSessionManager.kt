@@ -2,14 +2,20 @@ package org.ensodai.avalonmediacard.service.watchparty
 
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.NonCancellable
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.emitAll
+import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.onCompletion
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import org.ensodai.avalonmediacard.contract.auth.AuthState
+import org.ensodai.avalonmediacard.contract.model.LobbyEvent
 import org.ensodai.avalonmediacard.contract.model.MediaStatus
 import org.ensodai.avalonmediacard.contract.model.MediaType
 import org.ensodai.avalonmediacard.contract.model.RoomPlaybackCommand
+import org.ensodai.avalonmediacard.contract.model.SetLobbyStatusRequest
 import org.ensodai.avalonmediacard.contract.model.UserMovieItem
 import org.ensodai.avalonmediacard.contract.model.WatchRoomDto
 import org.ensodai.avalonmediacard.contract.model.WatchRoomEvent
@@ -199,7 +205,7 @@ class WatchRoomSessionManager(
     }
 
     /**
-     * Подключение к реактивному потоку событий комнаты.
+     * Подключение к реактивному потоку событий комнаты (TrueSync / Плеер).
      */
     suspend fun streamEvents(
         roomId: Uuid,
@@ -208,12 +214,61 @@ class WatchRoomSessionManager(
         val session = getOrCreateSession(roomId) ?: return null
 
         val role = if (session.hostUserId == user.userId) WatchRoomParticipantRole.HOST else WatchRoomParticipantRole.MEMBER
-        session.addOrUpdateParticipant(user.userId, user.username, role)
+        val connectionId = Uuid.random()
+        session.handleClientConnected(user.userId, user.username, role, connectionId)
 
-        return session.events.onCompletion {
-            // При закрытии WebSocket соединения отмечаем участника офлайн
-            session.markParticipantOffline(user.userId)
+        return flow {
+            // Мгновенный начальный снимок состояния для синхронизации подключающегося участника
+            emit(session.getCurrentSyncState())
+            emit(WatchRoomEvent.ParticipantsUpdated(session.getParticipantList()))
+            emitAll(session.events)
+        }.onCompletion {
+            withContext(NonCancellable) {
+                session.handleClientDisconnected(user.userId, connectionId)
+            }
         }
+    }
+
+    /**
+     * Подключение к реактивному потоку предстартового лобби (Snapshot + Upsert Item).
+     */
+    suspend fun streamLobbyState(
+        roomId: Uuid,
+        user: AuthState.Authorized
+    ): Flow<LobbyEvent>? {
+        val session = getOrCreateSession(roomId) ?: return null
+        val role = if (session.hostUserId == user.userId) WatchRoomParticipantRole.HOST else WatchRoomParticipantRole.MEMBER
+        val connectionId = Uuid.random()
+        session.handleClientConnected(user.userId, user.username, role, connectionId)
+
+        return session.subscribeLobby().onCompletion {
+            withContext(NonCancellable) {
+                session.handleClientDisconnected(user.userId, connectionId)
+            }
+        }
+    }
+
+    /**
+     * Обновление готовности и намерения участника в лобби.
+     */
+    suspend fun setLobbyStatus(
+        roomId: Uuid,
+        userId: Uuid,
+        request: SetLobbyStatusRequest
+    ): Boolean {
+        val session = sessions[roomId] ?: getOrCreateSession(roomId) ?: return false
+        return session.setLobbyStatus(userId, request.intent, request.isReady)
+    }
+
+    /**
+     * Запуск совместного просмотра хостом из лобби.
+     */
+    suspend fun triggerStartPlayback(
+        roomId: Uuid,
+        userId: Uuid
+    ): Boolean {
+        val session = sessions[roomId] ?: getOrCreateSession(roomId) ?: return false
+        return session.triggerStartPlayback(userId)
     }
 
     /**

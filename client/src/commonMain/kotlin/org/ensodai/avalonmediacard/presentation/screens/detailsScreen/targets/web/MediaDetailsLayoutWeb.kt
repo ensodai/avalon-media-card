@@ -11,6 +11,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import org.ensodai.avalonmediacard.contract.slot.Action
+import org.ensodai.avalonmediacard.presentation.screens.commonComponents.LocalRootOverlay
 import org.ensodai.avalonmediacard.presentation.screens.detailsScreen.component.carouselsSlot.CarouselsSlot
 import org.ensodai.avalonmediacard.presentation.screens.detailsScreen.component.commentsSlot.CommentsSlot
 import org.ensodai.avalonmediacard.presentation.screens.detailsScreen.component.continueWatchingSlot.ContinueWatchingSlot
@@ -20,10 +21,15 @@ import org.ensodai.avalonmediacard.presentation.screens.detailsScreen.targets.we
 import org.ensodai.avalonmediacard.presentation.screens.detailsScreen.targets.web.components.WebHeroSection
 import org.ensodai.avalonmediacard.presentation.screens.detailsScreen.targets.web.components.WebTvSeasonsSection
 import org.ensodai.avalonmediacard.presentation.screens.detailsScreen.viewState.DetailsViewState
+import org.ensodai.avalonmediacard.presentation.screens.player.launchPlayerOverlay
+import org.ensodai.avalonmediacard.presentation.screens.player.model.PlayerInitParams
+import org.ensodai.avalonmediacard.presentation.screens.player.model.PlayerMode
 import org.ensodai.avalonmediacard.presentation.screens.watchParty.WatchPartyScreen
+import org.ensodai.avalonmediacard.presentation.screens.watchParty.viewState.WatchPartyStep
 
 @Composable
 fun MediaDetailsLayoutWeb(
+    modifier: Modifier = Modifier,
     state: DetailsViewState,
     onAction: (Action) -> Unit,
     onClosePlayer: (() -> Unit)? = null,
@@ -33,7 +39,6 @@ fun MediaDetailsLayoutWeb(
     onRefreshSources: (() -> Unit)? = null,
     onOpenWatchParty: (() -> Unit)? = null,
     onCloseWatchParty: (() -> Unit)? = null,
-    modifier: Modifier = Modifier
 ) {
     val isPlayerOpen = state.playerState !is DetailsViewState.PlayerState.Idle
     val scrollState = rememberScrollState()
@@ -136,6 +141,8 @@ fun MediaDetailsLayoutWeb(
             )
         }
 
+        val rootOverlay = LocalRootOverlay.current
+
         // 4. Watch Party Modal (if open)
         WatchPartyScreen(
             isVisible = state.isWatchPartyOpen,
@@ -145,9 +152,24 @@ fun MediaDetailsLayoutWeb(
             torrentInspectorState = state.torrentInspector?.state,
             onRefreshSources = onRefreshSources,
             onAction = onAction,
+            initialStep = WatchPartyStep.SETUP,
             onClose = { onCloseWatchParty?.invoke() },
-            onStartPlayback = { _, _, _ ->
+            onStartPlayback = { roomId, season, episode ->
                 onCloseWatchParty?.invoke()
+                state.mediaKey?.let { key ->
+                    launchPlayerOverlay(
+                        rootOverlay = rootOverlay,
+                        params = PlayerInitParams(
+                            title = state.header?.state?.data?.title ?: "Watch Party",
+                            seriesTitle = state.header?.state?.data?.title,
+                            mediaKey = key,
+                            targetSeason = season,
+                            targetEpisode = episode,
+                            mode = PlayerMode.WATCH_PARTY,
+                            watchRoomId = roomId
+                        )
+                    )
+                }
             }
         )
     }

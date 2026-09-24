@@ -127,8 +127,8 @@ fun Application.module() {
     install(PartialContent)
 
     install(WebSockets) {
-        pingPeriodMillis = 60_000L
-        timeoutMillis = 300_000L
+        pingPeriodMillis = 10_000L
+        timeoutMillis = 20_000L
         maxFrameSize = Long.MAX_VALUE
         masking = false
     }

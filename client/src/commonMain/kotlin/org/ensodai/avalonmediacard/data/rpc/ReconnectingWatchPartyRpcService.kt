@@ -10,7 +10,9 @@ import kotlinx.rpc.withService
 import org.ensodai.avalonmediacard.contract.logging.AppLogging
 import org.ensodai.avalonmediacard.contract.model.CreateRoomRequest
 import org.ensodai.avalonmediacard.contract.model.JoinRoomResult
+import org.ensodai.avalonmediacard.contract.model.LobbyEvent
 import org.ensodai.avalonmediacard.contract.model.RoomPlaybackCommand
+import org.ensodai.avalonmediacard.contract.model.SetLobbyStatusRequest
 import org.ensodai.avalonmediacard.contract.model.WatchRoomDto
 import org.ensodai.avalonmediacard.contract.model.WatchRoomEvent
 import org.ensodai.avalonmediacard.contract.model.WatchRoomSummaryDto
@@ -49,6 +51,11 @@ class ReconnectingWatchPartyRpcService(
             getSavedRoomsForMedia(mediaId)
         }
 
+    override suspend fun getUserRooms(): List<WatchRoomSummaryDto> =
+        executor.execute("getUserRooms", getService = { getService() }) {
+            getUserRooms()
+        }
+
     override suspend fun leaveRoom(roomId: Uuid): Boolean =
         executor.execute("leaveRoom", getService = { getService() }) {
             leaveRoom(roomId)
@@ -57,6 +64,30 @@ class ReconnectingWatchPartyRpcService(
     override suspend fun closeRoom(roomId: Uuid): Boolean =
         executor.execute("closeRoom", getService = { getService() }) {
             closeRoom(roomId)
+        }
+
+    override fun streamLobbyState(roomId: Uuid): Flow<LobbyEvent> {
+        return flow {
+            emitAll(getService().streamLobbyState(roomId))
+        }.retryWhen { cause, attempt ->
+            if (cause is CancellationException && !executor.isNetworkCancellation(cause)) {
+                return@retryWhen false
+            }
+            logger.w(cause) { "Lobby State Stream failed for $roomId (attempt $attempt). Retrying..." }
+            connectionManager.notifyStreamFailure(cause)
+            delay(min(1000L * (attempt + 1), 5000L).milliseconds)
+            true
+        }
+    }
+
+    override suspend fun setLobbyStatus(roomId: Uuid, request: SetLobbyStatusRequest): Boolean =
+        executor.execute("setLobbyStatus", getService = { getService() }) {
+            setLobbyStatus(roomId, request)
+        }
+
+    override suspend fun triggerStartPlayback(roomId: Uuid): Boolean =
+        executor.execute("triggerStartPlayback", getService = { getService() }) {
+            triggerStartPlayback(roomId)
         }
 
     override fun streamRoomEvents(roomId: Uuid): Flow<WatchRoomEvent> {

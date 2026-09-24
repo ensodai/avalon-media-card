@@ -477,6 +477,24 @@
     <string name="watch_party_source_change">Change</string>
     <string name="watch_party_source_close_selector">Hide sources</string>
     <string name="watch_party_source_selected">Source selected</string>
+    <string name="watch_rooms_title">Watch Party</string>
+    <string name="watch_rooms_subtitle">Watch movies and shows together with real-time sync</string>
+    <string name="watch_rooms_btn_create">Create Room</string>
+    <string name="watch_rooms_create_desc">Create a new watch session</string>
+    <string name="watch_rooms_btn_connect">Connect by PIN</string>
+    <string name="watch_rooms_connect_desc">Enter PIN to join a friend's room</string>
+    <string name="watch_rooms_history_title">Your Rooms</string>
+    <string name="watch_rooms_history_empty">No active rooms yet. Create a new room or join with a PIN!</string>
+    <string name="watch_rooms_enter_room">Join</string>
+    <string name="nav_watch_rooms">Watch Party</string>
     <string name="player_test_mode_badge">Test Preview</string>
     <string name="player_btn_confirm_source">Confirm Source</string>
+    <string name="watch_party_ready_counter_all">All participants ready (%1$d/%2$d) ✓</string>
+    <string name="watch_party_ready_counter_waiting">Waiting for readiness: %1$d of %2$d</string>
+    <string name="watch_party_media_info_season_ep">Season %1$d • Episode %2$d</string>
+    <string name="watch_party_participant_offline">Offline</string>
+    <string name="watch_party_participant_online">Online</string>
+    <string name="watch_party_btn_invite">Invite</string>
+    <string name="watch_party_invite_copied">Invite link copied to clipboard!</string>
+    <string name="watch_party_media_card_label">Watching in this room</string>
 </resources>

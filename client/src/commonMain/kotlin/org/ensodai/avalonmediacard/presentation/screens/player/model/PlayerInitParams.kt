@@ -4,6 +4,7 @@ import org.ensodai.avalonmediacard.contract.model.MediaKey
 import org.ensodai.avalonmediacard.contract.plugins.AudioTrack
 import org.ensodai.avalonmediacard.contract.plugins.MediaStream
 import org.ensodai.avalonmediacard.contract.plugins.SubtitleTrack
+import kotlin.uuid.Uuid
 
 data class PlayerInitParams(
     val title: String,
@@ -21,5 +22,6 @@ data class PlayerInitParams(
     val audioTrackIndex: Int? = null,
     val mode: PlayerMode = PlayerMode.STANDARD,
     val sourceType: String? = null,
-    val sourceId: String? = null
+    val sourceId: String? = null,
+    val watchRoomId: Uuid? = null
 )

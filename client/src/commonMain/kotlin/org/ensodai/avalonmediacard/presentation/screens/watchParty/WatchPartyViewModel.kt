@@ -10,9 +10,9 @@ import org.ensodai.avalonmediacard.domain.useCases.watchparty.GetSavedWatchRooms
 import org.ensodai.avalonmediacard.domain.useCases.watchparty.JoinWatchRoomByIdUseCase
 import org.ensodai.avalonmediacard.domain.useCases.watchparty.JoinWatchRoomByPinUseCase
 import org.ensodai.avalonmediacard.domain.useCases.watchparty.LeaveWatchRoomUseCase
-import org.ensodai.avalonmediacard.domain.useCases.watchparty.SendPlaybackCommandUseCase
-import org.ensodai.avalonmediacard.domain.useCases.watchparty.SendReactionUseCase
-import org.ensodai.avalonmediacard.domain.useCases.watchparty.StreamWatchRoomEventsUseCase
+import org.ensodai.avalonmediacard.domain.useCases.watchparty.SetLobbyStatusUseCase
+import org.ensodai.avalonmediacard.domain.useCases.watchparty.StreamLobbyStateUseCase
+import org.ensodai.avalonmediacard.domain.useCases.watchparty.TriggerStartPlaybackUseCase
 import org.ensodai.avalonmediacard.presentation.core.mvi.BaseViewModel
 import org.ensodai.avalonmediacard.presentation.screens.watchParty.action.WatchPartyActions
 import org.ensodai.avalonmediacard.presentation.screens.watchParty.action.onControlModeChanged
@@ -32,6 +32,7 @@ import org.ensodai.avalonmediacard.presentation.screens.watchParty.action.onTest
 import org.ensodai.avalonmediacard.presentation.screens.watchParty.action.onTestSourceVerified
 import org.ensodai.avalonmediacard.presentation.screens.watchParty.action.onToggleReady
 import org.ensodai.avalonmediacard.presentation.screens.watchParty.action.onToggleSelectSource
+import org.ensodai.avalonmediacard.presentation.screens.watchParty.viewState.WatchPartyStep
 import org.ensodai.avalonmediacard.presentation.screens.watchParty.viewState.WatchPartyViewState
 import org.koin.core.annotation.Factory
 import kotlin.uuid.Uuid
@@ -44,9 +45,9 @@ class WatchPartyViewModel(
     internal val getSavedWatchRoomsUseCase: GetSavedWatchRoomsUseCase,
     internal val leaveWatchRoomUseCase: LeaveWatchRoomUseCase,
     internal val closeWatchRoomUseCase: CloseWatchRoomUseCase,
-    internal val streamWatchRoomEventsUseCase: StreamWatchRoomEventsUseCase,
-    internal val sendPlaybackCommandUseCase: SendPlaybackCommandUseCase,
-    internal val sendReactionUseCase: SendReactionUseCase,
+    internal val streamLobbyStateUseCase: StreamLobbyStateUseCase,
+    internal val setLobbyStatusUseCase: SetLobbyStatusUseCase,
+    internal val triggerStartPlaybackUseCase: TriggerStartPlaybackUseCase,
     internal val searchMediaSourcesUseCase: SearchMediaSourcesUseCase,
     internal val selectMediaSourceUseCase: SelectMediaSourceUseCase,
     internal val tokenStorage: TokenStorage
@@ -76,7 +77,13 @@ class WatchPartyViewModel(
         onToggleReady = ::onToggleReady,
         onStartPlayback = ::onStartPlayback,
         onLeaveRoom = ::onLeaveRoom,
-        onClose = { onCloseRequested?.invoke() }
+        onClose = {
+            if (viewState.value.step == WatchPartyStep.LOBBY && !viewState.value.isStartingPlayback) {
+                eventStreamJob?.cancel()
+                eventStreamJob = null
+            }
+            onCloseRequested?.invoke()
+        }
     )
 
     override fun onCleared() {

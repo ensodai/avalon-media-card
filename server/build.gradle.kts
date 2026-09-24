@@ -66,6 +66,7 @@ dependencies {
 
     testImplementation(libs.ktor.serverTestHost)
     testImplementation(libs.kotlin.testJunit)
+    testImplementation(libs.kotlinx.coroutines.test)
 }
 
 tasks.withType<KotlinCompile>().configureEach {

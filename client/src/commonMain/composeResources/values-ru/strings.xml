@@ -477,6 +477,24 @@
     <string name="watch_party_source_change">Изменить</string>
     <string name="watch_party_source_close_selector">Скрыть источники</string>
     <string name="watch_party_source_selected">Источник выбран</string>
+    <string name="watch_rooms_title">Смотрим вместе</string>
+    <string name="watch_rooms_subtitle">Совместный просмотр с синхронизацией в реальном времени</string>
+    <string name="watch_rooms_btn_create">Создать комнату</string>
+    <string name="watch_rooms_create_desc">Создайте новую сессию для просмотра</string>
+    <string name="watch_rooms_btn_connect">Подключиться по коду</string>
+    <string name="watch_rooms_connect_desc">Введите PIN-код для входа в комнату</string>
+    <string name="watch_rooms_history_title">Ваши комнаты</string>
+    <string name="watch_rooms_history_empty">У вас пока нет активных комнат. Создайте новую или подключитесь по PIN!</string>
+    <string name="watch_rooms_enter_room">Войти</string>
+    <string name="nav_watch_rooms">Смотрим вместе</string>
     <string name="player_test_mode_badge">Тестовый просмотр</string>
     <string name="player_btn_confirm_source">Подтвердить источник</string>
+    <string name="watch_party_ready_counter_all">Все зрители готовы (%1$d/%2$d) ✓</string>
+    <string name="watch_party_ready_counter_waiting">Ожидание готовности: %1$d из %2$d</string>
+    <string name="watch_party_media_info_season_ep">Сезон %1$d • Серия %2$d</string>
+    <string name="watch_party_participant_offline">Офлайн</string>
+    <string name="watch_party_participant_online">В сети</string>
+    <string name="watch_party_btn_invite">Пригласить</string>
+    <string name="watch_party_invite_copied">Ссылка-приглашение скопирована в буфер!</string>
+    <string name="watch_party_media_card_label">Смотрим в этой комнате</string>
 </resources>

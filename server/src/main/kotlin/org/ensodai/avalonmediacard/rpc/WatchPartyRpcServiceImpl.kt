@@ -6,7 +6,9 @@ import kotlinx.coroutines.flow.flow
 import org.ensodai.avalonmediacard.contract.auth.AuthState
 import org.ensodai.avalonmediacard.contract.model.CreateRoomRequest
 import org.ensodai.avalonmediacard.contract.model.JoinRoomResult
+import org.ensodai.avalonmediacard.contract.model.LobbyEvent
 import org.ensodai.avalonmediacard.contract.model.RoomPlaybackCommand
+import org.ensodai.avalonmediacard.contract.model.SetLobbyStatusRequest
 import org.ensodai.avalonmediacard.contract.model.WatchRoomDto
 import org.ensodai.avalonmediacard.contract.model.WatchRoomEvent
 import org.ensodai.avalonmediacard.contract.model.WatchRoomSummaryDto
@@ -89,6 +91,11 @@ class WatchPartyRpcServiceImpl(
         return watchRoomRepository.getRoomsForMedia(mediaId, authUser.userId)
     }
 
+    override suspend fun getUserRooms(): List<WatchRoomSummaryDto> {
+        val authUser = currentAuthorizedUser() ?: return emptyList()
+        return watchRoomRepository.getRoomsForUser(authUser.userId)
+    }
+
     override suspend fun leaveRoom(roomId: Uuid): Boolean {
         val authUser = currentAuthorizedUser() ?: return false
         logger.info("User {} left room {}", authUser.username, roomId)
@@ -99,6 +106,32 @@ class WatchPartyRpcServiceImpl(
         val authUser = currentAuthorizedUser() ?: return false
         logger.info("User {} requested to close room {}", authUser.username, roomId)
         return watchRoomSessionManager.closeRoom(roomId, authUser.userId)
+    }
+
+    override fun streamLobbyState(roomId: Uuid): Flow<LobbyEvent> = flow {
+        val authUser = currentAuthorizedUser()
+        if (authUser == null) {
+            emit(LobbyEvent.SystemNotice("Ошибка: вы не авторизованы"))
+            return@flow
+        }
+
+        val lobbyFlow = watchRoomSessionManager.streamLobbyState(roomId, authUser)
+        if (lobbyFlow == null) {
+            emit(LobbyEvent.SystemNotice("Комната не найдена или уже закрыта"))
+            return@flow
+        }
+
+        emitAll(lobbyFlow)
+    }
+
+    override suspend fun setLobbyStatus(roomId: Uuid, request: SetLobbyStatusRequest): Boolean {
+        val authUser = currentAuthorizedUser() ?: return false
+        return watchRoomSessionManager.setLobbyStatus(roomId, authUser.userId, request)
+    }
+
+    override suspend fun triggerStartPlayback(roomId: Uuid): Boolean {
+        val authUser = currentAuthorizedUser() ?: return false
+        return watchRoomSessionManager.triggerStartPlayback(roomId, authUser.userId)
     }
 
     override fun streamRoomEvents(roomId: Uuid): Flow<WatchRoomEvent> = flow {

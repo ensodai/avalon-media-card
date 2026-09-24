@@ -6,21 +6,28 @@ import kotlinx.coroutines.launch
 import org.ensodai.avalonmediacard.contract.model.CreateRoomRequest
 import org.ensodai.avalonmediacard.contract.model.EntityType
 import org.ensodai.avalonmediacard.contract.model.JoinRoomResult
+import org.ensodai.avalonmediacard.contract.model.LobbyEvent
 import org.ensodai.avalonmediacard.contract.model.MediaKey
+import org.ensodai.avalonmediacard.contract.model.MediaProvider
 import org.ensodai.avalonmediacard.contract.model.MediaType
-import org.ensodai.avalonmediacard.contract.model.RoomPlaybackCommand
+import org.ensodai.avalonmediacard.contract.model.SetLobbyStatusRequest
 import org.ensodai.avalonmediacard.contract.model.WatchParticipantIntent
 import org.ensodai.avalonmediacard.contract.model.WatchRoomControlMode
-import org.ensodai.avalonmediacard.contract.model.WatchRoomEvent
 import org.ensodai.avalonmediacard.presentation.screens.watchParty.WatchPartyViewModel
 import org.ensodai.avalonmediacard.presentation.screens.watchParty.viewState.WatchPartyStep
 import org.jetbrains.compose.resources.getString
 import kotlin.uuid.Uuid
 
-fun WatchPartyViewModel.initialize(mediaKey: MediaKey?, title: String?) {
+fun WatchPartyViewModel.initialize(
+    mediaKey: MediaKey?,
+    title: String?,
+    initialStep: WatchPartyStep? = null
+) {
     val currentUid = tokenStorage.cachedUserId?.let { runCatching { Uuid.parse(it) }.getOrNull() }
+    val step = initialStep ?: if (mediaKey != null) WatchPartyStep.SETUP else WatchPartyStep.ENTRY
     updateViewState {
         it.copy(
+            step = step,
             mediaKey = mediaKey,
             mediaTitle = title ?: it.mediaTitle,
             myUserId = currentUid
@@ -76,16 +83,24 @@ fun WatchPartyViewModel.onJoinByPin() {
                 val room = result.room
                 val myId = viewState.value.myUserId
                 val isHost = room.hostUserId == myId
+                val mediaType = if (room.mediaType == MediaType.TV) EntityType.TV else EntityType.MOVIE
+                val resolvedKey = viewState.value.mediaKey ?: MediaKey(provider = MediaProvider.Tmdb, type = mediaType, id = room.mediaId)
                 updateViewState {
                     it.copy(
                         activeRoom = room,
-                        participants = room.participants,
+                        mediaKey = resolvedKey,
+                        mediaTitle = if (it.mediaTitle.isNotBlank()) it.mediaTitle else room.title,
+                        selectedSeason = room.currentSeason ?: it.selectedSeason,
+                        selectedEpisode = room.currentEpisode ?: it.selectedEpisode,
+                        selectedSourceType = room.sourceType ?: it.selectedSourceType,
+                        selectedSourceId = room.sourceId ?: it.selectedSourceId,
+                        participantsMap = room.participants.associateBy { p -> p.userId },
                         isHost = isHost,
                         step = WatchPartyStep.LOBBY,
                         isJoining = false
                     )
                 }
-                subscribeToRoomEvents(room.id)
+                subscribeToLobbyState(room.id)
             }
             is JoinRoomResult.Error -> {
                 updateViewState { it.copy(joinError = result.message, isJoining = false) }
@@ -102,16 +117,24 @@ fun WatchPartyViewModel.onJoinById(roomId: Uuid) {
                 val room = result.room
                 val myId = viewState.value.myUserId
                 val isHost = room.hostUserId == myId
+                val mediaType = if (room.mediaType == MediaType.TV) EntityType.TV else EntityType.MOVIE
+                val resolvedKey = viewState.value.mediaKey ?: MediaKey(provider = MediaProvider.Tmdb, type = mediaType, id = room.mediaId)
                 updateViewState {
                     it.copy(
                         activeRoom = room,
-                        participants = room.participants,
+                        mediaKey = resolvedKey,
+                        mediaTitle = if (it.mediaTitle.isNotBlank()) it.mediaTitle else room.title,
+                        selectedSeason = room.currentSeason ?: it.selectedSeason,
+                        selectedEpisode = room.currentEpisode ?: it.selectedEpisode,
+                        selectedSourceType = room.sourceType ?: it.selectedSourceType,
+                        selectedSourceId = room.sourceId ?: it.selectedSourceId,
+                        participantsMap = room.participants.associateBy { p -> p.userId },
                         isHost = isHost,
                         step = WatchPartyStep.LOBBY,
                         isJoining = false
                     )
                 }
-                subscribeToRoomEvents(room.id)
+                subscribeToLobbyState(room.id)
             }
             is JoinRoomResult.Error -> {
                 updateViewState { it.copy(joinError = result.message, isJoining = false) }
@@ -203,13 +226,13 @@ fun WatchPartyViewModel.onCreateRoom() {
             updateViewState {
                 it.copy(
                     activeRoom = room,
-                    participants = room.participants,
+                    participantsMap = room.participants.associateBy { p -> p.userId },
                     isHost = true,
                     step = WatchPartyStep.LOBBY,
                     isCreatingRoom = false
                 )
             }
-            subscribeToRoomEvents(room.id)
+            subscribeToLobbyState(room.id)
         } catch (e: Exception) {
             val errorFallback = getString(Res.string.watch_party_error_create_failed)
             updateViewState { it.copy(createError = e.message ?: errorFallback, isCreatingRoom = false) }
@@ -219,30 +242,42 @@ fun WatchPartyViewModel.onCreateRoom() {
 
 fun WatchPartyViewModel.onSetMyIntent(intent: WatchParticipantIntent) {
     val room = viewState.value.activeRoom ?: return
-    updateViewState { it.copy(myIntent = intent) }
+    if (viewState.value.isActionPending) return
+    val currentReady = viewState.value.myIsReady
+    updateViewState { it.copy(myIntent = intent, isActionPending = true) }
     viewModelScope.launch {
-        sendPlaybackCommandUseCase(
-            roomId = room.id,
-            command = RoomPlaybackCommand.SetLobbyStatus(
-                intent = intent,
-                isReady = viewState.value.myIsReady
+        try {
+            setLobbyStatusUseCase(
+                roomId = room.id,
+                request = SetLobbyStatusRequest(
+                    isReady = currentReady,
+                    intent = intent
+                )
             )
-        )
+        } catch (_: Exception) {
+            updateViewState { it.copy(isActionPending = false) }
+        }
     }
 }
 
 fun WatchPartyViewModel.onToggleReady() {
     val room = viewState.value.activeRoom ?: return
+    if (viewState.value.isActionPending) return
     val nextReady = !viewState.value.myIsReady
-    updateViewState { it.copy(myIsReady = nextReady) }
+    val currentIntent = viewState.value.myIntent
+    updateViewState { it.copy(myIsReady = nextReady, isActionPending = true) }
     viewModelScope.launch {
-        sendPlaybackCommandUseCase(
-            roomId = room.id,
-            command = RoomPlaybackCommand.SetLobbyStatus(
-                intent = viewState.value.myIntent,
-                isReady = nextReady
+        try {
+            setLobbyStatusUseCase(
+                roomId = room.id,
+                request = SetLobbyStatusRequest(
+                    isReady = nextReady,
+                    intent = currentIntent
+                )
             )
-        )
+        } catch (_: Exception) {
+            updateViewState { it.copy(myIsReady = !nextReady, isActionPending = false) }
+        }
     }
 }
 
@@ -250,57 +285,78 @@ fun WatchPartyViewModel.onStartPlayback() {
     val room = viewState.value.activeRoom ?: return
     viewModelScope.launch {
         updateViewState { it.copy(isStartingPlayback = true) }
-        sendPlaybackCommandUseCase(
-            roomId = room.id,
-            command = RoomPlaybackCommand.Play(positionMs = 0L)
-        )
+        try {
+            triggerStartPlaybackUseCase(room.id)
+        } catch (_: Exception) {
+            updateViewState { it.copy(isStartingPlayback = false) }
+        }
     }
 }
 
 fun WatchPartyViewModel.onLeaveRoom() {
     val room = viewState.value.activeRoom ?: return
     viewModelScope.launch {
-        leaveWatchRoomUseCase(room.id)
+        try {
+            leaveWatchRoomUseCase(room.id)
+        } catch (_: Exception) {
+        }
         eventStreamJob?.cancel()
         eventStreamJob = null
         updateViewState {
             it.copy(
                 activeRoom = null,
-                participants = emptyList(),
+                participantsMap = emptyMap(),
                 isHost = false,
                 step = WatchPartyStep.ENTRY,
-                myIsReady = false
+                myIsReady = false,
+                isActionPending = false,
+                isStartingPlayback = false
             )
         }
         viewState.value.mediaKey?.let { loadSavedRooms(it.id) }
     }
 }
 
-fun WatchPartyViewModel.subscribeToRoomEvents(roomId: Uuid) {
+fun WatchPartyViewModel.subscribeToLobbyState(roomId: Uuid) {
     eventStreamJob?.cancel()
     eventStreamJob = viewModelScope.launch {
-        streamWatchRoomEventsUseCase(roomId).collect { event ->
+        streamLobbyStateUseCase(roomId).collect { event ->
             when (event) {
-                is WatchRoomEvent.SyncState -> {
-                    if (event.isPlaying) {
-                        onLaunchPlayerRequested?.invoke(roomId, event.season, event.episode)
-                    }
-                }
-                is WatchRoomEvent.ParticipantsUpdated -> {
+                is LobbyEvent.InitialSnapshot -> {
+                    val map = event.participants.associateBy { it.userId }
                     val myId = viewState.value.myUserId
-                    val myParticipant = event.participants.find { it.userId == myId }
+                    val me = myId?.let { map[it] }
                     updateViewState {
                         it.copy(
-                            participants = event.participants,
-                            myIsReady = myParticipant?.isReady ?: it.myIsReady,
-                            myIntent = myParticipant?.intent ?: it.myIntent
+                            participantsMap = map,
+                            myIsReady = me?.isReady ?: it.myIsReady,
+                            myIntent = me?.intent ?: it.myIntent,
+                            isActionPending = false
                         )
                     }
                 }
-                is WatchRoomEvent.SystemNotice -> {
-                    updateViewState { it.copy(systemNotice = event.message) }
+                is LobbyEvent.ParticipantUpdated -> {
+                    val myId = viewState.value.myUserId
+                    val isMe = event.participant.userId == myId
+                    updateViewState {
+                        it.copy(
+                            participantsMap = it.participantsMap + (event.participant.userId to event.participant),
+                            myIsReady = if (isMe) event.participant.isReady else it.myIsReady,
+                            myIntent = if (isMe) event.participant.intent else it.myIntent,
+                            isActionPending = if (isMe) false else it.isActionPending
+                        )
+                    }
                 }
-                is WatchRoomEvent.ReactionTriggered -> {
+                is LobbyEvent.ParticipantRemoved -> {
+                    updateViewState {
+                        it.copy(participantsMap = it.participantsMap - event.userId)
+                    }
+                }
+                is LobbyEvent.TransitionToPlayer -> {
+                    onLaunchPlayerRequested?.invoke(roomId, event.season, event.episode)
+                }
+                is LobbyEvent.SystemNotice -> {
+                    updateViewState { it.copy(systemNotice = event.message) }
                 }
             }
         }

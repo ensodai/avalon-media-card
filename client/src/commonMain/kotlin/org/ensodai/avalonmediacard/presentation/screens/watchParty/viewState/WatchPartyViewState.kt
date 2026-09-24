@@ -6,6 +6,7 @@ import org.ensodai.avalonmediacard.contract.model.WatchParticipantIntent
 import org.ensodai.avalonmediacard.contract.model.WatchRoomControlMode
 import org.ensodai.avalonmediacard.contract.model.WatchRoomDto
 import org.ensodai.avalonmediacard.contract.model.WatchRoomParticipantDto
+import org.ensodai.avalonmediacard.contract.model.WatchRoomParticipantRole
 import org.ensodai.avalonmediacard.contract.model.WatchRoomSummaryDto
 import org.ensodai.avalonmediacard.presentation.core.mvi.BaseViewState
 import kotlin.uuid.Uuid
@@ -44,13 +45,17 @@ data class WatchPartyViewState(
     val isCreatingRoom: Boolean = false,
     val createError: String? = null,
 
-    // Шаг 3: Лобби
+    // Шаг 3: Лобби (Snapshot + Upsert Item)
     val activeRoom: WatchRoomDto? = null,
-    val participants: List<WatchRoomParticipantDto> = emptyList(),
+    val participantsMap: Map<Uuid, WatchRoomParticipantDto> = emptyMap(),
     val myUserId: Uuid? = null,
     val isHost: Boolean = false,
     val myIntent: WatchParticipantIntent = WatchParticipantIntent.WATCHING_ATTENTIVELY,
     val myIsReady: Boolean = false,
+    val isActionPending: Boolean = false,
     val isStartingPlayback: Boolean = false,
     val systemNotice: String? = null
-) : BaseViewState()
+) : BaseViewState() {
+    val participants: List<WatchRoomParticipantDto>
+        get() = participantsMap.values.sortedByDescending { it.role == WatchRoomParticipantRole.HOST }
+}

@@ -15,8 +15,10 @@ import org.ensodai.avalonmediacard.database.WatchRoomParticipantTable
 import org.ensodai.avalonmediacard.database.WatchRoomTable
 import org.ensodai.avalonmediacard.database.dbQuery
 import org.jetbrains.exposed.v1.core.ResultRow
+import org.jetbrains.exposed.v1.core.SortOrder
 import org.jetbrains.exposed.v1.core.and
 import org.jetbrains.exposed.v1.core.eq
+import org.jetbrains.exposed.v1.core.inList
 import org.jetbrains.exposed.v1.core.neq
 import org.jetbrains.exposed.v1.core.or
 import org.jetbrains.exposed.v1.jdbc.deleteWhere
@@ -148,7 +150,9 @@ class WatchRoomRepositoryImpl : WatchRoomRepository {
 
     override suspend fun getRoomsForMedia(
         mediaId: String,
-        currentUserId: Uuid
+        currentUserId: Uuid,
+        limit: Int,
+        offset: Long
     ): List<WatchRoomSummaryDto> = dbQuery {
         val internalMediaId = MediaTable.selectAll()
             .where { MediaTable.externalId eq mediaId }
@@ -162,17 +166,25 @@ class WatchRoomRepositoryImpl : WatchRoomRepository {
                 (WatchRoomTable.mediaId eq internalMediaId) and
                         (WatchRoomTable.status neq WatchRoomStatus.ARCHIVED)
             }
+            .orderBy(WatchRoomTable.updatedAt, SortOrder.DESC)
+            .limit(limit)
+            .offset(offset)
             .toList()
 
         if (rooms.isEmpty()) return@dbQuery emptyList()
+
+        val roomIds = rooms.map { it[WatchRoomTable.id].value }
+        val participantsByRoom = WatchRoomParticipantTable.selectAll()
+            .where { WatchRoomParticipantTable.roomId inList roomIds }
+            .groupBy { it[WatchRoomParticipantTable.roomId].value }
 
         rooms.mapNotNull { row ->
             val roomId = row[WatchRoomTable.id].value
             val isHost = row[WatchRoomTable.hostUserId] == currentUserId
             val isPrivate = row[WatchRoomTable.isPrivate]
 
-            val participants = loadParticipantsInternal(roomId)
-            val isParticipant = participants.any { it.userId == currentUserId }
+            val participantsInRoom = participantsByRoom[roomId].orEmpty()
+            val isParticipant = participantsInRoom.any { it[WatchRoomParticipantTable.userId] == currentUserId }
 
             // Если комната приватная, показываем её только участникам и хосту
             if (isPrivate && !isHost && !isParticipant) {
@@ -188,7 +200,62 @@ class WatchRoomRepositoryImpl : WatchRoomRepository {
                 currentEpisode = row[WatchRoomTable.currentEpisode],
                 lastPositionSeconds = row[WatchRoomTable.lastPositionSeconds],
                 joinPin = row[WatchRoomTable.joinPin],
-                participantsCount = participants.size.coerceAtLeast(1),
+                participantsCount = participantsInRoom.size.coerceAtLeast(1),
+                isHost = isHost,
+                status = row[WatchRoomTable.status]
+            )
+        }
+    }
+
+    override suspend fun getRoomsForUser(
+        userId: Uuid,
+        limit: Int,
+        offset: Long
+    ): List<WatchRoomSummaryDto> = dbQuery {
+        val participantRoomIds = WatchRoomParticipantTable.selectAll()
+            .where { WatchRoomParticipantTable.userId eq userId }
+            .map { it[WatchRoomParticipantTable.roomId].value }
+            .toSet()
+
+        val whereOp = if (participantRoomIds.isNotEmpty()) {
+            (WatchRoomTable.status neq WatchRoomStatus.ARCHIVED) and
+                    ((WatchRoomTable.hostUserId eq userId) or (WatchRoomTable.id inList participantRoomIds))
+        } else {
+            (WatchRoomTable.status neq WatchRoomStatus.ARCHIVED) and
+                    (WatchRoomTable.hostUserId eq userId)
+        }
+
+        val rooms = (WatchRoomTable innerJoin MediaTable)
+            .selectAll()
+            .where { whereOp }
+            .orderBy(WatchRoomTable.updatedAt, SortOrder.DESC)
+            .limit(limit)
+            .offset(offset)
+            .toList()
+
+        if (rooms.isEmpty()) return@dbQuery emptyList()
+
+        val roomIds = rooms.map { it[WatchRoomTable.id].value }
+        val participantCounts = WatchRoomParticipantTable.selectAll()
+            .where { WatchRoomParticipantTable.roomId inList roomIds }
+            .groupBy { it[WatchRoomParticipantTable.roomId].value }
+            .mapValues { it.value.size }
+
+        rooms.map { row ->
+            val roomId = row[WatchRoomTable.id].value
+            val isHost = row[WatchRoomTable.hostUserId] == userId
+            val count = participantCounts[roomId] ?: 1
+
+            WatchRoomSummaryDto(
+                id = roomId,
+                title = row[WatchRoomTable.title],
+                mediaId = row[MediaTable.externalId],
+                mediaType = row[WatchRoomTable.mediaType],
+                currentSeason = row[WatchRoomTable.currentSeason],
+                currentEpisode = row[WatchRoomTable.currentEpisode],
+                lastPositionSeconds = row[WatchRoomTable.lastPositionSeconds],
+                joinPin = row[WatchRoomTable.joinPin],
+                participantsCount = count.coerceAtLeast(1),
                 isHost = isHost,
                 status = row[WatchRoomTable.status]
             )

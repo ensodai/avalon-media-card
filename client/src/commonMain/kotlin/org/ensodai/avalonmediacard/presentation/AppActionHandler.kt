@@ -33,6 +33,7 @@ class AppActionHandler(
                     is Screen.Admin -> navigation.navigateToAdmin()
                     is Screen.Settings -> navigation.navigateToSettings()
                     Screen.EpisodesNotifications -> navigation.navigateToEpisodesNotifications()
+                    Screen.WatchRooms -> navigation.navigateTo(Screen.WatchRooms)
                 }
             }
 

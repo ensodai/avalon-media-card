@@ -38,6 +38,7 @@ import org.ensodai.avalonmediacard.presentation.screens.player.model.PlayerMode
 import org.ensodai.avalonmediacard.presentation.screens.watchParty.action.initialize
 import org.ensodai.avalonmediacard.presentation.screens.watchParty.action.onToggleSelectSource
 import org.ensodai.avalonmediacard.presentation.screens.watchParty.targets.web.WatchPartyLayoutWeb
+import org.ensodai.avalonmediacard.presentation.screens.watchParty.viewState.WatchPartyStep
 import org.koin.compose.koinInject
 import kotlin.uuid.Uuid
 
@@ -51,6 +52,7 @@ fun WatchPartyScreen(
     torrentInspectorState: SlotUiState<SlotData.TorrentInspector>? = null,
     onRefreshSources: (() -> Unit)? = null,
     onAction: (Action) -> Unit = {},
+    initialStep: WatchPartyStep? = null,
     onClose: () -> Unit,
     onStartPlayback: ((roomId: Uuid, season: Int?, episode: Int?) -> Unit)? = null,
     viewModel: WatchPartyViewModel = koinInject(),
@@ -77,12 +79,16 @@ fun WatchPartyScreen(
         onDispose {
             viewModel.onCloseRequested = null
             viewModel.onLaunchPlayerRequested = null
+            if (viewModel.viewState.value.step == WatchPartyStep.LOBBY && !viewModel.viewState.value.isStartingPlayback) {
+                viewModel.eventStreamJob?.cancel()
+                viewModel.eventStreamJob = null
+            }
         }
     }
 
-    LaunchedEffect(isVisible, mediaKey, mediaTitle) {
+    LaunchedEffect(isVisible, mediaKey, mediaTitle, initialStep) {
         if (isVisible) {
-            viewModel.initialize(mediaKey, mediaTitle)
+            viewModel.initialize(mediaKey, mediaTitle, initialStep)
         }
     }
 

@@ -49,11 +49,13 @@ import org.ensodai.avalonmediacard.presentation.screens.settings.SettingsScreen
 import org.ensodai.avalonmediacard.presentation.screens.trendsScreen.TrendsScreen
 import avalonmediacard.client.generated.resources.*
 import org.ensodai.avalonmediacard.presentation.screens.tvShowsScreen.TvShowsScreen
+import org.ensodai.avalonmediacard.presentation.screens.watchRooms.WatchRoomsScreen
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.koinInject
 
 sealed class RootTab {
     data class Plugin(val item: SidebarItem) : RootTab()
+    data object WatchRooms : RootTab()
     data object Settings : RootTab()
     data object Integrations : RootTab()
     data object Admin : RootTab()
@@ -119,7 +121,10 @@ fun MainAppContent(
                     contentAlignment = Alignment.TopStart
                 ) {
                     val isSystemScreen =
-                        activeTabState.value is RootTab.Settings || activeTabState.value is RootTab.Integrations || activeTabState.value is RootTab.Admin
+                        activeTabState.value is RootTab.Settings ||
+                        activeTabState.value is RootTab.Integrations ||
+                        activeTabState.value is RootTab.Admin ||
+                        activeTabState.value is RootTab.WatchRooms
                     if (currentSidebarItems.isEmpty() && !isSystemScreen) {
                         Box(
                             modifier = Modifier.fillMaxSize(),
@@ -144,6 +149,7 @@ fun MainAppContent(
                             is RootTab.Admin -> "admin"
                             is RootTab.Settings -> "settings"
                             is RootTab.Integrations -> "integrations"
+                            is RootTab.WatchRooms -> "watch_rooms"
                             is RootTab.Plugin -> tab.item.itemId
                             null -> ""
                         }
@@ -155,7 +161,7 @@ fun MainAppContent(
                         }
 
                         val validTabIds = androidx.compose.runtime.remember(currentSidebarItems) {
-                            currentSidebarItems.map { it.itemId }.toSet() + setOf("admin", "settings", "integrations")
+                            currentSidebarItems.map { it.itemId }.toSet() + setOf("admin", "settings", "integrations", "watch_rooms")
                         }
                         androidx.compose.runtime.LaunchedEffect(validTabIds) {
                             initializedTabs.retainAll(validTabIds)
@@ -173,6 +179,7 @@ fun MainAppContent(
                                         "admin" -> Screen.Admin
                                         "settings" -> Screen.Settings
                                         "integrations" -> Screen.Integrations
+                                        "watch_rooms" -> Screen.WatchRooms
                                         else -> currentSidebarItems.find { it.itemId == tabId }?.screen
                                             ?: Screen.Dashboard
                                     }
@@ -329,6 +336,10 @@ fun MainAppContent(
                                                     is Screen.Admin -> {
                                                         AdminScreen()
                                                     }
+
+                                                    is Screen.WatchRooms -> {
+                                                        WatchRoomsScreen()
+                                                    }
                                                 }
                                             }
                                         }
@@ -339,19 +350,50 @@ fun MainAppContent(
                     }
                 }
 
+                val watchRoomsSidebarItem = remember {
+                    SidebarItem(
+                        itemId = "watch_rooms",
+                        title = null,
+                        iconName = "users",
+                        screen = Screen.WatchRooms,
+                        group = 0,
+                        order = 100
+                    )
+                }
+                val allSidebarItems = remember(currentSidebarItems, watchRoomsSidebarItem) {
+                    if (currentSidebarItems.isEmpty() || currentSidebarItems.any { it.itemId == "watch_rooms" }) {
+                        currentSidebarItems
+                    } else {
+                        currentSidebarItems + watchRoomsSidebarItem
+                    }
+                }
+                val currentSelectedItem = when (val tab = activeTabState.value) {
+                    is RootTab.Plugin -> tab.item
+                    is RootTab.WatchRooms -> allSidebarItems.find { it.itemId == "watch_rooms" }
+                    else -> null
+                }
+
                 Sidebar(
                     modifier = Modifier.navigationDomain(
                         sidebarRequester = sidebarFocusRequester,
                         contentRequester = contentFocusRequester
                     ),
-                    sidebarItems = currentSidebarItems,
-                    selectedItem = (activeTabState.value as? RootTab.Plugin)?.item,
+                    sidebarItems = allSidebarItems,
+                    selectedItem = currentSelectedItem,
                     onSelected = { item ->
-                        val currentTab = activeTabState.value
-                        if (currentTab is RootTab.Plugin && currentTab.item.itemId == item.itemId) {
-                            tabNavControllers[item.itemId]?.popToRoot()
+                        if (item.itemId == "watch_rooms") {
+                            if (activeTabState.value is RootTab.WatchRooms) {
+                                tabNavControllers["watch_rooms"]?.popToRoot()
+                            } else {
+                                activeTabState.value = RootTab.WatchRooms
+                            }
                         } else {
-                            activeTabState.value = RootTab.Plugin(item)
+                            val currentTab = activeTabState.value
+                            if (currentTab is RootTab.Plugin && currentTab.item.itemId == item.itemId) {
+                                tabNavControllers[item.itemId]?.popToRoot()
+                            } else {
+                                activeTabState.value = RootTab.Plugin(item)
+                            }
                         }
                     },
                     uploadStatus = uploadStatus,

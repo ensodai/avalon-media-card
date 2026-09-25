@@ -70,6 +70,7 @@ fun UnifiedVideoPlayer(
         val showUiOverlay = !state.isFullscreen || isMouseActive
         val showRightPanel = state.hasEpisodesContext && showUiOverlay
         PlayerInputHandler(
+            actions = actions,
             controller = controller,
             isFullscreen = state.isFullscreen,
             showUiOverlay = showUiOverlay,

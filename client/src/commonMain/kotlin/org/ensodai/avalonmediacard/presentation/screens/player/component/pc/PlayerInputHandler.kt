@@ -11,9 +11,11 @@ import androidx.compose.ui.input.key.*
 import androidx.compose.ui.input.pointer.PointerEventType
 import androidx.compose.ui.input.pointer.pointerInput
 import org.ensodai.avalonmediacard.core.PlaybackController
+import org.ensodai.avalonmediacard.presentation.screens.player.action.PlayerActions
 
 @Composable
 fun PlayerInputHandler(
+    actions: PlayerActions,
     controller: PlaybackController,
     isFullscreen: Boolean,
     showUiOverlay: Boolean = true,
@@ -71,19 +73,19 @@ fun PlayerInputHandler(
 
                     when {
                         event.key == Key.Spacebar -> {
-                            if (controller.state.isPlaying) controller.pause() else controller.play()
+                            actions.onPlayPauseClicked()
                             true
                         }
 
                         event.key == Key.DirectionLeft -> {
                             val newTime = (controller.state.currentTime - 5.0).coerceAtLeast(0.0)
-                            controller.seek(newTime)
+                            actions.onSeek(newTime)
                             true
                         }
 
                         event.key == Key.DirectionRight -> {
                             val newTime = (controller.state.currentTime + 5.0).coerceAtMost(duration)
-                            controller.seek(newTime)
+                            actions.onSeek(newTime)
                             true
                         }
 

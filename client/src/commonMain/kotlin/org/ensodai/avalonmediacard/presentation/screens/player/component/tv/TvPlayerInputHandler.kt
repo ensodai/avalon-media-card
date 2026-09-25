@@ -9,12 +9,14 @@ import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.input.key.*
 import org.ensodai.avalonmediacard.core.PlaybackController
 import org.ensodai.avalonmediacard.presentation.navigation.AvalonBackHandler
+import org.ensodai.avalonmediacard.presentation.screens.player.action.PlayerActions
 
 /**
  * Обработчик клавиш пульта (D-Pad) и удержания фокуса на ТВ.
  */
 @Composable
 fun TvPlayerInputHandler(
+    actions: PlayerActions,
     controller: PlaybackController,
     isUiVisible: Boolean,
     isShelfVisible: Boolean,
@@ -59,7 +61,7 @@ fun TvPlayerInputHandler(
                             }
 
                             Key.MediaPlayPause, Key.MediaPlay, Key.MediaPause -> {
-                                if (controller.state.isPlaying) controller.pause() else controller.play()
+                                actions.onPlayPauseClicked()
                                 true
                             }
 
@@ -74,7 +76,7 @@ fun TvPlayerInputHandler(
                         // Интерфейс виден
                         when (event.key) {
                             Key.MediaPlayPause, Key.MediaPlay, Key.MediaPause -> {
-                                if (controller.state.isPlaying) controller.pause() else controller.play()
+                                actions.onPlayPauseClicked()
                                 true
                             }
 

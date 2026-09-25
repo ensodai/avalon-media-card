@@ -134,6 +134,7 @@ fun TvPlayerLayout(
 
     CompositionLocalProvider(LocalContentFocusRequester provides playerDomainFocusRequester) {
         TvPlayerInputHandler(
+            actions = actions,
             controller = controller,
             isUiVisible = isUiVisible,
             isShelfVisible = isShelfExpanded,

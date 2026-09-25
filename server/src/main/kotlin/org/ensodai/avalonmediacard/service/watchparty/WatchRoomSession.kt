@@ -229,27 +229,6 @@ class WatchRoomSession(
         _events.emit(WatchRoomEvent.ParticipantsUpdated(getParticipantListLocked()))
     }
 
-    /**
-     * Окончательное исключение участника по истечении Grace-Period.
-     */
-    suspend fun evictParticipant(userId: Uuid) = mutex.withLock {
-        disconnectJobs.remove(userId)
-        userConnections.remove(userId)
-        val removed = participants.remove(userId) ?: return@withLock
-        bufferingParticipants.remove(userId)
-        if (phase == RoomPhase.PREPARING) {
-            checkMediaPreparationResolvedLocked()
-        } else {
-            checkBufferingResolvedLocked()
-        }
-
-        _lobbyEvents.emit(LobbyEvent.ParticipantRemoved(userId))
-        _events.emit(WatchRoomEvent.ParticipantsUpdated(getParticipantListLocked()))
-
-        if (removed.role == WatchRoomParticipantRole.HOST) {
-            checkHostMigrationLocked()
-        }
-    }
 
     /**
      * Обновление готовности и намерения участника в лобби.
@@ -414,10 +393,11 @@ class WatchRoomSession(
             is RoomPlaybackCommand.Play -> {
                 bufferingParticipants.clear()
                 val now = Clock.System.now()
-                val targetStart = now + 1500.milliseconds
+                val leadTimeMs = if (phase == RoomPhase.LOBBY || phase == RoomPhase.PREPARING) START_LEAD_TIME_MS else RESUME_LEAD_TIME_MS
+                val targetStart = now + leadTimeMs.milliseconds
                 logger.info(
-                    "[TrueSync:Server] Room {}: Received PLAY from user {} at pos {} ms. ServerNow={}, targetStart={} (+1500ms)",
-                    roomId, userId, command.positionMs, now, targetStart
+                    "[TrueSync:Server] Room {}: Received PLAY from user {} at pos {} ms. ServerNow={}, targetStart={} (+{}ms)",
+                    roomId, userId, command.positionMs, now, targetStart, leadTimeMs
                 )
 
                 participant.playbackState = WatchRoomPlaybackState.PLAYING

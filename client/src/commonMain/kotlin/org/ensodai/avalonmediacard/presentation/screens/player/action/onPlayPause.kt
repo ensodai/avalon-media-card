@@ -1,18 +1,40 @@
 package org.ensodai.avalonmediacard.presentation.screens.player.action
 
+import androidx.lifecycle.viewModelScope
+import kotlinx.coroutines.launch
 import org.ensodai.avalonmediacard.core.togglePlatformFullscreen
 import org.ensodai.avalonmediacard.presentation.screens.player.PlayerViewModel
 import org.ensodai.avalonmediacard.presentation.screens.player.model.PlaybackStatus
 
 fun PlayerViewModel.onPlayPauseClicked() {
-    updateViewState { state ->
-        val newStatus = if (state.isPlaying) PlaybackStatus.PAUSED else PlaybackStatus.PLAYING
-        state.copy(status = newStatus)
+    val sync = syncController
+    if (sync != null) {
+        viewModelScope.launch {
+            if (activeController?.state?.isPlaying == true) {
+                sync.sendPause()
+            } else {
+                sync.sendPlay()
+            }
+        }
+    } else {
+        activeController?.togglePlayPause()
+        updateViewState { state ->
+            val newStatus = if (state.isPlaying) PlaybackStatus.PAUSED else PlaybackStatus.PLAYING
+            state.copy(status = newStatus)
+        }
     }
     checkAndStartSyncLoop()
 }
 
 fun PlayerViewModel.onSeek(targetSeconds: Double) {
+    val sync = syncController
+    if (sync != null) {
+        viewModelScope.launch {
+            sync.sendSeek(targetSeconds)
+        }
+    } else {
+        activeController?.seek(targetSeconds)
+    }
     updateViewState { state ->
         state.copy(currentTime = targetSeconds)
     }

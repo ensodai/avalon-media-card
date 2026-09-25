@@ -9,7 +9,6 @@ import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import kotlinx.coroutines.delay
-import org.ensodai.avalonmediacard.contract.model.EntityType
 import org.ensodai.avalonmediacard.core.PlaybackController
 import org.ensodai.avalonmediacard.core.SystemFullscreenHandler
 import org.ensodai.avalonmediacard.presentation.screens.commonComponents.LocalDeviceTarget
@@ -20,7 +19,6 @@ import org.ensodai.avalonmediacard.presentation.screens.player.component.pc.Play
 import org.ensodai.avalonmediacard.presentation.screens.player.component.pc.PlayerTopBar
 import org.ensodai.avalonmediacard.presentation.screens.player.component.pc.UnifiedVideoPlayerLayout
 import org.ensodai.avalonmediacard.presentation.screens.player.component.tv.TvPlayerLayout
-import org.ensodai.avalonmediacard.presentation.screens.player.model.PlaybackStatus
 import org.ensodai.avalonmediacard.presentation.screens.player.viewState.PlayerViewState
 import kotlin.time.Duration.Companion.milliseconds
 
@@ -46,36 +44,6 @@ fun UnifiedVideoPlayer(
     val focusRequester = remember { FocusRequester() }
 
     val currentEpisode = state.currentEpisode
-
-    // Регулярный репорт текущего времени из контроллера во ViewModel для обновления стейта
-    LaunchedEffect(controller, state.currentStreamUrl) {
-        while (true) {
-            delay(1000.milliseconds)
-            if (state.currentStreamUrl.isNullOrBlank()) continue
-            val current = controller.state.currentTime
-
-            val dur = controller.state.duration
-            val isBuffering = controller.state.isBuffering
-            val isPlaying = controller.state.isPlaying
-
-            if (isBuffering) {
-                if (state.status != PlaybackStatus.BUFFERING && state.status != PlaybackStatus.RECOVERING) {
-                    actions.onPlaybackStateChanged(PlaybackStatus.BUFFERING)
-                }
-            } else if (isPlaying && current > 0.0) {
-                if (state.status != PlaybackStatus.PLAYING) {
-                    actions.onPlaybackStateChanged(PlaybackStatus.PLAYING)
-                }
-            } else if (!isPlaying && !isBuffering && state.status == PlaybackStatus.PLAYING) {
-                actions.onPlaybackStateChanged(PlaybackStatus.PAUSED)
-            }
-
-            if (!isBuffering && dur > 0.0 && current >= 0.0) {
-                actions.onProgressUpdate(current, dur)
-            }
-        }
-    }
-
 
     // Auto-hide mouse UI in fullscreen
     LaunchedEffect(mouseX, mouseY, state.isFullscreen) {
@@ -128,10 +96,7 @@ fun UnifiedVideoPlayer(
                         url = state.currentStreamUrl,
                         title = state.title,
                         errorOverride = state.errorMessage,
-                        onTap = {
-                            runCatching { focusRequester.requestFocus() }
-                            if (controller.state.isPlaying) controller.pause() else controller.play()
-                        },
+                        onTap = { actions.onPlayPauseClicked() },
                         modifier = Modifier.fillMaxSize()
                     )
                 },

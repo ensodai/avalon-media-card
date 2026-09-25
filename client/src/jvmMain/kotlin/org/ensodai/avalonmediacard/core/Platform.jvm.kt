@@ -73,6 +73,13 @@ actual fun VideoPlayer(
     val tokenStorage = koinInject<TokenStorage>()
     val controller = remember { DesktopMpvPlaybackController() }
 
+    DisposableEffect(controller) {
+        actions.onAttachController(controller)
+        onDispose {
+            actions.onDetachController()
+        }
+    }
+
     val url = state.currentStreamUrl
     val audioTrackIndex = state.selectedAudioTrackIndex
     val resolvedUrl = remember(url, audioTrackIndex) {

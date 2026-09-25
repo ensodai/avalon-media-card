@@ -20,6 +20,7 @@ import org.ensodai.avalonmediacard.core.player.engine.WasmStreamEngine
 import org.ensodai.avalonmediacard.core.player.engine.WasmStreamEngineFactory
 import org.ensodai.avalonmediacard.presentation.screens.player.action.PlayerActions
 import org.ensodai.avalonmediacard.presentation.screens.player.component.UnifiedVideoPlayer
+import org.ensodai.avalonmediacard.presentation.screens.player.model.PlaybackStatus
 import org.ensodai.avalonmediacard.presentation.screens.player.viewState.PlayerViewState
 import org.w3c.dom.HTMLElement
 import org.w3c.dom.HTMLVideoElement
@@ -194,6 +195,11 @@ class VideoElementPlaybackController(
     var isSeeking = false
         private set
 
+    override fun getCurrentPositionMs(): Long {
+        val t = videoElement.currentTime
+        return if (t.isNaN() || !t.isFinite()) 0L else (t * 1000).toLong().coerceAtLeast(0L)
+    }
+
     init {
         setupEventListeners()
     }
@@ -203,17 +209,19 @@ class VideoElementPlaybackController(
             when (event.type) {
                 "progress" -> if (!isSeeking) evaluateBufferState()
                 "waiting" -> {
-                    state.isBuffering = true
+                    setBuffering(true)
                     state.isPlaying = false
                 }
 
                 "playing" -> {
                     state.isPlaying = true
-                    state.isBuffering = false
+                    setBuffering(false)
                 }
 
                 "seeking" -> {
                     isSeeking = true
+                    setBuffering(true)
+                    state.isPlaying = false
                 }
 
                 "seeked" -> {
@@ -224,7 +232,7 @@ class VideoElementPlaybackController(
                         videoElement.currentTime
                     ) || videoElement.readyState >= 2
                     if (isReady) {
-                        state.isBuffering = false
+                        setBuffering(false)
                         if (intentToPlay) {
                             safePlayWasm(videoElement)
                             state.isPlaying = true
@@ -232,6 +240,8 @@ class VideoElementPlaybackController(
                             videoElement.pause()
                             state.isPlaying = false
                         }
+                    } else {
+                        setBuffering(true)
                     }
                 }
 
@@ -242,7 +252,7 @@ class VideoElementPlaybackController(
                             videoElement.currentTime
                         ) || videoElement.readyState >= 2
                         if (isReady) {
-                            state.isBuffering = false
+                            setBuffering(false)
                             if (intentToPlay) {
                                 safePlayWasm(videoElement)
                                 state.isPlaying = true
@@ -292,15 +302,15 @@ class VideoElementPlaybackController(
 
         if (intentToPlay) {
             if (state.isBuffering) {
-                if (isVideoReady && (currentBufferAhead >= REBUFFERING_GOAL || currentBufferAhead >= MIN_BUFFER_TO_PLAY)) {
+                if (isVideoReady && (currentBufferAhead >= MIN_BUFFER_TO_PLAY || isTimeInBufferedRangesWasm(videoElement, videoElement.currentTime))) {
                     safePlayWasm(videoElement)
-                    state.isBuffering = false
+                    setBuffering(false)
                     state.isPlaying = true
                 }
             } else {
-                if (!isVideoReady || currentBufferAhead < CRITICAL_BUFFER_LEVEL) {
+                if (!isVideoReady) {
                     videoElement.pause()
-                    state.isBuffering = true
+                    setBuffering(true)
                     state.isPlaying = false
                 } else {
                     safePlayWasm(videoElement)
@@ -333,6 +343,8 @@ class VideoElementPlaybackController(
     override fun seek(time: Double) {
         if (time.isNaN() || !time.isFinite()) return
         isSeeking = true
+        setBuffering(true)
+        state.isPlaying = false
         videoElement.currentTime = time
         state.currentTime = time
     }
@@ -348,11 +360,16 @@ class VideoElementPlaybackController(
         state.volume = clamped
     }
 
+    override fun setPlaybackRate(rate: Float) {
+        val clamped = rate.coerceIn(0.25f, 4.0f).toDouble()
+        videoElement.playbackRate = clamped
+    }
+
     companion object {
         const val BUFFERING_CHECK_INTERVAL = 500
-        const val MIN_BUFFER_TO_PLAY = 2.0
+        const val MIN_BUFFER_TO_PLAY = 1.0
         const val CRITICAL_BUFFER_LEVEL = 0.5
-        const val REBUFFERING_GOAL = 5.0
+        const val REBUFFERING_GOAL = 3.0
     }
 }
 
@@ -391,6 +408,13 @@ actual fun VideoPlayer(
     }
 
     val controller = remember(videoElement) { VideoElementPlaybackController(videoElement) }
+
+    DisposableEffect(controller) {
+        actions.onAttachController(controller)
+        onDispose {
+            actions.onDetachController()
+        }
+    }
 
     var lastKnownTime by remember { mutableStateOf(0.0) }
     var currentUrl by remember { mutableStateOf<String?>(null) }
@@ -442,7 +466,7 @@ actual fun VideoPlayer(
         
         while (true) {
             val currentTime = lastKnownTime
-            val nowMs = kotlinx.browser.window.performance.now()
+            val nowMs = window.performance.now()
             
             val chunksToDownload = activeSubtitleChunks.filter { chunk ->
                 when (val st = chunk.state) {
@@ -482,14 +506,24 @@ actual fun VideoPlayer(
     }
 
     DisposableEffect(url) {
-        controller.state.isBuffering = true
+        controller.setBuffering(true)
         container.appendChild(videoElement)
 
         val waitingListener: (org.w3c.dom.events.Event) -> Unit = {
-            controller.state.isBuffering = true
+            controller.setBuffering(true)
+            actions.onPlaybackStateChanged(PlaybackStatus.BUFFERING)
         }
         val playingListener: (org.w3c.dom.events.Event) -> Unit = {
-            controller.state.isBuffering = false
+            controller.setBuffering(false)
+            actions.onPlaybackStateChanged(PlaybackStatus.PLAYING)
+        }
+        val pauseListener: (org.w3c.dom.events.Event) -> Unit = {
+            actions.onPlaybackStateChanged(PlaybackStatus.PAUSED)
+        }
+        val timeUpdateListener: (org.w3c.dom.events.Event) -> Unit = {
+            if (!controller.isSeeking && videoElement.duration > 0.0) {
+                actions.onProgressUpdate(videoElement.currentTime, videoElement.duration)
+            }
         }
         val visibilityListener: (org.w3c.dom.events.Event) -> Unit = {
             activeEngine?.onVisibilityChanged(isDocumentVisibleWasm())
@@ -499,6 +533,8 @@ actual fun VideoPlayer(
         videoElement.addEventListener("stalled", waitingListener)
         videoElement.addEventListener("playing", playingListener)
         videoElement.addEventListener("canplay", playingListener)
+        videoElement.addEventListener("pause", pauseListener)
+        videoElement.addEventListener("timeupdate", timeUpdateListener)
         document.addEventListener("visibilitychange", visibilityListener)
 
         var engine: WasmStreamEngine? = null
@@ -523,7 +559,7 @@ actual fun VideoPlayer(
             } else {
                 controller.state.playbackError =
                     "This video format is not supported in the browser. Please open in an external player."
-                controller.state.isBuffering = false
+                controller.setBuffering(false)
             }
         }
 
@@ -533,6 +569,8 @@ actual fun VideoPlayer(
             videoElement.removeEventListener("stalled", waitingListener)
             videoElement.removeEventListener("playing", playingListener)
             videoElement.removeEventListener("canplay", playingListener)
+            videoElement.removeEventListener("pause", pauseListener)
+            videoElement.removeEventListener("timeupdate", timeUpdateListener)
             engine?.destroy()
             activeEngine = null
             videoElement.pause()

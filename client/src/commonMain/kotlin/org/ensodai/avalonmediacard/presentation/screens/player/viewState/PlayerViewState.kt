@@ -10,6 +10,7 @@ import org.ensodai.avalonmediacard.presentation.core.mvi.BaseViewState
 import org.ensodai.avalonmediacard.presentation.screens.player.model.PlaybackStatus
 import org.ensodai.avalonmediacard.presentation.screens.player.model.PlayerEngine
 import org.ensodai.avalonmediacard.presentation.screens.player.model.PlayerMode
+import kotlin.uuid.Uuid
 
 data class PlayerTitleData(
     val topText: String,
@@ -36,7 +37,8 @@ data class PlayerViewState(
     val areControlsVisible: Boolean = true,
     val errorMessage: String? = null,
     val defaultPlayerEngine: PlayerEngine = PlayerEngine.MEDIA3,
-    val mode: PlayerMode = PlayerMode.STANDARD
+    val mode: PlayerMode = PlayerMode.STANDARD,
+    val watchRoomId: Uuid? = null
 ) : BaseViewState() {
     val isBuffering: Boolean
         get() = status == PlaybackStatus.BUFFERING || status == PlaybackStatus.RECOVERING

@@ -153,6 +153,13 @@ actual fun VideoPlayer(
         PlayerEngine.MPV -> mpvControllerLazy.value
     }
 
+    DisposableEffect(activeController) {
+        actions.onAttachController(activeController)
+        onDispose {
+            actions.onDetachController()
+        }
+    }
+
     LaunchedEffect(state.audioTracks, state.subtitleTracks) {
         if (state.audioTracks.isNotEmpty() && activeController.audioTracks.isEmpty()) {
             activeController.setTracks(state.audioTracks, state.subtitleTracks)

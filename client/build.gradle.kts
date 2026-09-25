@@ -72,6 +72,7 @@ kotlin {
         }
         commonTest.dependencies {
             implementation(libs.kotlin.test)
+            implementation(libs.kotlinx.coroutines.test)
         }
         jvmMain.dependencies {
             implementation(libs.ktor.client.okhttp)
@@ -101,7 +102,7 @@ kotlin {
             implementation(
                 npm(
                     "playsvideo",
-                    "file:${project.projectDir.parentFile.absolutePath}/libs/playsvideo-0.4.7-f2.15.tgz"
+                    "file:${project.projectDir.parentFile.absolutePath}/libs/playsvideo-0.4.7-f2.16.tgz"
                 )
             )
             implementation(npm("hls.js", "^1.5.0"))
@@ -115,7 +116,7 @@ kotlin {
                 implementation(
                     npm(
                         "playsvideo",
-                        "file:${project.projectDir.parentFile.absolutePath}/libs/playsvideo-0.4.7-f2.15.tgz"
+                        "file:${project.projectDir.parentFile.absolutePath}/libs/playsvideo-0.4.7-f2.16.tgz"
                     )
                 )
                 implementation(npm("hls.js", "^1.5.0"))

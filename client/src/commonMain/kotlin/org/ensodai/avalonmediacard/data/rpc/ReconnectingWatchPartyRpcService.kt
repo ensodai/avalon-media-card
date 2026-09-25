@@ -8,6 +8,8 @@ import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.retryWhen
 import kotlinx.rpc.withService
 import org.ensodai.avalonmediacard.contract.logging.AppLogging
+import org.ensodai.avalonmediacard.contract.model.ClockSyncPing
+import org.ensodai.avalonmediacard.contract.model.ClockSyncPong
 import org.ensodai.avalonmediacard.contract.model.CreateRoomRequest
 import org.ensodai.avalonmediacard.contract.model.JoinRoomResult
 import org.ensodai.avalonmediacard.contract.model.LobbyEvent
@@ -112,5 +114,10 @@ class ReconnectingWatchPartyRpcService(
     override suspend fun sendReaction(roomId: Uuid, emoji: String): Boolean =
         executor.execute("sendReaction", getService = { getService() }) {
             sendReaction(roomId, emoji)
+        }
+
+    override suspend fun syncClock(ping: ClockSyncPing): ClockSyncPong =
+        executor.execute("syncClock", getService = { getService() }) {
+            syncClock(ping)
         }
 }

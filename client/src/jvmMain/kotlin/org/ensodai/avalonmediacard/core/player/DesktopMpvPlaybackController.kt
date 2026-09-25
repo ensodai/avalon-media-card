@@ -260,6 +260,9 @@ class DesktopMpvPlaybackController : CommonPlaybackController() {
         }
     }
 
+    override fun getCurrentPositionMs(): Long =
+        (state.currentTime * 1000).toLong().coerceAtLeast(0L)
+
     private fun handleMpvEvent(event: MpvNative.MpvEvent) {
         when (event.event_id) {
             MpvNative.MPV_EVENT_PROPERTY_CHANGE -> {
@@ -288,7 +291,7 @@ class DesktopMpvPlaybackController : CommonPlaybackController() {
                     "paused-for-cache" -> {
                         if (prop.format == MpvNative.MPV_FORMAT_FLAG && prop.data != null) {
                             val isBuffering = prop.data!!.getInt(0) != 0
-                            state.isBuffering = isBuffering
+                            setBuffering(isBuffering)
                         }
                     }
                     "demuxer-cache-duration" -> {
@@ -627,6 +630,7 @@ class DesktopMpvPlaybackController : CommonPlaybackController() {
     }
 
     override fun seek(time: Double) {
+        setBuffering(true)
         updateTime(time)
         val handle = mpvHandle ?: return
         mpv.mpv_command(handle, arrayOf("seek", time.toString(), "absolute+exact"))
@@ -656,6 +660,12 @@ class DesktopMpvPlaybackController : CommonPlaybackController() {
         state.isMuted = muted
         val handle = mpvHandle ?: return
         mpv.mpv_set_property_string(handle, "mute", if (muted) "yes" else "no")
+    }
+
+    override fun setPlaybackRate(rate: Float) {
+        val handle = mpvHandle ?: return
+        val clamped = rate.coerceIn(0.25f, 4.0f)
+        mpv.mpv_set_property_string(handle, "speed", clamped.toString())
     }
 
     override fun selectAudioTrack(track: AudioTrack) {

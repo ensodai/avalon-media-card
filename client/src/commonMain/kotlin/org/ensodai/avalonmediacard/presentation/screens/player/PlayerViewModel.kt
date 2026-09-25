@@ -10,7 +10,11 @@ import org.ensodai.avalonmediacard.contract.plugins.StreamType
 import org.ensodai.avalonmediacard.contract.plugins.VideoQuality
 import org.ensodai.avalonmediacard.contract.rpc.PlaybackMetadataResult
 import org.ensodai.avalonmediacard.contract.rpc.StreamPlaybackResult
+import org.ensodai.avalonmediacard.contract.rpc.WatchPartyRpcService
+import org.ensodai.avalonmediacard.core.PlaybackController
 import org.ensodai.avalonmediacard.core.player.StreamUrlResolver
+import org.ensodai.avalonmediacard.core.player.watchparty.ClientSyncController
+import org.ensodai.avalonmediacard.core.player.watchparty.ClockSyncService
 import org.ensodai.avalonmediacard.data.AppSettingsStorage
 import org.ensodai.avalonmediacard.data.TokenStorage
 import org.ensodai.avalonmediacard.data.platformServerUrl
@@ -34,7 +38,9 @@ class PlayerViewModel(
     val getPlaybackMetadata: GetPlaybackMetadataUseCase,
     val getPlaybackStream: GetPlaybackStreamUseCase,
     val tokenStorage: TokenStorage,
-    val appSettings: AppSettingsStorage
+    val appSettings: AppSettingsStorage,
+    val clockSync: ClockSyncService,
+    val rpcService: WatchPartyRpcService
 ) : BaseViewModel<PlayerViewState, PlayerActions>(
     initialState = PlayerViewState(
         title = params.title,
@@ -51,6 +57,7 @@ class PlayerViewModel(
         selectedAudioTrackIndex = params.audioTrackIndex,
         defaultPlayerEngine = appSettings.cachedDefaultPlayer,
         mode = params.mode,
+        watchRoomId = params.watchRoomId,
         status = PlaybackStatus.BUFFERING
     )
 ) {
@@ -61,6 +68,32 @@ class PlayerViewModel(
     private var syncJob: Job? = null
     private var metadataJob: Job? = null
     private var playbackJob: Job? = null
+
+    var activeController: PlaybackController? = null
+        private set
+    var syncController: ClientSyncController? = null
+        private set
+
+    fun attachController(controller: PlaybackController) {
+        activeController = controller
+        val roomId = viewState.value.watchRoomId
+        if (viewState.value.mode == PlayerMode.WATCH_PARTY && roomId != null) {
+            syncController?.stop()
+            syncController = ClientSyncController(
+                roomId = roomId,
+                underlyingController = controller,
+                clockSync = clockSync,
+                rpcService = rpcService,
+                coroutineScope = viewModelScope
+            ).also { it.start() }
+        }
+    }
+
+    fun detachController() {
+        syncController?.stop()
+        syncController = null
+        activeController = null
+    }
 
     init {
         viewModelScope.launch {
@@ -102,6 +135,7 @@ class PlayerViewModel(
                     currentStreamUrl = fullUrl,
                     currentStreamId = newParams.streamId ?: it.currentStreamId,
                     mode = newParams.mode,
+                    watchRoomId = newParams.watchRoomId,
                     status = PlaybackStatus.BUFFERING
                 )
             }
@@ -263,6 +297,7 @@ class PlayerViewModel(
     fun stopPlaybackAndDispose() {
         syncJob?.cancel()
         syncJob = null
+        detachController()
         if (viewState.value.mode != PlayerMode.TEST_PREVIEW) {
             persistProgress(viewState.value, force = true)
         }
@@ -315,6 +350,8 @@ class PlayerViewModel(
         onConfirmSource = {
             stopPlaybackAndDispose()
             onConfirmSourceCallback?.invoke()
-        }
+        },
+        onAttachController = ::attachController,
+        onDetachController = ::detachController
     )
 }

@@ -8,6 +8,9 @@ import io.ktor.client.request.*
 import io.ktor.client.statement.*
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import org.ensodai.avalonmediacard.contract.plugins.AudioTrack
 import org.ensodai.avalonmediacard.contract.plugins.SubtitleTrack
@@ -17,6 +20,19 @@ import org.ensodai.avalonmediacard.core.PlaybackState
 abstract class CommonPlaybackController : PlaybackController {
 
     override val state: PlaybackState = PlaybackState()
+
+    protected val _isBufferingFlow = MutableStateFlow(true)
+    override val isBufferingFlow: StateFlow<Boolean> = _isBufferingFlow.asStateFlow()
+
+    fun setBuffering(buffering: Boolean) {
+        state.isBuffering = buffering
+        _isBufferingFlow.value = buffering
+    }
+
+    override fun stop() {
+        pause()
+        setBuffering(true)
+    }
 
     protected var _audioTracks by mutableStateOf<List<AudioTrack>>(emptyList())
     override val audioTracks: List<AudioTrack> get() = _audioTracks

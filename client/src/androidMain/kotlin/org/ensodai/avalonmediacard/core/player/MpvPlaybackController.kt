@@ -60,6 +60,9 @@ class MpvPlaybackController(
         }
     }
 
+    override fun getCurrentPositionMs(): Long =
+        (state.currentTime * 1000).toLong().coerceAtLeast(0L)
+
     private val eventObserver = object : MPV.EventObserver {
         override fun eventProperty(property: String) {}
 
@@ -82,7 +85,7 @@ class MpvPlaybackController(
                     state.isPlaying = !value
                 }
                 "paused-for-cache" -> {
-                    state.isBuffering = value
+                    setBuffering(value)
                 }
             }
         }
@@ -116,10 +119,10 @@ class MpvPlaybackController(
         override fun event(eventId: Int, data: MPVNode) {
             when (eventId) {
                 MPV.mpvEvent.MPV_EVENT_START_FILE -> {
-                    state.isBuffering = true
+                    setBuffering(true)
                 }
                 MPV.mpvEvent.MPV_EVENT_FILE_LOADED -> {
-                    state.isBuffering = false
+                    setBuffering(false)
                     state.isPlaying = true
 
                     if (pendingSeekSeconds > 0.0) {
@@ -141,7 +144,7 @@ class MpvPlaybackController(
                     }
                 }
                 MPV.mpvEvent.MPV_EVENT_PLAYBACK_RESTART -> {
-                    state.isBuffering = false
+                    setBuffering(false)
                     state.isPlaying = true
                 }
                 MPV.mpvEvent.MPV_EVENT_END_FILE -> {
@@ -573,6 +576,7 @@ class MpvPlaybackController(
     }
 
     override fun seek(time: Double) {
+        setBuffering(true)
         updateTime(time)
         scope.launch(Dispatchers.IO) {
             mpv.command("seek", time.toInt().toString(), "absolute", "keyframes")
@@ -592,6 +596,13 @@ class MpvPlaybackController(
             scope.launch(Dispatchers.IO) {
                 mpv.setPropertyInt("volume", (volume * 100).toInt())
             }
+        }
+    }
+
+    override fun setPlaybackRate(rate: Float) {
+        val clamped = rate.coerceIn(0.25f, 4.0f).toDouble()
+        scope.launch(Dispatchers.IO) {
+            mpv.setPropertyDouble("speed", clamped)
         }
     }
 

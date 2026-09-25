@@ -4,6 +4,8 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.emitAll
 import kotlinx.coroutines.flow.flow
 import org.ensodai.avalonmediacard.contract.auth.AuthState
+import org.ensodai.avalonmediacard.contract.model.ClockSyncPing
+import org.ensodai.avalonmediacard.contract.model.ClockSyncPong
 import org.ensodai.avalonmediacard.contract.model.CreateRoomRequest
 import org.ensodai.avalonmediacard.contract.model.JoinRoomResult
 import org.ensodai.avalonmediacard.contract.model.LobbyEvent
@@ -13,6 +15,7 @@ import org.ensodai.avalonmediacard.contract.model.WatchRoomDto
 import org.ensodai.avalonmediacard.contract.model.WatchRoomEvent
 import org.ensodai.avalonmediacard.contract.model.WatchRoomSummaryDto
 import org.ensodai.avalonmediacard.contract.rpc.WatchPartyRpcService
+import kotlin.time.Clock
 import org.ensodai.avalonmediacard.repository.watchparty.WatchRoomRepository
 import org.ensodai.avalonmediacard.security.RpcSessionContext
 import org.ensodai.avalonmediacard.service.watchparty.WatchRoomSessionManager
@@ -158,6 +161,15 @@ class WatchPartyRpcServiceImpl(
     override suspend fun sendReaction(roomId: Uuid, emoji: String): Boolean {
         val authUser = currentAuthorizedUser() ?: return false
         return watchRoomSessionManager.sendReaction(roomId, authUser.userId, emoji)
+    }
+
+    override suspend fun syncClock(ping: ClockSyncPing): ClockSyncPong {
+        val receiveTime = Clock.System.now()
+        return ClockSyncPong(
+            clientSendTime = ping.clientSendTime,
+            serverReceiveTime = receiveTime,
+            serverTransmitTime = Clock.System.now()
+        )
     }
 
     private fun generateRoomPin(): String {

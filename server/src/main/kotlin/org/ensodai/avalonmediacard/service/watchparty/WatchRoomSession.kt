@@ -24,7 +24,9 @@ import org.ensodai.avalonmediacard.contract.model.WatchRoomEvent
 import org.slf4j.LoggerFactory
 import java.util.concurrent.ConcurrentHashMap
 import kotlin.time.Clock
+import kotlin.time.Duration.Companion.milliseconds
 import kotlin.time.Duration.Companion.seconds
+import kotlin.time.Instant
 import kotlin.uuid.Uuid
 
 /**
@@ -53,9 +55,20 @@ data class ActiveParticipant(
 }
 
 /**
+ * Фазы жизненного цикла воспроизведения комнаты совместного просмотра TrueSync.
+ */
+enum class RoomPhase {
+    LOBBY,              // Выбор контента, предстартовая готовность
+    PREPARING,          // Загрузка медиапотока всеми участниками перед стартом (Media Ready Barrier)
+    STARTING_SCHEDULED, // Резерв времени на Preroll (T_start = now + leadTime), виртуальные часы стоят
+    PLAYING_IN_SYNC,    // Активное воспроизведение, виртуальные часы идут
+    PARTIAL_BUFFERING,  // Аварийная пауза из-за отставания/буферизации участника (Grace Period 8с)
+    FORCE_PAUSED        // Ручная пауза
+}
+
+/**
  * In-Memory State Machine комнаты совместного просмотра.
- * Реализует алгоритм синхронизации TrueSync (PlayAt детерминированный запуск,
- * Grace Period буферизации 8 сек, реакции и миграцию хоста).
+ * Реализует канонический алгоритм синхронизации TrueSync на базе 5-состояний FSM.
  */
 class WatchRoomSession(
     val roomId: Uuid,
@@ -73,12 +86,16 @@ class WatchRoomSession(
     private val logger = LoggerFactory.getLogger(WatchRoomSession::class.java)
     private val mutex = Mutex()
 
-    // Текущее состояние воспроизведения
-    var isPlaying: Boolean = false
+    // Текущая фаза воспроизведения FSM
+    var phase: RoomPhase = RoomPhase.LOBBY
         private set
+
+    val isPlaying: Boolean
+        get() = phase == RoomPhase.PLAYING_IN_SYNC || phase == RoomPhase.STARTING_SCHEDULED
+
     var anchorPositionMs: Long = initialPositionSeconds * 1000L
         private set
-    var anchorServerTimestampMs: Long = Clock.System.now().toEpochMilliseconds()
+    var anchorServerTime: Instant = Clock.System.now()
         private set
     var currentSeason: Int? = initialSeason
         private set
@@ -88,9 +105,11 @@ class WatchRoomSession(
     // Участники сессии
     private val participants = ConcurrentHashMap<Uuid, ActiveParticipant>()
 
-    // Буферизующиеся участники
+    // Буферизующиеся участники и таймеры
     private val bufferingParticipants = ConcurrentHashMap.newKeySet<Uuid>()
     private var gracePeriodJob: Job? = null
+    private var scheduledStartJob: Job? = null
+    private var preparationTimeoutJob: Job? = null
 
     // Реактивная шина событий комнаты (TrueSync / Плеер)
     private val _events = MutableSharedFlow<WatchRoomEvent>(
@@ -144,16 +163,25 @@ class WatchRoomSession(
         val p = if (existing != null) {
             existing.isOnline = true
             existing.lastPingAt = Clock.System.now().toEpochMilliseconds()
+            if (phase == RoomPhase.PREPARING) {
+                existing.playbackState = WatchRoomPlaybackState.BUFFERING
+                bufferingParticipants.add(userId)
+            }
             existing
         } else {
+            val initialPlaybackState = if (phase == RoomPhase.PREPARING) WatchRoomPlaybackState.BUFFERING else WatchRoomPlaybackState.READY
             val newP = ActiveParticipant(
                 userId = userId,
                 username = username,
                 role = role,
                 isOnline = true,
-                playbackState = WatchRoomPlaybackState.READY,
-                lastPingAt = Clock.System.now().toEpochMilliseconds()
+                playbackState = initialPlaybackState,
+                lastPingAt = Clock.System.now().toEpochMilliseconds(),
+                isDesynced = (role != WatchRoomParticipantRole.HOST && (phase == RoomPhase.PLAYING_IN_SYNC || phase == RoomPhase.STARTING_SCHEDULED))
             )
+            if (phase == RoomPhase.PREPARING) {
+                bufferingParticipants.add(userId)
+            }
             participants[userId] = newP
             newP
         }
@@ -190,6 +218,11 @@ class WatchRoomSession(
         p.isOnline = false
         p.playbackState = WatchRoomPlaybackState.OFFLINE
         bufferingParticipants.remove(userId)
+        if (phase == RoomPhase.PREPARING) {
+            checkMediaPreparationResolvedLocked()
+        } else {
+            checkBufferingResolvedLocked()
+        }
 
         val dto = p.toDto()
         _lobbyEvents.emit(LobbyEvent.ParticipantUpdated(dto))
@@ -204,6 +237,11 @@ class WatchRoomSession(
         userConnections.remove(userId)
         val removed = participants.remove(userId) ?: return@withLock
         bufferingParticipants.remove(userId)
+        if (phase == RoomPhase.PREPARING) {
+            checkMediaPreparationResolvedLocked()
+        } else {
+            checkBufferingResolvedLocked()
+        }
 
         _lobbyEvents.emit(LobbyEvent.ParticipantRemoved(userId))
         _events.emit(WatchRoomEvent.ParticipantsUpdated(getParticipantListLocked()))
@@ -233,6 +271,8 @@ class WatchRoomSession(
 
     /**
      * Запуск воспроизведения хостом из лобби.
+     * Переводит комнату в фазу PREPARING (барьер готовности), чтобы все участники
+     * успели открыть плеер, получить URL и демультиплексировать видеопоток перед синхронным стартом.
      */
     suspend fun triggerStartPlayback(userId: Uuid): Boolean = mutex.withLock {
         val p = participants[userId] ?: return@withLock false
@@ -241,38 +281,54 @@ class WatchRoomSession(
             return@withLock false
         }
 
+        scheduledStartJob?.cancel()
+        scheduledStartJob = null
         gracePeriodJob?.cancel()
         gracePeriodJob = null
+        preparationTimeoutJob?.cancel()
+        preparationTimeoutJob = null
+
+        phase = RoomPhase.PREPARING
+        anchorPositionMs = 0L
+        anchorServerTime = Clock.System.now()
         bufferingParticipants.clear()
 
-        val now = Clock.System.now().toEpochMilliseconds()
-        val targetStartMs = now + 500L
-        isPlaying = true
-        anchorPositionMs = 0L
-        anchorServerTimestampMs = targetStartMs
-        p.playbackState = WatchRoomPlaybackState.PLAYING
+        // Все активные онлайн-участники ожидают подготовки медиа
+        participants.values.forEach { participant ->
+            if (participant.isOnline) {
+                participant.playbackState = WatchRoomPlaybackState.BUFFERING
+                participant.isDesynced = false
+                bufferingParticipants.add(participant.userId)
+            }
+        }
 
-        emitCurrentSyncState(userId)
-        _events.emit(WatchRoomEvent.ParticipantsUpdated(getParticipantListLocked()))
+        val targetStartPlaceholder = Clock.System.now()
         _lobbyEvents.emit(
             LobbyEvent.TransitionToPlayer(
-                playAtServerTimestampMs = targetStartMs,
+                playAtServerTime = targetStartPlaceholder,
                 season = currentSeason,
                 episode = currentEpisode
             )
         )
 
+        emitCurrentSyncState(userId)
+        _events.emit(WatchRoomEvent.ParticipantsUpdated(getParticipantListLocked()))
+        _events.emit(WatchRoomEvent.SystemNotice("Подготовка к совместному просмотру... Ожидание загрузки видео всеми участниками."))
+
+        startPreparationTimeoutLocked()
         onProgressChanged(currentSeason, currentEpisode, 0L)
         true
     }
 
     /**
      * Возвращает текущее интерполированное время воспроизведения в миллисекундах.
+     * Время идет только в фазе PLAYING_IN_SYNC. В фазе STARTING_SCHEDULED (преролл)
+     * время зафиксировано на anchorPositionMs.
      */
     fun getCurrentPositionMs(): Long {
-        if (!isPlaying) return anchorPositionMs
-        val now = Clock.System.now().toEpochMilliseconds()
-        val elapsed = (now - anchorServerTimestampMs).coerceAtLeast(0L)
+        if (phase != RoomPhase.PLAYING_IN_SYNC) return anchorPositionMs
+        val now = Clock.System.now()
+        val elapsed = (now - anchorServerTime).inWholeMilliseconds.coerceAtLeast(0L)
         return anchorPositionMs + elapsed
     }
 
@@ -323,6 +379,11 @@ class WatchRoomSession(
         userConnections.remove(userId)
         participants.remove(userId)
         bufferingParticipants.remove(userId)
+        if (phase == RoomPhase.PREPARING) {
+            checkMediaPreparationResolvedLocked()
+        } else {
+            checkBufferingResolvedLocked()
+        }
 
         _lobbyEvents.emit(LobbyEvent.ParticipantRemoved(userId))
         _events.emit(WatchRoomEvent.ParticipantsUpdated(getParticipantListLocked()))
@@ -342,6 +403,7 @@ class WatchRoomSession(
         if (controlMode == WatchRoomControlMode.HOST_ONLY &&
             participant.role != WatchRoomParticipantRole.HOST &&
             command !is RoomPlaybackCommand.ReportBuffer &&
+            command !is RoomPlaybackCommand.ReportMediaReady &&
             command !is RoomPlaybackCommand.SetLobbyStatus
         ) {
             logger.warn("User {} tried to issue command {} in HOST_ONLY room {}", userId, command, roomId)
@@ -350,35 +412,44 @@ class WatchRoomSession(
 
         when (command) {
             is RoomPlaybackCommand.Play -> {
-                gracePeriodJob?.cancel()
-                gracePeriodJob = null
                 bufferingParticipants.clear()
-
-                // Детерминированный запуск через 500мс в будущем
-                val now = Clock.System.now().toEpochMilliseconds()
-                val targetStartMs = now + 500L
-                isPlaying = true
-                anchorPositionMs = command.positionMs
-                anchorServerTimestampMs = targetStartMs
+                val now = Clock.System.now()
+                val targetStart = now + 1500.milliseconds
+                logger.info(
+                    "[TrueSync:Server] Room {}: Received PLAY from user {} at pos {} ms. ServerNow={}, targetStart={} (+1500ms)",
+                    roomId, userId, command.positionMs, now, targetStart
+                )
 
                 participant.playbackState = WatchRoomPlaybackState.PLAYING
-                emitCurrentSyncState(userId)
+                participant.isDesynced = false
+                schedulePrerollTransitionLocked(targetStart, command.positionMs, userId)
                 _events.emit(WatchRoomEvent.ParticipantsUpdated(getParticipantListLocked()))
 
-                onProgressChanged(currentSeason, currentEpisode, anchorPositionMs / 1000L)
+                onProgressChanged(currentSeason, currentEpisode, command.positionMs / 1000L)
                 true
             }
 
             is RoomPlaybackCommand.Pause -> {
+                scheduledStartJob?.cancel()
+                scheduledStartJob = null
                 gracePeriodJob?.cancel()
                 gracePeriodJob = null
+                preparationTimeoutJob?.cancel()
+                preparationTimeoutJob = null
 
-                val now = Clock.System.now().toEpochMilliseconds()
-                isPlaying = false
-                anchorPositionMs = command.positionMs
-                anchorServerTimestampMs = now
+                val now = Clock.System.now()
+                val pausePos = if (phase == RoomPhase.PLAYING_IN_SYNC) getCurrentPositionMs() else command.positionMs
+                phase = RoomPhase.FORCE_PAUSED
+                anchorPositionMs = pausePos
+                anchorServerTime = now
+
+                logger.info(
+                    "[TrueSync:Server] Room {}: Received PAUSE from user {} at pos {} ms (savedPos={} ms). ServerNow={}",
+                    roomId, userId, command.positionMs, pausePos, now
+                )
 
                 participant.playbackState = WatchRoomPlaybackState.PAUSED
+                participant.isDesynced = false
                 emitCurrentSyncState(userId)
                 _events.emit(WatchRoomEvent.ParticipantsUpdated(getParticipantListLocked()))
 
@@ -387,42 +458,78 @@ class WatchRoomSession(
             }
 
             is RoomPlaybackCommand.Seek -> {
-                val now = Clock.System.now().toEpochMilliseconds()
-                anchorPositionMs = command.targetPositionMs
-
+                participant.isDesynced = false
+                val now = Clock.System.now()
                 if (isPlaying) {
-                    // Запуск с новой позиции через 500мс
-                    anchorServerTimestampMs = now + 500L
+                    val targetStart = now + 2000.milliseconds
+                    logger.info(
+                        "[TrueSync:Server] Room {}: Received SEEK while playing from user {} to {} ms. Scheduled preroll targetStart={}",
+                        roomId, userId, command.targetPositionMs, targetStart
+                    )
+                    schedulePrerollTransitionLocked(targetStart, command.targetPositionMs, userId)
                 } else {
-                    anchorServerTimestampMs = now
+                    scheduledStartJob?.cancel()
+                    scheduledStartJob = null
+                    gracePeriodJob?.cancel()
+                    gracePeriodJob = null
+                    preparationTimeoutJob?.cancel()
+                    preparationTimeoutJob = null
+                    anchorPositionMs = command.targetPositionMs
+                    anchorServerTime = now
+                    logger.info(
+                        "[TrueSync:Server] Room {}: Received SEEK while paused from user {} to {} ms.",
+                        roomId, userId, command.targetPositionMs
+                    )
+                    emitCurrentSyncState(userId)
                 }
-
-                emitCurrentSyncState(userId)
-                onProgressChanged(currentSeason, currentEpisode, anchorPositionMs / 1000L)
+                onProgressChanged(currentSeason, currentEpisode, command.targetPositionMs / 1000L)
                 true
             }
 
             is RoomPlaybackCommand.ChangeEpisode -> {
+                scheduledStartJob?.cancel()
+                scheduledStartJob = null
                 gracePeriodJob?.cancel()
                 gracePeriodJob = null
+                preparationTimeoutJob?.cancel()
+                preparationTimeoutJob = null
                 bufferingParticipants.clear()
 
                 currentSeason = command.season
                 currentEpisode = command.episode
                 anchorPositionMs = 0L
-                isPlaying = false
-                anchorServerTimestampMs = Clock.System.now().toEpochMilliseconds()
+                phase = RoomPhase.PREPARING
+                anchorServerTime = Clock.System.now()
 
-                participant.playbackState = WatchRoomPlaybackState.READY
+                participants.values.forEach { p ->
+                    if (p.isOnline) {
+                        p.playbackState = WatchRoomPlaybackState.BUFFERING
+                        p.isDesynced = false
+                        bufferingParticipants.add(p.userId)
+                    }
+                }
+
+                logger.info(
+                    "[TrueSync:Server] Room {}: Received ChangeEpisode S{}E{} from user {}. Entering PREPARING.",
+                    roomId, command.season, command.episode, userId
+                )
+
                 emitCurrentSyncState(userId)
                 _events.emit(WatchRoomEvent.ParticipantsUpdated(getParticipantListLocked()))
+                _events.emit(WatchRoomEvent.SystemNotice("Смена серии (S${command.season}E${command.episode}). Загрузка видео всеми участниками..."))
 
+                startPreparationTimeoutLocked()
                 onProgressChanged(currentSeason, currentEpisode, 0L)
                 true
             }
 
             is RoomPlaybackCommand.ReportBuffer -> {
                 handleBufferReportLocked(participant, command.isBuffering)
+                true
+            }
+
+            is RoomPlaybackCommand.ReportMediaReady -> {
+                handleMediaReadyReportLocked(participant, command.positionMs)
                 true
             }
 
@@ -436,7 +543,66 @@ class WatchRoomSession(
     }
 
     /**
-     * Обработка буферизации по алгоритму TrueSync (Grace Period 8 секунд).
+     * Планирование детерминированного перехода в PLAYING_IN_SYNC через фазу STARTING_SCHEDULED (Preroll).
+     * Во время Preroll виртуальные часы стоят на месте, а отчеты о буферизации не вызывают паузу.
+     */
+    private fun schedulePrerollTransitionLocked(
+        targetStart: Instant,
+        targetPosMs: Long,
+        causedByUserId: Uuid? = null
+    ) {
+        scheduledStartJob?.cancel()
+        gracePeriodJob?.cancel()
+        gracePeriodJob = null
+
+        phase = RoomPhase.STARTING_SCHEDULED
+        anchorPositionMs = targetPosMs
+        anchorServerTime = targetStart
+
+        emitCurrentSyncState(causedByUserId)
+
+        scheduledStartJob = scope.launch {
+            val waitDuration = targetStart - Clock.System.now()
+            if (waitDuration.isPositive()) {
+                delay(waitDuration)
+            }
+            mutex.withLock {
+                if (phase != RoomPhase.STARTING_SCHEDULED) return@withLock
+
+                val activeBuffering = bufferingParticipants.filter { uid ->
+                    val p = participants[uid]
+                    p != null && p.isOnline && !p.isDesynced
+                }
+
+                if (activeBuffering.isEmpty()) {
+                    phase = RoomPhase.PLAYING_IN_SYNC
+                    anchorServerTime = targetStart
+                    logger.info("[TrueSync:Server] Room {}: STARTING_SCHEDULED -> PLAYING_IN_SYNC at {}", roomId, targetStart)
+                    participants.values.forEach { p ->
+                        if (p.isOnline && !p.isDesynced) {
+                            p.playbackState = WatchRoomPlaybackState.PLAYING
+                        }
+                    }
+                    emitCurrentSyncState(null)
+                    _events.emit(WatchRoomEvent.ParticipantsUpdated(getParticipantListLocked()))
+                } else {
+                    phase = RoomPhase.PARTIAL_BUFFERING
+                    val names = activeBuffering.mapNotNull { participants[it]?.username }.joinToString(", ")
+                    logger.warn("[TrueSync:Server] Room {}: STARTING_SCHEDULED -> PARTIAL_BUFFERING. Participants still buffering: {}", roomId, names)
+
+                    anchorPositionMs = targetPosMs
+                    anchorServerTime = Clock.System.now()
+                    emitCurrentSyncState(null)
+                    _events.emit(WatchRoomEvent.SystemNotice("Зритель $names буферизует видео..."))
+
+                    startGracePeriodTimerLocked()
+                }
+            }
+        }
+    }
+
+    /**
+     * Обработка буферизации по алгоритму TrueSync на основе 5-состояний FSM.
      */
     private suspend fun handleBufferReportLocked(
         participant: ActiveParticipant,
@@ -446,21 +612,40 @@ class WatchRoomSession(
             participant.playbackState = WatchRoomPlaybackState.BUFFERING
             bufferingParticipants.add(participant.userId)
 
-            if (isPlaying && gracePeriodJob == null) {
-                // Ставим воспроизведение на паузу на текущей интерполированной позиции
-                val currentPos = getCurrentPositionMs()
-                val now = Clock.System.now().toEpochMilliseconds()
-                isPlaying = false
-                anchorPositionMs = currentPos
-                anchorServerTimestampMs = now
+            when (phase) {
+                RoomPhase.PREPARING -> {
+                    // Во время подготовки медиа буферизация ожидаема
+                    logger.debug("[TrueSync:Server] Room {}: Participant {} buffering during PREPARING.", roomId, participant.userId)
+                }
+                RoomPhase.STARTING_SCHEDULED -> {
+                    // Во время преролла буферизация нормальна: идет загрузка чанков в MSE.
+                    // Паузу НЕ вызываем, участник учтен в bufferingParticipants.
+                    logger.debug("[TrueSync:Server] Room {}: Participant {} buffering during STARTING_SCHEDULED (preroll). Recorded.", roomId, participant.userId)
+                }
+                RoomPhase.PLAYING_IN_SYNC -> {
+                    // Аварийный останов посреди активного просмотра
+                    if (!participant.isDesynced || participant.role == WatchRoomParticipantRole.HOST) {
+                        val currentPos = getCurrentPositionMs()
+                        val now = Clock.System.now()
+                        logger.warn("[TrueSync:Server] Room {}: Participant {} stalled during PLAYING_IN_SYNC at {} ms. Entering PARTIAL_BUFFERING.", roomId, participant.userId, currentPos)
 
-                emitCurrentSyncState(participant.userId)
-                _events.emit(WatchRoomEvent.SystemNotice("Зритель ${participant.username} буферизует видео..."))
+                        scheduledStartJob?.cancel()
+                        scheduledStartJob = null
+                        phase = RoomPhase.PARTIAL_BUFFERING
+                        anchorPositionMs = currentPos
+                        anchorServerTime = now
 
-                // Запускаем таймер Grace Period на 8 секунд
-                gracePeriodJob = scope.launch {
-                    delay(8000L)
-                    onGracePeriodExpired()
+                        emitCurrentSyncState(participant.userId)
+                        val names = bufferingParticipants.mapNotNull { participants[it]?.username }.joinToString(", ")
+                        _events.emit(WatchRoomEvent.SystemNotice("Зритель $names буферизует видео..."))
+
+                        startGracePeriodTimerLocked()
+                    }
+                }
+                RoomPhase.PARTIAL_BUFFERING,
+                RoomPhase.FORCE_PAUSED,
+                RoomPhase.LOBBY -> {
+                    // Уже на паузе или в лобби
                 }
             }
         } else {
@@ -468,44 +653,143 @@ class WatchRoomSession(
             participant.isDesynced = false
             bufferingParticipants.remove(participant.userId)
 
-            // Если все буферизовавшиеся зрители готовы и был запущен таймер ожидания
-            if (bufferingParticipants.isEmpty() && gracePeriodJob != null) {
-                gracePeriodJob?.cancel()
-                gracePeriodJob = null
-
-                // Возобновляем воспроизведение
-                val now = Clock.System.now().toEpochMilliseconds()
-                isPlaying = true
-                anchorServerTimestampMs = now + 500L
-
-                emitCurrentSyncState(null)
-                _events.emit(WatchRoomEvent.SystemNotice("Все зрители готовы. Возобновляем воспроизведение!"))
+            if (phase == RoomPhase.PREPARING) {
+                checkMediaPreparationResolvedLocked()
+            } else {
+                checkBufferingResolvedLocked()
             }
         }
 
         _events.emit(WatchRoomEvent.ParticipantsUpdated(getParticipantListLocked()))
     }
 
+    private suspend fun handleMediaReadyReportLocked(
+        participant: ActiveParticipant,
+        positionMs: Long
+    ) {
+        participant.playbackState = if (isPlaying) WatchRoomPlaybackState.PLAYING else WatchRoomPlaybackState.READY
+        participant.isDesynced = false
+        bufferingParticipants.remove(participant.userId)
+        logger.info("[TrueSync:Server] Room {}: Participant {} reported MEDIA READY at pos {} ms. Phase={}", roomId, participant.userId, positionMs, phase)
+
+        if (phase == RoomPhase.PREPARING) {
+            checkMediaPreparationResolvedLocked()
+        } else {
+            checkBufferingResolvedLocked()
+        }
+        _events.emit(WatchRoomEvent.ParticipantsUpdated(getParticipantListLocked()))
+    }
+
+    private suspend fun checkMediaPreparationResolvedLocked() {
+        if (phase != RoomPhase.PREPARING) return
+
+        val unready = bufferingParticipants.filter { uid ->
+            val p = participants[uid]
+            p != null && p.isOnline && !p.isDesynced
+        }
+
+        if (unready.isEmpty()) {
+            preparationTimeoutJob?.cancel()
+            preparationTimeoutJob = null
+            bufferingParticipants.clear()
+
+            val targetStart = Clock.System.now() + 1500.milliseconds
+            logger.info("[TrueSync:Server] Room {}: All participants READY in PREPARING phase! Scheduling synchronized start at {}", roomId, targetStart)
+            schedulePrerollTransitionLocked(targetStart, anchorPositionMs, null)
+            _events.emit(WatchRoomEvent.SystemNotice("Все участники готовы! Старт воспроизведения через 1.5 секунды."))
+            _events.emit(WatchRoomEvent.ParticipantsUpdated(getParticipantListLocked()))
+        } else {
+            val totalOnline = participants.values.count { it.isOnline && !it.isDesynced }
+            val readyCount = totalOnline - unready.size
+            val unreadyNames = unready.mapNotNull { participants[it]?.username }.joinToString(", ")
+            logger.info("[TrueSync:Server] Room {}: Media preparation in progress: {}/{} ready. Waiting for: {}", roomId, readyCount, totalOnline, unreadyNames)
+            _events.emit(WatchRoomEvent.SystemNotice("Подготовка видео: $readyCount/$totalOnline готовы ($unreadyNames загружает...)"))
+            _events.emit(WatchRoomEvent.ParticipantsUpdated(getParticipantListLocked()))
+        }
+    }
+
+    private fun startPreparationTimeoutLocked() {
+        preparationTimeoutJob?.cancel()
+        preparationTimeoutJob = scope.launch {
+            delay(PREPARATION_TIMEOUT_MS)
+            onPreparationTimeoutExpired()
+        }
+    }
+
+    private suspend fun onPreparationTimeoutExpired() = mutex.withLock {
+        if (phase != RoomPhase.PREPARING) return@withLock
+
+        val unready = bufferingParticipants.filter { uid ->
+            val p = participants[uid]
+            p != null && p.isOnline && !p.isDesynced
+        }
+        if (unready.isEmpty()) return@withLock
+
+        val names = unready.mapNotNull { participants[it]?.username }.joinToString(", ")
+        logger.warn("[TrueSync:Server] Room {}: Preparation watchdog timeout ({}s) expired for: {}. Marking desynced.", roomId, PREPARATION_TIMEOUT_MS / 1000, names)
+        unready.forEach { uid ->
+            participants[uid]?.isDesynced = true
+        }
+        bufferingParticipants.clear()
+        preparationTimeoutJob = null
+
+        val targetStart = Clock.System.now() + START_LEAD_TIME_MS.milliseconds
+        schedulePrerollTransitionLocked(targetStart, anchorPositionMs, null)
+        _events.emit(WatchRoomEvent.SystemNotice("Старт воспроизведения. $names продолжит просмотр после завершения загрузки."))
+        _events.emit(WatchRoomEvent.ParticipantsUpdated(getParticipantListLocked()))
+    }
+
+    private suspend fun checkBufferingResolvedLocked() {
+        if (phase == RoomPhase.PARTIAL_BUFFERING) {
+            val activeBuffering = bufferingParticipants.filter { uid ->
+                val p = participants[uid]
+                p != null && p.isOnline && !p.isDesynced
+            }
+            if (activeBuffering.isEmpty()) {
+                logger.info("[TrueSync:Server] Room {}: All buffering participants ready in PARTIAL_BUFFERING. Resuming playback!", roomId)
+                gracePeriodJob?.cancel()
+                gracePeriodJob = null
+                bufferingParticipants.clear()
+
+                val targetStart = Clock.System.now() + RESUME_LEAD_TIME_MS.milliseconds
+                schedulePrerollTransitionLocked(targetStart, anchorPositionMs, null)
+                _events.emit(WatchRoomEvent.SystemNotice("Все зрители готовы. Возобновляем воспроизведение!"))
+            }
+        }
+    }
+
+    private fun startGracePeriodTimerLocked() {
+        gracePeriodJob?.cancel()
+        gracePeriodJob = scope.launch {
+            delay(GRACE_PERIOD_MS)
+            onGracePeriodExpired()
+        }
+    }
+
     /**
      * Срабатывание 8-секундного таймера буферизации:
-     * Отставшие зрители помечаются как desynced, а комната возобновляет просмотр.
+     * Отставшие зрители помечаются как desynced, а комната возобновляет просмотр (+500мс lead time).
      */
     private suspend fun onGracePeriodExpired() = mutex.withLock {
-        if (bufferingParticipants.isEmpty()) return@withLock
+        if (phase != RoomPhase.PARTIAL_BUFFERING) return@withLock
 
-        val names = bufferingParticipants.mapNotNull { participants[it]?.username }.joinToString(", ")
-        bufferingParticipants.forEach { uid ->
+        val activeBuffering = bufferingParticipants.filter { uid ->
+            val p = participants[uid]
+            p != null && p.isOnline && !p.isDesynced
+        }
+        if (activeBuffering.isEmpty()) return@withLock
+
+        val names = activeBuffering.mapNotNull { participants[it]?.username }.joinToString(", ")
+        logger.warn("[TrueSync:Server] Room {}: Grace period expired for participants: {}. Marking desynced.", roomId, names)
+        activeBuffering.forEach { uid ->
             participants[uid]?.isDesynced = true
         }
         bufferingParticipants.clear()
         gracePeriodJob = null
 
-        val now = Clock.System.now().toEpochMilliseconds()
-        isPlaying = true
-        anchorServerTimestampMs = now + 500L
-
-        emitCurrentSyncState(null)
-        _events.emit(WatchRoomEvent.SystemNotice("Возобновляем просмотр. $names сможет нагнать комнату."))
+        val targetStart = Clock.System.now() + 500.milliseconds
+        schedulePrerollTransitionLocked(targetStart, anchorPositionMs, null)
+        _events.emit(WatchRoomEvent.SystemNotice("Возобновляем воспроизведение. $names продолжит просмотр после завершения загрузки."))
         _events.emit(WatchRoomEvent.ParticipantsUpdated(getParticipantListLocked()))
     }
 
@@ -581,7 +865,7 @@ class WatchRoomSession(
         return WatchRoomEvent.SyncState(
             isPlaying = isPlaying,
             anchorPositionMs = anchorPositionMs,
-            anchorServerTimestampMs = anchorServerTimestampMs,
+            anchorServerTime = anchorServerTime,
             season = currentSeason,
             episode = currentEpisode,
             triggeredByUserId = null
@@ -589,28 +873,43 @@ class WatchRoomSession(
     }
 
     private fun emitCurrentSyncState(triggeredByUserId: Uuid?) {
-        _events.tryEmit(
-            WatchRoomEvent.SyncState(
-                isPlaying = isPlaying,
-                anchorPositionMs = anchorPositionMs,
-                anchorServerTimestampMs = anchorServerTimestampMs,
-                season = currentSeason,
-                episode = currentEpisode,
-                triggeredByUserId = triggeredByUserId
-            )
+        val state = WatchRoomEvent.SyncState(
+            isPlaying = isPlaying,
+            anchorPositionMs = anchorPositionMs,
+            anchorServerTime = anchorServerTime,
+            season = currentSeason,
+            episode = currentEpisode,
+            triggeredByUserId = triggeredByUserId
         )
+        logger.info(
+            "[TrueSync:Server] Room {}: Emitting SyncState: isPlaying={}, anchorPositionMs={} ms, anchorServerTime={}, triggeredBy={}",
+            roomId, isPlaying, anchorPositionMs, anchorServerTime, triggeredByUserId
+        )
+        _events.tryEmit(state)
     }
 
     /**
      * Закрытие сессии: отменяет фоновые таймеры и уведомляет участников.
      */
     suspend fun close() = mutex.withLock {
+        scheduledStartJob?.cancel()
+        scheduledStartJob = null
         gracePeriodJob?.cancel()
         gracePeriodJob = null
+        preparationTimeoutJob?.cancel()
+        preparationTimeoutJob = null
         disconnectJobs.values.forEach { it.cancel() }
         disconnectJobs.clear()
         userConnections.clear()
         _events.emit(WatchRoomEvent.SystemNotice("Комната была закрыта хостом."))
         _lobbyEvents.emit(LobbyEvent.SystemNotice("Комната была закрыта хостом."))
+    }
+
+    companion object {
+        const val PREPARATION_TIMEOUT_MS = 60_000L
+        const val GRACE_PERIOD_MS = 8000L
+        const val START_LEAD_TIME_MS = 1500L
+        const val SEEK_LEAD_TIME_MS = 2000L
+        const val RESUME_LEAD_TIME_MS = 500L
     }
 }

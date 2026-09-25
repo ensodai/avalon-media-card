@@ -163,10 +163,10 @@ localforage@^1.10.0:
   dependencies:
     lie "3.1.1"
 
-"mediabunny@file:../../../../../.cache/yarn/v6/.tmp/8213c0e6eabe340f9a7a9e4434ecf3c2/vendor/mediabunny-1.38.1-f0.5.tgz":
+"mediabunny@file:../../../../../.cache/yarn/v6/npm-playsvideo-0.4.7-f2.16-25c32fc13508739e11428135ab91c8b19aaf8d2d/node_modules/playsvideo/vendor/mediabunny-1.38.1-f0.5.tgz":
   version "1.38.1-f0.5"
   uid "4c33690342703b2af0c0524883cb18d8c3691fde"
-  resolved "file:../../../../../.cache/yarn/v6/.tmp/8213c0e6eabe340f9a7a9e4434ecf3c2/vendor/mediabunny-1.38.1-f0.5.tgz#4c33690342703b2af0c0524883cb18d8c3691fde"
+  resolved "file:../../../../../.cache/yarn/v6/npm-playsvideo-0.4.7-f2.16-25c32fc13508739e11428135ab91c8b19aaf8d2d/node_modules/playsvideo/vendor/mediabunny-1.38.1-f0.5.tgz#4c33690342703b2af0c0524883cb18d8c3691fde"
   dependencies:
     "@types/dom-mediacapture-transform" "^0.1.11"
     "@types/dom-webcodecs" "0.1.13"
@@ -191,12 +191,13 @@ path-browserify@^1.0.1:
   resolved "https://registry.yarnpkg.com/path-browserify/-/path-browserify-1.0.1.tgz#d98454a9c3753d5790860f16f68867b9e46be1fd"
   integrity sha512-b7uo2UCUOYZcnF/3ID0lulOJi/bafxa1xPe7ZPsammBSpjSWQkjNxlt635YGS2MiR9GjvuXCtz2emr3jbsz98g==
 
-"playsvideo@file:../../libs/playsvideo-0.4.7-f2.15.tgz":
-  version "0.4.7-f2.15"
-  resolved "file:../../libs/playsvideo-0.4.7-f2.15.tgz#b06b306c367425361d6810e8b6b80f4fe3c2a09b"
+"playsvideo@file:../../libs/playsvideo-0.4.7-f2.16.tgz":
+  version "0.4.7-f2.16"
+  uid "25c32fc13508739e11428135ab91c8b19aaf8d2d"
+  resolved "file:../../libs/playsvideo-0.4.7-f2.16.tgz#25c32fc13508739e11428135ab91c8b19aaf8d2d"
   dependencies:
     hls.js "^1.5.0"
-    mediabunny "file:../../../../../.cache/yarn/v6/npm-playsvideo-0.4.7-f2.15-b06b306c367425361d6810e8b6b80f4fe3c2a09b/node_modules/playsvideo/vendor/mediabunny-1.38.1-f0.5.tgz"
+    mediabunny "file:../../../../../.cache/yarn/v6/.tmp/dddefd96ecf35ad8d50f8aa3626ce959/vendor/mediabunny-1.38.1-f0.5.tgz"
 
 sax@1.2.1:
   version "1.2.1"

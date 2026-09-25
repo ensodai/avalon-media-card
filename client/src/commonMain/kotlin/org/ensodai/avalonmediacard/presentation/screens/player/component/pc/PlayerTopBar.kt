@@ -98,6 +98,20 @@ fun PlayerTopBar(
                     onClick = { actions.onConfirmSource?.invoke() }
                 )
             }
+        } else if (state.mode == PlayerMode.WATCH_PARTY) {
+            Row(
+                verticalAlignment = Alignment.Top,
+                horizontalArrangement = Arrangement.spacedBy(12.dp)
+            ) {
+                PlayerIslandDynamicButton(
+                    icon = Lucide.Users,
+                    text = stringResource(Res.string.watch_party_title),
+                    contentDescription = stringResource(Res.string.watch_party_title),
+                    iconTint = Color(0xFF64B5F6),
+                    textColor = Color(0xFF64B5F6),
+                    onClick = {}
+                )
+            }
         } else if (currentEpisode != null) {
             var showRatingPopup by remember { mutableStateOf(false) }
 

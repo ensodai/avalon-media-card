@@ -54,7 +54,7 @@ kotlin {
                 implementation(
                     npm(
                         "playsvideo",
-                        "file:${project.projectDir.parentFile.absolutePath}/libs/playsvideo-0.4.7-f2.15.tgz"
+                        "file:${project.projectDir.parentFile.absolutePath}/libs/playsvideo-0.4.7-f2.16.tgz"
                     )
                 )
                 implementation(
@@ -70,7 +70,7 @@ kotlin {
                 implementation(
                     npm(
                         "playsvideo",
-                        "file:${project.projectDir.parentFile.absolutePath}/libs/playsvideo-0.4.7-f2.15.tgz"
+                        "file:${project.projectDir.parentFile.absolutePath}/libs/playsvideo-0.4.7-f2.16.tgz"
                     )
                 )
                 implementation(

@@ -5,6 +5,8 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 import org.ensodai.avalonmediacard.contract.model.EntityType
 import org.ensodai.avalonmediacard.contract.plugins.AudioTrack
 import org.ensodai.avalonmediacard.contract.plugins.MediaStream
@@ -56,6 +58,8 @@ class PlaybackState(
 
 interface PlaybackController {
     val state: PlaybackState
+    val isBufferingFlow: StateFlow<Boolean> get() = MutableStateFlow(state.isBuffering)
+    fun getCurrentPositionMs(): Long = (state.currentTime * 1000).toLong().coerceAtLeast(0L)
     fun play()
     fun pause()
     fun stop() {
@@ -66,6 +70,7 @@ interface PlaybackController {
     fun seek(time: Double)
     fun setMuted(muted: Boolean)
     fun setVolume(volume: Double)
+    fun setPlaybackRate(rate: Float) {}
     fun sendKeyPress(key: String) {}
 
 

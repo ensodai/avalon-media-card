@@ -4,6 +4,7 @@ import org.ensodai.avalonmediacard.contract.plugins.AudioTrack
 import org.ensodai.avalonmediacard.contract.plugins.MediaStream
 import org.ensodai.avalonmediacard.contract.plugins.SubtitleTrack
 import org.ensodai.avalonmediacard.contract.plugins.VideoQuality
+import org.ensodai.avalonmediacard.core.PlaybackController
 import org.ensodai.avalonmediacard.presentation.core.mvi.BaseActions
 import org.ensodai.avalonmediacard.presentation.screens.player.model.PlaybackStatus
 import org.ensodai.avalonmediacard.presentation.screens.player.model.PlayerEngine
@@ -27,5 +28,7 @@ data class PlayerActions(
     val onRateEpisode: (MediaStream, Int) -> Unit = { _, _ -> },
     val onChangeDefaultPlayer: (PlayerEngine) -> Unit = {},
     val onRequestOtherSource: () -> Unit = {},
-    val onConfirmSource: (() -> Unit)? = null
+    val onConfirmSource: (() -> Unit)? = null,
+    val onAttachController: (PlaybackController) -> Unit = {},
+    val onDetachController: () -> Unit = {}
 ) : BaseActions()

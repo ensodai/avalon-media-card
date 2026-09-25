@@ -82,7 +82,7 @@ fun PlayerBottomBar(
                 currentTime = safeCurrentTime.toDouble(),
                 duration = safeDuration.toDouble(),
                 bufferTime = currentTime + ctrlState.bufferAheadSeconds,
-                onSeek = { controller.seek(it) }
+                onSeek = { actions.onSeek(it) }
             )
         } else {
             Text(
@@ -144,7 +144,7 @@ fun PlayerBottomBar(
                             scaleTarget = 1.15f,
                             shape = CircleShape,
                             activeBorderColor = Color.Transparent,
-                            onClick = { if (isPlaying) controller.pause() else controller.play() }
+                            onClick = { actions.onPlayPauseClicked() }
                         )
                         .clip(CircleShape),
                     contentAlignment = Alignment.Center

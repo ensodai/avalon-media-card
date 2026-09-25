@@ -360,19 +360,23 @@ class VideoElementPlaybackController(
     private fun evaluateBufferState() {
         if (isSeeking) return
         val currentBufferAhead = calculateBufferAheadJs(videoElement)
+        val isVideoReady = (videoElement.asDynamic().readyState as? Int ?: 0) >= 2
         state.bufferAheadSeconds = currentBufferAhead
 
         if (intentToPlay) {
             if (state.isBuffering) {
-                if (currentBufferAhead >= REBUFFERING_GOAL || currentBufferAhead >= MIN_BUFFER_TO_PLAY) {
+                if (isVideoReady && (currentBufferAhead >= MIN_BUFFER_TO_PLAY || isTimeInBufferedRangesJs(videoElement, videoElement.currentTime))) {
                     safePlayJs(videoElement)
                     state.isBuffering = false
+                    state.isPlaying = true
                 }
             } else {
-                if (currentBufferAhead < CRITICAL_BUFFER_LEVEL) {
+                if (!isVideoReady) {
                     videoElement.pause()
                     state.isBuffering = true
                     state.isPlaying = false
+                } else {
+                    safePlayJs(videoElement)
                 }
             }
         }
@@ -413,9 +417,9 @@ class VideoElementPlaybackController(
 
     companion object {
         const val BUFFERING_CHECK_INTERVAL = 500
-        const val MIN_BUFFER_TO_PLAY = 2.0
+        const val MIN_BUFFER_TO_PLAY = 1.0
         const val CRITICAL_BUFFER_LEVEL = 0.5
-        const val REBUFFERING_GOAL = 5.0
+        const val REBUFFERING_GOAL = 3.0
     }
 }
 
@@ -473,6 +477,13 @@ actual fun VideoPlayer(
 
     val controller = remember(videoElement) { VideoElementPlaybackController(videoElement) }
 
+    DisposableEffect(controller) {
+        actions.onAttachController(controller)
+        onDispose {
+            actions.onDetachController()
+        }
+    }
+
     var lastKnownTime by remember { mutableStateOf(0.0) }
     var currentUrl by remember { mutableStateOf<String?>(null) }
 
@@ -505,7 +516,7 @@ actual fun VideoPlayer(
             controller.state.isBuffering = false
         }
         val visibilityListener: (org.w3c.dom.events.Event) -> Unit = {
-            if (kotlinx.browser.document.asDynamic().visibilityState == "visible") {
+            if (document.asDynamic().visibilityState == "visible") {
                 if (!videoElement.paused && videoElement.readyState < 3 && hlsInstance != null) {
                     hlsInstance?.startLoad()
                     safePlayJs(videoElement)
@@ -517,7 +528,7 @@ actual fun VideoPlayer(
         videoElement.addEventListener("stalled", waitingListener)
         videoElement.addEventListener("playing", playingListener)
         videoElement.addEventListener("canplay", playingListener)
-        kotlinx.browser.document.addEventListener("visibilitychange", visibilityListener)
+        document.addEventListener("visibilitychange", visibilityListener)
 
         if (url != null) {
             if (url.contains(".avi", ignoreCase = true)) {
@@ -589,7 +600,7 @@ actual fun VideoPlayer(
         }
 
         onDispose {
-            kotlinx.browser.document.removeEventListener("visibilitychange", visibilityListener)
+            document.removeEventListener("visibilitychange", visibilityListener)
             videoElement.removeEventListener("waiting", waitingListener)
             videoElement.removeEventListener("stalled", waitingListener)
             videoElement.removeEventListener("playing", playingListener)

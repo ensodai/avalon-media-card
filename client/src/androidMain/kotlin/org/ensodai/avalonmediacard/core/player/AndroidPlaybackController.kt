@@ -3,6 +3,7 @@ package org.ensodai.avalonmediacard.core.player
 import android.util.Log
 import androidx.media3.common.MediaItem
 import androidx.media3.common.PlaybackException
+import androidx.media3.common.PlaybackParameters
 import androidx.media3.common.Player
 import androidx.media3.common.Tracks
 import androidx.media3.common.TrackSelectionOverride
@@ -33,16 +34,19 @@ class AndroidPlaybackController(
     var hasFatalError: Boolean = false
         private set
 
+    override fun getCurrentPositionMs(): Long =
+        exoPlayer.currentPosition.coerceAtLeast(0L)
+
     init {
         exoPlayer.addListener(object : Player.Listener {
             override fun onPlaybackStateChanged(playbackState: Int) {
                 when (playbackState) {
                     Player.STATE_BUFFERING -> {
-                        state.isBuffering = true
+                        setBuffering(true)
                     }
                     Player.STATE_READY -> {
                         networkRetryCount = 0
-                        state.isBuffering = false
+                        setBuffering(false)
                         state.duration = (exoPlayer.duration.coerceAtLeast(0L) / 1000.0)
                     }
                     Player.STATE_ENDED -> {
@@ -75,7 +79,7 @@ class AndroidPlaybackController(
             }
 
             override fun onPlayerError(error: PlaybackException) {
-                state.isBuffering = false
+                setBuffering(false)
                 state.isPlaying = false
                 
                 // Коды от 2000 до 2008 — это ошибки сети и IO (интернета)
@@ -88,7 +92,7 @@ class AndroidPlaybackController(
                         networkRetryCount++
                         val lastValidPosMs = (state.currentTime * 1000).toLong().coerceAtLeast(exoPlayer.currentPosition)
                         logger.d { "Network reconnect attempt $networkRetryCount/3 at pos=$lastValidPosMs ms" }
-                        state.isBuffering = true
+                        setBuffering(true)
                         state.playbackError = null
                         exoPlayer.prepare()
                         if (lastValidPosMs > 0L) {
@@ -208,6 +212,7 @@ class AndroidPlaybackController(
     }
 
     override fun seek(time: Double) {
+        setBuffering(true)
         updateTime(time)
         exoPlayer.seekTo((time * 1000).toLong())
     }
@@ -314,6 +319,11 @@ class AndroidPlaybackController(
                 }
             }
         }
+    }
+
+    override fun setPlaybackRate(rate: Float) {
+        val clamped = rate.coerceIn(0.25f, 4.0f)
+        exoPlayer.playbackParameters = PlaybackParameters(clamped, 1.0f)
     }
 
     fun release() {

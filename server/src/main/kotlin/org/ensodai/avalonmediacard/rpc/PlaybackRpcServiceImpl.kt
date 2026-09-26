@@ -91,12 +91,15 @@ class PlaybackRpcServiceImpl(
             val customizedDetails = mediaDetails?.withUserSettings(userSettings)
             val canonicalSeriesTitle = customizedDetails?.title?.takeIf { it.isNotBlank() }
 
+            val fallbackDuration = targetStream.durationSeconds
+                ?: customizedDetails?.runtime?.takeIf { it > 0 }?.let { (it * 60).toDouble() }
+
             return PlaybackMetadataResult.Ready(
                 currentSeason = targetStream.seasonNumber ?: targetCursor?.season,
                 currentEpisode = targetStream.episodeNumber ?: targetCursor?.episode,
                 episodeTitle = targetStream.episodeName ?: targetStream.title,
                 seriesTitle = canonicalSeriesTitle ?: targetStream.title,
-                durationSeconds = targetStream.durationSeconds,
+                durationSeconds = fallbackDuration,
                 startPositionSeconds = targetStream.watchedProgressSeconds ?: targetCursor?.progressSeconds,
                 playlist = mappedStreams,
                 boundSourceTitle = targetStream.sourceName.ifBlank { resolvedProviderId }
@@ -156,10 +159,14 @@ class PlaybackRpcServiceImpl(
                 streamHeaders = preparedStream.headers
             )
 
+            val fallbackDuration = preparedStream.durationSeconds
+                ?: targetStream.durationSeconds
+                ?: runCatching { mediaCatalog.getMediaDetails(key, language = "ru") }.getOrNull()?.runtime?.takeIf { it > 0 }?.let { (it * 60).toDouble() }
+
             return StreamPlaybackResult.Ready(
                 streamUrl = secureUrl,
                 streamId = preparedStream.canonicalId,
-                durationSeconds = preparedStream.durationSeconds,
+                durationSeconds = fallbackDuration,
                 startPositionSeconds = targetPair.second?.progressSeconds,
                 audioTracks = preparedStream.audioTracks,
                 subtitleTracks = preparedStream.subtitleTracks,

@@ -66,8 +66,14 @@ class PlaysVideoStreamEngine(
             val isAudioUnsupported = getAudioUnsupportedWasm(event)
             controller.state.audioUnsupported = isAudioUnsupported
 
-            if (pendingRestoreTime != null && pendingRestoreTime!! > 0) {
-                videoElement.currentTime = pendingRestoreTime!!
+            val durationSec = extractDurationFromEventWasm(event)
+            if (durationSec > 0.0) {
+                controller.state.duration = durationSec
+            }
+
+            val targetTime = pendingRestoreTime ?: if (videoElement.currentTime > 0) videoElement.currentTime else null
+            if (targetTime != null && targetTime > 0) {
+                videoElement.currentTime = targetTime
                 pendingRestoreTime = null
             }
             safePlayWasm(videoElement)
@@ -132,6 +138,9 @@ private external fun getTrackChannelsWasm(obj: JsAny): Int?
 
 @JsFun("(event) => { return event && event.detail && event.detail.audioUnsupported === true; }")
 private external fun getAudioUnsupportedWasm(event: JsAny): Boolean
+
+@JsFun("(event) => { return (event && event.detail && typeof event.detail.durationSec === 'number' && !isNaN(event.detail.durationSec) && isFinite(event.detail.durationSec)) ? event.detail.durationSec : 0.0; }")
+private external fun extractDurationFromEventWasm(event: JsAny): Double
 
 @JsFun("() => { return {}; }")
 private external fun createEmptyLoadOptionsWasm(): JsAny

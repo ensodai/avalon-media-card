@@ -227,10 +227,9 @@ class VideoElementPlaybackController(
                 "seeked" -> {
                     isSeeking = false
                     updateTime(videoElement.currentTime)
-                    val isReady = isTimeInBufferedRangesWasm(
-                        videoElement,
-                        videoElement.currentTime
-                    ) || videoElement.readyState >= 2
+                    val currentBufferAhead = calculateBufferAheadWasm(videoElement)
+                    val isNearEnd = state.duration > 0.0 && (videoElement.currentTime + currentBufferAhead) >= (state.duration - 0.5)
+                    val isReady = videoElement.readyState >= 2 && (currentBufferAhead >= MIN_BUFFER_TO_PLAY || isNearEnd)
                     if (isReady) {
                         setBuffering(false)
                         if (intentToPlay) {
@@ -247,20 +246,7 @@ class VideoElementPlaybackController(
 
                 "canplay", "canplaythrough" -> {
                     if (!isSeeking) {
-                        val isReady = isTimeInBufferedRangesWasm(
-                            videoElement,
-                            videoElement.currentTime
-                        ) || videoElement.readyState >= 2
-                        if (isReady) {
-                            setBuffering(false)
-                            if (intentToPlay) {
-                                safePlayWasm(videoElement)
-                                state.isPlaying = true
-                            } else {
-                                videoElement.pause()
-                                state.isPlaying = false
-                            }
-                        }
+                        evaluateBufferState()
                     }
                 }
 
@@ -271,7 +257,11 @@ class VideoElementPlaybackController(
 
                 "loadedmetadata", "durationchange", "timeupdate" -> {
                     val d = videoElement.duration
-                    state.duration = if (d.isNaN() || !d.isFinite()) 0.0 else d
+                    if (!d.isNaN() && d.isFinite() && d > 0.0) {
+                        if (d > (videoElement.currentTime + 1.0) || state.duration <= 0.0) {
+                            state.duration = d
+                        }
+                    }
 
                     if (event.type == "timeupdate" && !isSeeking) {
                         updateTime(videoElement.currentTime)
@@ -300,15 +290,20 @@ class VideoElementPlaybackController(
         val isVideoReady = videoElement.readyState >= 2
         state.bufferAheadSeconds = currentBufferAhead
 
-        if (intentToPlay) {
-            if (state.isBuffering) {
-                if (isVideoReady && (currentBufferAhead >= MIN_BUFFER_TO_PLAY || isTimeInBufferedRangesWasm(videoElement, videoElement.currentTime))) {
+        val isNearEnd = state.duration > 0.0 && (videoElement.currentTime + currentBufferAhead) >= (state.duration - 0.5)
+        val hasSufficientBuffer = currentBufferAhead >= MIN_BUFFER_TO_PLAY || isNearEnd
+
+        if (state.isBuffering) {
+            if (isVideoReady && hasSufficientBuffer) {
+                setBuffering(false)
+                if (intentToPlay) {
                     safePlayWasm(videoElement)
-                    setBuffering(false)
                     state.isPlaying = true
                 }
-            } else {
-                if (!isVideoReady) {
+            }
+        } else {
+            if (intentToPlay) {
+                if (!isVideoReady || currentBufferAhead < CRITICAL_BUFFER_LEVEL) {
                     videoElement.pause()
                     setBuffering(true)
                     state.isPlaying = false
@@ -532,7 +527,6 @@ actual fun VideoPlayer(
         videoElement.addEventListener("waiting", waitingListener)
         videoElement.addEventListener("stalled", waitingListener)
         videoElement.addEventListener("playing", playingListener)
-        videoElement.addEventListener("canplay", playingListener)
         videoElement.addEventListener("pause", pauseListener)
         videoElement.addEventListener("timeupdate", timeUpdateListener)
         document.addEventListener("visibilitychange", visibilityListener)
@@ -568,7 +562,6 @@ actual fun VideoPlayer(
             videoElement.removeEventListener("waiting", waitingListener)
             videoElement.removeEventListener("stalled", waitingListener)
             videoElement.removeEventListener("playing", playingListener)
-            videoElement.removeEventListener("canplay", playingListener)
             videoElement.removeEventListener("pause", pauseListener)
             videoElement.removeEventListener("timeupdate", timeUpdateListener)
             engine?.destroy()

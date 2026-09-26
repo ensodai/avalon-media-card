@@ -42,10 +42,15 @@ class IntegrationSettingsManagerImpl(
 
     override suspend fun getTorrServerHost(userId: Uuid?): ResolvedIntegrationSetting? {
         if (userId != null) {
-            val userHost = userIntegrationSettingsRepository.getSetting(userId, pluginId, "torrserver_host")
-                ?: userIntegrationSettingsRepository.getSetting(userId, "torrserver-plugin", "torrserver_host")
-            if (!userHost.isNullOrBlank()) {
-                return ResolvedIntegrationSetting(userHost, IntegrationSettingSource.PERSONAL)
+            val userUse = userIntegrationSettingsRepository.getSetting(userId, pluginId, "use_torrserver")?.toBooleanStrictOrNull()
+                ?: userIntegrationSettingsRepository.getSetting(userId, "torrserver-plugin", "use_torrserver")?.toBooleanStrictOrNull()
+                ?: false
+            if (userUse) {
+                val userHost = userIntegrationSettingsRepository.getSetting(userId, pluginId, "torrserver_host")
+                    ?: userIntegrationSettingsRepository.getSetting(userId, "torrserver-plugin", "torrserver_host")
+                if (!userHost.isNullOrBlank()) {
+                    return ResolvedIntegrationSetting(userHost, IntegrationSettingSource.PERSONAL)
+                }
             }
         }
 

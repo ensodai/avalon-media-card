@@ -275,28 +275,30 @@ class VideoElementPlaybackController(
             when (event.type) {
                 "progress" -> if (!isSeeking) evaluateBufferState()
                 "waiting" -> {
-                    state.isBuffering = true
+                    setBuffering(true)
                     state.isPlaying = false
                 }
 
                 "playing" -> {
                     state.isPlaying = true
-                    state.isBuffering = false
+                    setBuffering(false)
                 }
 
                 "seeking" -> {
                     isSeeking = true
+                    setBuffering(true)
+                    state.isPlaying = false
                 }
 
                 "seeked" -> {
                     isSeeking = false
                     updateTime(videoElement.currentTime)
-                    val isReady = isTimeInBufferedRangesJs(
-                        videoElement,
-                        videoElement.currentTime
-                    ) || (videoElement.asDynamic().readyState as? Int ?: 0) >= 2
+                    val currentBufferAhead = calculateBufferAheadJs(videoElement)
+                    val isNearEnd = state.duration > 0.0 && (videoElement.currentTime + currentBufferAhead) >= (state.duration - 0.5)
+                    val isVideoReady = (videoElement.asDynamic().readyState as? Int ?: 0) >= 2
+                    val isReady = isVideoReady && (currentBufferAhead >= MIN_BUFFER_TO_PLAY || isNearEnd)
                     if (isReady) {
-                        state.isBuffering = false
+                        setBuffering(false)
                         if (intentToPlay) {
                             safePlayJs(videoElement)
                             state.isPlaying = true
@@ -304,25 +306,14 @@ class VideoElementPlaybackController(
                             videoElement.pause()
                             state.isPlaying = false
                         }
+                    } else {
+                        setBuffering(true)
                     }
                 }
 
                 "canplay", "canplaythrough" -> {
                     if (!isSeeking) {
-                        val isReady = isTimeInBufferedRangesJs(
-                            videoElement,
-                            videoElement.currentTime
-                        ) || (videoElement.asDynamic().readyState as? Int ?: 0) >= 2
-                        if (isReady) {
-                            state.isBuffering = false
-                            if (intentToPlay) {
-                                safePlayJs(videoElement)
-                                state.isPlaying = true
-                            } else {
-                                videoElement.pause()
-                                state.isPlaying = false
-                            }
-                        }
+                        evaluateBufferState()
                     }
                 }
 
@@ -363,17 +354,22 @@ class VideoElementPlaybackController(
         val isVideoReady = (videoElement.asDynamic().readyState as? Int ?: 0) >= 2
         state.bufferAheadSeconds = currentBufferAhead
 
-        if (intentToPlay) {
-            if (state.isBuffering) {
-                if (isVideoReady && (currentBufferAhead >= MIN_BUFFER_TO_PLAY || isTimeInBufferedRangesJs(videoElement, videoElement.currentTime))) {
+        val isNearEnd = state.duration > 0.0 && (videoElement.currentTime + currentBufferAhead) >= (state.duration - 0.5)
+        val hasSufficientBuffer = currentBufferAhead >= MIN_BUFFER_TO_PLAY || isNearEnd
+
+        if (state.isBuffering) {
+            if (isVideoReady && hasSufficientBuffer) {
+                setBuffering(false)
+                if (intentToPlay) {
                     safePlayJs(videoElement)
-                    state.isBuffering = false
                     state.isPlaying = true
                 }
-            } else {
-                if (!isVideoReady) {
+            }
+        } else {
+            if (intentToPlay) {
+                if (!isVideoReady || currentBufferAhead < CRITICAL_BUFFER_LEVEL) {
                     videoElement.pause()
-                    state.isBuffering = true
+                    setBuffering(true)
                     state.isPlaying = false
                 } else {
                     safePlayJs(videoElement)
@@ -406,6 +402,8 @@ class VideoElementPlaybackController(
     override fun seek(time: Double) {
         if (time.isNaN() || !time.isFinite()) return
         isSeeking = true
+        setBuffering(true)
+        state.isPlaying = false
         videoElement.currentTime = time
         state.currentTime = time
     }
@@ -513,7 +511,7 @@ actual fun VideoPlayer(
             controller.state.isBuffering = true
         }
         val playingListener: (org.w3c.dom.events.Event) -> Unit = {
-            controller.state.isBuffering = false
+            controller.setBuffering(false)
         }
         val visibilityListener: (org.w3c.dom.events.Event) -> Unit = {
             if (document.asDynamic().visibilityState == "visible") {
@@ -527,7 +525,6 @@ actual fun VideoPlayer(
         videoElement.addEventListener("waiting", waitingListener)
         videoElement.addEventListener("stalled", waitingListener)
         videoElement.addEventListener("playing", playingListener)
-        videoElement.addEventListener("canplay", playingListener)
         document.addEventListener("visibilitychange", visibilityListener)
 
         if (url != null) {
@@ -604,7 +601,6 @@ actual fun VideoPlayer(
             videoElement.removeEventListener("waiting", waitingListener)
             videoElement.removeEventListener("stalled", waitingListener)
             videoElement.removeEventListener("playing", playingListener)
-            videoElement.removeEventListener("canplay", playingListener)
             mpegtsPlayer?.destroy()
             hlsInstance?.destroy()
             playsVideoEngine?.destroy()

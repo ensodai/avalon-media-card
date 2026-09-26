@@ -42,10 +42,15 @@ fun PlayerBottomBar(
 ) {
     val ctrlState = controller.state
     val currentTime = ctrlState.currentTime
-    val duration = if (ctrlState.duration > 0.0 && !ctrlState.duration.isInfinite()) {
-        ctrlState.duration
-    } else {
-        state.duration
+    val expectedDur = state.duration
+    val ctrlDur = ctrlState.duration
+    val duration = when {
+        ctrlDur > 0.0 && !ctrlDur.isInfinite() && !ctrlDur.isNaN() && ctrlDur > (currentTime + 1.0) -> {
+            if (expectedDur > 0.0 && expectedDur > ctrlDur * 1.5) expectedDur else ctrlDur
+        }
+        expectedDur > 0.0 -> expectedDur
+        ctrlDur > 0.0 && !ctrlDur.isInfinite() && !ctrlDur.isNaN() && !ctrlState.isBuffering && currentTime > 5.0 -> ctrlDur
+        else -> 0.0
     }
     val isPlaying = ctrlState.isPlaying
     val isMuted = ctrlState.isMuted
@@ -191,7 +196,7 @@ fun PlayerBottomBar(
                         fontSize = 14.sp,
                         fontWeight = FontWeight.Medium
                     )
-                    if (duration > 0.0) {
+                    if (duration > 0.0 && (duration > currentTime || !ctrlState.isBuffering)) {
                         Text(
                             text = " / ${formatTime(duration)}",
                             color = Color.White.copy(alpha = 0.5f),

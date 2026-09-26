@@ -137,8 +137,6 @@ class ClientSyncController(
                 "localNow=$localNow, estimatedServerNow=$serverNow, clockOffset=${offsetMs}ms"
         }
 
-        lastHardSeekTime = null
-
         if (!syncState.isPlaying) {
             // Режим паузы
             stopDriftLoop()
@@ -153,7 +151,7 @@ class ClientSyncController(
                 "[TrueSync:Client] PAUSE applied. Current player pos = $currentPosMs ms, target = ${syncState.anchorPositionMs} ms (drift = ${drift} ms)"
             }
             if (abs(drift) > PAUSE_SEEK_THRESHOLD_MS) {
-                underlyingController.seek(syncState.anchorPositionMs / 1000.0)
+                safeSeek(syncState.anchorPositionMs / 1000.0, "Pause drift correction")
             }
             underlyingController.setPlaybackRate(1.0f)
         } else {
@@ -176,6 +174,38 @@ class ClientSyncController(
         }
     }
 
+    private fun safeSeek(targetPosSec: Double, reason: String) {
+        val now = clockSync.clockProvider()
+        val lastSeek = lastHardSeekTime
+        val currentSec = underlyingController.getCurrentPositionMs() / 1000.0
+        val diffSec = abs(currentSec - targetPosSec)
+
+        if (diffSec < 0.25) {
+            return
+        }
+
+        if (underlyingController.state.isBuffering) {
+            // Во время буферизации мелкие корректировки (< 2с) игнорируются,
+            // чтобы не срывать (abort) загрузку сегментов в HLS/MSE веб-воркере.
+            if (diffSec < 2.0) {
+                logger.d {
+                    "[TrueSync:Client] Seek skipped ($reason): player is buffering and target is close (${diffSec}s < 2.0s)"
+                }
+                return
+            }
+            if (lastSeek != null && (now - lastSeek) < HARD_SEEK_COOLDOWN) {
+                logger.d {
+                    "[TrueSync:Client] Seek skipped ($reason): player is buffering and seek cooldown is active (${(now - lastSeek).inWholeMilliseconds} ms < ${HARD_SEEK_COOLDOWN_MS} ms)"
+                }
+                return
+            }
+        }
+
+        lastHardSeekTime = now
+        logger.i { "[TrueSync:Client] Seek applied ($reason): ${currentSec}s -> ${targetPosSec}s" }
+        underlyingController.seek(targetPosSec)
+    }
+
     private fun startPreroll(syncState: WatchRoomEvent.SyncState) {
         stopDriftLoop()
         prerollJob?.cancel()
@@ -186,8 +216,7 @@ class ClientSyncController(
         val currentPosMs = underlyingController.getCurrentPositionMs()
         underlyingController.pause()
         if (abs(currentPosMs - startPosMs) > PREROLL_SEEK_THRESHOLD_MS) {
-            logger.i { "[TrueSync:Client] Preroll: seeking from $currentPosMs ms to $startPosMs ms" }
-            underlyingController.seek(startPosSec)
+            safeSeek(startPosSec, "Preroll target seek")
         } else {
             logger.i { "[TrueSync:Client] Preroll: already at position $currentPosMs ms (~$startPosMs ms), skipping redundant seek" }
         }
@@ -207,12 +236,29 @@ class ClientSyncController(
             val wakeServerNow = clockSync.estimatedServerTime()
             val wakeLocalNow = clockSync.clockProvider()
             val actualPosMs = underlyingController.getCurrentPositionMs()
+            val stillBuffering = underlyingController.state.isBuffering
             logger.i {
-                "[TrueSync:Client] Preroll FINISHED -> Calling play()! localNow=$wakeLocalNow, serverNow=$wakeServerNow, " +
-                    "playerPos=$actualPosMs ms, targetAnchorPos=${syncState.anchorPositionMs} ms"
+                "[TrueSync:Client] Preroll FINISHED -> localNow=$wakeLocalNow, serverNow=$wakeServerNow, " +
+                    "playerPos=$actualPosMs ms, targetAnchorPos=${syncState.anchorPositionMs} ms, stillBuffering=$stillBuffering"
             }
-            underlyingController.play()
-            startDriftLoop()
+            if (stillBuffering) {
+                // Преролл завершен, но видеопоток еще не готов (буферизуется в MSE/TorrServer).
+                // Немедленно уведомляем сервер, чтобы комната встала в PARTIAL_BUFFERING и не убегала по времени!
+                lastReportedBuffering = true
+                try {
+                    rpcService.sendPlaybackCommand(
+                        roomId,
+                        RoomPlaybackCommand.ReportBuffer(isBuffering = true)
+                    )
+                } catch (e: CancellationException) {
+                    throw e
+                } catch (e: Exception) {
+                    logger.w(e) { "Failed to report buffer stall after preroll" }
+                }
+            } else if (underlyingController.state.duration > 0.0) {
+                underlyingController.play()
+                startDriftLoop()
+            }
         }
     }
 
@@ -268,8 +314,7 @@ class ClientSyncController(
                 }
 
                 logger.w { "[TrueSync:Client] Drift critical ($deltaMs ms > $HARD_SEEK_THRESHOLD_MS ms). Hard seek to $targetPositionMs ms (rate=1.0x)" }
-                lastHardSeekTime = now
-                underlyingController.seek(targetPositionMs / 1000.0)
+                safeSeek(targetPositionMs / 1000.0, "Drift critical ($deltaMs ms)")
                 underlyingController.setPlaybackRate(1.0f)
             }
             // Мертвая зона: расхождение незаметно человеку
@@ -326,13 +371,18 @@ class ClientSyncController(
                             roomId,
                             RoomPlaybackCommand.ReportBuffer(isBuffering = isBuffering)
                         )
-                        if (!isBuffering && (isDurationValid || !hasReportedMediaReady)) {
+                        if (!isBuffering && isDurationValid && !hasReportedMediaReady) {
                             hasReportedMediaReady = true
                             val currentMs = underlyingController.getCurrentPositionMs()
                             rpcService.sendPlaybackCommand(
                                 roomId,
                                 RoomPlaybackCommand.ReportMediaReady(positionMs = currentMs)
                             )
+                            val state = latestSyncState
+                            if (state != null && state.isPlaying && !isPrerolling) {
+                                underlyingController.play()
+                                startDriftLoop()
+                            }
                         }
                     } catch (e: CancellationException) {
                         throw e
@@ -347,6 +397,11 @@ class ClientSyncController(
                             roomId,
                             RoomPlaybackCommand.ReportMediaReady(positionMs = currentMs)
                         )
+                        val state = latestSyncState
+                        if (state != null && state.isPlaying && !isPrerolling) {
+                            underlyingController.play()
+                            startDriftLoop()
+                        }
                     } catch (e: CancellationException) {
                         throw e
                     } catch (e: Exception) {

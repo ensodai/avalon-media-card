@@ -143,6 +143,15 @@ class WatchRoomSession(
      */
     fun subscribeLobby(): Flow<LobbyEvent> = flow {
         emit(LobbyEvent.InitialSnapshot(WatchRoomStatus.ACTIVE, getParticipantList()))
+        if (phase != RoomPhase.LOBBY) {
+            emit(
+                LobbyEvent.TransitionToPlayer(
+                    playAtServerTime = Clock.System.now(),
+                    season = currentSeason,
+                    episode = currentEpisode
+                )
+            )
+        }
         emitAll(lobbyEvents)
     }
 
@@ -268,7 +277,9 @@ class WatchRoomSession(
         preparationTimeoutJob = null
 
         phase = RoomPhase.PREPARING
-        anchorPositionMs = 0L
+        if (anchorPositionMs < 0L) {
+            anchorPositionMs = 0L
+        }
         anchorServerTime = Clock.System.now()
         bufferingParticipants.clear()
 
@@ -652,6 +663,11 @@ class WatchRoomSession(
         bufferingParticipants.remove(participant.userId)
         logger.info("[TrueSync:Server] Room {}: Participant {} reported MEDIA READY at pos {} ms. Phase={}", roomId, participant.userId, positionMs, phase)
 
+        if (participant.role == WatchRoomParticipantRole.HOST && positionMs > 0L) {
+            anchorPositionMs = positionMs
+            logger.info("[TrueSync:Server] Room {}: Updated anchorPositionMs to host reported position {} ms", roomId, positionMs)
+        }
+
         if (phase == RoomPhase.PREPARING) {
             checkMediaPreparationResolvedLocked()
         } else {
@@ -758,6 +774,17 @@ class WatchRoomSession(
             p != null && p.isOnline && !p.isDesynced
         }
         if (activeBuffering.isEmpty()) return@withLock
+
+        val hostIsBuffering = activeBuffering.any { participants[it]?.role == WatchRoomParticipantRole.HOST }
+        if (hostIsBuffering) {
+            val hostName = activeBuffering
+                .mapNotNull { participants[it] }
+                .firstOrNull { it.role == WatchRoomParticipantRole.HOST }?.username ?: "Хост"
+            logger.warn("[TrueSync:Server] Room {}: Host ({}) is still buffering after grace period. Holding room in pause.", roomId, hostName)
+            _events.emit(WatchRoomEvent.SystemNotice("Ожидаем хоста ($hostName): загрузка видео продолжается..."))
+            startGracePeriodTimerLocked()
+            return@withLock
+        }
 
         val names = activeBuffering.mapNotNull { participants[it]?.username }.joinToString(", ")
         logger.warn("[TrueSync:Server] Room {}: Grace period expired for participants: {}. Marking desynced.", roomId, names)
@@ -887,7 +914,7 @@ class WatchRoomSession(
 
     companion object {
         const val PREPARATION_TIMEOUT_MS = 60_000L
-        const val GRACE_PERIOD_MS = 8000L
+        const val GRACE_PERIOD_MS = 25_000L
         const val START_LEAD_TIME_MS = 1500L
         const val SEEK_LEAD_TIME_MS = 2000L
         const val RESUME_LEAD_TIME_MS = 500L

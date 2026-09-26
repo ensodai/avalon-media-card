@@ -263,8 +263,16 @@ fun TvPlayerLayout(
                         .padding(bottom = if (isShelfExpanded) 6.dp else 16.dp)
                 ) {
                     val expectedDur = state.duration
-                    val duration = if (expectedDur > controller.state.duration) expectedDur else (if (controller.state.duration > 0.0) controller.state.duration else expectedDur)
+                    val ctrlDur = controller.state.duration
                     val currentTime = controller.state.currentTime
+                    val duration = when {
+                        ctrlDur > 0.0 && !ctrlDur.isInfinite() && !ctrlDur.isNaN() && ctrlDur > (currentTime + 1.0) -> {
+                            if (expectedDur > 0.0 && expectedDur > ctrlDur * 1.5) expectedDur else ctrlDur
+                        }
+                        expectedDur > 0.0 -> expectedDur
+                        ctrlDur > 0.0 && !ctrlDur.isInfinite() && !ctrlDur.isNaN() && !controller.state.isBuffering && currentTime > 5.0 -> ctrlDur
+                        else -> 0.0
+                    }
 
                     // Фокус-группа 1: Шкала времени (SeekBar) + Время воспроизведения (скрываются при раскрытии полки)
                     AnimatedVisibility(

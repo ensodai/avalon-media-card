@@ -28,33 +28,12 @@ class TorrServerApiClient(
         if (resolved != null && resolved.value.isNotBlank()) {
             return resolved.value
         }
-        val host = if (userId != null) {
-            context.userSettings.getString(userId, "torrserver_host")
-        } else {
-            context.settings.getString("torrserver_host")
-        }
-        return host?.takeIf { it.isNotBlank() }
-            ?: System.getenv("TORRSERVER_HOST")?.takeIf { it.isNotBlank() }
+        return System.getenv("TORRSERVER_HOST")?.takeIf { it.isNotBlank() }
             ?: "http://127.0.0.1:8090"
     }
 
     private suspend fun getAuthHeader(userId: kotlin.uuid.Uuid?): String? {
-        val auth = context.integrationManager.getTorrServerAuth(userId)
-        if (!auth.isNullOrBlank()) {
-            return auth
-        }
-        val login = if (userId != null) context.userSettings.getString(
-            userId,
-            "torrserver_login"
-        ) else context.settings.getString("torrserver_login")
-        val pass = if (userId != null) context.userSettings.getString(
-            userId,
-            "torrserver_password"
-        ) else context.settings.getString("torrserver_password")
-        if (!login.isNullOrBlank() && !pass.isNullOrBlank()) {
-            return "Basic " + java.util.Base64.getEncoder().encodeToString("$login:$pass".toByteArray())
-        }
-        return null
+        return context.integrationManager.getTorrServerAuth(userId)?.takeIf { it.isNotBlank() }
     }
 
     suspend fun testConnection(host: String, login: String?, pass: String?): String {
@@ -106,11 +85,11 @@ class TorrServerApiClient(
     }
 
     suspend fun addTorrent(urlOrMagnet: String, fileBytes: ByteArray? = null, userId: kotlin.uuid.Uuid?): String? {
+        val torrserverUrl = getTorrserverUrl(userId)
+        val auth = getAuthHeader(userId)
         return try {
-            val torrserverUrl = getTorrserverUrl(userId)
-            val auth = getAuthHeader(userId)
             val addResponse = if (fileBytes != null && fileBytes.isNotEmpty()) {
-                logger.info("Отправляем .torrent файл (${fileBytes.size} байт) в TorrServer")
+                logger.info("Отправляем .torrent файл (${fileBytes.size} байт) в TorrServer ($torrserverUrl)")
                 httpClient.post("$torrserverUrl/torrent/upload") {
                     if (auth != null) header(HttpHeaders.Authorization, auth)
                     setBody(
@@ -125,7 +104,7 @@ class TorrServerApiClient(
                     ))
                 }
             } else {
-                logger.info("Отправляем ссылку/магнет в TorrServer: $urlOrMagnet")
+                logger.info("Отправляем ссылку/магнет в TorrServer ($torrserverUrl): $urlOrMagnet")
                 httpClient.post("$torrserverUrl/torrents") {
                     if (auth != null) header(HttpHeaders.Authorization, auth)
                     contentType(ContentType.Application.Json)
@@ -136,20 +115,20 @@ class TorrServerApiClient(
             if (addResponse.status == HttpStatusCode.OK) {
                 val bodyStr = addResponse.body<String>()
                 if (bodyStr.trim() == "null" || bodyStr.isBlank()) {
-                    logger.error("TorrServer вернул null вместо данных торрента", null)
+                    logger.error("TorrServer ($torrserverUrl) вернул null вместо данных торрента", null)
                     return null
                 }
                 val torrInfo = json.decodeFromString<TorrServerResponse>(bodyStr)
                 torrInfo.hash
             } else {
-                logger.error("Не удалось добавить торрент: ${addResponse.status}", null)
+                logger.error("Не удалось добавить торрент в TorrServer ($torrserverUrl): ${addResponse.status}", null)
                 null
             }
         } catch (e: java.net.SocketTimeoutException) {
-            logger.error("Таймаут TorrServer (слишком долгий поиск пиров)", e)
+            logger.error("Таймаут TorrServer ($torrserverUrl) (слишком долгий поиск пиров)", e)
             null
         } catch (e: Exception) {
-            logger.error("Ошибка при добавлении торрента в TorrServer", e)
+            logger.error("Ошибка при добавлении торрента в TorrServer ($torrserverUrl)", e)
             null
         }
     }
@@ -191,16 +170,16 @@ class TorrServerApiClient(
     }
 
     suspend fun dropTorrent(hash: String, userId: kotlin.uuid.Uuid?) {
+        val torrserverUrl = getTorrserverUrl(userId)
+        val auth = getAuthHeader(userId)
         try {
-            val torrserverUrl = getTorrserverUrl(userId)
-            val auth = getAuthHeader(userId)
             httpClient.post("$torrserverUrl/torrents") {
                 if (auth != null) header(HttpHeaders.Authorization, auth)
                 contentType(ContentType.Application.Json)
                 setBody(TorrServerAction(action = "rem", hash = hash, link = null))
             }
         } catch (e: Exception) {
-            logger.error("Ошибка при удалении торрента", e)
+            logger.error("Ошибка при удалении торрента из TorrServer ($torrserverUrl)", e)
         }
     }
 

@@ -396,9 +396,6 @@ class ClientSyncController(
         bufferMonitorJob = coroutineScope.launch {
             launch {
                 underlyingController.isBufferingFlow.collect { isBuffering ->
-                    // Во время Preroll изоляция: не отправляем ReportBuffer(true) при штатной подготовке чанков
-                    if (isPrerolling && isBuffering) return@collect
-
                     if (isBuffering != lastReportedBuffering) {
                         lastReportedBuffering = isBuffering
                         try {

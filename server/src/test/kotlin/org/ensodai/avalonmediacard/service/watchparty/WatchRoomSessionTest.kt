@@ -13,6 +13,7 @@ import org.ensodai.avalonmediacard.contract.model.RoomPlaybackCommand
 import org.ensodai.avalonmediacard.contract.model.WatchParticipantIntent
 import org.ensodai.avalonmediacard.contract.model.WatchRoomControlMode
 import org.ensodai.avalonmediacard.contract.model.WatchRoomParticipantRole
+import org.ensodai.avalonmediacard.contract.model.WatchRoomPlaybackState
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFalse
@@ -402,6 +403,23 @@ class WatchRoomSessionTest {
         val leadTimeMs = (syncState.anchorServerTime - beforeSeek).inWholeMilliseconds
         assertTrue(leadTimeMs in 1800..2500, "Lead time при Seek во время воспроизведения должен быть ~2000 мс (было: $leadTimeMs ms)")
         assertEquals(RoomPhase.STARTING_SCHEDULED, session.phase)
+
+        val host = session.getParticipantList().find { it.userId == hostId }
+        assertNotNull(host)
+        assertEquals(WatchRoomPlaybackState.BUFFERING, host.playbackState, "При перемотке участник должен перейти в BUFFERING")
+
+        // Участник подтверждает окончание буферизации во время преролла
+        session.handleCommand(hostId, RoomPlaybackCommand.ReportBuffer(isBuffering = false))
+        runCurrent()
+        val hostReady = session.getParticipantList().find { it.userId == hostId }
+        assertEquals(WatchRoomPlaybackState.READY, hostReady?.playbackState, "После загрузки чанков участник переходит в READY")
+
+        // По истечении преролла (2000 мс) комната переходит в PLAYING_IN_SYNC, а участник в PLAYING
+        advanceTimeBy(2100.milliseconds)
+        runCurrent()
+        assertEquals(RoomPhase.PLAYING_IN_SYNC, session.phase)
+        val hostPlaying = session.getParticipantList().find { it.userId == hostId }
+        assertEquals(WatchRoomPlaybackState.PLAYING, hostPlaying?.playbackState)
     }
 
     @Test
@@ -468,8 +486,8 @@ class WatchRoomSessionTest {
         session.handleCommand(hostId, RoomPlaybackCommand.ReportMediaReady(positionMs = 0L))
         runCurrent()
 
-        // Гость завис или ушел AFK на 60 секунд
-        advanceTimeBy(61.seconds)
+        // Гость завис или ушел AFK на 120 секунд (PREPARATION_TIMEOUT_MS)
+        advanceTimeBy(121.seconds)
         runCurrent()
 
         // Комната должна была пометить гостя desynced и перейти в STARTING_SCHEDULED

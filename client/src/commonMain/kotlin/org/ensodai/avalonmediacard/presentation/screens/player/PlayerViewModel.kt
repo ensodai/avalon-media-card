@@ -5,6 +5,7 @@ import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
+import org.ensodai.avalonmediacard.contract.model.WatchRoomEvent
 import org.ensodai.avalonmediacard.contract.plugins.MediaStream
 import org.ensodai.avalonmediacard.contract.plugins.StreamType
 import org.ensodai.avalonmediacard.contract.plugins.VideoQuality
@@ -58,6 +59,7 @@ class PlayerViewModel(
         defaultPlayerEngine = appSettings.cachedDefaultPlayer,
         mode = params.mode,
         watchRoomId = params.watchRoomId,
+        currentUserId = tokenStorage.cachedUserId,
         status = PlaybackStatus.BUFFERING
     )
 ) {
@@ -66,6 +68,7 @@ class PlayerViewModel(
     var onConfirmSourceCallback: (() -> Unit)? = null
     var lastPersistedSeconds: Long = -1L
     private var syncJob: Job? = null
+    private var syncEventsJob: Job? = null
     private var metadataJob: Job? = null
     private var playbackJob: Job? = null
 
@@ -82,18 +85,30 @@ class PlayerViewModel(
             if (existing != null && existing.roomId == roomId) {
                 existing.updateUnderlyingController(controller)
             } else {
+                syncEventsJob?.cancel()
                 syncController?.stop()
-                syncController = ClientSyncController(
+                val sc = ClientSyncController(
                     roomId = roomId,
                     underlyingController = controller,
                     clockSync = clockSync,
                     rpcService = rpcService,
                     coroutineScope = viewModelScope
-                ).also { sc ->
-                    sc.onEpisodeChangeRequested = { season, episode ->
+                ).also { scInstance ->
+                    scInstance.onEpisodeChangeRequested = { season, episode ->
                         handleRemoteEpisodeChange(season, episode)
                     }
-                    sc.start()
+                    scInstance.start()
+                }
+                syncController = sc
+                syncEventsJob = viewModelScope.launch {
+                    sc.roomEvents.collect { event ->
+                        when (event) {
+                            is WatchRoomEvent.ParticipantsUpdated -> {
+                                updateViewState { it.copy(watchRoomParticipants = event.participants) }
+                            }
+                            else -> {}
+                        }
+                    }
                 }
             }
         }
@@ -112,6 +127,8 @@ class PlayerViewModel(
 
     fun detachController() {
         if (viewState.value.mode != PlayerMode.WATCH_PARTY) {
+            syncEventsJob?.cancel()
+            syncEventsJob = null
             syncController?.stop()
             syncController = null
         }
@@ -119,6 +136,11 @@ class PlayerViewModel(
     }
 
     init {
+        viewModelScope.launch {
+            tokenStorage.userId.collect { uid ->
+                updateViewState { it.copy(currentUserId = uid) }
+            }
+        }
         viewModelScope.launch {
             appSettings.defaultPlayer.collect { engine ->
                 updateViewState { it.copy(defaultPlayerEngine = engine) }
@@ -328,6 +350,8 @@ class PlayerViewModel(
     fun stopPlaybackAndDispose() {
         syncJob?.cancel()
         syncJob = null
+        syncEventsJob?.cancel()
+        syncEventsJob = null
         syncController?.stop()
         syncController = null
         detachController()
@@ -335,6 +359,10 @@ class PlayerViewModel(
             persistProgress(viewState.value, force = true)
         }
         updateViewState { it.copy(status = PlaybackStatus.IDLE, currentStreamUrl = null) }
+    }
+
+    fun onToggleParticipantsPanel() {
+        updateViewState { it.copy(isParticipantsPanelVisible = !it.isParticipantsPanelVisible) }
     }
 
 
@@ -387,6 +415,7 @@ class PlayerViewModel(
             onConfirmSourceCallback?.invoke()
         },
         onAttachController = ::attachController,
-        onDetachController = ::detachController
+        onDetachController = ::detachController,
+        onToggleParticipantsPanel = ::onToggleParticipantsPanel
     )
 }

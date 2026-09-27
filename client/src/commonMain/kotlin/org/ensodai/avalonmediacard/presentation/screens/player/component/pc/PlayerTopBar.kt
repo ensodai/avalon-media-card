@@ -99,17 +99,25 @@ fun PlayerTopBar(
                 )
             }
         } else if (state.mode == PlayerMode.WATCH_PARTY) {
+            val onlineCount = state.onlineParticipantsCount
+            val badgeText = if (onlineCount > 0) {
+                stringResource(Res.string.watch_party_participants_count, onlineCount)
+            } else {
+                stringResource(Res.string.watch_party_title)
+            }
+            val isPanelOpen = state.isParticipantsPanelVisible
+
             Row(
                 verticalAlignment = Alignment.Top,
                 horizontalArrangement = Arrangement.spacedBy(12.dp)
             ) {
                 PlayerIslandDynamicButton(
                     icon = Lucide.Users,
-                    text = stringResource(Res.string.watch_party_title),
-                    contentDescription = stringResource(Res.string.watch_party_title),
-                    iconTint = Color(0xFF64B5F6),
-                    textColor = Color(0xFF64B5F6),
-                    onClick = {}
+                    text = badgeText,
+                    contentDescription = badgeText,
+                    iconTint = if (isPanelOpen) Color(0xFF64B5F6) else Color.White.copy(alpha = 0.6f),
+                    textColor = if (isPanelOpen) Color(0xFF64B5F6) else Color.White.copy(alpha = 0.85f),
+                    onClick = { actions.onToggleParticipantsPanel() }
                 )
             }
         } else if (currentEpisode != null) {

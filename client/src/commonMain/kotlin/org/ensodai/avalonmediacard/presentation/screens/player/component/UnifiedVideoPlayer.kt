@@ -19,6 +19,7 @@ import org.ensodai.avalonmediacard.presentation.screens.player.component.pc.Play
 import org.ensodai.avalonmediacard.presentation.screens.player.component.pc.PlayerTopBar
 import org.ensodai.avalonmediacard.presentation.screens.player.component.pc.UnifiedVideoPlayerLayout
 import org.ensodai.avalonmediacard.presentation.screens.player.component.tv.TvPlayerLayout
+import org.ensodai.avalonmediacard.presentation.screens.player.model.PlayerMode
 import org.ensodai.avalonmediacard.presentation.screens.player.viewState.PlayerViewState
 import kotlin.time.Duration.Companion.milliseconds
 
@@ -68,7 +69,16 @@ fun UnifiedVideoPlayer(
         )
     } else {
         val showUiOverlay = !state.isFullscreen || isMouseActive
-        val showRightPanel = state.hasEpisodesContext && showUiOverlay
+        val showEpisodesPanel = state.hasEpisodesContext && showUiOverlay
+        val showParticipantsPanel = state.mode == PlayerMode.WATCH_PARTY && state.isParticipantsPanelVisible && showUiOverlay
+        val showRightPanel = showEpisodesPanel || showParticipantsPanel
+
+        val episodesWidth = if (showEpisodesPanel) 360.dp else 0.dp
+        val participantsWidth = if (showParticipantsPanel) 280.dp else 0.dp
+        val spacingWidth = if (showEpisodesPanel && showParticipantsPanel) 16.dp else 0.dp
+        val totalPanelsWidth = episodesWidth + participantsWidth + spacingWidth
+        val rightPadding = if (totalPanelsWidth > 0.dp) totalPanelsWidth + 48.dp else 24.dp
+
         PlayerInputHandler(
             actions = actions,
             controller = controller,
@@ -102,7 +112,6 @@ fun UnifiedVideoPlayer(
                     )
                 },
                 topBar = {
-                    val rightPadding = if (showRightPanel) 360.dp + 48.dp else 24.dp
                     PlayerTopBar(
                         state = state,
                         actions = actions,
@@ -118,7 +127,12 @@ fun UnifiedVideoPlayer(
                 },
                 rightPanelOverlay = {
                     PlayerRightPanelOverlay(
-                        visible = showRightPanel,
+                        showEpisodes = showEpisodesPanel,
+                        showParticipants = showParticipantsPanel,
+                        participants = state.watchRoomParticipants,
+                        currentUserId = state.currentUserId,
+                        onCloseParticipantsClick = { actions.onToggleParticipantsPanel() },
+                        isLocalBuffering = controller.state.isBuffering,
                         seasonEpisodes = state.seasonEpisodes,
                         currentStreamId = state.currentStreamId,
                         url = state.currentStreamUrl,

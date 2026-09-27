@@ -32,5 +32,6 @@ data class PlayerActions(
     val onRequestOtherSource: () -> Unit = {},
     val onConfirmSource: (() -> Unit)? = null,
     val onAttachController: (PlaybackController) -> Unit = {},
-    val onDetachController: () -> Unit = {}
+    val onDetachController: () -> Unit = {},
+    val onToggleParticipantsPanel: () -> Unit = {}
 ) : BaseActions()

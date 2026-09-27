@@ -457,6 +457,14 @@ class WatchRoomSession(
                         "[TrueSync:Server] Room {}: Received SEEK while playing from user {} to {} ms. Scheduled preroll targetStart={}",
                         roomId, userId, command.targetPositionMs, targetStart
                     )
+                    bufferingParticipants.clear()
+                    participants.values.forEach { p ->
+                        if (p.isOnline && !p.isDesynced) {
+                            p.playbackState = WatchRoomPlaybackState.BUFFERING
+                            bufferingParticipants.add(p.userId)
+                        }
+                    }
+                    _events.emit(WatchRoomEvent.ParticipantsUpdated(getParticipantListLocked()))
                     schedulePrerollTransitionLocked(targetStart, command.targetPositionMs, userId)
                 } else {
                     scheduledStartJob?.cancel()
@@ -640,7 +648,11 @@ class WatchRoomSession(
                 }
             }
         } else {
-            participant.playbackState = if (isPlaying) WatchRoomPlaybackState.PLAYING else WatchRoomPlaybackState.READY
+            participant.playbackState = when (phase) {
+                RoomPhase.PLAYING_IN_SYNC -> WatchRoomPlaybackState.PLAYING
+                RoomPhase.FORCE_PAUSED -> WatchRoomPlaybackState.PAUSED
+                else -> WatchRoomPlaybackState.READY
+            }
             participant.isDesynced = false
             bufferingParticipants.remove(participant.userId)
 
@@ -658,7 +670,11 @@ class WatchRoomSession(
         participant: ActiveParticipant,
         positionMs: Long
     ) {
-        participant.playbackState = if (isPlaying) WatchRoomPlaybackState.PLAYING else WatchRoomPlaybackState.READY
+        participant.playbackState = when (phase) {
+            RoomPhase.PLAYING_IN_SYNC -> WatchRoomPlaybackState.PLAYING
+            RoomPhase.FORCE_PAUSED -> WatchRoomPlaybackState.PAUSED
+            else -> WatchRoomPlaybackState.READY
+        }
         participant.isDesynced = false
         bufferingParticipants.remove(participant.userId)
         logger.info("[TrueSync:Server] Room {}: Participant {} reported MEDIA READY at pos {} ms. Phase={}", roomId, participant.userId, positionMs, phase)

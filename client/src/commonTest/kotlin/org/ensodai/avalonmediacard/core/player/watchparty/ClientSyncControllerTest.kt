@@ -417,7 +417,7 @@ class ClientSyncControllerTest {
     }
 
     @Test
-    fun testMonitorBufferingSuppressedDuringPreroll() = runTest {
+    fun testMonitorBufferingReportedDuringPreroll() = runTest {
         val rpc = TestWatchPartyRpcService()
         val player = TestPlaybackController(initialTime = 0.0)
         val clockSync = ClockSyncService(rpc)
@@ -452,9 +452,9 @@ class ClientSyncControllerTest {
             player.setBuffering(true)
             testScheduler.runCurrent()
 
-            // Проверяем: никаких ReportBuffer команд НЕ должно быть отправлено!
+            // FSM-барьер: ReportBuffer(true) честно отправляется на сервер для отображения статуса участника
             val bufferCommands = rpc.sentCommands.filter { it.second is RoomPlaybackCommand.ReportBuffer }
-            assertTrue(bufferCommands.isEmpty(), "Во время Preroll команды ReportBuffer не должны отправляться на сервер")
+            assertTrue(bufferCommands.any { (it.second as RoomPlaybackCommand.ReportBuffer).isBuffering }, "Во время Preroll команды ReportBuffer(true) должны честно отправляться на сервер")
         } finally {
             controller.stop()
         }

@@ -40,10 +40,8 @@ fun UnifiedVideoPlayerLayout(
             }
         }
 
-        // Правая панель в виде оверлея
-        if (hasEpisodesContext) {
-            rightPanelOverlay()
-        }
+        // Правые панели в виде оверлея (серии и/или участники)
+        rightPanelOverlay()
 
         // Нижняя панель управления вынесена наверх
         AnimatedVisibility(

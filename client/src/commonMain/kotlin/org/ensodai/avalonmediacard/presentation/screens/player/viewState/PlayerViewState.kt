@@ -2,6 +2,7 @@ package org.ensodai.avalonmediacard.presentation.screens.player.viewState
 
 import org.ensodai.avalonmediacard.contract.model.EntityType
 import org.ensodai.avalonmediacard.contract.model.MediaKey
+import org.ensodai.avalonmediacard.contract.model.WatchRoomParticipantDto
 import org.ensodai.avalonmediacard.contract.plugins.AudioTrack
 import org.ensodai.avalonmediacard.contract.plugins.MediaStream
 import org.ensodai.avalonmediacard.contract.plugins.SubtitleTrack
@@ -38,8 +39,13 @@ data class PlayerViewState(
     val errorMessage: String? = null,
     val defaultPlayerEngine: PlayerEngine = PlayerEngine.MEDIA3,
     val mode: PlayerMode = PlayerMode.STANDARD,
-    val watchRoomId: Uuid? = null
+    val watchRoomId: Uuid? = null,
+    val watchRoomParticipants: List<WatchRoomParticipantDto> = emptyList(),
+    val isParticipantsPanelVisible: Boolean = true,
+    val currentUserId: String? = null
 ) : BaseViewState() {
+    val onlineParticipantsCount: Int
+        get() = watchRoomParticipants.count { it.isOnline }
     val isBuffering: Boolean
         get() = status == PlaybackStatus.BUFFERING || status == PlaybackStatus.RECOVERING
 

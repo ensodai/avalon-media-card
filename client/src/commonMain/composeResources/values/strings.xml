@@ -497,4 +497,11 @@
     <string name="watch_party_btn_invite">Invite</string>
     <string name="watch_party_invite_copied">Invite link copied to clipboard!</string>
     <string name="watch_party_media_card_label">Watching in this room</string>
+    <string name="watch_party_status_buffering">Buffering...</string>
+    <string name="watch_party_status_playing">Watching</string>
+    <string name="watch_party_status_paused">Paused</string>
+    <string name="watch_party_status_ready">Ready</string>
+    <string name="watch_party_you">You</string>
+    <string name="watch_party_participants_header">Live</string>
+    <string name="watch_party_participants_count">%1$d online</string>
 </resources>

@@ -36,12 +36,26 @@ import kotlin.uuid.Uuid
  */
 class ClientSyncController(
     val roomId: Uuid,
-    val underlyingController: PlaybackController,
+    var underlyingController: PlaybackController,
     val clockSync: ClockSyncService,
     val rpcService: WatchPartyRpcService,
     val coroutineScope: CoroutineScope
 ) {
     private val logger = AppLogging.logger("ClientSyncController")
+
+    var isAwaitingNewStream: Boolean = false
+        internal set
+
+    fun updateUnderlyingController(newController: PlaybackController) {
+        logger.i { "[TrueSync:Client] Updating underlyingController for room $roomId" }
+        underlyingController = newController
+        isAwaitingNewStream = false
+        hasReportedMediaReady = false
+        lastReportedBuffering = null
+        bufferMonitorJob?.cancel()
+        monitorBuffering()
+        latestSyncState?.let { handleSyncState(it) }
+    }
 
     private var eventSubscriptionJob: Job? = null
     private var driftLoopJob: Job? = null
@@ -59,6 +73,8 @@ class ClientSyncController(
 
     private var lastReportedBuffering: Boolean? = null
     private var hasReportedMediaReady: Boolean = false
+
+    var onEpisodeChangeRequested: ((season: Int?, episode: Int?) -> Unit)? = null
 
     private val _roomEvents = MutableSharedFlow<WatchRoomEvent>(extraBufferCapacity = 64)
     val roomEvents: SharedFlow<WatchRoomEvent> = _roomEvents.asSharedFlow()
@@ -112,6 +128,7 @@ class ClientSyncController(
         lastHardSeekTime = null
         hasReportedMediaReady = false
         lastReportedBuffering = null
+        isAwaitingNewStream = false
         underlyingController.setPlaybackRate(1.0f)
         logger.i { "TrueSync stopped for room $roomId" }
     }
@@ -123,10 +140,25 @@ class ClientSyncController(
         val isEpisodeChanged = latestSyncState != null &&
             (latestSyncState?.season != syncState.season || latestSyncState?.episode != syncState.episode)
         if (isEpisodeChanged) {
+            logger.i { "[TrueSync:Client] Room episode changed: S${latestSyncState?.season}E${latestSyncState?.episode} -> S${syncState.season}E${syncState.episode}" }
+            isAwaitingNewStream = true
             hasReportedMediaReady = false
-            lastReportedBuffering = null
+            lastReportedBuffering = true
+            stopDriftLoop()
+            prerollJob?.cancel()
+            prerollJob = null
+            isPrerolling = false
+            bufferMonitorJob?.cancel()
+            underlyingController.pause()
+            underlyingController.setPlaybackRate(1.0f)
+            onEpisodeChangeRequested?.invoke(syncState.season, syncState.episode)
         }
         latestSyncState = syncState
+
+        if (isAwaitingNewStream) {
+            logger.d { "[TrueSync:Client] Awaiting new stream, ignoring sync playback actions until new controller is attached" }
+            return
+        }
         val serverNow = clockSync.estimatedServerTime()
         val localNow = clockSync.clockProvider()
         val offsetMs = clockSync.offset?.inWholeMilliseconds
@@ -235,6 +267,7 @@ class ClientSyncController(
             isPrerolling = false
             val wakeServerNow = clockSync.estimatedServerTime()
             val wakeLocalNow = clockSync.clockProvider()
+            underlyingController.evaluateBufferState()
             val actualPosMs = underlyingController.getCurrentPositionMs()
             val stillBuffering = underlyingController.state.isBuffering
             logger.i {
@@ -245,15 +278,17 @@ class ClientSyncController(
                 // Преролл завершен, но видеопоток еще не готов (буферизуется в MSE/TorrServer).
                 // Немедленно уведомляем сервер, чтобы комната встала в PARTIAL_BUFFERING и не убегала по времени!
                 lastReportedBuffering = true
-                try {
-                    rpcService.sendPlaybackCommand(
-                        roomId,
-                        RoomPlaybackCommand.ReportBuffer(isBuffering = true)
-                    )
-                } catch (e: CancellationException) {
-                    throw e
-                } catch (e: Exception) {
-                    logger.w(e) { "Failed to report buffer stall after preroll" }
+                coroutineScope.launch {
+                    try {
+                        rpcService.sendPlaybackCommand(
+                            roomId,
+                            RoomPlaybackCommand.ReportBuffer(isBuffering = true)
+                        )
+                    } catch (e: CancellationException) {
+                        throw e
+                    } catch (e: Exception) {
+                        logger.w(e) { "Failed to report buffer stall after preroll" }
+                    }
                 }
             } else if (underlyingController.state.duration > 0.0) {
                 underlyingController.play()
@@ -359,55 +394,61 @@ class ClientSyncController(
     private fun monitorBuffering() {
         bufferMonitorJob?.cancel()
         bufferMonitorJob = coroutineScope.launch {
-            underlyingController.isBufferingFlow.collect { isBuffering ->
-                // Во время Preroll изоляция: не отправляем ReportBuffer(true) при штатной подготовке чанков
-                if (isPrerolling && isBuffering) return@collect
+            launch {
+                underlyingController.isBufferingFlow.collect { isBuffering ->
+                    // Во время Preroll изоляция: не отправляем ReportBuffer(true) при штатной подготовке чанков
+                    if (isPrerolling && isBuffering) return@collect
 
-                val isDurationValid = underlyingController.state.duration > 0.0
-                if (isBuffering != lastReportedBuffering) {
-                    lastReportedBuffering = isBuffering
-                    try {
-                        rpcService.sendPlaybackCommand(
-                            roomId,
-                            RoomPlaybackCommand.ReportBuffer(isBuffering = isBuffering)
-                        )
-                        if (!isBuffering && isDurationValid && !hasReportedMediaReady) {
-                            hasReportedMediaReady = true
-                            val currentMs = underlyingController.getCurrentPositionMs()
+                    if (isBuffering != lastReportedBuffering) {
+                        lastReportedBuffering = isBuffering
+                        try {
                             rpcService.sendPlaybackCommand(
                                 roomId,
-                                RoomPlaybackCommand.ReportMediaReady(positionMs = currentMs)
+                                RoomPlaybackCommand.ReportBuffer(isBuffering = isBuffering)
                             )
-                            val state = latestSyncState
-                            if (state != null && state.isPlaying && !isPrerolling) {
-                                underlyingController.play()
-                                startDriftLoop()
-                            }
+                        } catch (e: CancellationException) {
+                            throw e
+                        } catch (e: Exception) {
+                            logger.w(e) { "Failed to send buffer telemetry to room $roomId" }
                         }
-                    } catch (e: CancellationException) {
-                        throw e
-                    } catch (e: Exception) {
-                        logger.w(e) { "Failed to send buffer telemetry to room $roomId" }
                     }
-                } else if (!isBuffering && !hasReportedMediaReady && isDurationValid) {
-                    hasReportedMediaReady = true
-                    try {
-                        val currentMs = underlyingController.getCurrentPositionMs()
-                        rpcService.sendPlaybackCommand(
-                            roomId,
-                            RoomPlaybackCommand.ReportMediaReady(positionMs = currentMs)
-                        )
-                        val state = latestSyncState
-                        if (state != null && state.isPlaying && !isPrerolling) {
-                            underlyingController.play()
-                            startDriftLoop()
-                        }
-                    } catch (e: CancellationException) {
-                        throw e
-                    } catch (e: Exception) {
-                        logger.w(e) { "Failed to send media ready telemetry to room $roomId" }
-                    }
+                    checkAndReportMediaReady()
                 }
+            }
+            launch {
+                while (!hasReportedMediaReady) {
+                    checkAndReportMediaReady()
+                    delay(200.milliseconds)
+                }
+            }
+        }
+    }
+
+    private suspend fun checkAndReportMediaReady() {
+        if (isAwaitingNewStream) return
+        val currentMs = underlyingController.getCurrentPositionMs()
+        val duration = underlyingController.state.duration
+        val isReady = !underlyingController.state.isBuffering &&
+            duration > 0.0 &&
+            currentMs >= 0L
+        if (!hasReportedMediaReady && isReady) {
+            hasReportedMediaReady = true
+            val reportedPos = if (currentMs < 2000L) 0L else currentMs
+            logger.i { "[TrueSync:Client] Reporting Media Ready at $reportedPos ms (actual: $currentMs ms, duration: $duration s) for room $roomId" }
+            try {
+                rpcService.sendPlaybackCommand(
+                    roomId,
+                    RoomPlaybackCommand.ReportMediaReady(positionMs = reportedPos)
+                )
+                val state = latestSyncState
+                if (state != null && state.isPlaying && !isPrerolling) {
+                    underlyingController.play()
+                    startDriftLoop()
+                }
+            } catch (e: CancellationException) {
+                throw e
+            } catch (e: Exception) {
+                logger.w(e) { "Failed to send media ready telemetry to room $roomId" }
             }
         }
     }
@@ -439,6 +480,13 @@ class ClientSyncController(
 
     suspend fun sendReaction(emoji: String) {
         rpcService.sendReaction(roomId, emoji)
+    }
+
+    suspend fun sendChangeEpisode(season: Int?, episode: Int?) {
+        val s = season ?: 1
+        val e = episode ?: 1
+        logger.i { "[TrueSync:Client] Sending ChangeEpisode command to room $roomId (S${s}E${e})" }
+        rpcService.sendPlaybackCommand(roomId, RoomPlaybackCommand.ChangeEpisode(s, e))
     }
 
     /**
@@ -515,6 +563,10 @@ class ClientSyncController(
 
             override fun setTracks(audioTracks: List<AudioTrack>, subtitleTracks: List<SubtitleTrack>) {
                 underlyingController.setTracks(audioTracks, subtitleTracks)
+            }
+
+            override fun evaluateBufferState() {
+                underlyingController.evaluateBufferState()
             }
         }
     }

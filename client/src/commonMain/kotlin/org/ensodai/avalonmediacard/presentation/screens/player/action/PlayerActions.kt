@@ -13,6 +13,8 @@ data class PlayerActions(
     val onPlayPauseClicked: () -> Unit,
     val onSeek: (Double) -> Unit,
     val onEpisodeSelected: (MediaStream) -> Unit,
+    val onNextEpisodeClicked: () -> Unit = {},
+    val onPrevEpisodeClicked: () -> Unit = {},
     val onAudioTrackSelected: (AudioTrack) -> Unit,
     val onSubtitleTrackSelected: (SubtitleTrack?) -> Unit,
     val onQualitySelected: (VideoQuality) -> Unit = {},

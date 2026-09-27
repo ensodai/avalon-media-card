@@ -72,6 +72,7 @@ interface PlaybackController {
     fun setVolume(volume: Double)
     fun setPlaybackRate(rate: Float) {}
     fun sendKeyPress(key: String) {}
+    fun evaluateBufferState() {}
 
 
     fun stepForward() {

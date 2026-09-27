@@ -229,7 +229,8 @@ class VideoElementPlaybackController(
                     updateTime(videoElement.currentTime)
                     val currentBufferAhead = calculateBufferAheadWasm(videoElement)
                     val isNearEnd = state.duration > 0.0 && (videoElement.currentTime + currentBufferAhead) >= (state.duration - 0.5)
-                    val isReady = videoElement.readyState >= 2 && (currentBufferAhead >= MIN_BUFFER_TO_PLAY || isNearEnd)
+                    val hasSufficientBuffer = videoElement.readyState >= 3 || currentBufferAhead >= MIN_BUFFER_TO_PLAY || isNearEnd
+                    val isReady = videoElement.readyState >= 2 && hasSufficientBuffer
                     if (isReady) {
                         setBuffering(false)
                         if (intentToPlay) {
@@ -284,14 +285,14 @@ class VideoElementPlaybackController(
         videoElement.addEventListener("canplaythrough", listener)
     }
 
-    private fun evaluateBufferState() {
+    override fun evaluateBufferState() {
         if (isSeeking) return
         val currentBufferAhead = calculateBufferAheadWasm(videoElement)
         val isVideoReady = videoElement.readyState >= 2
         state.bufferAheadSeconds = currentBufferAhead
 
         val isNearEnd = state.duration > 0.0 && (videoElement.currentTime + currentBufferAhead) >= (state.duration - 0.5)
-        val hasSufficientBuffer = currentBufferAhead >= MIN_BUFFER_TO_PLAY || isNearEnd
+        val hasSufficientBuffer = videoElement.readyState >= 3 || currentBufferAhead >= MIN_BUFFER_TO_PLAY || isNearEnd
 
         if (state.isBuffering) {
             if (isVideoReady && hasSufficientBuffer) {
@@ -303,12 +304,12 @@ class VideoElementPlaybackController(
             }
         } else {
             if (intentToPlay) {
-                if (!isVideoReady || currentBufferAhead < CRITICAL_BUFFER_LEVEL) {
-                    videoElement.pause()
+                if (!isVideoReady) {
                     setBuffering(true)
                     state.isPlaying = false
                 } else {
                     safePlayWasm(videoElement)
+                    state.isPlaying = true
                 }
             }
         }
@@ -592,6 +593,7 @@ actual fun VideoPlayer(
 
     LaunchedEffect(controller, activeSubtitleChunks) {
         while (true) {
+            controller.evaluateBufferState()
             val state = controller.state
             if (!controller.isSeeking) {
                 state.currentTime = videoElement.currentTime

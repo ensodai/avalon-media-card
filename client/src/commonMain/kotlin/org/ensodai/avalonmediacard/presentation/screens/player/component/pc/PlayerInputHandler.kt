@@ -72,8 +72,23 @@ fun PlayerInputHandler(
                     }
 
                     when {
-                        event.key == Key.Spacebar -> {
+                        event.key == Key.Spacebar || code == ' '.code -> {
                             actions.onPlayPauseClicked()
+                            true
+                        }
+
+                        event.key == Key.N || code == 'n'.code || code == 'N'.code || code == 'т'.code || code == 'Т'.code -> {
+                            actions.onNextEpisodeClicked()
+                            true
+                        }
+
+                        event.key == Key.P || code == 'p'.code || code == 'P'.code || code == 'з'.code || code == 'З'.code -> {
+                            actions.onPrevEpisodeClicked()
+                            true
+                        }
+
+                        event.key == Key.Zero || event.key == Key.NumPad0 || code == '0'.code || event.key == Key.MoveHome -> {
+                            actions.onSeek(0.0)
                             true
                         }
 

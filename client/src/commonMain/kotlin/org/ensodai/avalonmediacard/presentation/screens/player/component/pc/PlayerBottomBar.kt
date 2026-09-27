@@ -126,7 +126,7 @@ fun PlayerBottomBar(
                                 shape = CircleShape,
                                 activeBorderColor = Color.Transparent,
                                 onClick = {
-                                    prevEpisode?.let { actions.onEpisodeSelected(it) }
+                                    actions.onPrevEpisodeClicked()
                                 }
                             )
                             .clip(CircleShape),
@@ -173,7 +173,7 @@ fun PlayerBottomBar(
                                 shape = CircleShape,
                                 activeBorderColor = Color.Transparent,
                                 onClick = {
-                                    nextEpisode?.let { actions.onEpisodeSelected(it) }
+                                    actions.onNextEpisodeClicked()
                                 }
                             )
                             .clip(CircleShape),

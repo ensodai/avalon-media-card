@@ -78,20 +78,43 @@ class PlayerViewModel(
         activeController = controller
         val roomId = viewState.value.watchRoomId
         if (viewState.value.mode == PlayerMode.WATCH_PARTY && roomId != null) {
-            syncController?.stop()
-            syncController = ClientSyncController(
-                roomId = roomId,
-                underlyingController = controller,
-                clockSync = clockSync,
-                rpcService = rpcService,
-                coroutineScope = viewModelScope
-            ).also { it.start() }
+            val existing = syncController
+            if (existing != null && existing.roomId == roomId) {
+                existing.updateUnderlyingController(controller)
+            } else {
+                syncController?.stop()
+                syncController = ClientSyncController(
+                    roomId = roomId,
+                    underlyingController = controller,
+                    clockSync = clockSync,
+                    rpcService = rpcService,
+                    coroutineScope = viewModelScope
+                ).also { sc ->
+                    sc.onEpisodeChangeRequested = { season, episode ->
+                        handleRemoteEpisodeChange(season, episode)
+                    }
+                    sc.start()
+                }
+            }
+        }
+    }
+
+    fun handleRemoteEpisodeChange(season: Int?, episode: Int?) {
+        val targetStream = viewState.value.playlist.find {
+            it.seasonNumber == season && it.episodeNumber == episode
+        }
+        if (targetStream != null) {
+            onEpisodeSelected(targetStream, isRemoteSync = true)
+        } else {
+            loadPlaybackSession(season, episode)
         }
     }
 
     fun detachController() {
-        syncController?.stop()
-        syncController = null
+        if (viewState.value.mode != PlayerMode.WATCH_PARTY) {
+            syncController?.stop()
+            syncController = null
+        }
         activeController = null
     }
 
@@ -188,7 +211,11 @@ class PlayerViewModel(
                                 it.episodeNumber == (metaResult.currentEpisode ?: targetEpisode)
                     }
                     val resolvedTitle = currentEp?.episodeName ?: currentEp?.title ?: metaResult.episodeTitle
-                    val initialPosition = metaResult.startPositionSeconds ?: currentEp?.watchedProgressSeconds ?: 0L
+                    val initialPosition = if (viewState.value.mode == PlayerMode.WATCH_PARTY) {
+                        params.startPositionSeconds ?: 0L
+                    } else {
+                        metaResult.startPositionSeconds ?: currentEp?.watchedProgressSeconds ?: 0L
+                    }
                     val streamId = currentEp?.canonicalId ?: ""
 
                     updateViewState {
@@ -237,7 +264,11 @@ class PlayerViewModel(
                     val targetEpisode = fullPlaylist.find { it.canonicalId == result.streamId }
                         ?: fullPlaylist.find { it.url == fullUrl }
                     val resolvedTitle = targetEpisode?.episodeName ?: targetEpisode?.title ?: viewState.value.title
-                    val startPosition = result.startPositionSeconds ?: targetEpisode?.watchedProgressSeconds ?: 0L
+                    val startPosition = if (viewState.value.mode == PlayerMode.WATCH_PARTY) {
+                        0L
+                    } else {
+                        result.startPositionSeconds ?: targetEpisode?.watchedProgressSeconds ?: 0L
+                    }
 
                     updateViewState {
                         it.copy(
@@ -297,6 +328,8 @@ class PlayerViewModel(
     fun stopPlaybackAndDispose() {
         syncJob?.cancel()
         syncJob = null
+        syncController?.stop()
+        syncController = null
         detachController()
         if (viewState.value.mode != PlayerMode.TEST_PREVIEW) {
             persistProgress(viewState.value, force = true)
@@ -325,7 +358,9 @@ class PlayerViewModel(
     override val actions = PlayerActions(
         onPlayPauseClicked = ::onPlayPauseClicked,
         onSeek = ::onSeek,
-        onEpisodeSelected = ::onEpisodeSelected,
+        onEpisodeSelected = { stream -> onEpisodeSelected(stream) },
+        onNextEpisodeClicked = { viewState.value.nextEpisode?.let { onEpisodeSelected(it) } },
+        onPrevEpisodeClicked = { viewState.value.prevEpisode?.let { onEpisodeSelected(it) } },
         onAudioTrackSelected = ::onAudioTrackSelected,
         onSubtitleTrackSelected = ::onSubtitleTrackSelected,
         onQualitySelected = ::onQualitySelected,

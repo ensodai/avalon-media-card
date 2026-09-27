@@ -61,6 +61,18 @@ data class PlayerViewState(
     val seasonEpisodes: Map<Int, List<MediaStream>>
         get() = playlist.groupBy { it.seasonNumber ?: 1 }
 
+    val currentEpisodeIndex: Int
+        get() = playlist.indexOfFirst {
+            (currentStreamId.isNotBlank() && it.canonicalId == currentStreamId) ||
+            (!currentStreamUrl.isNullOrBlank() && it.url == currentStreamUrl)
+        }
+
+    val prevEpisode: MediaStream?
+        get() = if (currentEpisodeIndex > 0) playlist.getOrNull(currentEpisodeIndex - 1) else null
+
+    val nextEpisode: MediaStream?
+        get() = if (currentEpisodeIndex in 0 until playlist.size - 1) playlist.getOrNull(currentEpisodeIndex + 1) else null
+
     val hasEpisodesContext: Boolean
         get() = (mediaKey?.type == EntityType.TV) && playlist.isNotEmpty() && currentEpisode != null
 

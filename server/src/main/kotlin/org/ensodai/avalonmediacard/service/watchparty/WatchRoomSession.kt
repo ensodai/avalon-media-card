@@ -663,7 +663,7 @@ class WatchRoomSession(
         bufferingParticipants.remove(participant.userId)
         logger.info("[TrueSync:Server] Room {}: Participant {} reported MEDIA READY at pos {} ms. Phase={}", roomId, participant.userId, positionMs, phase)
 
-        if (participant.role == WatchRoomParticipantRole.HOST && positionMs > 0L) {
+        if (participant.role == WatchRoomParticipantRole.HOST && positionMs > 0L && phase != RoomPhase.PREPARING) {
             anchorPositionMs = positionMs
             logger.info("[TrueSync:Server] Room {}: Updated anchorPositionMs to host reported position {} ms", roomId, positionMs)
         }
@@ -913,8 +913,8 @@ class WatchRoomSession(
     }
 
     companion object {
-        const val PREPARATION_TIMEOUT_MS = 60_000L
-        const val GRACE_PERIOD_MS = 25_000L
+        const val PREPARATION_TIMEOUT_MS = 120_000L
+        const val GRACE_PERIOD_MS = 10_000L
         const val START_LEAD_TIME_MS = 1500L
         const val SEEK_LEAD_TIME_MS = 2000L
         const val RESUME_LEAD_TIME_MS = 500L

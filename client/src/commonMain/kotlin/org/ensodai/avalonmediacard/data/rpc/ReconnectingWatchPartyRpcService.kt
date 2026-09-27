@@ -53,10 +53,38 @@ class ReconnectingWatchPartyRpcService(
             getSavedRoomsForMedia(mediaId)
         }
 
+    override fun streamSavedRoomsForMedia(mediaId: String): Flow<List<WatchRoomSummaryDto>> {
+        return flow {
+            emitAll(getService().streamSavedRoomsForMedia(mediaId))
+        }.retryWhen { cause, attempt ->
+            if (cause is CancellationException && !executor.isNetworkCancellation(cause)) {
+                return@retryWhen false
+            }
+            logger.w(cause) { "Saved Rooms for Media Stream failed (attempt $attempt). Retrying..." }
+            connectionManager.notifyStreamFailure(cause)
+            delay(min(1000L * (attempt + 1), 5000L).milliseconds)
+            true
+        }
+    }
+
     override suspend fun getUserRooms(): List<WatchRoomSummaryDto> =
         executor.execute("getUserRooms", getService = { getService() }) {
             getUserRooms()
         }
+
+    override fun streamUserRooms(): Flow<List<WatchRoomSummaryDto>> {
+        return flow {
+            emitAll(getService().streamUserRooms())
+        }.retryWhen { cause, attempt ->
+            if (cause is CancellationException && !executor.isNetworkCancellation(cause)) {
+                return@retryWhen false
+            }
+            logger.w(cause) { "User Rooms Stream failed (attempt $attempt). Retrying..." }
+            connectionManager.notifyStreamFailure(cause)
+            delay(min(1000L * (attempt + 1), 5000L).milliseconds)
+            true
+        }
+    }
 
     override suspend fun leaveRoom(roomId: Uuid): Boolean =
         executor.execute("leaveRoom", getService = { getService() }) {

@@ -8,6 +8,7 @@ import io.ktor.client.request.*
 import io.ktor.client.statement.*
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -47,7 +48,7 @@ abstract class CommonPlaybackController : PlaybackController {
     override val selectedSubtitleTrack: SubtitleTrack? get() = _selectedSubtitleTrack
 
     private var activeSubtitleCues: List<SubtitleCue> = emptyList()
-    private val scope = CoroutineScope(Dispatchers.Default)
+    protected val playbackScope = CoroutineScope(Dispatchers.Default + SupervisorJob())
     private val httpClient = HttpClient()
 
     fun setCues(cues: List<SubtitleCue>) {
@@ -86,7 +87,7 @@ abstract class CommonPlaybackController : PlaybackController {
         val url = track.url
         println("[SUBTITLE DEBUG] selectSubtitleTrack: name='${track.name}', url='$url'")
         if (!url.isNullOrBlank()) {
-            scope.launch {
+            playbackScope.launch {
                 try {
                     val rawText = httpClient.get(url).bodyAsText()
                     println("[SUBTITLE DEBUG] Fetched raw VTT text bytes=${rawText.length}")

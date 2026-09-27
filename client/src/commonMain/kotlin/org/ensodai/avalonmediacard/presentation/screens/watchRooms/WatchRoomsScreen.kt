@@ -19,6 +19,11 @@ import avalonmediacard.client.generated.resources.*
 import com.composables.icons.lucide.KeyRound
 import com.composables.icons.lucide.Lucide
 import com.composables.icons.lucide.Plus
+import org.ensodai.avalonmediacard.contract.model.EntityType
+import org.ensodai.avalonmediacard.contract.model.MediaKey
+import org.ensodai.avalonmediacard.contract.model.MediaProvider
+import org.ensodai.avalonmediacard.contract.model.MediaType
+import org.ensodai.avalonmediacard.contract.model.WatchRoomPhase
 import org.ensodai.avalonmediacard.presentation.screens.commonComponents.LocalRootOverlay
 import org.ensodai.avalonmediacard.presentation.screens.player.launchPlayerOverlay
 import org.ensodai.avalonmediacard.presentation.screens.player.model.PlayerInitParams
@@ -34,7 +39,7 @@ import kotlin.uuid.Uuid
 
 @Composable
 fun WatchRoomsScreen(
-    onStartPlayback: ((roomId: Uuid, season: Int?, episode: Int?) -> Unit)? = null,
+    onStartPlayback: ((roomId: Uuid, season: Int?, episode: Int?, startPositionSeconds: Long) -> Unit)? = null,
     viewModel: WatchRoomsViewModel = koinInject(),
     watchPartyViewModel: WatchPartyViewModel = koinInject()
 ) {
@@ -126,7 +131,33 @@ fun WatchRoomsScreen(
                 items(state.rooms, key = { it.id.toString() }) { room ->
                     WatchRoomSummaryCard(
                         room = room,
-                        onClick = { actions.onOpenRoom(room.id) }
+                        onClick = {
+                            if (room.phase != WatchRoomPhase.LOBBY) {
+                                if (onStartPlayback != null) {
+                                    onStartPlayback.invoke(room.id, room.currentSeason, room.currentEpisode, room.lastPositionSeconds)
+                                } else {
+                                    val entityType = if (room.mediaType == MediaType.TV) EntityType.TV else EntityType.MOVIE
+                                    val mediaKey = MediaKey(provider = MediaProvider.Tmdb, type = entityType, id = room.mediaId)
+                                    launchPlayerOverlay(
+                                        rootOverlay = rootOverlay,
+                                        params = PlayerInitParams(
+                                            title = room.title,
+                                            seriesTitle = room.title,
+                                            mediaKey = mediaKey,
+                                            targetSeason = room.currentSeason,
+                                            targetEpisode = room.currentEpisode,
+                                            startPositionSeconds = room.lastPositionSeconds,
+                                            mode = PlayerMode.WATCH_PARTY,
+                                            sourceType = room.sourceType,
+                                            sourceId = room.sourceId,
+                                            watchRoomId = room.id
+                                        )
+                                    )
+                                }
+                            } else {
+                                actions.onOpenRoom(room.id)
+                            }
+                        }
                     )
                 }
             }
@@ -145,10 +176,10 @@ fun WatchRoomsScreen(
                 initialStep = state.modalInitialStep,
                 viewModel = watchPartyViewModel,
                 onClose = { actions.onCloseModal() },
-                onStartPlayback = { roomId, season, episode ->
+                onStartPlayback = { roomId, season, episode, startPositionSeconds ->
                     actions.onCloseModal()
                     if (onStartPlayback != null) {
-                        onStartPlayback.invoke(roomId, season, episode)
+                        onStartPlayback.invoke(roomId, season, episode, startPositionSeconds)
                     } else {
                         val activeRoom = watchPartyViewModel.viewState.value.activeRoom
                         val mediaKey = watchPartyViewModel.viewState.value.mediaKey
@@ -161,6 +192,7 @@ fun WatchRoomsScreen(
                                     mediaKey = mediaKey,
                                     targetSeason = season ?: activeRoom?.currentSeason,
                                     targetEpisode = episode ?: activeRoom?.currentEpisode,
+                                    startPositionSeconds = if (startPositionSeconds > 0L) startPositionSeconds else activeRoom?.lastPositionSeconds,
                                     mode = PlayerMode.WATCH_PARTY,
                                     sourceType = activeRoom?.sourceType,
                                     sourceId = activeRoom?.sourceId,

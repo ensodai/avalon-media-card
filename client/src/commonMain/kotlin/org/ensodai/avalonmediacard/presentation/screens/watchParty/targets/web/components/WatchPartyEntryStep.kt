@@ -203,30 +203,70 @@ fun WatchPartyEntryStep(
                             modifier = Modifier
                                 .fillMaxWidth()
                                 .clip(RoundedCornerShape(12.dp))
-                                .background(Color.White.copy(alpha = 0.05f))
+                                .background(
+                                    if (room.isPlaying) Color(0xFF4CAF50).copy(alpha = 0.08f)
+                                    else Color.White.copy(alpha = 0.05f)
+                                )
+                                .border(
+                                    1.dp,
+                                    if (room.isPlaying) Color(0xFF4CAF50).copy(alpha = 0.35f)
+                                    else Color.Transparent,
+                                    RoundedCornerShape(12.dp)
+                                )
                                 .clickable { actions.onJoinById(room.id) }
                                 .padding(horizontal = 16.dp, vertical = 12.dp),
                             verticalAlignment = Alignment.CenterVertically,
                             horizontalArrangement = Arrangement.SpaceBetween
                         ) {
-                            Column {
+                            Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
+                                Row(
+                                    verticalAlignment = Alignment.CenterVertically,
+                                    horizontalArrangement = Arrangement.spacedBy(6.dp)
+                                ) {
+                                    Text(
+                                        text = room.title,
+                                        fontSize = 14.sp,
+                                        fontWeight = FontWeight.SemiBold,
+                                        color = Color.White
+                                    )
+                                    if (room.isPlaying) {
+                                        Box(
+                                            modifier = Modifier
+                                                .clip(RoundedCornerShape(4.dp))
+                                                .background(Color(0xFF4CAF50).copy(alpha = 0.2f))
+                                                .border(1.dp, Color(0xFF4CAF50).copy(alpha = 0.4f), RoundedCornerShape(4.dp))
+                                                .padding(horizontal = 6.dp, vertical = 2.dp)
+                                        ) {
+                                            Text(
+                                                text = stringResource(Res.string.watch_party_live_badge),
+                                                fontSize = 10.sp,
+                                                fontWeight = FontWeight.Bold,
+                                                color = Color(0xFF4CAF50)
+                                            )
+                                        }
+                                    }
+                                }
+
+                                val participantsLabel = if (room.isPlaying && room.onlineParticipantsCount > 0) {
+                                    stringResource(Res.string.watch_party_online_watching, room.onlineParticipantsCount)
+                                } else if (room.onlineParticipantsCount > 0) {
+                                    stringResource(Res.string.watch_party_online_in_lobby, room.onlineParticipantsCount)
+                                } else {
+                                    stringResource(Res.string.watch_party_participants_label, room.participantsCount)
+                                }
+
                                 Text(
-                                    text = room.title,
-                                    fontSize = 14.sp,
-                                    fontWeight = FontWeight.SemiBold,
-                                    color = Color.White
-                                )
-                                Text(
-                                    text = stringResource(Res.string.watch_party_participants_label, room.participantsCount),
+                                    text = participantsLabel,
                                     fontSize = 12.sp,
-                                    color = Color.White.copy(alpha = 0.6f)
+                                    color = if (room.isPlaying) Color(0xFF81C784) else Color.White.copy(alpha = 0.6f)
                                 )
                             }
                             Text(
-                                text = stringResource(Res.string.watch_party_btn_join),
+                                text = if (room.isPlaying) stringResource(Res.string.watch_party_btn_join_playback)
+                                else stringResource(Res.string.watch_party_btn_join),
                                 fontSize = 13.sp,
                                 fontWeight = FontWeight.Bold,
-                                color = Color(0xFF6C63FF)
+                                color = if (room.isPlaying) Color(0xFF4CAF50) else Color(0xFF6C63FF)
                             )
                         }
                     }

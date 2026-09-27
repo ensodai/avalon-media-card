@@ -27,7 +27,7 @@ class WatchRoomsViewModel(
     init {
         viewModelScope.launch {
             getUserWatchRoomsUseCase.userRoomsFlow.collect { rooms ->
-                updateViewState { it.copy(rooms = rooms) }
+                updateViewState { it.copy(rooms = rooms, isLoading = false) }
             }
         }
         loadRooms()

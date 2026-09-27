@@ -174,7 +174,7 @@ class WatchRoomRepositoryImpl : WatchRoomRepository {
         if (rooms.isEmpty()) return@dbQuery emptyList()
 
         val roomIds = rooms.map { it[WatchRoomTable.id].value }
-        val participantsByRoom = WatchRoomParticipantTable.selectAll()
+        val participantsByRoom = (WatchRoomParticipantTable innerJoin UserTable).selectAll()
             .where { WatchRoomParticipantTable.roomId inList roomIds }
             .groupBy { it[WatchRoomParticipantTable.roomId].value }
 
@@ -183,8 +183,16 @@ class WatchRoomRepositoryImpl : WatchRoomRepository {
             val isHost = row[WatchRoomTable.hostUserId] == currentUserId
             val isPrivate = row[WatchRoomTable.isPrivate]
 
-            val participantsInRoom = participantsByRoom[roomId].orEmpty()
-            val isParticipant = participantsInRoom.any { it[WatchRoomParticipantTable.userId] == currentUserId }
+            val participantsInRoom = participantsByRoom[roomId].orEmpty().map { partRow ->
+                WatchRoomParticipantDto(
+                    userId = partRow[WatchRoomParticipantTable.userId],
+                    username = partRow[UserTable.username],
+                    role = partRow[WatchRoomParticipantTable.role],
+                    isOnline = false,
+                    playbackState = WatchRoomPlaybackState.READY
+                )
+            }
+            val isParticipant = participantsInRoom.any { it.userId == currentUserId }
 
             // Если комната приватная, показываем её только участникам и хосту
             if (isPrivate && !isHost && !isParticipant) {
@@ -200,9 +208,11 @@ class WatchRoomRepositoryImpl : WatchRoomRepository {
                 currentEpisode = row[WatchRoomTable.currentEpisode],
                 lastPositionSeconds = row[WatchRoomTable.lastPositionSeconds],
                 joinPin = row[WatchRoomTable.joinPin],
-                participantsCount = participantsInRoom.size.coerceAtLeast(1),
+                participants = participantsInRoom,
                 isHost = isHost,
-                status = row[WatchRoomTable.status]
+                status = row[WatchRoomTable.status],
+                sourceType = row[WatchRoomTable.sourceType],
+                sourceId = row[WatchRoomTable.sourceId]
             )
         }
     }
@@ -236,15 +246,22 @@ class WatchRoomRepositoryImpl : WatchRoomRepository {
         if (rooms.isEmpty()) return@dbQuery emptyList()
 
         val roomIds = rooms.map { it[WatchRoomTable.id].value }
-        val participantCounts = WatchRoomParticipantTable.selectAll()
+        val participantsByRoom = (WatchRoomParticipantTable innerJoin UserTable).selectAll()
             .where { WatchRoomParticipantTable.roomId inList roomIds }
             .groupBy { it[WatchRoomParticipantTable.roomId].value }
-            .mapValues { it.value.size }
 
         rooms.map { row ->
             val roomId = row[WatchRoomTable.id].value
             val isHost = row[WatchRoomTable.hostUserId] == userId
-            val count = participantCounts[roomId] ?: 1
+            val participantsInRoom = participantsByRoom[roomId].orEmpty().map { partRow ->
+                WatchRoomParticipantDto(
+                    userId = partRow[WatchRoomParticipantTable.userId],
+                    username = partRow[UserTable.username],
+                    role = partRow[WatchRoomParticipantTable.role],
+                    isOnline = false,
+                    playbackState = WatchRoomPlaybackState.READY
+                )
+            }
 
             WatchRoomSummaryDto(
                 id = roomId,
@@ -255,9 +272,11 @@ class WatchRoomRepositoryImpl : WatchRoomRepository {
                 currentEpisode = row[WatchRoomTable.currentEpisode],
                 lastPositionSeconds = row[WatchRoomTable.lastPositionSeconds],
                 joinPin = row[WatchRoomTable.joinPin],
-                participantsCount = count.coerceAtLeast(1),
+                participants = participantsInRoom,
                 isHost = isHost,
-                status = row[WatchRoomTable.status]
+                status = row[WatchRoomTable.status],
+                sourceType = row[WatchRoomTable.sourceType],
+                sourceId = row[WatchRoomTable.sourceId]
             )
         }
     }

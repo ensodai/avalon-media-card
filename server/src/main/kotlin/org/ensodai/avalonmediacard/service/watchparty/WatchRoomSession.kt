@@ -5,6 +5,7 @@ import kotlinx.coroutines.Job
 import kotlinx.coroutines.channels.BufferOverflow
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.isActive
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.emitAll
@@ -18,6 +19,7 @@ import org.ensodai.avalonmediacard.contract.model.WatchParticipantIntent
 import org.ensodai.avalonmediacard.contract.model.WatchRoomControlMode
 import org.ensodai.avalonmediacard.contract.model.WatchRoomParticipantDto
 import org.ensodai.avalonmediacard.contract.model.WatchRoomParticipantRole
+import org.ensodai.avalonmediacard.contract.model.WatchRoomPhase
 import org.ensodai.avalonmediacard.contract.model.WatchRoomPlaybackState
 import org.ensodai.avalonmediacard.contract.model.WatchRoomStatus
 import org.ensodai.avalonmediacard.contract.model.WatchRoomEvent
@@ -36,8 +38,8 @@ data class ActiveParticipant(
     val userId: Uuid,
     val username: String,
     var role: WatchRoomParticipantRole,
-    var isOnline: Boolean = true,
-    var playbackState: WatchRoomPlaybackState = WatchRoomPlaybackState.READY,
+    var isOnline: Boolean = false,
+    var playbackState: WatchRoomPlaybackState = WatchRoomPlaybackState.OFFLINE,
     var isReady: Boolean = false,
     var intent: WatchParticipantIntent = WatchParticipantIntent.WATCHING_ATTENTIVELY,
     var lastPingAt: Long = Clock.System.now().toEpochMilliseconds(),
@@ -56,15 +58,9 @@ data class ActiveParticipant(
 
 /**
  * Фазы жизненного цикла воспроизведения комнаты совместного просмотра TrueSync.
+ * Алиас к контракту WatchRoomPhase для полной совместимости.
  */
-enum class RoomPhase {
-    LOBBY,              // Выбор контента, предстартовая готовность
-    PREPARING,          // Загрузка медиапотока всеми участниками перед стартом (Media Ready Barrier)
-    STARTING_SCHEDULED, // Резерв времени на Preroll (T_start = now + leadTime), виртуальные часы стоят
-    PLAYING_IN_SYNC,    // Активное воспроизведение, виртуальные часы идут
-    PARTIAL_BUFFERING,  // Аварийная пауза из-за отставания/буферизации участника (Grace Period 8с)
-    FORCE_PAUSED        // Ручная пауза
-}
+typealias RoomPhase = WatchRoomPhase
 
 /**
  * In-Memory State Machine комнаты совместного просмотра.
@@ -81,14 +77,33 @@ class WatchRoomSession(
     initialPositionSeconds: Long,
     private val scope: CoroutineScope,
     private val onProgressChanged: suspend (season: Int?, episode: Int?, positionSeconds: Long) -> Unit,
-    private val onHostMigrated: suspend (newHostUserId: Uuid) -> Unit
+    private val onHostMigrated: suspend (newHostUserId: Uuid) -> Unit,
+    val onRoomStateChanged: (roomId: Uuid) -> Unit = {}
 ) {
     private val logger = LoggerFactory.getLogger(WatchRoomSession::class.java)
     private val mutex = Mutex()
 
+    private fun notifyRoomStateChanged() {
+        try {
+            onRoomStateChanged(roomId)
+        } catch (e: Exception) {
+            logger.warn("Error invoking onRoomStateChanged for room $roomId", e)
+        }
+    }
+
     // Текущая фаза воспроизведения FSM
     var phase: RoomPhase = RoomPhase.LOBBY
-        private set
+        private set(value) {
+            val changed = field != value
+            field = value
+            if (changed) {
+                if (field != RoomPhase.PLAYING_IN_SYNC) {
+                    progressPersistenceJob?.cancel()
+                    progressPersistenceJob = null
+                }
+                notifyRoomStateChanged()
+            }
+        }
 
     val isPlaying: Boolean
         get() = phase == RoomPhase.PLAYING_IN_SYNC || phase == RoomPhase.STARTING_SCHEDULED
@@ -110,6 +125,7 @@ class WatchRoomSession(
     private var gracePeriodJob: Job? = null
     private var scheduledStartJob: Job? = null
     private var preparationTimeoutJob: Job? = null
+    private var progressPersistenceJob: Job? = null
 
     // Реактивная шина событий комнаты (TrueSync / Плеер)
     private val _events = MutableSharedFlow<WatchRoomEvent>(
@@ -143,12 +159,13 @@ class WatchRoomSession(
      */
     fun subscribeLobby(): Flow<LobbyEvent> = flow {
         emit(LobbyEvent.InitialSnapshot(WatchRoomStatus.ACTIVE, getParticipantList()))
-        if (phase != RoomPhase.LOBBY) {
+        if (phase == RoomPhase.PLAYING_IN_SYNC || phase == RoomPhase.STARTING_SCHEDULED) {
             emit(
                 LobbyEvent.TransitionToPlayer(
                     playAtServerTime = Clock.System.now(),
                     season = currentSeason,
-                    episode = currentEpisode
+                    episode = currentEpisode,
+                    startPositionSeconds = getCurrentPositionSeconds()
                 )
             )
         }
@@ -198,6 +215,7 @@ class WatchRoomSession(
         val dto = p.toDto()
         _lobbyEvents.emit(LobbyEvent.ParticipantUpdated(dto))
         _events.emit(WatchRoomEvent.ParticipantsUpdated(getParticipantListLocked()))
+        notifyRoomStateChanged()
         dto
     }
 
@@ -226,7 +244,9 @@ class WatchRoomSession(
         val p = participants[userId] ?: return@withLock
         p.isOnline = false
         p.playbackState = WatchRoomPlaybackState.OFFLINE
-        bufferingParticipants.remove(userId)
+        if (phase != RoomPhase.PREPARING) {
+            bufferingParticipants.remove(userId)
+        }
         if (phase == RoomPhase.PREPARING) {
             checkMediaPreparationResolvedLocked()
         } else {
@@ -236,6 +256,39 @@ class WatchRoomSession(
         val dto = p.toDto()
         _lobbyEvents.emit(LobbyEvent.ParticipantUpdated(dto))
         _events.emit(WatchRoomEvent.ParticipantsUpdated(getParticipantListLocked()))
+        notifyRoomStateChanged()
+
+        val anyOnline = participants.values.any { it.isOnline }
+        if (!anyOnline && phase != RoomPhase.PREPARING) {
+            autoPauseAndConserveLocked()
+        }
+    }
+
+    /**
+     * Автоматическая консервация состояния и сброс в LOBBY при отсутствии активных участников онлайн.
+     */
+    private fun autoPauseAndConserveLocked() {
+        if (phase != RoomPhase.LOBBY) {
+            val currentPosMs = getCurrentPositionMs()
+            anchorPositionMs = currentPosMs
+            anchorServerTime = Clock.System.now()
+            scheduledStartJob?.cancel()
+            scheduledStartJob = null
+            gracePeriodJob?.cancel()
+            gracePeriodJob = null
+            preparationTimeoutJob?.cancel()
+            preparationTimeoutJob = null
+            bufferingParticipants.clear()
+            phase = RoomPhase.LOBBY
+            logger.info(
+                "[TrueSync:Server] Room {}: All participants disconnected. Auto-pausing at {} ms and conserving state in LOBBY.",
+                roomId, anchorPositionMs
+            )
+            scope.launch {
+                onProgressChanged(currentSeason, currentEpisode, anchorPositionMs / 1000L)
+            }
+            emitCurrentSyncState(null)
+        }
     }
 
 
@@ -297,7 +350,8 @@ class WatchRoomSession(
             LobbyEvent.TransitionToPlayer(
                 playAtServerTime = targetStartPlaceholder,
                 season = currentSeason,
-                episode = currentEpisode
+                episode = currentEpisode,
+                startPositionSeconds = anchorPositionMs / 1000L
             )
         )
 
@@ -306,7 +360,7 @@ class WatchRoomSession(
         _events.emit(WatchRoomEvent.SystemNotice("Подготовка к совместному просмотру... Ожидание загрузки видео всеми участниками."))
 
         startPreparationTimeoutLocked()
-        onProgressChanged(currentSeason, currentEpisode, 0L)
+        onProgressChanged(currentSeason, currentEpisode, anchorPositionMs / 1000L)
         true
     }
 
@@ -322,27 +376,38 @@ class WatchRoomSession(
         return anchorPositionMs + elapsed
     }
 
+    fun isActivelyPlaying(): Boolean =
+        (phase == RoomPhase.PLAYING_IN_SYNC || phase == RoomPhase.STARTING_SCHEDULED || phase == RoomPhase.PARTIAL_BUFFERING) &&
+                participants.values.any { it.isOnline }
+
+    fun getOnlineCount(): Int = participants.values.count { it.isOnline }
+
+    fun getCurrentPositionSeconds(): Long = getCurrentPositionMs() / 1000L
+
     /**
      * Добавление или обновление участника при подключении.
      */
     suspend fun addOrUpdateParticipant(
         userId: Uuid,
         username: String,
-        role: WatchRoomParticipantRole
+        role: WatchRoomParticipantRole,
+        isOnline: Boolean = false
     ): List<WatchRoomParticipantDto> = mutex.withLock {
         disconnectJobs.remove(userId)?.cancel()
 
         val existing = participants[userId]
         if (existing != null) {
-            existing.isOnline = true
+            existing.role = role
+            val hasActiveConnection = userConnections[userId]?.isNotEmpty() == true
+            existing.isOnline = hasActiveConnection || isOnline
             existing.lastPingAt = Clock.System.now().toEpochMilliseconds()
         } else {
             participants[userId] = ActiveParticipant(
                 userId = userId,
                 username = username,
                 role = role,
-                isOnline = true,
-                playbackState = WatchRoomPlaybackState.READY,
+                isOnline = isOnline,
+                playbackState = if (isOnline) WatchRoomPlaybackState.READY else WatchRoomPlaybackState.OFFLINE,
                 lastPingAt = Clock.System.now().toEpochMilliseconds()
             )
         }
@@ -353,6 +418,7 @@ class WatchRoomSession(
             _lobbyEvents.emit(LobbyEvent.ParticipantUpdated(p.toDto()))
         }
         _events.emit(WatchRoomEvent.ParticipantsUpdated(dtoList))
+        notifyRoomStateChanged()
         dtoList
     }
 
@@ -377,9 +443,15 @@ class WatchRoomSession(
 
         _lobbyEvents.emit(LobbyEvent.ParticipantRemoved(userId))
         _events.emit(WatchRoomEvent.ParticipantsUpdated(getParticipantListLocked()))
+        notifyRoomStateChanged()
 
         if (userId == hostUserId) {
             checkHostMigrationLocked()
+        }
+
+        val anyOnline = participants.values.any { it.isOnline }
+        if (!anyOnline) {
+            autoPauseAndConserveLocked()
         }
     }
 
@@ -538,6 +610,40 @@ class WatchRoomSession(
                 _events.emit(WatchRoomEvent.ParticipantsUpdated(getParticipantListLocked()))
                 true
             }
+
+            is RoomPlaybackCommand.ReturnToLobby -> {
+                scheduledStartJob?.cancel()
+                scheduledStartJob = null
+                gracePeriodJob?.cancel()
+                gracePeriodJob = null
+                preparationTimeoutJob?.cancel()
+                preparationTimeoutJob = null
+                bufferingParticipants.clear()
+
+                val now = Clock.System.now()
+                val currentPos = if (phase == RoomPhase.PLAYING_IN_SYNC) getCurrentPositionMs() else anchorPositionMs
+                phase = RoomPhase.LOBBY
+                anchorPositionMs = currentPos
+                anchorServerTime = now
+
+                logger.info(
+                    "[TrueSync:Server] Room {}: Received ReturnToLobby from user {}. Conserved pos={} ms.",
+                    roomId, userId, currentPos
+                )
+
+                participants.values.forEach { p ->
+                    if (p.isOnline) {
+                        p.playbackState = WatchRoomPlaybackState.READY
+                    }
+                }
+
+                _events.emit(WatchRoomEvent.ReturnedToLobby)
+                _events.emit(WatchRoomEvent.ParticipantsUpdated(getParticipantListLocked()))
+                _lobbyEvents.emit(LobbyEvent.InitialSnapshot(WatchRoomStatus.ACTIVE, getParticipantListLocked()))
+
+                onProgressChanged(currentSeason, currentEpisode, anchorPositionMs / 1000L)
+                true
+            }
         }
     }
 
@@ -576,6 +682,7 @@ class WatchRoomSession(
                 if (activeBuffering.isEmpty()) {
                     phase = RoomPhase.PLAYING_IN_SYNC
                     anchorServerTime = targetStart
+                    startPeriodicProgressPersistenceLocked()
                     logger.info("[TrueSync:Server] Room {}: STARTING_SCHEDULED -> PLAYING_IN_SYNC at {}", roomId, targetStart)
                     participants.values.forEach { p ->
                         if (p.isOnline && !p.isDesynced) {
@@ -679,11 +786,6 @@ class WatchRoomSession(
         bufferingParticipants.remove(participant.userId)
         logger.info("[TrueSync:Server] Room {}: Participant {} reported MEDIA READY at pos {} ms. Phase={}", roomId, participant.userId, positionMs, phase)
 
-        if (participant.role == WatchRoomParticipantRole.HOST && positionMs > 0L && phase != RoomPhase.PREPARING) {
-            anchorPositionMs = positionMs
-            logger.info("[TrueSync:Server] Room {}: Updated anchorPositionMs to host reported position {} ms", roomId, positionMs)
-        }
-
         if (phase == RoomPhase.PREPARING) {
             checkMediaPreparationResolvedLocked()
         } else {
@@ -695,15 +797,12 @@ class WatchRoomSession(
     private suspend fun checkMediaPreparationResolvedLocked() {
         if (phase != RoomPhase.PREPARING) return
 
-        val unready = bufferingParticipants.filter { uid ->
-            val p = participants[uid]
-            p != null && p.isOnline && !p.isDesynced
-        }
+        val anyOnline = participants.values.any { it.isOnline }
+        val allReady = bufferingParticipants.isEmpty()
 
-        if (unready.isEmpty()) {
+        if (anyOnline && allReady) {
             preparationTimeoutJob?.cancel()
             preparationTimeoutJob = null
-            bufferingParticipants.clear()
 
             val targetStart = Clock.System.now() + 1500.milliseconds
             logger.info("[TrueSync:Server] Room {}: All participants READY in PREPARING phase! Scheduling synchronized start at {}", roomId, targetStart)
@@ -711,11 +810,11 @@ class WatchRoomSession(
             _events.emit(WatchRoomEvent.SystemNotice("Все участники готовы! Старт воспроизведения через 1.5 секунды."))
             _events.emit(WatchRoomEvent.ParticipantsUpdated(getParticipantListLocked()))
         } else {
-            val totalOnline = participants.values.count { it.isOnline && !it.isDesynced }
-            val readyCount = totalOnline - unready.size
-            val unreadyNames = unready.mapNotNull { participants[it]?.username }.joinToString(", ")
-            logger.info("[TrueSync:Server] Room {}: Media preparation in progress: {}/{} ready. Waiting for: {}", roomId, readyCount, totalOnline, unreadyNames)
-            _events.emit(WatchRoomEvent.SystemNotice("Подготовка видео: $readyCount/$totalOnline готовы ($unreadyNames загружает...)"))
+            val total = participants.values.count { !it.isDesynced }
+            val readyCount = (total - bufferingParticipants.size).coerceAtLeast(0)
+            val unreadyNames = bufferingParticipants.mapNotNull { participants[it]?.username }.joinToString(", ")
+            logger.info("[TrueSync:Server] Room {}: Media preparation in progress: {}/{} ready. Waiting for: {}", roomId, readyCount, total, unreadyNames)
+            _events.emit(WatchRoomEvent.SystemNotice("Подготовка видео: $readyCount/$total готовы ($unreadyNames загружает...)"))
             _events.emit(WatchRoomEvent.ParticipantsUpdated(getParticipantListLocked()))
         }
     }
@@ -731,9 +830,15 @@ class WatchRoomSession(
     private suspend fun onPreparationTimeoutExpired() = mutex.withLock {
         if (phase != RoomPhase.PREPARING) return@withLock
 
+        val anyOnline = participants.values.any { it.isOnline }
+        if (!anyOnline) {
+            autoPauseAndConserveLocked()
+            return@withLock
+        }
+
         val unready = bufferingParticipants.filter { uid ->
             val p = participants[uid]
-            p != null && p.isOnline && !p.isDesynced
+            p != null && !p.isDesynced
         }
         if (unready.isEmpty()) return@withLock
 
@@ -911,10 +1016,27 @@ class WatchRoomSession(
         _events.tryEmit(state)
     }
 
+    private fun startPeriodicProgressPersistenceLocked() {
+        progressPersistenceJob?.cancel()
+        progressPersistenceJob = scope.launch {
+            while (isActive) {
+                delay(5000L)
+                mutex.withLock {
+                    if (phase == RoomPhase.PLAYING_IN_SYNC) {
+                        val posSeconds = getCurrentPositionSeconds()
+                        onProgressChanged(currentSeason, currentEpisode, posSeconds)
+                    }
+                }
+            }
+        }
+    }
+
     /**
      * Закрытие сессии: отменяет фоновые таймеры и уведомляет участников.
      */
     suspend fun close() = mutex.withLock {
+        progressPersistenceJob?.cancel()
+        progressPersistenceJob = null
         scheduledStartJob?.cancel()
         scheduledStartJob = null
         gracePeriodJob?.cancel()

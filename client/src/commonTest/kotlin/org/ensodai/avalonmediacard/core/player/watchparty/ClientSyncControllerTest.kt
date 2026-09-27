@@ -113,10 +113,12 @@ class ClientSyncControllerTest {
         override suspend fun joinRoomByPin(pin: String): JoinRoomResult = TODO()
         override suspend fun joinRoomById(roomId: Uuid): JoinRoomResult = TODO()
         override suspend fun getSavedRoomsForMedia(mediaId: String): List<WatchRoomSummaryDto> = TODO()
+        override fun streamSavedRoomsForMedia(mediaId: String): Flow<List<WatchRoomSummaryDto>> = kotlinx.coroutines.flow.emptyFlow()
         override suspend fun getUserRooms(): List<WatchRoomSummaryDto> = TODO()
         override suspend fun leaveRoom(roomId: Uuid): Boolean = TODO()
         override suspend fun closeRoom(roomId: Uuid): Boolean = TODO()
         override fun streamLobbyState(roomId: Uuid): Flow<LobbyEvent> = TODO()
+        override fun streamUserRooms(): Flow<List<WatchRoomSummaryDto>> = kotlinx.coroutines.flow.emptyFlow()
         override suspend fun setLobbyStatus(roomId: Uuid, request: SetLobbyStatusRequest): Boolean = TODO()
         override suspend fun triggerStartPlayback(roomId: Uuid): Boolean = TODO()
         override suspend fun sendReaction(roomId: Uuid, emoji: String): Boolean = true
@@ -697,3 +699,4 @@ class ClientSyncControllerTest {
         }
     }
 }
+

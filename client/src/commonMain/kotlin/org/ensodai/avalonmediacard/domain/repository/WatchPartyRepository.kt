@@ -17,6 +17,7 @@ interface WatchPartyRepository {
     suspend fun joinRoomByPin(pin: String): JoinRoomResult
     suspend fun joinRoomById(roomId: Uuid): JoinRoomResult
     suspend fun getSavedRoomsForMedia(mediaId: String): List<WatchRoomSummaryDto>
+    fun streamSavedRoomsForMedia(mediaId: String): Flow<List<WatchRoomSummaryDto>>
     val userRoomsFlow: StateFlow<List<WatchRoomSummaryDto>>
     suspend fun refreshUserRooms(): List<WatchRoomSummaryDto>
     suspend fun getUserRooms(): List<WatchRoomSummaryDto>

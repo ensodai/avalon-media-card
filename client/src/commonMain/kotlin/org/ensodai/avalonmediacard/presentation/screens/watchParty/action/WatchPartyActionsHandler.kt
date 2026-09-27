@@ -40,11 +40,13 @@ fun WatchPartyViewModel.initialize(
 }
 
 fun WatchPartyViewModel.loadSavedRooms(mediaId: String) {
-    viewModelScope.launch {
+    savedRoomsStreamJob?.cancel()
+    savedRoomsStreamJob = viewModelScope.launch {
         updateViewState { it.copy(isLoadingSavedRooms = true) }
         try {
-            val rooms = getSavedWatchRoomsUseCase(mediaId)
-            updateViewState { it.copy(savedRooms = rooms, isLoadingSavedRooms = false) }
+            getSavedWatchRoomsUseCase.stream(mediaId).collect { rooms ->
+                updateViewState { it.copy(savedRooms = rooms, isLoadingSavedRooms = false) }
+            }
         } catch (_: Exception) {
             updateViewState { it.copy(isLoadingSavedRooms = false) }
         }
@@ -353,7 +355,9 @@ fun WatchPartyViewModel.subscribeToLobbyState(roomId: Uuid) {
                     }
                 }
                 is LobbyEvent.TransitionToPlayer -> {
-                    onLaunchPlayerRequested?.invoke(roomId, event.season, event.episode)
+                    eventStreamJob?.cancel()
+                    eventStreamJob = null
+                    onLaunchPlayerRequested?.invoke(roomId, event.season, event.episode, event.startPositionSeconds)
                 }
                 is LobbyEvent.SystemNotice -> {
                     updateViewState { it.copy(systemNotice = event.message) }

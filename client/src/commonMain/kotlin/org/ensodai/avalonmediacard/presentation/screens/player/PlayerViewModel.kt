@@ -67,6 +67,7 @@ class PlayerViewModel(
     var onRequestOtherSourceCallback: (() -> Unit)? = null
     var onConfirmSourceCallback: (() -> Unit)? = null
     var lastPersistedSeconds: Long = -1L
+    var seekDebounceJob: Job? = null
     private var syncJob: Job? = null
     private var syncEventsJob: Job? = null
     private var metadataJob: Job? = null
@@ -106,6 +107,9 @@ class PlayerViewModel(
                             is WatchRoomEvent.ParticipantsUpdated -> {
                                 updateViewState { it.copy(watchRoomParticipants = event.participants) }
                             }
+                            is WatchRoomEvent.ReturnedToLobby -> {
+                                actions.onCloseClicked()
+                            }
                             else -> {}
                         }
                     }
@@ -126,12 +130,10 @@ class PlayerViewModel(
     }
 
     fun detachController() {
-        if (viewState.value.mode != PlayerMode.WATCH_PARTY) {
-            syncEventsJob?.cancel()
-            syncEventsJob = null
-            syncController?.stop()
-            syncController = null
-        }
+        syncEventsJob?.cancel()
+        syncEventsJob = null
+        syncController?.stop()
+        syncController = null
         activeController = null
     }
 
@@ -287,7 +289,7 @@ class PlayerViewModel(
                         ?: fullPlaylist.find { it.url == fullUrl }
                     val resolvedTitle = targetEpisode?.episodeName ?: targetEpisode?.title ?: viewState.value.title
                     val startPosition = if (viewState.value.mode == PlayerMode.WATCH_PARTY) {
-                        0L
+                        params.startPositionSeconds ?: 0L
                     } else {
                         result.startPositionSeconds ?: targetEpisode?.watchedProgressSeconds ?: 0L
                     }

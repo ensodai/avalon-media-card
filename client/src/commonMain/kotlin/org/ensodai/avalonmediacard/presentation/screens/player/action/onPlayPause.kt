@@ -1,6 +1,7 @@
 package org.ensodai.avalonmediacard.presentation.screens.player.action
 
 import androidx.lifecycle.viewModelScope
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import org.ensodai.avalonmediacard.core.togglePlatformFullscreen
 import org.ensodai.avalonmediacard.presentation.screens.player.PlayerViewModel
@@ -10,7 +11,7 @@ fun PlayerViewModel.onPlayPauseClicked() {
     val sync = syncController
     if (sync != null) {
         viewModelScope.launch {
-            if (activeController?.state?.isPlaying == true) {
+            if (viewState.value.isPlaying || activeController?.state?.isPlaying == true) {
                 sync.sendPause()
             } else {
                 sync.sendPlay()
@@ -27,16 +28,18 @@ fun PlayerViewModel.onPlayPauseClicked() {
 }
 
 fun PlayerViewModel.onSeek(targetSeconds: Double) {
+    updateViewState { state ->
+        state.copy(currentTime = targetSeconds)
+    }
     val sync = syncController
     if (sync != null) {
-        viewModelScope.launch {
+        seekDebounceJob?.cancel()
+        seekDebounceJob = viewModelScope.launch {
+            delay(250)
             sync.sendSeek(targetSeconds)
         }
     } else {
         activeController?.seek(targetSeconds)
-    }
-    updateViewState { state ->
-        state.copy(currentTime = targetSeconds)
     }
 }
 

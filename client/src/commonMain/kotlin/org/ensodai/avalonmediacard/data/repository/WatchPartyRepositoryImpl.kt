@@ -1,9 +1,14 @@
 package org.ensodai.avalonmediacard.data.repository
 
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.emitAll
+import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.stateIn
 import org.ensodai.avalonmediacard.contract.model.CreateRoomRequest
 import org.ensodai.avalonmediacard.contract.model.JoinRoomResult
 import org.ensodai.avalonmediacard.contract.model.LobbyEvent
@@ -22,13 +27,18 @@ class WatchPartyRepositoryImpl(
     private val rpcService: WatchPartyRpcService
 ) : WatchPartyRepository {
 
-    private val _userRoomsFlow = MutableStateFlow<List<WatchRoomSummaryDto>>(emptyList())
-    override val userRoomsFlow: StateFlow<List<WatchRoomSummaryDto>> = _userRoomsFlow.asStateFlow()
+    private val scope = CoroutineScope(SupervisorJob() + Dispatchers.Default)
+
+    override val userRoomsFlow: StateFlow<List<WatchRoomSummaryDto>> = flow {
+        emitAll(rpcService.streamUserRooms())
+    }.stateIn(
+        scope = scope,
+        started = SharingStarted.WhileSubscribed(5000),
+        initialValue = emptyList()
+    )
 
     override suspend fun refreshUserRooms(): List<WatchRoomSummaryDto> {
-        val rooms = rpcService.getUserRooms()
-        _userRoomsFlow.value = rooms
-        return rooms
+        return rpcService.getUserRooms()
     }
 
     override suspend fun createRoom(request: CreateRoomRequest): WatchRoomDto {
@@ -45,6 +55,9 @@ class WatchPartyRepositoryImpl(
 
     override suspend fun getSavedRoomsForMedia(mediaId: String): List<WatchRoomSummaryDto> =
         rpcService.getSavedRoomsForMedia(mediaId)
+
+    override fun streamSavedRoomsForMedia(mediaId: String): Flow<List<WatchRoomSummaryDto>> =
+        rpcService.streamSavedRoomsForMedia(mediaId)
 
     override suspend fun getUserRooms(): List<WatchRoomSummaryDto> =
         refreshUserRooms()

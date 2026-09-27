@@ -2,9 +2,14 @@ package org.ensodai.avalonmediacard.service.watchparty
 
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.NonCancellable
 import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.channels.BufferOverflow
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.asSharedFlow
+import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.flow.emitAll
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.onCompletion
@@ -20,7 +25,9 @@ import org.ensodai.avalonmediacard.contract.model.UserMovieItem
 import org.ensodai.avalonmediacard.contract.model.WatchRoomDto
 import org.ensodai.avalonmediacard.contract.model.WatchRoomEvent
 import org.ensodai.avalonmediacard.contract.model.WatchRoomParticipantRole
+import org.ensodai.avalonmediacard.contract.model.WatchRoomPhase
 import org.ensodai.avalonmediacard.contract.model.WatchRoomStatus
+import org.ensodai.avalonmediacard.contract.model.WatchRoomSummaryDto
 import org.ensodai.avalonmediacard.repository.UserEpisodeRepository
 import org.ensodai.avalonmediacard.repository.UserMovieRepository
 import org.ensodai.avalonmediacard.repository.watchparty.WatchRoomRepository
@@ -28,6 +35,7 @@ import org.koin.core.annotation.Single
 import org.slf4j.LoggerFactory
 import java.util.concurrent.ConcurrentHashMap
 import kotlin.time.Clock
+import kotlin.time.Duration.Companion.milliseconds
 import kotlin.uuid.Uuid
 
 /**
@@ -37,13 +45,24 @@ import kotlin.uuid.Uuid
 class WatchRoomSessionManager(
     private val watchRoomRepository: WatchRoomRepository,
     private val userMovieRepository: UserMovieRepository,
-    private val userEpisodeRepository: UserEpisodeRepository
+    private val userEpisodeRepository: UserEpisodeRepository,
+    private val scope: CoroutineScope = CoroutineScope(SupervisorJob() + Dispatchers.Default)
 ) {
     private val logger = LoggerFactory.getLogger(WatchRoomSessionManager::class.java)
-    private val scope = CoroutineScope(SupervisorJob() + Dispatchers.Default)
 
     // Активные сессии комнат в оперативной памяти
     private val sessions = ConcurrentHashMap<Uuid, WatchRoomSession>()
+
+    // Шина оповещений об изменениях в комнатах для реактивного стриминга
+    private val _roomUpdatesFlow = MutableSharedFlow<Uuid>(
+        extraBufferCapacity = 64,
+        onBufferOverflow = BufferOverflow.DROP_OLDEST
+    )
+    val roomUpdatesFlow: Flow<Uuid> = _roomUpdatesFlow.asSharedFlow()
+
+    fun notifyRoomUpdated(roomId: Uuid) {
+        _roomUpdatesFlow.tryEmit(roomId)
+    }
 
     /**
      * Получение существующей или восстановление сессии комнаты из БД.
@@ -78,15 +97,17 @@ class WatchRoomSessionManager(
             },
             onHostMigrated = { newHostId ->
                 watchRoomRepository.transferHost(roomDto.id, newHostId)
-            }
+            },
+            onRoomStateChanged = { updatedRoomId -> notifyRoomUpdated(updatedRoomId) }
         )
 
-        // Загружаем постоянных участников комнаты
+        // Загружаем постоянных участников комнаты из БД строго со статусом оффлайн
         roomDto.participants.forEach { p ->
             newSession.addOrUpdateParticipant(
                 userId = p.userId,
                 username = p.username,
-                role = p.role
+                role = p.role,
+                isOnline = false
             )
         }
 
@@ -121,18 +142,26 @@ class WatchRoomSessionManager(
             },
             onHostMigrated = { newHostId ->
                 watchRoomRepository.transferHost(roomDto.id, newHostId)
-            }
+            },
+            onRoomStateChanged = { updatedRoomId -> notifyRoomUpdated(updatedRoomId) }
         )
 
         session.addOrUpdateParticipant(
             userId = hostUser.userId,
             username = hostUser.username,
-            role = WatchRoomParticipantRole.HOST
+            role = WatchRoomParticipantRole.HOST,
+            isOnline = false
         )
 
         sessions[roomDto.id] = session
+        notifyRoomUpdated(roomDto.id)
         return session
     }
+
+    /**
+     * Получение активной сессии комнаты из памяти (если существует).
+     */
+    fun getActiveSession(roomId: Uuid): WatchRoomSession? = sessions[roomId]
 
     /**
      * Вход пользователя в комнату.
@@ -143,12 +172,15 @@ class WatchRoomSessionManager(
         val isHost = session.hostUserId == user.userId
         val role = if (isHost) WatchRoomParticipantRole.HOST else WatchRoomParticipantRole.MEMBER
 
-        session.addOrUpdateParticipant(user.userId, user.username, role)
+        session.addOrUpdateParticipant(user.userId, user.username, role, isOnline = false)
         watchRoomRepository.addParticipant(roomId, user.userId, role)
+        notifyRoomUpdated(roomId)
 
         val dbRoom = watchRoomRepository.findRoomById(roomId) ?: return null
         return dbRoom.copy(
-            participants = session.getParticipantList()
+            participants = session.getParticipantList(),
+            phase = session.phase,
+            lastPositionSeconds = session.getCurrentPositionSeconds()
         )
     }
 
@@ -161,6 +193,7 @@ class WatchRoomSessionManager(
             session.removeParticipant(userId)
         }
         watchRoomRepository.removeParticipant(roomId, userId)
+        notifyRoomUpdated(roomId)
         return true
     }
 
@@ -177,7 +210,66 @@ class WatchRoomSessionManager(
         session.close()
         sessions.remove(roomId)
         watchRoomRepository.updateRoomStatus(roomId, WatchRoomStatus.ARCHIVED)
+        notifyRoomUpdated(roomId)
         return true
+    }
+
+    suspend fun getUserRooms(userId: Uuid): List<WatchRoomSummaryDto> {
+        val dbRooms = watchRoomRepository.getRoomsForUser(userId)
+        return enrichRoomsWithLiveSessionState(dbRooms)
+    }
+
+    suspend fun getSavedRoomsForMedia(mediaId: String, currentUserId: Uuid): List<WatchRoomSummaryDto> {
+        val dbRooms = watchRoomRepository.getRoomsForMedia(mediaId, currentUserId)
+        return enrichRoomsWithLiveSessionState(dbRooms)
+    }
+
+    fun enrichRoomsWithLiveSessionState(rooms: List<WatchRoomSummaryDto>): List<WatchRoomSummaryDto> {
+        return rooms.map { room ->
+            val session = sessions[room.id]
+            if (session != null) {
+                val sessionPhase = session.phase
+                val participants = session.getParticipantList()
+                val posSec = session.getCurrentPositionSeconds()
+                room.copy(
+                    phase = sessionPhase,
+                    participants = participants,
+                    lastPositionSeconds = posSec,
+                    status = if (sessionPhase == WatchRoomPhase.PLAYING_IN_SYNC) WatchRoomStatus.ACTIVE else WatchRoomStatus.PAUSED
+                )
+            } else {
+                room.copy(
+                    phase = WatchRoomPhase.LOBBY
+                )
+            }
+        }
+    }
+
+    /**
+     * Реактивный поток актуального списка комнат пользователя.
+     * При подключении отдает текущий слепок, а затем пушит свежий список при любых событиях комнат.
+     */
+    @OptIn(FlowPreview::class)
+    fun streamUserRooms(userId: Uuid): Flow<List<WatchRoomSummaryDto>> = flow {
+        emit(getUserRooms(userId))
+        _roomUpdatesFlow
+            .debounce(100.milliseconds)
+            .collect {
+                emit(getUserRooms(userId))
+            }
+    }
+
+    /**
+     * Реактивный поток актуального списка сохраненных комнат для конкретного тайтла.
+     */
+    @OptIn(FlowPreview::class)
+    fun streamSavedRoomsForMedia(mediaId: String, currentUserId: Uuid): Flow<List<WatchRoomSummaryDto>> = flow {
+        emit(getSavedRoomsForMedia(mediaId, currentUserId))
+        _roomUpdatesFlow
+            .debounce(100.milliseconds)
+            .collect {
+                emit(getSavedRoomsForMedia(mediaId, currentUserId))
+            }
     }
 
     /**

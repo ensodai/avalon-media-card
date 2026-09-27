@@ -13,6 +13,8 @@ import org.ensodai.avalonmediacard.contract.model.RoomPlaybackCommand
 import org.ensodai.avalonmediacard.contract.model.SetLobbyStatusRequest
 import org.ensodai.avalonmediacard.contract.model.WatchRoomDto
 import org.ensodai.avalonmediacard.contract.model.WatchRoomEvent
+import org.ensodai.avalonmediacard.contract.model.WatchRoomPhase
+import org.ensodai.avalonmediacard.contract.model.WatchRoomStatus
 import org.ensodai.avalonmediacard.contract.model.WatchRoomSummaryDto
 import org.ensodai.avalonmediacard.contract.rpc.WatchPartyRpcService
 import kotlin.time.Clock
@@ -91,12 +93,30 @@ class WatchPartyRpcServiceImpl(
 
     override suspend fun getSavedRoomsForMedia(mediaId: String): List<WatchRoomSummaryDto> {
         val authUser = currentAuthorizedUser() ?: return emptyList()
-        return watchRoomRepository.getRoomsForMedia(mediaId, authUser.userId)
+        return watchRoomSessionManager.getSavedRoomsForMedia(mediaId, authUser.userId)
+    }
+
+    override fun streamSavedRoomsForMedia(mediaId: String): Flow<List<WatchRoomSummaryDto>> = flow {
+        val authUser = currentAuthorizedUser()
+        if (authUser == null) {
+            emit(emptyList())
+            return@flow
+        }
+        emitAll(watchRoomSessionManager.streamSavedRoomsForMedia(mediaId, authUser.userId))
     }
 
     override suspend fun getUserRooms(): List<WatchRoomSummaryDto> {
         val authUser = currentAuthorizedUser() ?: return emptyList()
-        return watchRoomRepository.getRoomsForUser(authUser.userId)
+        return watchRoomSessionManager.getUserRooms(authUser.userId)
+    }
+
+    override fun streamUserRooms(): Flow<List<WatchRoomSummaryDto>> = flow {
+        val authUser = currentAuthorizedUser()
+        if (authUser == null) {
+            emit(emptyList())
+            return@flow
+        }
+        emitAll(watchRoomSessionManager.streamUserRooms(authUser.userId))
     }
 
     override suspend fun leaveRoom(roomId: Uuid): Boolean {

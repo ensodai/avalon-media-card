@@ -11,7 +11,10 @@ import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.layout.positionInWindow
 import kotlinx.browser.document
 import kotlinx.browser.window
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.isActive
+import kotlinx.coroutines.launch
 import org.ensodai.avalonmediacard.contract.model.EntityType
 import org.ensodai.avalonmediacard.contract.plugins.AudioTrack
 import org.ensodai.avalonmediacard.contract.plugins.MediaStream
@@ -259,6 +262,7 @@ class VideoElementPlaybackController(
     private var intentToPlay = true
     var isSeeking = false
         private set
+    private var bufferCheckJob: Job? = null
 
     override fun setVolume(volume: Double) {
         val clamped = volume.coerceIn(0.0, 1.0)
@@ -268,6 +272,17 @@ class VideoElementPlaybackController(
 
     init {
         setupEventListeners()
+        startBufferCheckLoop()
+    }
+
+    private fun startBufferCheckLoop() {
+        bufferCheckJob?.cancel()
+        bufferCheckJob = playbackScope.launch {
+            while (isActive) {
+                delay(BUFFERING_CHECK_INTERVAL.milliseconds)
+                evaluateBufferState()
+            }
+        }
     }
 
     private fun setupEventListeners() {
@@ -297,7 +312,11 @@ class VideoElementPlaybackController(
                     val isNearEnd = state.duration > 0.0 && (videoElement.currentTime + currentBufferAhead) >= (state.duration - 0.5)
                     val readyState = videoElement.asDynamic().readyState as? Int ?: 0
                     val hasSufficientBuffer = readyState >= 3 || currentBufferAhead >= MIN_BUFFER_TO_PLAY || isNearEnd
-                    val isReady = readyState >= 2 && hasSufficientBuffer
+                    val isReady = if (intentToPlay) {
+                        readyState >= 2 && hasSufficientBuffer
+                    } else {
+                        readyState >= 2
+                    }
                     if (isReady) {
                         setBuffering(false)
                         if (intentToPlay) {
@@ -359,7 +378,12 @@ class VideoElementPlaybackController(
         val hasSufficientBuffer = (videoElement.asDynamic().readyState as? Int ?: 0) >= 3 || currentBufferAhead >= MIN_BUFFER_TO_PLAY || isNearEnd
 
         if (state.isBuffering) {
-            if (isVideoReady && hasSufficientBuffer) {
+            val canClearBuffering = if (intentToPlay) {
+                isVideoReady && hasSufficientBuffer
+            } else {
+                isVideoReady
+            }
+            if (canClearBuffering) {
                 setBuffering(false)
                 if (intentToPlay) {
                     safePlayJs(videoElement)
@@ -398,6 +422,15 @@ class VideoElementPlaybackController(
         intentToPlay = false
         videoElement.pause()
         state.isPlaying = false
+        val readyState = videoElement.asDynamic().readyState as? Int ?: 0
+        if (readyState >= 2 && !isSeeking) {
+            setBuffering(false)
+        }
+    }
+
+    override fun stop() {
+        bufferCheckJob?.cancel()
+        super.stop()
     }
 
     override fun seek(time: Double) {

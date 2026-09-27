@@ -225,12 +225,6 @@ class ClientSyncController(
                 }
                 return
             }
-            if (lastSeek != null && (now - lastSeek) < HARD_SEEK_COOLDOWN) {
-                logger.d {
-                    "[TrueSync:Client] Seek skipped ($reason): player is buffering and seek cooldown is active (${(now - lastSeek).inWholeMilliseconds} ms < ${HARD_SEEK_COOLDOWN_MS} ms)"
-                }
-                return
-            }
         }
 
         lastHardSeekTime = now
@@ -290,7 +284,7 @@ class ClientSyncController(
                         logger.w(e) { "Failed to report buffer stall after preroll" }
                     }
                 }
-            } else if (underlyingController.state.duration > 0.0) {
+            } else {
                 underlyingController.play()
                 startDriftLoop()
             }
@@ -378,7 +372,8 @@ class ClientSyncController(
                         is WatchRoomEvent.SyncState -> handleSyncState(event)
                         is WatchRoomEvent.ParticipantsUpdated,
                         is WatchRoomEvent.ReactionTriggered,
-                        is WatchRoomEvent.SystemNotice -> {
+                        is WatchRoomEvent.SystemNotice,
+                        is WatchRoomEvent.ReturnedToLobby -> {
                             // Передаются подписчикам через flow roomEvents
                         }
                     }

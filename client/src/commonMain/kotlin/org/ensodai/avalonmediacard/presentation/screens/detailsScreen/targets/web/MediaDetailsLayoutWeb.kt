@@ -154,7 +154,7 @@ fun MediaDetailsLayoutWeb(
             onAction = onAction,
             initialStep = WatchPartyStep.SETUP,
             onClose = { onCloseWatchParty?.invoke() },
-            onStartPlayback = { roomId, season, episode ->
+            onStartPlayback = { roomId, season, episode, startPositionSeconds ->
                 onCloseWatchParty?.invoke()
                 state.mediaKey?.let { key ->
                     launchPlayerOverlay(
@@ -165,6 +165,7 @@ fun MediaDetailsLayoutWeb(
                             mediaKey = key,
                             targetSeason = season,
                             targetEpisode = episode,
+                            startPositionSeconds = startPositionSeconds,
                             mode = PlayerMode.WATCH_PARTY,
                             watchRoomId = roomId
                         )

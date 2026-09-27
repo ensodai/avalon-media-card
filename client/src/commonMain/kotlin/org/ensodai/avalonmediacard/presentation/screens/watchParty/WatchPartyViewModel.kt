@@ -55,9 +55,10 @@ class WatchPartyViewModel(
     initialState = WatchPartyViewState()
 ) {
     var onCloseRequested: (() -> Unit)? = null
-    var onLaunchPlayerRequested: ((roomId: Uuid, season: Int?, episode: Int?) -> Unit)? = null
+    var onLaunchPlayerRequested: ((roomId: Uuid, season: Int?, episode: Int?, startPositionSeconds: Long) -> Unit)? = null
 
     internal var eventStreamJob: Job? = null
+    internal var savedRoomsStreamJob: Job? = null
 
     override val actions = WatchPartyActions(
         onSetStep = ::onSetStep,
@@ -78,10 +79,10 @@ class WatchPartyViewModel(
         onStartPlayback = ::onStartPlayback,
         onLeaveRoom = ::onLeaveRoom,
         onClose = {
-            if (viewState.value.step == WatchPartyStep.LOBBY && !viewState.value.isStartingPlayback) {
-                eventStreamJob?.cancel()
-                eventStreamJob = null
-            }
+            eventStreamJob?.cancel()
+            eventStreamJob = null
+            savedRoomsStreamJob?.cancel()
+            savedRoomsStreamJob = null
             onCloseRequested?.invoke()
         }
     )
@@ -89,5 +90,6 @@ class WatchPartyViewModel(
     override fun onCleared() {
         super.onCleared()
         eventStreamJob?.cancel()
+        savedRoomsStreamJob?.cancel()
     }
 }

@@ -504,4 +504,10 @@
     <string name="watch_party_you">You</string>
     <string name="watch_party_participants_header">Live</string>
     <string name="watch_party_participants_count">%1$d online</string>
+    <string name="watch_party_btn_join_playback">Join Playback</string>
+    <string name="watch_party_live_badge">Live</string>
+    <string name="watch_party_in_lobby_badge">In Lobby</string>
+    <string name="watch_party_paused_at">Paused: %1$s</string>
+    <string name="watch_party_online_watching">%1$d watching</string>
+    <string name="watch_party_online_in_lobby">%1$d in lobby</string>
 </resources>

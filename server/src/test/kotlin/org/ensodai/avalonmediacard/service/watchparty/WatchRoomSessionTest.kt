@@ -33,6 +33,7 @@ class WatchRoomSessionTest {
         val hostId = Uuid.random()
         val guestId = Uuid.random()
 
+        val actualScope = (testScope as? kotlinx.coroutines.test.TestScope)?.backgroundScope ?: testScope
         val session = WatchRoomSession(
             roomId = roomId,
             mediaId = "test_media_123",
@@ -42,7 +43,7 @@ class WatchRoomSessionTest {
             initialSeason = 1,
             initialEpisode = 1,
             initialPositionSeconds = 0L,
-            scope = testScope,
+            scope = actualScope,
             onProgressChanged = { _, _, _ -> },
             onHostMigrated = { _ -> }
         )
@@ -499,5 +500,151 @@ class WatchRoomSessionTest {
         advanceTimeBy(1600.milliseconds)
         runCurrent()
         assertEquals(RoomPhase.PLAYING_IN_SYNC, session.phase)
+    }
+
+    @Test
+    fun test_all_participants_disconnect_auto_pauses_and_resets_to_lobby() = runTest {
+        var savedProgressSec = -1L
+        val roomId = Uuid.random()
+        val hostId = Uuid.random()
+
+        val session = WatchRoomSession(
+            roomId = roomId,
+            mediaId = "test_media_123",
+            title = "Test Party",
+            hostUserId = hostId,
+            controlMode = WatchRoomControlMode.HOST_ONLY,
+            initialSeason = 1,
+            initialEpisode = 1,
+            initialPositionSeconds = 0L,
+            scope = this,
+            onProgressChanged = { _, _, posSec -> savedProgressSec = posSec },
+            onHostMigrated = { _ -> }
+        )
+
+        session.handleClientConnected(hostId, "HostUser", WatchRoomParticipantRole.HOST)
+        session.handleCommand(hostId, RoomPlaybackCommand.Play(positionMs = 5000L))
+        advanceTimeBy(1600.milliseconds)
+        runCurrent()
+
+        assertEquals(RoomPhase.PLAYING_IN_SYNC, session.phase)
+        assertTrue(session.isActivelyPlaying())
+
+        // Все выходят (хост отключился)
+        session.handleClientDisconnected(hostId)
+        runCurrent()
+
+        // Комната должна перейти в LOBBY и сохранить прогресс
+        assertEquals(RoomPhase.LOBBY, session.phase)
+        assertFalse(session.isActivelyPlaying())
+        assertEquals(0, session.getOnlineCount())
+        assertEquals(5L, savedProgressSec)
+    }
+
+    @Test
+    fun test_subscribe_lobby_does_not_emit_transition_if_in_lobby() = runTest {
+        val (session, hostId, _) = createSession(this)
+        session.handleClientConnected(hostId, "HostUser", WatchRoomParticipantRole.HOST)
+
+        val events = mutableListOf<LobbyEvent>()
+        val job = launch {
+            session.subscribeLobby().collect { events.add(it) }
+        }
+        runCurrent()
+
+        assertEquals(1, events.size)
+        assertTrue(events[0] is LobbyEvent.InitialSnapshot)
+
+        // Переводим в воспроизведение
+        session.handleCommand(hostId, RoomPlaybackCommand.Play(positionMs = 0L))
+        advanceTimeBy(1600.milliseconds)
+        runCurrent()
+        assertEquals(RoomPhase.PLAYING_IN_SYNC, session.phase)
+
+        // Подключающийся в PLAYING_IN_SYNC сразу получает TransitionToPlayer
+        val secondSubscriberEvents = mutableListOf<LobbyEvent>()
+        val job2 = launch {
+            session.subscribeLobby().collect { secondSubscriberEvents.add(it) }
+        }
+        runCurrent()
+
+        assertTrue(secondSubscriberEvents.any { it is LobbyEvent.TransitionToPlayer })
+
+        job.cancel()
+        job2.cancel()
+    }
+
+    /**
+     * ТЕСТ-БАГ 1: Восстановление участников из БД после перезагрузки сервера.
+     * Ни один клиент еще не установил WebSocket соединение, поэтому онлайн должен быть 0,
+     * а все участники должны быть isOnline = false.
+     */
+    @Test
+    fun test_restored_participants_from_db_must_be_offline_initially() = runTest {
+        val (session, hostId, guestId) = createSession(this)
+
+        // Имитируем то, как WatchRoomSessionManager загружает постоянных участников из БД
+        session.addOrUpdateParticipant(hostId, "HostUser", WatchRoomParticipantRole.HOST)
+        session.addOrUpdateParticipant(guestId, "GuestUser", WatchRoomParticipantRole.MEMBER)
+
+        // ПРОВЕРКА: Ни один клиент еще не подключился по WebSocket (не вызвал handleClientConnected)
+        assertEquals(0, session.getOnlineCount(), "При инициализации из БД онлайн должен быть 0, пока клиенты не подключились!")
+        val participants = session.getParticipantList()
+        assertFalse(participants.first { it.userId == hostId }.isOnline, "Хост не должен быть онлайн до реального подключения WebSocket")
+        assertFalse(participants.first { it.userId == guestId }.isOnline, "Гость не должен быть онлайн до реального подключения WebSocket")
+    }
+
+    /**
+     * ТЕСТ-БАГ 2: Динамика в лобби — вход, выход и закрытие обоими участниками.
+     * Проверяем живые события LobbyEvent в потоке и итоговое обнуление онлайна при выходе.
+     */
+    @Test
+    fun test_lobby_live_online_and_offline_updates_when_users_enter_and_leave() = runTest {
+        val (session, hostId, guestId) = createSession(this)
+        val connHost = Uuid.random()
+        val connGuest = Uuid.random()
+
+        // 1. Хост заходит в лобби и подписывается на поток
+        session.handleClientConnected(hostId, "HostUser", WatchRoomParticipantRole.HOST, connHost)
+        val hostEvents = mutableListOf<LobbyEvent>()
+        val hostCollectJob = launch {
+            session.subscribeLobby().collect { hostEvents.add(it) }
+        }
+        runCurrent()
+
+        // В снепшоте только хост онлайн
+        val initialSnapshot = hostEvents.filterIsInstance<LobbyEvent.InitialSnapshot>().first()
+        assertEquals(1, initialSnapshot.participants.count { it.isOnline })
+
+        // 2. Гость подключается со 2-го аккаунта
+        session.handleClientConnected(guestId, "GuestUser", WatchRoomParticipantRole.MEMBER, connGuest)
+        runCurrent()
+
+        assertEquals(2, session.getOnlineCount())
+        val guestJoinedEvent = hostEvents.filterIsInstance<LobbyEvent.ParticipantUpdated>().lastOrNull()
+        assertNotNull(guestJoinedEvent)
+        assertEquals(guestId, guestJoinedEvent.participant.userId)
+        assertTrue(guestJoinedEvent.participant.isOnline, "Хост должен получить событие, что Гость теперь онлайн")
+
+        // 3. Гость закрывает лобби (дисконнект WebSocket)
+        session.handleClientDisconnected(guestId, connGuest)
+        runCurrent()
+
+        assertEquals(1, session.getOnlineCount())
+        val guestLeftEvent = hostEvents.filterIsInstance<LobbyEvent.ParticipantUpdated>().lastOrNull()
+        assertNotNull(guestLeftEvent)
+        assertEquals(guestId, guestLeftEvent.participant.userId)
+        assertFalse(guestLeftEvent.participant.isOnline, "Хост должен получить событие, что Гость теперь оффлайн")
+
+        // 4. Хост тоже закрывает лобби (дисконнект WebSocket)
+        session.handleClientDisconnected(hostId, connHost)
+        runCurrent()
+
+        assertEquals(0, session.getOnlineCount(), "Когда оба закрыли лобби, онлайн в сессии обязан быть 0!")
+        val finalParticipants = session.getParticipantList()
+        assertFalse(finalParticipants.first { it.userId == hostId }.isOnline)
+        assertFalse(finalParticipants.first { it.userId == guestId }.isOnline)
+
+        hostCollectJob.cancel()
     }
 }

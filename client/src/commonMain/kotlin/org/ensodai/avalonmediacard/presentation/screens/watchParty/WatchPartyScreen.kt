@@ -54,7 +54,7 @@ fun WatchPartyScreen(
     onAction: (Action) -> Unit = {},
     initialStep: WatchPartyStep? = null,
     onClose: () -> Unit,
-    onStartPlayback: ((roomId: Uuid, season: Int?, episode: Int?) -> Unit)? = null,
+    onStartPlayback: ((roomId: Uuid, season: Int?, episode: Int?, startPositionSeconds: Long) -> Unit)? = null,
     viewModel: WatchPartyViewModel = koinInject(),
     mediaSourcesViewModel: MediaSourcesViewModel = koinInject()
 ) {
@@ -79,10 +79,8 @@ fun WatchPartyScreen(
         onDispose {
             viewModel.onCloseRequested = null
             viewModel.onLaunchPlayerRequested = null
-            if (viewModel.viewState.value.step == WatchPartyStep.LOBBY && !viewModel.viewState.value.isStartingPlayback) {
-                viewModel.eventStreamJob?.cancel()
-                viewModel.eventStreamJob = null
-            }
+            viewModel.eventStreamJob?.cancel()
+            viewModel.eventStreamJob = null
         }
     }
 

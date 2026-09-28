@@ -594,6 +594,7 @@ class WatchRoomSession(
                         roomId, userId, command.targetPositionMs
                     )
                     emitCurrentSyncState(userId)
+                    notifyRoomStateChanged()
                 }
                 onProgressChanged(currentSeason, currentEpisode, command.targetPositionMs / 1000L)
                 true
@@ -1061,12 +1062,19 @@ class WatchRoomSession(
     private fun startPeriodicProgressPersistenceLocked() {
         progressPersistenceJob?.cancel()
         progressPersistenceJob = scope.launch {
+            var syncTicks = 0
             while (isActive) {
                 delay(5000L)
                 mutex.withLock {
                     if (phase == RoomPhase.PLAYING_IN_SYNC) {
                         val posSeconds = getCurrentPositionSeconds()
                         onProgressChanged(currentSeason, currentEpisode, posSeconds)
+                        syncTicks++
+                        // Каждые 60 секунд (12 тиков по 5 сек) делаем мягкую синхронизацию комнаты для дашборда
+                        if (syncTicks >= 12) {
+                            syncTicks = 0
+                            notifyRoomStateChanged()
+                        }
                     }
                 }
             }

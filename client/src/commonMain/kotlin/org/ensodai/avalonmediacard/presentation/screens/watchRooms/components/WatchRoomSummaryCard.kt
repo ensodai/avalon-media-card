@@ -8,6 +8,8 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.produceState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -19,6 +21,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import avalonmediacard.client.generated.resources.*
+import kotlinx.coroutines.delay
 import org.ensodai.avalonmediacard.contract.model.MediaType
 import org.ensodai.avalonmediacard.contract.model.WatchRoomParticipantDto
 import org.ensodai.avalonmediacard.contract.model.WatchRoomParticipantRole
@@ -27,6 +30,8 @@ import org.ensodai.avalonmediacard.contract.model.WatchRoomSummaryDto
 import org.ensodai.avalonmediacard.presentation.components.ShimmerImage
 import org.ensodai.avalonmediacard.presentation.screens.commonComponents.tvAndWebHoverEffect
 import org.jetbrains.compose.resources.stringResource
+import kotlin.time.Clock
+import kotlin.time.Duration.Companion.milliseconds
 
 @Composable
 fun WatchRoomSummaryCard(
@@ -37,6 +42,25 @@ fun WatchRoomSummaryCard(
     val isLive = room.phase == WatchRoomPhase.PLAYING_IN_SYNC || room.phase == WatchRoomPhase.STARTING_SCHEDULED
     val isBuffering = room.phase == WatchRoomPhase.PREPARING || room.phase == WatchRoomPhase.PARTIAL_BUFFERING
     val isPaused = room.phase == WatchRoomPhase.FORCE_PAUSED
+
+    // Плавный локальный тикер времени во время активного LIVE-воспроизведения (TrueSync) без спама по сети
+    val currentPositionSeconds by produceState(
+        initialValue = room.lastPositionSeconds,
+        key1 = room.id,
+        key2 = room.lastPositionSeconds,
+        key3 = isLive
+    ) {
+        value = room.lastPositionSeconds
+        if (isLive) {
+            val startLocalTime = Clock.System.now()
+            val baseSeconds = room.lastPositionSeconds
+            while (true) {
+                delay(1000.milliseconds)
+                val elapsed = (Clock.System.now() - startLocalTime).inWholeSeconds
+                value = baseSeconds + elapsed
+            }
+        }
+    }
 
     Box(
         modifier = modifier
@@ -127,8 +151,8 @@ fun WatchRoomSummaryCard(
                                         .clip(CircleShape)
                                         .background(Color(0xFF4CAF50))
                                 )
-                                val timeStr = if (room.lastPositionSeconds > 0L) {
-                                    " • ${formatTimeSeconds(room.lastPositionSeconds)}"
+                                val timeStr = if (currentPositionSeconds > 0L) {
+                                    " • ${formatTimeSeconds(currentPositionSeconds)}"
                                 } else ""
                                 Text(
                                     text = "${stringResource(Res.string.watch_party_live_badge)}$timeStr",
@@ -147,8 +171,8 @@ fun WatchRoomSummaryCard(
                                 .border(1.dp, Color(0xFF2196F3).copy(alpha = 0.60f), RoundedCornerShape(6.dp))
                                 .padding(horizontal = 8.dp, vertical = 3.dp)
                         ) {
-                            val pauseLabel = if (room.lastPositionSeconds > 0L) {
-                                stringResource(Res.string.watch_party_paused_at, formatTimeSeconds(room.lastPositionSeconds))
+                            val pauseLabel = if (currentPositionSeconds > 0L) {
+                                stringResource(Res.string.watch_party_paused_at, formatTimeSeconds(currentPositionSeconds))
                             } else {
                                 stringResource(Res.string.watch_party_status_paused)
                             }

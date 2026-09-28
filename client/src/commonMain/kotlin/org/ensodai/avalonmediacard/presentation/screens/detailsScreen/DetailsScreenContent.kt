@@ -10,6 +10,8 @@ import org.ensodai.avalonmediacard.presentation.screens.detailsScreen.targets.mo
 import org.ensodai.avalonmediacard.presentation.screens.detailsScreen.targets.tv.MediaDetailsLayoutTv
 import org.ensodai.avalonmediacard.presentation.screens.detailsScreen.targets.web.MediaDetailsLayoutWeb
 import org.ensodai.avalonmediacard.presentation.screens.detailsScreen.viewState.DetailsViewState
+import org.ensodai.avalonmediacard.presentation.screens.watchParty.viewState.WatchPartyStep
+import kotlin.uuid.Uuid
 
 private val logger = AppLogging.logger("DetailsContent")
 
@@ -23,7 +25,7 @@ fun DetailsContent(
     onCloseSources: (() -> Unit)? = null,
     onSelectSource: ((providerId: String, sourceId: String, seasonNumber: Int?, episodeNumber: Int?, onComplete: () -> Unit) -> Unit)? = null,
     onRefreshSources: (() -> Unit)? = null,
-    onOpenWatchParty: (() -> Unit)? = null,
+    onOpenWatchParty: ((step: WatchPartyStep, roomId: Uuid?) -> Unit)? = null,
     onCloseWatchParty: (() -> Unit)? = null,
 ) {
     logger.d { "[PROFILING] DetailsContent RECOMPOSE (Header state: ${state.header?.state?.let { it::class.simpleName }}): ${Clock.System.now()}" }

@@ -26,6 +26,7 @@ import org.ensodai.avalonmediacard.presentation.screens.player.model.PlayerInitP
 import org.ensodai.avalonmediacard.presentation.screens.player.model.PlayerMode
 import org.ensodai.avalonmediacard.presentation.screens.watchParty.WatchPartyScreen
 import org.ensodai.avalonmediacard.presentation.screens.watchParty.viewState.WatchPartyStep
+import kotlin.uuid.Uuid
 
 @Composable
 fun MediaDetailsLayoutWeb(
@@ -37,7 +38,7 @@ fun MediaDetailsLayoutWeb(
     onCloseSources: (() -> Unit)? = null,
     onSelectSource: ((providerId: String, sourceId: String, seasonNumber: Int?, episodeNumber: Int?, onComplete: () -> Unit) -> Unit)? = null,
     onRefreshSources: (() -> Unit)? = null,
-    onOpenWatchParty: (() -> Unit)? = null,
+    onOpenWatchParty: ((step: WatchPartyStep, roomId: Uuid?) -> Unit)? = null,
     onCloseWatchParty: (() -> Unit)? = null,
 ) {
     val isPlayerOpen = state.playerState !is DetailsViewState.PlayerState.Idle
@@ -73,7 +74,7 @@ fun MediaDetailsLayoutWeb(
                 scrollOffset = scrollState.value,
                 heroHeight = heroHeight,
                 onRequestOtherSource = onRequestOtherSource,
-                onOpenWatchParty = onOpenWatchParty
+                onOpenWatchParty = onOpenWatchParty?.let { cb -> { cb(WatchPartyStep.SETUP, null) } }
             )
 
             // 2. Centered Content Body (max-width: 1320dp)
@@ -152,7 +153,8 @@ fun MediaDetailsLayoutWeb(
             torrentInspectorState = state.torrentInspector?.state,
             onRefreshSources = onRefreshSources,
             onAction = onAction,
-            initialStep = WatchPartyStep.SETUP,
+            initialStep = state.watchPartyInitialStep,
+            initialRoomId = state.watchPartyRoomId,
             onClose = { onCloseWatchParty?.invoke() },
             onStartPlayback = { roomId, season, episode, startPositionSeconds ->
                 onCloseWatchParty?.invoke()
@@ -167,8 +169,12 @@ fun MediaDetailsLayoutWeb(
                             targetEpisode = episode,
                             startPositionSeconds = startPositionSeconds,
                             mode = PlayerMode.WATCH_PARTY,
-                            watchRoomId = roomId
-                        )
+                            watchRoomId = roomId,
+                            isHost = true
+                        ),
+                        onReturnToLobby = { retRoomId ->
+                            onOpenWatchParty?.invoke(WatchPartyStep.LOBBY, retRoomId)
+                        }
                     )
                 }
             }

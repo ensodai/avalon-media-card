@@ -18,9 +18,11 @@ import org.ensodai.avalonmediacard.domain.useCases.playback.SearchMediaSourcesUs
 import org.ensodai.avalonmediacard.domain.useCases.playback.SelectMediaSourceUseCase
 import org.ensodai.avalonmediacard.presentation.core.*
 import org.ensodai.avalonmediacard.presentation.screens.detailsScreen.viewState.DetailsViewState
+import org.ensodai.avalonmediacard.presentation.screens.watchParty.viewState.WatchPartyStep
 import org.koin.core.annotation.InjectedParam
 import org.koin.core.annotation.KoinViewModel
 import kotlin.time.Clock
+import kotlin.uuid.Uuid
 
 @KoinViewModel
 class DetailsViewModel(
@@ -402,12 +404,24 @@ class DetailsViewModel(
         updateViewState { it.copy(isSourcesExpanded = expanded) }
     }
 
-    fun openWatchParty() {
-        updateViewState { it.copy(isWatchPartyOpen = true) }
+    fun openWatchParty(step: WatchPartyStep = WatchPartyStep.SETUP, roomId: Uuid? = null) {
+        updateViewState {
+            it.copy(
+                isWatchPartyOpen = true,
+                watchPartyInitialStep = step,
+                watchPartyRoomId = roomId
+            )
+        }
     }
 
     fun closeWatchParty() {
-        updateViewState { it.copy(isWatchPartyOpen = false) }
+        updateViewState {
+            it.copy(
+                isWatchPartyOpen = false,
+                watchPartyInitialStep = WatchPartyStep.SETUP,
+                watchPartyRoomId = null
+            )
+        }
     }
 
     fun closePlayer() {

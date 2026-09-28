@@ -82,8 +82,12 @@ fun WatchPartyViewModel.initialize(
 
     if (!isDifferentMedia && viewState.value.activeRoom != null && viewState.value.step == WatchPartyStep.LOBBY) {
         if (initialStep == null || initialStep == WatchPartyStep.LOBBY) {
-            if (title != null && viewState.value.mediaTitle.isBlank()) {
-                updateViewState { it.copy(mediaTitle = title) }
+            updateViewState {
+                it.copy(
+                    isStartingPlayback = false,
+                    isActionPending = false,
+                    mediaTitle = if (title != null && it.mediaTitle.isBlank()) title else it.mediaTitle
+                )
             }
             return
         }
@@ -114,7 +118,9 @@ fun WatchPartyViewModel.initialize(
             isSelectingSource = false,
             roomTitleInput = if (isDifferentMedia) "" else it.roomTitleInput,
             createError = null,
-            joinError = null
+            joinError = null,
+            isStartingPlayback = false,
+            isActionPending = false
         )
     }
     if (mediaKey != null) {
@@ -193,7 +199,9 @@ fun WatchPartyViewModel.onJoinByPin() {
                         participantsMap = room.participants.associateBy { p -> p.userId },
                         isHost = isHost,
                         step = WatchPartyStep.LOBBY,
-                        isJoining = false
+                        isJoining = false,
+                        isStartingPlayback = false,
+                        isActionPending = false
                     )
                 }
                 subscribeToLobbyState(room.id)
@@ -238,7 +246,9 @@ fun WatchPartyViewModel.onJoinById(roomId: Uuid) {
                         participantsMap = room.participants.associateBy { p -> p.userId },
                         isHost = isHost,
                         step = WatchPartyStep.LOBBY,
-                        isJoining = false
+                        isJoining = false,
+                        isStartingPlayback = false,
+                        isActionPending = false
                     )
                 }
                 subscribeToLobbyState(room.id)
@@ -379,7 +389,9 @@ fun WatchPartyViewModel.onCreateRoom() {
                     participantsMap = room.participants.associateBy { p -> p.userId },
                     isHost = true,
                     step = WatchPartyStep.LOBBY,
-                    isCreatingRoom = false
+                    isCreatingRoom = false,
+                    isStartingPlayback = false,
+                    isActionPending = false
                 )
             }
             subscribeToLobbyState(room.id)
@@ -441,7 +453,10 @@ fun WatchPartyViewModel.onStartPlayback() {
     viewModelScope.launch {
         updateViewState { it.copy(isStartingPlayback = true) }
         try {
-            triggerStartPlaybackUseCase(room.id)
+            val success = triggerStartPlaybackUseCase(room.id)
+            if (!success) {
+                updateViewState { it.copy(isStartingPlayback = false) }
+            }
         } catch (_: Exception) {
             updateViewState { it.copy(isStartingPlayback = false) }
         }
@@ -519,7 +534,8 @@ fun WatchPartyViewModel.subscribeToLobbyState(roomId: Uuid) {
                                 ),
                                 myIsReady = me?.isReady ?: it.myIsReady,
                                 myIntent = if (me?.isReady == true) me.intent else null,
-                                isActionPending = false
+                                isActionPending = false,
+                                isStartingPlayback = false
                             )
                         }
                     }
@@ -561,6 +577,7 @@ fun WatchPartyViewModel.subscribeToLobbyState(roomId: Uuid) {
                     is LobbyEvent.TransitionToPlayer -> {
                         eventStreamJob?.cancel()
                         eventStreamJob = null
+                        updateViewState { it.copy(isStartingPlayback = false) }
                         onLaunchPlayerRequested?.invoke(roomId, event.season, event.episode, event.startPositionSeconds)
                     }
                     is LobbyEvent.SystemNotice -> {

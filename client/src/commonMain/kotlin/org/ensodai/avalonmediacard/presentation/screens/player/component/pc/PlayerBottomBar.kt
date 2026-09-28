@@ -23,6 +23,7 @@ import org.ensodai.avalonmediacard.presentation.screens.commonComponents.tvAndWe
 import avalonmediacard.client.generated.resources.*
 import org.ensodai.avalonmediacard.presentation.screens.player.action.PlayerActions
 import org.ensodai.avalonmediacard.presentation.screens.player.component.PremiumSeekBar
+import org.ensodai.avalonmediacard.presentation.screens.player.model.PlayerMode
 import org.ensodai.avalonmediacard.presentation.screens.player.viewState.PlayerViewState
 import org.jetbrains.compose.resources.stringResource
 
@@ -429,45 +430,61 @@ fun PlayerBottomBar(
                 }
 
                 // Settings (Gear Icon) for Popups
-                Box(modifier = Modifier.wrapContentSize(Alignment.BottomEnd)) {
-                    var showSettings by remember { mutableStateOf(false) }
+                val isWatchParty = state.mode == PlayerMode.WATCH_PARTY
+                val canShowSettings = !isWatchParty || state.isEffectiveHost
 
-                    Box(
-                        modifier = Modifier
-                            .size(36.dp)
-                            .tvAndWebHoverEffect(
-                                scaleTarget = 1.15f,
-                                shape = CircleShape,
-                                activeBorderColor = Color.Transparent,
-                                onClick = { showSettings = true }
-                            )
-                            .clip(CircleShape),
-                        contentAlignment = Alignment.Center
-                    ) {
-                        Icon(
-                            imageVector = Lucide.Settings,
-                            contentDescription = stringResource(Res.string.player_settings_title),
-                            tint = Color.White,
-                            modifier = Modifier.size(22.dp)
-                        )
-                    }
+                if (canShowSettings) {
+                    Box(modifier = Modifier.wrapContentSize(Alignment.BottomEnd)) {
+                        var showSettings by remember { mutableStateOf(false) }
 
-                    if (showSettings) {
-                        val density = LocalDensity.current
-                        AvalonDropdownMenu(
-                            expanded = showSettings,
-                            alignment = Alignment.BottomEnd,
-                            offset = IntOffset(0, with(density) { -48.dp.roundToPx() }),
-                            onDismissRequest = { showSettings = false }
+                        Box(
+                            modifier = Modifier
+                                .size(36.dp)
+                                .tvAndWebHoverEffect(
+                                    scaleTarget = 1.15f,
+                                    shape = CircleShape,
+                                    activeBorderColor = Color.Transparent,
+                                    onClick = { showSettings = true }
+                                )
+                                .clip(CircleShape),
+                            contentAlignment = Alignment.Center
                         ) {
-                            AvalonDropdownMenuItem(
-                                text = stringResource(Res.string.player_btn_select_other_source),
-                                icon = Lucide.RefreshCcw,
-                                onClick = {
-                                    showSettings = false
-                                    actions.onRequestOtherSource()
-                                }
+                            Icon(
+                                imageVector = Lucide.Settings,
+                                contentDescription = stringResource(Res.string.player_settings_title),
+                                tint = Color.White,
+                                modifier = Modifier.size(22.dp)
                             )
+                        }
+
+                        if (showSettings) {
+                            val density = LocalDensity.current
+                            AvalonDropdownMenu(
+                                expanded = showSettings,
+                                alignment = Alignment.BottomEnd,
+                                offset = IntOffset(0, with(density) { -48.dp.roundToPx() }),
+                                onDismissRequest = { showSettings = false }
+                            ) {
+                                if (isWatchParty) {
+                                    AvalonDropdownMenuItem(
+                                        text = stringResource(Res.string.watch_party_btn_return_to_lobby),
+                                        icon = Lucide.Users,
+                                        onClick = {
+                                            showSettings = false
+                                            actions.onReturnToLobby()
+                                        }
+                                    )
+                                } else {
+                                    AvalonDropdownMenuItem(
+                                        text = stringResource(Res.string.player_btn_select_other_source),
+                                        icon = Lucide.RefreshCcw,
+                                        onClick = {
+                                            showSettings = false
+                                            actions.onRequestOtherSource()
+                                        }
+                                    )
+                                }
+                            }
                         }
                     }
                 }

@@ -23,5 +23,6 @@ data class PlayerInitParams(
     val mode: PlayerMode = PlayerMode.STANDARD,
     val sourceType: String? = null,
     val sourceId: String? = null,
-    val watchRoomId: Uuid? = null
+    val watchRoomId: Uuid? = null,
+    val isHost: Boolean = false
 )

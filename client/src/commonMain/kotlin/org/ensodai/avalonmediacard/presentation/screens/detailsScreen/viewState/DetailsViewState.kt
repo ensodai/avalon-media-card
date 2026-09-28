@@ -6,6 +6,8 @@ import org.ensodai.avalonmediacard.contract.slot.ServerAction
 import org.ensodai.avalonmediacard.contract.slot.SlotData
 import org.ensodai.avalonmediacard.presentation.core.SduiSlot
 import org.ensodai.avalonmediacard.presentation.core.SduiViewState
+import org.ensodai.avalonmediacard.presentation.screens.watchParty.viewState.WatchPartyStep
+import kotlin.uuid.Uuid
 
 data class DetailsViewState(
     val mediaKey: MediaKey,
@@ -25,6 +27,8 @@ data class DetailsViewState(
     val comments: SduiSlot<SlotData.Comments>? = null,
     val isSourcesExpanded: Boolean = false,
     val isWatchPartyOpen: Boolean = false,
+    val watchPartyRoomId: Uuid? = null,
+    val watchPartyInitialStep: WatchPartyStep = WatchPartyStep.SETUP,
     val playerState: PlayerState = PlayerState.Idle
 ) : SduiViewState {
 

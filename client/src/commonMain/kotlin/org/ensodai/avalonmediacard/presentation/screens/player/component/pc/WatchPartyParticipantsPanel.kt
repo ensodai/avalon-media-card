@@ -68,8 +68,7 @@ fun WatchPartyParticipantsPanel(
         modifier = modifier
             .width(280.dp)
             .animateContentSize()
-            .clip(RoundedCornerShape(20.dp))
-            .background(Color.Black.copy(alpha = 0.70f))
+            .background(Color.Black.copy(alpha = 0.70f), RoundedCornerShape(20.dp))
             .border(1.dp, Color.White.copy(alpha = 0.08f), RoundedCornerShape(20.dp))
     ) {
         Column(modifier = Modifier.width(280.dp)) {
@@ -83,6 +82,7 @@ fun WatchPartyParticipantsPanel(
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
+                    .clip(headerShape)
                     .tvAndWebHoverEffect(
                         scaleTarget = 1.03f,
                         shape = headerShape,
@@ -92,7 +92,6 @@ fun WatchPartyParticipantsPanel(
                         defaultBorderWidth = 0.dp,
                         onClick = { isExpanded = !isExpanded }
                     )
-                    .clip(headerShape)
                     .padding(horizontal = 14.dp, vertical = 10.dp),
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.SpaceBetween

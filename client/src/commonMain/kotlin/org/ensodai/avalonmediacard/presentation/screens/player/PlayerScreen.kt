@@ -10,6 +10,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import kotlin.uuid.Uuid
 import org.ensodai.avalonmediacard.core.VideoPlayer
 import org.ensodai.avalonmediacard.presentation.screens.player.model.PlayerInitParams
 import org.koin.compose.viewmodel.koinViewModel
@@ -22,16 +23,19 @@ fun PlayerScreen(
     onClose: () -> Unit,
     onRequestOtherSource: (() -> Unit)? = null,
     onConfirmSource: (() -> Unit)? = null,
+    onReturnToLobby: ((roomId: Uuid) -> Unit)? = null,
     viewModel: PlayerViewModel = koinViewModel(key = "${params.mediaKey}_${params.targetSeason}_${params.targetEpisode}_${params.streamId}_${params.sourceType}_${params.sourceId}_${params.streamUrl?.hashCode()}_${params.mode}_${params.watchRoomId}") { parametersOf(params) }
 ) {
-    DisposableEffect(onClose, onRequestOtherSource, onConfirmSource) {
+    DisposableEffect(onClose, onRequestOtherSource, onConfirmSource, onReturnToLobby) {
         viewModel.onCloseCallback = onClose
         viewModel.onRequestOtherSourceCallback = onRequestOtherSource
         viewModel.onConfirmSourceCallback = onConfirmSource
+        viewModel.onReturnToLobbyCallback = onReturnToLobby
         onDispose {
             viewModel.onCloseCallback = null
             viewModel.onRequestOtherSourceCallback = null
             viewModel.onConfirmSourceCallback = null
+            viewModel.onReturnToLobbyCallback = null
         }
     }
     val viewState by viewModel.viewState.collectAsState()

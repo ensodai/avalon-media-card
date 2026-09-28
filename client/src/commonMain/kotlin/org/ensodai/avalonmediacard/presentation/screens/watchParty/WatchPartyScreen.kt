@@ -55,6 +55,7 @@ fun WatchPartyScreen(
     onRefreshSources: (() -> Unit)? = null,
     onAction: (Action) -> Unit = {},
     initialStep: WatchPartyStep? = null,
+    initialRoomId: Uuid? = null,
     onClose: () -> Unit,
     onStartPlayback: ((roomId: Uuid, season: Int?, episode: Int?, startPositionSeconds: Long) -> Unit)? = null,
     viewModel: WatchPartyViewModel = koinInject(),
@@ -96,9 +97,12 @@ fun WatchPartyScreen(
         }
     }
 
-    LaunchedEffect(isVisible, mediaKey, mediaTitle, initialStep) {
+    LaunchedEffect(isVisible, mediaKey, mediaTitle, initialStep, initialRoomId) {
         if (isVisible) {
             viewModel.initialize(mediaKey, mediaTitle, initialStep)
+            if (initialRoomId != null) {
+                viewModel.actions.onJoinById(initialRoomId)
+            }
         } else {
             viewModel.actions.onClose()
         }

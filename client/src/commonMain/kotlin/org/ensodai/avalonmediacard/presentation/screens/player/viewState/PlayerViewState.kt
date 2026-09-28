@@ -3,6 +3,7 @@ package org.ensodai.avalonmediacard.presentation.screens.player.viewState
 import org.ensodai.avalonmediacard.contract.model.EntityType
 import org.ensodai.avalonmediacard.contract.model.MediaKey
 import org.ensodai.avalonmediacard.contract.model.WatchRoomParticipantDto
+import org.ensodai.avalonmediacard.contract.model.WatchRoomParticipantRole
 import org.ensodai.avalonmediacard.contract.plugins.AudioTrack
 import org.ensodai.avalonmediacard.contract.plugins.MediaStream
 import org.ensodai.avalonmediacard.contract.plugins.SubtitleTrack
@@ -42,8 +43,14 @@ data class PlayerViewState(
     val watchRoomId: Uuid? = null,
     val watchRoomParticipants: List<WatchRoomParticipantDto> = emptyList(),
     val isParticipantsPanelVisible: Boolean = true,
-    val currentUserId: String? = null
+    val currentUserId: String? = null,
+    val isHost: Boolean = false
 ) : BaseViewState() {
+    val isEffectiveHost: Boolean
+        get() = isHost || currentUserId?.let { uid ->
+            watchRoomParticipants.find { it.userId.toString() == uid }?.role == WatchRoomParticipantRole.HOST
+        } ?: false
+
     val onlineParticipantsCount: Int
         get() = watchRoomParticipants.count { it.isOnline }
     val isBuffering: Boolean

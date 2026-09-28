@@ -5,7 +5,9 @@ import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
+import org.ensodai.avalonmediacard.contract.model.RoomPlaybackCommand
 import org.ensodai.avalonmediacard.contract.model.WatchRoomEvent
+import org.ensodai.avalonmediacard.contract.model.WatchRoomParticipantRole
 import org.ensodai.avalonmediacard.contract.plugins.MediaStream
 import org.ensodai.avalonmediacard.contract.plugins.StreamType
 import org.ensodai.avalonmediacard.contract.plugins.VideoQuality
@@ -31,6 +33,7 @@ import org.ensodai.avalonmediacard.presentation.screens.player.viewState.PlayerV
 import org.koin.core.annotation.InjectedParam
 import org.koin.core.annotation.KoinViewModel
 import kotlin.time.Duration.Companion.milliseconds
+import kotlin.uuid.Uuid
 
 @KoinViewModel
 class PlayerViewModel(
@@ -60,12 +63,14 @@ class PlayerViewModel(
         mode = params.mode,
         watchRoomId = params.watchRoomId,
         currentUserId = tokenStorage.cachedUserId,
+        isHost = params.isHost,
         status = PlaybackStatus.BUFFERING
     )
 ) {
     var onCloseCallback: (() -> Unit)? = null
     var onRequestOtherSourceCallback: (() -> Unit)? = null
     var onConfirmSourceCallback: (() -> Unit)? = null
+    var onReturnToLobbyCallback: ((roomId: Uuid) -> Unit)? = null
     var lastPersistedSeconds: Long = -1L
     var seekDebounceJob: Job? = null
     private var syncJob: Job? = null
@@ -105,9 +110,20 @@ class PlayerViewModel(
                     sc.roomEvents.collect { event ->
                         when (event) {
                             is WatchRoomEvent.ParticipantsUpdated -> {
-                                updateViewState { it.copy(watchRoomParticipants = event.participants) }
+                                val currentUid = viewState.value.currentUserId
+                                val myRole = event.participants.find { it.userId.toString() == currentUid }?.role
+                                updateViewState {
+                                    it.copy(
+                                        watchRoomParticipants = event.participants,
+                                        isHost = it.isHost || myRole == WatchRoomParticipantRole.HOST
+                                    )
+                                }
                             }
                             is WatchRoomEvent.ReturnedToLobby -> {
+                                val roomId = viewState.value.watchRoomId
+                                if (roomId != null) {
+                                    onReturnToLobbyCallback?.invoke(roomId)
+                                }
                                 actions.onCloseClicked()
                             }
                             else -> {}
@@ -429,6 +445,17 @@ class PlayerViewModel(
         },
         onAttachController = ::attachController,
         onDetachController = ::detachController,
-        onToggleParticipantsPanel = ::onToggleParticipantsPanel
+        onToggleParticipantsPanel = ::onToggleParticipantsPanel,
+        onReturnToLobby = ::onReturnToLobby
     )
+
+    fun onReturnToLobby() {
+        val roomId = viewState.value.watchRoomId ?: return
+        viewModelScope.launch {
+            try {
+                rpcService.sendPlaybackCommand(roomId, RoomPlaybackCommand.ReturnToLobby)
+            } catch (_: Exception) {
+            }
+        }
+    }
 }

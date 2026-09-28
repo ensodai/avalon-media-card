@@ -126,8 +126,12 @@ fun WatchRoomsScreen(
                                             mode = PlayerMode.WATCH_PARTY,
                                             sourceType = room.sourceType,
                                             sourceId = room.sourceId,
-                                            watchRoomId = room.id
-                                        )
+                                            watchRoomId = room.id,
+                                            isHost = room.isHost
+                                        ),
+                                        onReturnToLobby = { roomId ->
+                                            actions.onOpenRoom(roomId)
+                                        }
                                     )
                                 }
                             } else {
@@ -159,6 +163,7 @@ fun WatchRoomsScreen(
                     } else {
                         val activeRoom = watchPartyViewModel.viewState.value.activeRoom
                         val mediaKey = watchPartyViewModel.viewState.value.mediaKey
+                        val isHost = watchPartyViewModel.viewState.value.isHost
                         if (mediaKey != null) {
                             launchPlayerOverlay(
                                 rootOverlay = rootOverlay,
@@ -172,8 +177,12 @@ fun WatchRoomsScreen(
                                     mode = PlayerMode.WATCH_PARTY,
                                     sourceType = activeRoom?.sourceType,
                                     sourceId = activeRoom?.sourceId,
-                                    watchRoomId = roomId
-                                )
+                                    watchRoomId = roomId,
+                                    isHost = isHost
+                                ),
+                                onReturnToLobby = { retRoomId ->
+                                    actions.onOpenRoom(retRoomId)
+                                }
                             )
                         }
                     }

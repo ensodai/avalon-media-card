@@ -82,9 +82,8 @@ fun WatchPartyParticipantsPanel(
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .clip(headerShape)
                     .tvAndWebHoverEffect(
-                        scaleTarget = 1.03f,
+                        scaleTarget = 1.0f,
                         shape = headerShape,
                         activeBorderColor = MaterialTheme.colorScheme.primary,
                         activeBorderWidth = 1.5.dp,

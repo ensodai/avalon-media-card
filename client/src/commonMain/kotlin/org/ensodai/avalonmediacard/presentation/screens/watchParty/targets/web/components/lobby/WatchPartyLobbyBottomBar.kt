@@ -25,6 +25,8 @@ import org.jetbrains.compose.resources.stringResource
 fun WatchPartyLobbyBottomBar(
     isHost: Boolean,
     isStartingPlayback: Boolean,
+    readyCount: Int,
+    totalCount: Int,
     onStartPlayback: () -> Unit,
     onLeaveRoom: () -> Unit,
     modifier: Modifier = Modifier
@@ -82,7 +84,11 @@ fun WatchPartyLobbyBottomBar(
                     )
                     Spacer(modifier = Modifier.width(8.dp))
                     Text(
-                        text = stringResource(Res.string.watch_party_btn_start_playback),
+                        text = if (totalCount > 0) {
+                            "${stringResource(Res.string.watch_party_btn_start_playback)} ($readyCount/$totalCount)"
+                        } else {
+                            stringResource(Res.string.watch_party_btn_start_playback)
+                        },
                         fontSize = 14.sp,
                         fontWeight = FontWeight.Bold,
                         color = Color.Black
@@ -99,7 +105,11 @@ fun WatchPartyLobbyBottomBar(
                 contentAlignment = Alignment.Center
             ) {
                 Text(
-                    text = stringResource(Res.string.watch_party_waiting_host),
+                    text = if (totalCount > 0) {
+                        "${stringResource(Res.string.watch_party_waiting_host)} ($readyCount/$totalCount)"
+                    } else {
+                        stringResource(Res.string.watch_party_waiting_host)
+                    },
                     fontSize = 13.sp,
                     color = Color.White.copy(alpha = 0.6f)
                 )

@@ -83,6 +83,24 @@ class WatchPartyBrutalLifecycleStressTest {
                 )
             }
         }
+        override suspend fun updateRoomSource(
+            roomId: Uuid,
+            sourceType: String,
+            sourceId: String,
+            season: Int?,
+            episode: Int?
+        ): Boolean {
+            val idx = rooms.indexOfFirst { it.id == roomId }
+            if (idx != -1) {
+                rooms[idx] = rooms[idx].copy(
+                    sourceType = sourceType,
+                    sourceId = sourceId,
+                    currentSeason = season ?: rooms[idx].currentSeason,
+                    currentEpisode = episode ?: rooms[idx].currentEpisode
+                )
+            }
+            return true
+        }
         override suspend fun updateRoomStatus(roomId: Uuid, status: WatchRoomStatus) {
             lastSavedStatus = status
             val idx = rooms.indexOfFirst { it.id == roomId }

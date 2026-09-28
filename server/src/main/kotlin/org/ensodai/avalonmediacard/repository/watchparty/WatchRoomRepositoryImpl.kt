@@ -110,6 +110,17 @@ class WatchRoomRepositoryImpl : WatchRoomRepository {
         logger.info("Watch party room created: id={}, pin={}, mediaId={}", newRoomId, pin, request.mediaId)
 
         val (backdrops, titles) = loadMediaMeta(listOf(internalMediaId))
+        val reqMediaTitle = request.mediaTitle
+        val resolvedMediaTitle = titles[internalMediaId] ?: reqMediaTitle?.takeIf { it.isNotBlank() }
+
+        if (!reqMediaTitle.isNullOrBlank() && titles[internalMediaId] == null) {
+            MediaTranslationTable.insertIgnore {
+                it[id] = Uuid.random()
+                it[mediaId] = internalMediaId
+                it[language] = "ru"
+                it[title] = reqMediaTitle
+            }
+        }
 
         WatchRoomDto(
             id = newRoomId,
@@ -128,7 +139,7 @@ class WatchRoomRepositoryImpl : WatchRoomRepository {
             isPrivate = request.isPrivate,
             participants = listOf(hostParticipant),
             backdropUrl = backdrops[internalMediaId],
-            mediaTitle = titles[internalMediaId]
+            mediaTitle = resolvedMediaTitle
         )
     }
 
@@ -234,7 +245,7 @@ class WatchRoomRepositoryImpl : WatchRoomRepository {
                 currentSeason = row[WatchRoomTable.currentSeason],
                 currentEpisode = row[WatchRoomTable.currentEpisode],
                 lastPositionSeconds = row[WatchRoomTable.lastPositionSeconds],
-                joinPin = row[WatchRoomTable.joinPin],
+                joinPin = if (isHost) row[WatchRoomTable.joinPin] else null,
                 participants = participantsInRoom,
                 isHost = isHost,
                 status = row[WatchRoomTable.status],
@@ -305,7 +316,7 @@ class WatchRoomRepositoryImpl : WatchRoomRepository {
                 currentSeason = row[WatchRoomTable.currentSeason],
                 currentEpisode = row[WatchRoomTable.currentEpisode],
                 lastPositionSeconds = row[WatchRoomTable.lastPositionSeconds],
-                joinPin = row[WatchRoomTable.joinPin],
+                joinPin = if (isHost) row[WatchRoomTable.joinPin] else null,
                 participants = participantsInRoom,
                 isHost = isHost,
                 status = row[WatchRoomTable.status],
@@ -315,6 +326,21 @@ class WatchRoomRepositoryImpl : WatchRoomRepository {
                 mediaTitle = titles[currentMediaId]
             )
         }
+    }
+
+    override suspend fun updateRoomSource(
+        roomId: Uuid,
+        sourceType: String,
+        sourceId: String,
+        season: Int?,
+        episode: Int?
+    ): Boolean = dbQuery {
+        WatchRoomTable.update({ WatchRoomTable.id eq roomId }) {
+            it[this.sourceType] = sourceType
+            it[this.sourceId] = sourceId
+            if (season != null) it[currentSeason] = season
+            if (episode != null) it[currentEpisode] = episode
+        } > 0
     }
 
     override suspend fun updateRoomProgress(

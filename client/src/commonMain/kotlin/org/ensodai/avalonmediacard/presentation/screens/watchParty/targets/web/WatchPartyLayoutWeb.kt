@@ -30,9 +30,9 @@ fun WatchPartyLayoutWeb(
     modifier: Modifier = Modifier,
     sourcesContent: (@Composable () -> Unit)? = null
 ) {
-    val isExpandedMode = state.step == WatchPartyStep.SETUP && state.isSelectingSource && sourcesContent != null
+    val isExpandedMode = (state.step == WatchPartyStep.SETUP || state.step == WatchPartyStep.LOBBY) && state.isSelectingSource && sourcesContent != null
     val targetMaxWidth by animateDpAsState(
-        targetValue = if (isExpandedMode) 1240.dp else 760.dp,
+        targetValue = if (isExpandedMode) 1240.dp else if (state.step == WatchPartyStep.LOBBY) 880.dp else 760.dp,
         animationSpec = spring(stiffness = Spring.StiffnessMediumLow)
     )
 
@@ -50,11 +50,15 @@ fun WatchPartyLayoutWeb(
             modifier = Modifier.fillMaxWidth(),
             verticalArrangement = Arrangement.spacedBy(20.dp)
         ) {
+            val roomTitle = state.activeRoom?.title?.takeIf { it.isNotBlank() } ?: state.mediaTitle
             WatchPartyHeader(
                 mediaTitle = state.mediaTitle,
                 step = state.step,
                 onBack = { actions.onSetStep(WatchPartyStep.ENTRY) },
-                onClose = actions.onClose
+                onClose = actions.onClose,
+                roomTitle = roomTitle,
+                isHost = state.isHost,
+                joinPin = state.activeRoom?.joinPin
             )
 
             when (state.step) {
@@ -77,7 +81,24 @@ fun WatchPartyLayoutWeb(
                         WatchPartySetupStep(state = state, actions = actions)
                     }
                 }
-                WatchPartyStep.LOBBY -> WatchPartyLobbyStep(state = state, actions = actions)
+                WatchPartyStep.LOBBY -> {
+                    if (isExpandedMode) {
+                        Row(
+                            modifier = Modifier.fillMaxWidth(),
+                            horizontalArrangement = Arrangement.spacedBy(24.dp),
+                            verticalAlignment = Alignment.Top
+                        ) {
+                            Box(modifier = Modifier.weight(1f)) {
+                                WatchPartyLobbyStep(state = state, actions = actions)
+                            }
+                            Box(modifier = Modifier.weight(1.25f)) {
+                                sourcesContent()
+                            }
+                        }
+                    } else {
+                        WatchPartyLobbyStep(state = state, actions = actions)
+                    }
+                }
             }
         }
     }

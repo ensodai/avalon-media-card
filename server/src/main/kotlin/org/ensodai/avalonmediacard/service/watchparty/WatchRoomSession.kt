@@ -75,6 +75,8 @@ class WatchRoomSession(
     initialSeason: Int?,
     initialEpisode: Int?,
     initialPositionSeconds: Long,
+    val initialSourceType: String? = null,
+    val initialSourceId: String? = null,
     private val scope: CoroutineScope,
     private val onProgressChanged: suspend (season: Int?, episode: Int?, positionSeconds: Long) -> Unit,
     private val onHostMigrated: suspend (newHostUserId: Uuid) -> Unit,
@@ -82,6 +84,11 @@ class WatchRoomSession(
 ) {
     private val logger = LoggerFactory.getLogger(WatchRoomSession::class.java)
     private val mutex = Mutex()
+
+    var sourceType: String? = initialSourceType
+        private set
+    var sourceId: String? = initialSourceId
+        private set
 
     private fun notifyRoomStateChanged() {
         try {
@@ -158,7 +165,16 @@ class WatchRoomSession(
      * При подключении всегда гарантированно отдает InitialSnapshot, затем шлет точечные события.
      */
     fun subscribeLobby(): Flow<LobbyEvent> = flow {
-        emit(LobbyEvent.InitialSnapshot(WatchRoomStatus.ACTIVE, getParticipantList()))
+        emit(
+            LobbyEvent.InitialSnapshot(
+                roomStatus = WatchRoomStatus.ACTIVE,
+                participants = getParticipantList(),
+                sourceType = sourceType,
+                sourceId = sourceId,
+                season = currentSeason,
+                episode = currentEpisode
+            )
+        )
         if (phase == RoomPhase.PLAYING_IN_SYNC || phase == RoomPhase.STARTING_SCHEDULED) {
             emit(
                 LobbyEvent.TransitionToPlayer(
@@ -170,6 +186,32 @@ class WatchRoomSession(
             )
         }
         emitAll(lobbyEvents)
+    }
+
+    /**
+     * Обновление медиа-источника комнаты на лету хостом.
+     */
+    suspend fun updateSource(
+        newSourceType: String,
+        newSourceId: String,
+        newSourceName: String? = null,
+        newSeason: Int? = null,
+        newEpisode: Int? = null
+    ) = mutex.withLock {
+        sourceType = newSourceType
+        sourceId = newSourceId
+        if (newSeason != null) currentSeason = newSeason
+        if (newEpisode != null) currentEpisode = newEpisode
+        _lobbyEvents.emit(
+            LobbyEvent.SourceUpdated(
+                sourceType = newSourceType,
+                sourceId = newSourceId,
+                sourceName = newSourceName,
+                season = newSeason ?: currentSeason,
+                episode = newEpisode ?: currentEpisode
+            )
+        )
+        notifyRoomStateChanged()
     }
 
     /**

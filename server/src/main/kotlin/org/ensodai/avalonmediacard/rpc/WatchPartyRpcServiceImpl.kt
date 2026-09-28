@@ -20,6 +20,7 @@ import org.ensodai.avalonmediacard.contract.model.MediaProvider
 import org.ensodai.avalonmediacard.contract.model.MediaType
 import org.ensodai.avalonmediacard.contract.model.RoomPlaybackCommand
 import org.ensodai.avalonmediacard.contract.model.SetLobbyStatusRequest
+import org.ensodai.avalonmediacard.contract.model.UpdateRoomSourceRequest
 import org.ensodai.avalonmediacard.contract.model.WatchRoomDto
 import org.ensodai.avalonmediacard.contract.model.WatchRoomEvent
 import org.ensodai.avalonmediacard.contract.model.WatchRoomPhase
@@ -184,6 +185,19 @@ class WatchPartyRpcServiceImpl(
     override suspend fun setLobbyStatus(roomId: Uuid, request: SetLobbyStatusRequest): Boolean {
         val authUser = currentAuthorizedUser() ?: return false
         return watchRoomSessionManager.setLobbyStatus(roomId, authUser.userId, request)
+    }
+
+    override suspend fun updateRoomSource(request: UpdateRoomSourceRequest): Boolean {
+        val authUser = currentAuthorizedUser() ?: return false
+        return watchRoomSessionManager.updateRoomSource(
+            roomId = request.roomId,
+            userId = authUser.userId,
+            sourceType = request.sourceType,
+            sourceId = request.sourceId,
+            sourceName = request.sourceName,
+            season = request.season,
+            episode = request.episode
+        )
     }
 
     override suspend fun triggerStartPlayback(roomId: Uuid): Boolean {

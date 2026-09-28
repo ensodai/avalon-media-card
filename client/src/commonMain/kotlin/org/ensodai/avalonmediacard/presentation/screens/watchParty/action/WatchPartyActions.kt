@@ -2,6 +2,7 @@ package org.ensodai.avalonmediacard.presentation.screens.watchParty.action
 
 import org.ensodai.avalonmediacard.contract.model.WatchParticipantIntent
 import org.ensodai.avalonmediacard.contract.model.WatchRoomControlMode
+import org.ensodai.avalonmediacard.contract.slot.ServerAction
 import org.ensodai.avalonmediacard.presentation.core.mvi.BaseActions
 import org.ensodai.avalonmediacard.presentation.screens.watchParty.viewState.WatchPartyStep
 import kotlin.uuid.Uuid
@@ -24,5 +25,7 @@ data class WatchPartyActions(
     val onToggleReady: () -> Unit,
     val onStartPlayback: () -> Unit,
     val onLeaveRoom: () -> Unit,
+    val onRefreshSources: () -> Unit,
+    val onExecuteServerAction: (ServerAction) -> Unit,
     val onClose: () -> Unit
 ) : BaseActions()

@@ -1,7 +1,10 @@
 package org.ensodai.avalonmediacard.presentation.screens.watchParty
 
 import kotlinx.coroutines.Job
+import org.ensodai.avalonmediacard.contract.slot.ServerAction
 import org.ensodai.avalonmediacard.data.TokenStorage
+import org.ensodai.avalonmediacard.domain.useCases.core.ExecuteServerActionUseCase
+import org.ensodai.avalonmediacard.domain.useCases.core.StreamScreenSlotsUseCase
 import org.ensodai.avalonmediacard.domain.useCases.playback.SearchMediaSourcesUseCase
 import org.ensodai.avalonmediacard.domain.useCases.playback.SelectMediaSourceUseCase
 import org.ensodai.avalonmediacard.domain.useCases.watchparty.CloseWatchRoomUseCase
@@ -13,14 +16,17 @@ import org.ensodai.avalonmediacard.domain.useCases.watchparty.LeaveWatchRoomUseC
 import org.ensodai.avalonmediacard.domain.useCases.watchparty.SetLobbyStatusUseCase
 import org.ensodai.avalonmediacard.domain.useCases.watchparty.StreamLobbyStateUseCase
 import org.ensodai.avalonmediacard.domain.useCases.watchparty.TriggerStartPlaybackUseCase
+import org.ensodai.avalonmediacard.domain.useCases.watchparty.UpdateWatchRoomSourceUseCase
 import org.ensodai.avalonmediacard.presentation.core.mvi.BaseViewModel
 import org.ensodai.avalonmediacard.presentation.screens.watchParty.action.WatchPartyActions
 import org.ensodai.avalonmediacard.presentation.screens.watchParty.action.onControlModeChanged
 import org.ensodai.avalonmediacard.presentation.screens.watchParty.action.onCreateRoom
+import org.ensodai.avalonmediacard.presentation.screens.watchParty.action.onExecuteServerAction
 import org.ensodai.avalonmediacard.presentation.screens.watchParty.action.onJoinById
 import org.ensodai.avalonmediacard.presentation.screens.watchParty.action.onJoinByPin
 import org.ensodai.avalonmediacard.presentation.screens.watchParty.action.onLeaveRoom
 import org.ensodai.avalonmediacard.presentation.screens.watchParty.action.onPinChanged
+import org.ensodai.avalonmediacard.presentation.screens.watchParty.action.onRefreshSources
 import org.ensodai.avalonmediacard.presentation.screens.watchParty.action.onRoomTitleChanged
 import org.ensodai.avalonmediacard.presentation.screens.watchParty.action.onSeasonEpisodeChanged
 import org.ensodai.avalonmediacard.presentation.screens.watchParty.action.onSelectSource
@@ -48,8 +54,11 @@ class WatchPartyViewModel(
     internal val streamLobbyStateUseCase: StreamLobbyStateUseCase,
     internal val setLobbyStatusUseCase: SetLobbyStatusUseCase,
     internal val triggerStartPlaybackUseCase: TriggerStartPlaybackUseCase,
+    internal val updateWatchRoomSourceUseCase: UpdateWatchRoomSourceUseCase,
     internal val searchMediaSourcesUseCase: SearchMediaSourcesUseCase,
     internal val selectMediaSourceUseCase: SelectMediaSourceUseCase,
+    internal val streamScreenSlotsUseCase: StreamScreenSlotsUseCase,
+    internal val executeServerActionUseCase: ExecuteServerActionUseCase,
     internal val tokenStorage: TokenStorage
 ) : BaseViewModel<WatchPartyViewState, WatchPartyActions>(
     initialState = WatchPartyViewState()
@@ -59,6 +68,7 @@ class WatchPartyViewModel(
 
     internal var eventStreamJob: Job? = null
     internal var savedRoomsStreamJob: Job? = null
+    internal var sourcesStreamJob: Job? = null
 
     override val actions = WatchPartyActions(
         onSetStep = ::onSetStep,
@@ -78,11 +88,15 @@ class WatchPartyViewModel(
         onToggleReady = ::onToggleReady,
         onStartPlayback = ::onStartPlayback,
         onLeaveRoom = ::onLeaveRoom,
+        onRefreshSources = ::onRefreshSources,
+        onExecuteServerAction = ::onExecuteServerAction,
         onClose = {
             eventStreamJob?.cancel()
             eventStreamJob = null
             savedRoomsStreamJob?.cancel()
             savedRoomsStreamJob = null
+            sourcesStreamJob?.cancel()
+            sourcesStreamJob = null
             onCloseRequested?.invoke()
         }
     )
@@ -91,5 +105,6 @@ class WatchPartyViewModel(
         super.onCleared()
         eventStreamJob?.cancel()
         savedRoomsStreamJob?.cancel()
+        sourcesStreamJob?.cancel()
     }
 }

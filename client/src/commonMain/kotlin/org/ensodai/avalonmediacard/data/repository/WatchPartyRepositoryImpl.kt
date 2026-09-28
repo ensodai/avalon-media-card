@@ -14,6 +14,7 @@ import org.ensodai.avalonmediacard.contract.model.JoinRoomResult
 import org.ensodai.avalonmediacard.contract.model.LobbyEvent
 import org.ensodai.avalonmediacard.contract.model.RoomPlaybackCommand
 import org.ensodai.avalonmediacard.contract.model.SetLobbyStatusRequest
+import org.ensodai.avalonmediacard.contract.model.UpdateRoomSourceRequest
 import org.ensodai.avalonmediacard.contract.model.WatchRoomDto
 import org.ensodai.avalonmediacard.contract.model.WatchRoomEvent
 import org.ensodai.avalonmediacard.contract.model.WatchRoomSummaryDto
@@ -79,6 +80,9 @@ class WatchPartyRepositoryImpl(
 
     override suspend fun setLobbyStatus(roomId: Uuid, request: SetLobbyStatusRequest): Boolean =
         rpcService.setLobbyStatus(roomId, request)
+
+    override suspend fun updateRoomSource(request: UpdateRoomSourceRequest): Boolean =
+        rpcService.updateRoomSource(request)
 
     override suspend fun triggerStartPlayback(roomId: Uuid): Boolean =
         rpcService.triggerStartPlayback(roomId)

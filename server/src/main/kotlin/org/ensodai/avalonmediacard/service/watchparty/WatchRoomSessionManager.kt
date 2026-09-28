@@ -83,6 +83,8 @@ class WatchRoomSessionManager(
             initialSeason = roomDto.currentSeason,
             initialEpisode = roomDto.currentEpisode,
             initialPositionSeconds = roomDto.lastPositionSeconds,
+            initialSourceType = roomDto.sourceType,
+            initialSourceId = roomDto.sourceId,
             scope = scope,
             onProgressChanged = { season, episode, posSec ->
                 watchRoomRepository.updateRoomProgress(roomDto.id, season, episode, posSec)
@@ -128,6 +130,8 @@ class WatchRoomSessionManager(
             initialSeason = roomDto.currentSeason,
             initialEpisode = roomDto.currentEpisode,
             initialPositionSeconds = roomDto.lastPositionSeconds,
+            initialSourceType = roomDto.sourceType,
+            initialSourceId = roomDto.sourceId,
             scope = scope,
             onProgressChanged = { season, episode, posSec ->
                 watchRoomRepository.updateRoomProgress(roomDto.id, season, episode, posSec)
@@ -178,8 +182,13 @@ class WatchRoomSessionManager(
 
         val dbRoom = watchRoomRepository.findRoomById(roomId) ?: return null
         return dbRoom.copy(
+            joinPin = if (isHost) dbRoom.joinPin else null,
             participants = session.getParticipantList(),
             phase = session.phase,
+            sourceType = session.sourceType ?: dbRoom.sourceType,
+            sourceId = session.sourceId ?: dbRoom.sourceId,
+            currentSeason = session.currentSeason ?: dbRoom.currentSeason,
+            currentEpisode = session.currentEpisode ?: dbRoom.currentEpisode,
             lastPositionSeconds = session.getCurrentPositionSeconds()
         )
     }
@@ -214,6 +223,31 @@ class WatchRoomSessionManager(
         return true
     }
 
+    /**
+     * Смена медиа-источника комнаты хостом.
+     */
+    suspend fun updateRoomSource(
+        roomId: Uuid,
+        userId: Uuid,
+        sourceType: String,
+        sourceId: String,
+        sourceName: String? = null,
+        season: Int? = null,
+        episode: Int? = null
+    ): Boolean {
+        val session = sessions[roomId] ?: getOrCreateSession(roomId) ?: return false
+        if (session.hostUserId != userId) {
+            logger.warn("User {} tried to update source for room {} without host privileges", userId, roomId)
+            return false
+        }
+        val dbUpdated = watchRoomRepository.updateRoomSource(roomId, sourceType, sourceId, season, episode)
+        if (!dbUpdated) return false
+
+        session.updateSource(sourceType, sourceId, sourceName, season, episode)
+        notifyRoomUpdated(roomId)
+        return true
+    }
+
     suspend fun getUserRooms(userId: Uuid): List<WatchRoomSummaryDto> {
         val dbRooms = watchRoomRepository.getRoomsForUser(userId)
         return enrichRoomsWithLiveSessionState(dbRooms)
@@ -235,6 +269,10 @@ class WatchRoomSessionManager(
                     phase = sessionPhase,
                     participants = participants,
                     lastPositionSeconds = posSec,
+                    sourceType = session.sourceType ?: room.sourceType,
+                    sourceId = session.sourceId ?: room.sourceId,
+                    currentSeason = session.currentSeason ?: room.currentSeason,
+                    currentEpisode = session.currentEpisode ?: room.currentEpisode,
                     status = if (sessionPhase == WatchRoomPhase.PLAYING_IN_SYNC) WatchRoomStatus.ACTIVE else WatchRoomStatus.PAUSED
                 )
             } else {

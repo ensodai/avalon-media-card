@@ -472,7 +472,9 @@
     <string name="watch_party_intent_discussion">Готов к бурному обсуждению</string>
     <string name="watch_party_intent_chilling">Просто чиллю</string>
     <string name="watch_party_ready_status_ready">Готов ✓</string>
-    <string name="watch_party_ready_status_not_ready">Не готов</string>
+    <string name="watch_party_ready_status_not_ready">Ожидание</string>
+    <string name="watch_party_choose_intent_hint">Выбери настрой для готовности:</string>
+    <string name="watch_party_participant_waiting">Выбирает настрой...</string>
     <string name="watch_party_waiting_host">Ожидание запуска ведущим...</string>
     <string name="watch_party_source_change">Изменить</string>
     <string name="watch_party_source_close_selector">Скрыть источники</string>

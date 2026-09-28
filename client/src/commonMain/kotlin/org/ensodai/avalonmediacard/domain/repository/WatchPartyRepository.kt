@@ -7,6 +7,7 @@ import org.ensodai.avalonmediacard.contract.model.JoinRoomResult
 import org.ensodai.avalonmediacard.contract.model.LobbyEvent
 import org.ensodai.avalonmediacard.contract.model.RoomPlaybackCommand
 import org.ensodai.avalonmediacard.contract.model.SetLobbyStatusRequest
+import org.ensodai.avalonmediacard.contract.model.UpdateRoomSourceRequest
 import org.ensodai.avalonmediacard.contract.model.WatchRoomDto
 import org.ensodai.avalonmediacard.contract.model.WatchRoomEvent
 import org.ensodai.avalonmediacard.contract.model.WatchRoomSummaryDto
@@ -25,6 +26,7 @@ interface WatchPartyRepository {
     suspend fun closeRoom(roomId: Uuid): Boolean
     fun streamLobbyState(roomId: Uuid): Flow<LobbyEvent>
     suspend fun setLobbyStatus(roomId: Uuid, request: SetLobbyStatusRequest): Boolean
+    suspend fun updateRoomSource(request: UpdateRoomSourceRequest): Boolean
     suspend fun triggerStartPlayback(roomId: Uuid): Boolean
     fun streamRoomEvents(roomId: Uuid): Flow<WatchRoomEvent>
     suspend fun sendPlaybackCommand(roomId: Uuid, command: RoomPlaybackCommand): Boolean

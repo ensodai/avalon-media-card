@@ -62,6 +62,17 @@ interface WatchRoomRepository {
     )
 
     /**
+     * Обновляет медиа-источник комнаты (провайдер, sourceId, сезон, эпизод).
+     */
+    suspend fun updateRoomSource(
+        roomId: Uuid,
+        sourceType: String,
+        sourceId: String,
+        season: Int?,
+        episode: Int?
+    ): Boolean
+
+    /**
      * Обновляет статус комнаты (ACTIVE, PAUSED, ARCHIVED).
      */
     suspend fun updateRoomStatus(roomId: Uuid, status: WatchRoomStatus)

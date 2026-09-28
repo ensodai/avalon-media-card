@@ -31,6 +31,15 @@ fun WatchParticipantIntent.toLabelRes(): StringResource = when (this) {
     WatchParticipantIntent.CHILLING -> Res.string.watch_party_intent_chilling
 }
 
+fun intentToEmoji(intent: WatchParticipantIntent): String = when (intent) {
+    WatchParticipantIntent.WATCHING_ATTENTIVELY -> "🍿"
+    WatchParticipantIntent.CHILLING -> "🛋️"
+    WatchParticipantIntent.AWAY_FOR_SNACKS -> "☕"
+    WatchParticipantIntent.SILENT_NO_PAUSES -> "🤫"
+    WatchParticipantIntent.ACTIVE_DISCUSSION -> "💬"
+    WatchParticipantIntent.BACKGROUND_LISTENING -> "🎧"
+}
+
 private class ParticipantVisualState(
     val rowAlpha: Float,
     val rowBackground: Color,
@@ -156,9 +165,13 @@ fun WatchPartyParticipantItem(
                     }
                 }
                 Text(
-                    text = intentLabel,
+                    text = if (isReady) {
+                        "${intentToEmoji(participant.intent)} $intentLabel"
+                    } else {
+                        stringResource(Res.string.watch_party_participant_waiting)
+                    },
                     fontSize = 11.sp,
-                    color = Color.White.copy(alpha = if (isOnline) 0.55f else 0.35f)
+                    color = Color.White.copy(alpha = if (isOnline) 0.65f else 0.35f)
                 )
             }
         }

@@ -27,6 +27,7 @@ import com.composables.icons.lucide.Play
 import org.ensodai.avalonmediacard.contract.model.WatchRoomControlMode
 import org.ensodai.avalonmediacard.presentation.screens.commonComponents.tvAndWebHoverEffect
 import org.ensodai.avalonmediacard.presentation.screens.watchParty.action.WatchPartyActions
+import org.ensodai.avalonmediacard.presentation.screens.watchParty.targets.web.components.lobby.formatSourceProviderTitle
 import org.ensodai.avalonmediacard.presentation.screens.watchParty.viewState.WatchPartyViewState
 import org.jetbrains.compose.resources.stringResource
 
@@ -207,7 +208,7 @@ fun WatchPartySetupStep(
                         )
                         state.selectedSourceType?.let { sType ->
                             Text(
-                                text = sType.uppercase(),
+                                text = formatSourceProviderTitle(sType) ?: sType.uppercase(),
                                 fontSize = 11.sp,
                                 fontWeight = FontWeight.Bold,
                                 color = Color(0xFF6C63FF)

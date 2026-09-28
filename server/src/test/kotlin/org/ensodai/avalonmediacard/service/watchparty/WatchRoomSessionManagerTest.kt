@@ -51,6 +51,7 @@ class WatchRoomSessionManagerTest {
         override suspend fun getRoomsForMedia(mediaId: String, currentUserId: Uuid, limit: Int, offset: Long): List<WatchRoomSummaryDto> = TODO()
         override suspend fun getRoomsForUser(userId: Uuid, limit: Int, offset: Long): List<WatchRoomSummaryDto> = rooms
         override suspend fun updateRoomProgress(roomId: Uuid, season: Int?, episode: Int?, positionSeconds: Long) {}
+        override suspend fun updateRoomSource(roomId: Uuid, sourceType: String, sourceId: String, season: Int?, episode: Int?): Boolean = true
         override suspend fun updateRoomStatus(roomId: Uuid, status: WatchRoomStatus) {}
         override suspend fun updateRoomControlMode(roomId: Uuid, controlMode: WatchRoomControlMode) {}
         override suspend fun addParticipant(roomId: Uuid, userId: Uuid, role: WatchRoomParticipantRole): Boolean = true

@@ -8,6 +8,8 @@ import org.ensodai.avalonmediacard.contract.model.WatchRoomDto
 import org.ensodai.avalonmediacard.contract.model.WatchRoomParticipantDto
 import org.ensodai.avalonmediacard.contract.model.WatchRoomParticipantRole
 import org.ensodai.avalonmediacard.contract.model.WatchRoomSummaryDto
+import org.ensodai.avalonmediacard.contract.slot.SlotData
+import org.ensodai.avalonmediacard.presentation.core.SduiSlot
 import org.ensodai.avalonmediacard.presentation.core.mvi.BaseViewState
 import kotlin.uuid.Uuid
 
@@ -22,6 +24,8 @@ data class WatchPartyViewState(
     val step: WatchPartyStep = WatchPartyStep.ENTRY,
     val mediaKey: MediaKey? = null,
     val mediaTitle: String = "",
+    val mediaSourcesList: List<SduiSlot<SlotData.MediaSources>> = emptyList(),
+    val torrentInspectorSlot: SduiSlot<SlotData.TorrentInspector>? = null,
 
     // Шаг 1: Вход
     val savedRooms: List<WatchRoomSummaryDto> = emptyList(),
@@ -50,7 +54,7 @@ data class WatchPartyViewState(
     val participantsMap: Map<Uuid, WatchRoomParticipantDto> = emptyMap(),
     val myUserId: Uuid? = null,
     val isHost: Boolean = false,
-    val myIntent: WatchParticipantIntent = WatchParticipantIntent.WATCHING_ATTENTIVELY,
+    val myIntent: WatchParticipantIntent? = null,
     val myIsReady: Boolean = false,
     val isActionPending: Boolean = false,
     val isStartingPlayback: Boolean = false,

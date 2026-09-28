@@ -21,20 +21,21 @@ fun WatchPartyParticipantsList(
     modifier: Modifier = Modifier
 ) {
     Column(
-        modifier = modifier,
+        modifier = modifier.fillMaxWidth(),
         verticalArrangement = Arrangement.spacedBy(8.dp)
     ) {
         Text(
             text = stringResource(Res.string.watch_party_participants_label, participants.size),
-            fontSize = 12.sp,
-            fontWeight = FontWeight.Medium,
-            color = Color.White.copy(alpha = 0.7f)
+            fontSize = 11.sp,
+            fontWeight = FontWeight.Bold,
+            color = Color.White.copy(alpha = 0.5f),
+            letterSpacing = 0.5.sp
         )
 
         LazyColumn(
             modifier = Modifier
                 .fillMaxWidth()
-                .heightIn(max = 160.dp),
+                .heightIn(max = 210.dp),
             verticalArrangement = Arrangement.spacedBy(6.dp)
         ) {
             items(participants, key = { it.userId.toString() }) { p ->

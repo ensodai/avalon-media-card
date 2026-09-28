@@ -1,17 +1,18 @@
 package org.ensodai.avalonmediacard.presentation.screens.watchParty.targets.web.components.lobby
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.lazy.LazyRow
-import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import avalonmediacard.client.generated.resources.*
@@ -19,42 +20,97 @@ import org.ensodai.avalonmediacard.contract.model.WatchParticipantIntent
 import org.ensodai.avalonmediacard.presentation.screens.watchParty.targets.web.components.toLabelRes
 import org.jetbrains.compose.resources.stringResource
 
+private fun intentToEmoji(intent: WatchParticipantIntent): String = when (intent) {
+    WatchParticipantIntent.WATCHING_ATTENTIVELY -> "🍿"
+    WatchParticipantIntent.CHILLING -> "🛋️"
+    WatchParticipantIntent.AWAY_FOR_SNACKS -> "☕"
+    WatchParticipantIntent.SILENT_NO_PAUSES -> "🤫"
+    WatchParticipantIntent.ACTIVE_DISCUSSION -> "💬"
+    WatchParticipantIntent.BACKGROUND_LISTENING -> "🎧"
+}
+
 @Composable
 fun WatchPartyIntentSelector(
-    selectedIntent: WatchParticipantIntent,
+    selectedIntent: WatchParticipantIntent?,
+    isReady: Boolean,
     onSelectIntent: (WatchParticipantIntent) -> Unit,
     modifier: Modifier = Modifier
 ) {
     Column(
-        modifier = modifier,
+        modifier = modifier.fillMaxWidth(),
         verticalArrangement = Arrangement.spacedBy(8.dp)
     ) {
-        Text(
-            text = stringResource(Res.string.watch_party_my_intent_label),
-            fontSize = 12.sp,
-            fontWeight = FontWeight.Medium,
-            color = Color.White.copy(alpha = 0.7f)
-        )
-
-        LazyRow(
+        Row(
             modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.spacedBy(8.dp)
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.CenterVertically
         ) {
-            items(WatchParticipantIntent.entries.toTypedArray()) { intent ->
-                val isSelected = selectedIntent == intent
+            Text(
+                text = if (isReady && selectedIntent != null) {
+                    stringResource(Res.string.watch_party_my_intent_label)
+                } else {
+                    stringResource(Res.string.watch_party_choose_intent_hint)
+                },
+                fontSize = 11.sp,
+                fontWeight = FontWeight.Bold,
+                color = Color.White.copy(alpha = 0.5f),
+                letterSpacing = 0.5.sp
+            )
+            if (isReady && selectedIntent != null) {
+                Text(
+                    text = "${stringResource(Res.string.watch_party_ready_status_ready)} (${stringResource(selectedIntent.toLabelRes())})",
+                    fontSize = 12.sp,
+                    fontWeight = FontWeight.SemiBold,
+                    color = Color(0xFF81C784)
+                )
+            } else {
+                Text(
+                    text = stringResource(Res.string.watch_party_ready_status_not_ready),
+                    fontSize = 12.sp,
+                    fontWeight = FontWeight.Medium,
+                    color = Color.White.copy(alpha = 0.45f)
+                )
+            }
+        }
+
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.spacedBy(8.dp),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            val intents = listOf(
+                WatchParticipantIntent.WATCHING_ATTENTIVELY,
+                WatchParticipantIntent.CHILLING,
+                WatchParticipantIntent.AWAY_FOR_SNACKS,
+                WatchParticipantIntent.SILENT_NO_PAUSES,
+                WatchParticipantIntent.ACTIVE_DISCUSSION,
+                WatchParticipantIntent.BACKGROUND_LISTENING
+            )
+
+            intents.forEach { intent ->
+                val isSelected = isReady && selectedIntent == intent
 
                 Box(
                     modifier = Modifier
-                        .clip(RoundedCornerShape(20.dp))
-                        .background(if (isSelected) Color(0xFF6C63FF) else Color.White.copy(alpha = 0.08f))
-                        .clickable { onSelectIntent(intent) }
-                        .padding(horizontal = 14.dp, vertical = 8.dp)
+                        .weight(1f)
+                        .height(42.dp)
+                        .clip(RoundedCornerShape(12.dp))
+                        .background(
+                            if (isSelected) Color(0xFF6C63FF).copy(alpha = 0.35f)
+                            else Color.White.copy(alpha = 0.06f)
+                        )
+                        .border(
+                            width = if (isSelected) 1.5.dp else 1.dp,
+                            color = if (isSelected) Color(0xFF8C82FF) else Color.White.copy(alpha = 0.10f),
+                            shape = RoundedCornerShape(12.dp)
+                        )
+                        .clickable { onSelectIntent(intent) },
+                    contentAlignment = Alignment.Center
                 ) {
                     Text(
-                        text = stringResource(intent.toLabelRes()),
-                        fontSize = 12.sp,
-                        fontWeight = if (isSelected) FontWeight.Bold else FontWeight.Normal,
-                        color = Color.White
+                        text = intentToEmoji(intent),
+                        fontSize = 18.sp,
+                        textAlign = TextAlign.Center
                     )
                 }
             }

@@ -2,7 +2,6 @@ package org.ensodai.avalonmediacard.presentation.screens.watchParty.targets.web.
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Text
@@ -17,6 +16,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import avalonmediacard.client.generated.resources.*
 import org.ensodai.avalonmediacard.contract.model.WatchParticipantIntent
+import org.ensodai.avalonmediacard.presentation.screens.commonComponents.tvAndWebHoverEffect
 import org.ensodai.avalonmediacard.presentation.screens.watchParty.targets.web.components.toLabelRes
 import org.jetbrains.compose.resources.stringResource
 
@@ -58,7 +58,7 @@ fun WatchPartyIntentSelector(
             )
             if (isReady && selectedIntent != null) {
                 Text(
-                    text = "${stringResource(Res.string.watch_party_ready_status_ready)} (${stringResource(selectedIntent.toLabelRes())})",
+                    text = stringResource(selectedIntent.toLabelRes()),
                     fontSize = 12.sp,
                     fontWeight = FontWeight.SemiBold,
                     color = Color(0xFF81C784)
@@ -87,6 +87,7 @@ fun WatchPartyIntentSelector(
                 WatchParticipantIntent.BACKGROUND_LISTENING
             )
 
+            val intentShape = RoundedCornerShape(12.dp)
             intents.forEach { intent ->
                 val isSelected = isReady && selectedIntent == intent
 
@@ -94,17 +95,19 @@ fun WatchPartyIntentSelector(
                     modifier = Modifier
                         .weight(1f)
                         .height(42.dp)
-                        .clip(RoundedCornerShape(12.dp))
+                        .tvAndWebHoverEffect(
+                            scaleTarget = 1.10f,
+                            shape = intentShape,
+                            activeBorderColor = Color(0xFF8C82FF),
+                            defaultBorderWidth = if (isSelected) 1.5.dp else 1.dp,
+                            defaultBorderColor = if (isSelected) Color(0xFF8C82FF) else Color.White.copy(alpha = 0.10f),
+                            onClick = { onSelectIntent(intent) }
+                        )
                         .background(
                             if (isSelected) Color(0xFF6C63FF).copy(alpha = 0.35f)
-                            else Color.White.copy(alpha = 0.06f)
-                        )
-                        .border(
-                            width = if (isSelected) 1.5.dp else 1.dp,
-                            color = if (isSelected) Color(0xFF8C82FF) else Color.White.copy(alpha = 0.10f),
-                            shape = RoundedCornerShape(12.dp)
-                        )
-                        .clickable { onSelectIntent(intent) },
+                            else Color.White.copy(alpha = 0.06f),
+                            intentShape
+                        ),
                     contentAlignment = Alignment.Center
                 ) {
                     Text(

@@ -2,7 +2,6 @@ package org.ensodai.avalonmediacard.presentation.screens.watchParty.targets.web.
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Icon
@@ -21,6 +20,7 @@ import avalonmediacard.client.generated.resources.*
 import com.composables.icons.lucide.Check
 import com.composables.icons.lucide.Copy
 import com.composables.icons.lucide.Lucide
+import org.ensodai.avalonmediacard.presentation.screens.commonComponents.tvAndWebHoverEffect
 import org.jetbrains.compose.resources.stringResource
 
 @Composable
@@ -58,15 +58,20 @@ fun WatchPartyPinCard(
             )
         }
 
+        val copyBtnShape = RoundedCornerShape(10.dp)
         Row(
             modifier = Modifier
                 .height(38.dp)
-                .clip(RoundedCornerShape(10.dp))
-                .background(Color.White.copy(alpha = 0.1f))
-                .clickable {
-                    clipboard.setText(AnnotatedString(pin))
-                    copied = true
-                }
+                .tvAndWebHoverEffect(
+                    scaleTarget = 1.05f,
+                    shape = copyBtnShape,
+                    activeBorderColor = Color(0xFF8C82FF),
+                    onClick = {
+                        clipboard.setText(AnnotatedString(pin))
+                        copied = true
+                    }
+                )
+                .background(Color.White.copy(alpha = 0.1f), copyBtnShape)
                 .padding(horizontal = 14.dp),
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.spacedBy(6.dp)

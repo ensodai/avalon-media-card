@@ -42,10 +42,10 @@ fun BoxScope.PlayerRightPanelOverlay(
 ) {
     Row(
         modifier = Modifier
-            .align(Alignment.CenterEnd)
+            .align(Alignment.TopEnd)
             .padding(top = 24.dp, bottom = 110.dp, end = 24.dp),
         horizontalArrangement = Arrangement.spacedBy(16.dp),
-        verticalAlignment = Alignment.CenterVertically
+        verticalAlignment = Alignment.Top
     ) {
         // Панель участников совместного просмотра (слева от серий, либо у правого края если серий нет)
         AnimatedVisibility(

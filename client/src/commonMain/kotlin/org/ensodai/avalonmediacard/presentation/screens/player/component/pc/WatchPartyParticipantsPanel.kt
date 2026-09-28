@@ -1,5 +1,11 @@
 package org.ensodai.avalonmediacard.presentation.screens.player.component.pc
 
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.animateContentSize
+import androidx.compose.animation.expandVertically
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.shrinkVertically
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -9,10 +15,9 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxHeight
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
@@ -23,9 +28,13 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -48,26 +57,43 @@ import org.jetbrains.compose.resources.stringResource
 fun WatchPartyParticipantsPanel(
     participants: List<WatchRoomParticipantDto>,
     currentUserId: String?,
-    onCloseClick: () -> Unit,
+    onCloseClick: () -> Unit = {},
     isLocalBuffering: Boolean = false,
     modifier: Modifier = Modifier
 ) {
+    var isExpanded by remember { mutableStateOf(true) }
     val onlineCount = remember(participants) { participants.count { it.isOnline } }
 
     Box(
         modifier = modifier
             .width(280.dp)
-            .fillMaxHeight()
-            .clip(RoundedCornerShape(24.dp))
-            .background(Color.Black.copy(alpha = 0.65f))
-            .border(1.dp, Color.White.copy(alpha = 0.05f), RoundedCornerShape(24.dp))
+            .animateContentSize()
+            .clip(RoundedCornerShape(20.dp))
+            .background(Color.Black.copy(alpha = 0.70f))
+            .border(1.dp, Color.White.copy(alpha = 0.08f), RoundedCornerShape(20.dp))
     ) {
-        Column(modifier = Modifier.fillMaxSize()) {
-            // Шапка панели
+        Column(modifier = Modifier.width(280.dp)) {
+            val headerShape = if (isExpanded) {
+                RoundedCornerShape(topStart = 20.dp, topEnd = 20.dp)
+            } else {
+                RoundedCornerShape(20.dp)
+            }
+
+            // Кликабельная шапка с TV/Web эффектом: по клику на нее список участников сворачивается или разворачивается
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(horizontal = 18.dp, vertical = 14.dp),
+                    .tvAndWebHoverEffect(
+                        scaleTarget = 1.03f,
+                        shape = headerShape,
+                        activeBorderColor = MaterialTheme.colorScheme.primary,
+                        activeBorderWidth = 1.5.dp,
+                        defaultBorderColor = Color.Transparent,
+                        defaultBorderWidth = 0.dp,
+                        onClick = { isExpanded = !isExpanded }
+                    )
+                    .clip(headerShape)
+                    .padding(horizontal = 14.dp, vertical = 10.dp),
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
@@ -77,7 +103,7 @@ fun WatchPartyParticipantsPanel(
                 ) {
                     Box(
                         modifier = Modifier
-                            .size(28.dp)
+                            .size(26.dp)
                             .clip(CircleShape)
                             .background(Color(0xFF64B5F6).copy(alpha = 0.15f)),
                         contentAlignment = Alignment.Center
@@ -86,14 +112,14 @@ fun WatchPartyParticipantsPanel(
                             imageVector = Lucide.Users,
                             contentDescription = null,
                             tint = Color(0xFF64B5F6),
-                            modifier = Modifier.size(15.dp)
+                            modifier = Modifier.size(14.dp)
                         )
                     }
 
                     Text(
                         text = stringResource(Res.string.watch_party_participants_header),
-                        fontSize = 14.sp,
-                        fontWeight = FontWeight.Bold,
+                        fontSize = 13.sp,
+                        fontWeight = FontWeight.SemiBold,
                         color = Color.White
                     )
 
@@ -101,71 +127,71 @@ fun WatchPartyParticipantsPanel(
                     Box(
                         modifier = Modifier
                             .clip(RoundedCornerShape(10.dp))
-                            .background(Color(0xFF4CAF50).copy(alpha = 0.15f))
-                            .padding(horizontal = 7.dp, vertical = 2.dp)
+                            .background(Color(0xFF4CAF50).copy(alpha = 0.20f))
+                            .padding(horizontal = 6.dp, vertical = 1.dp)
                     ) {
                         Text(
                             text = onlineCount.toString(),
                             fontSize = 11.sp,
                             fontWeight = FontWeight.Bold,
-                            color = Color(0xFF4CAF50)
+                            color = Color(0xFF81C784)
                         )
                     }
                 }
 
-                // Кнопка закрытия
-                Box(
-                    modifier = Modifier
-                        .size(28.dp)
-                        .clip(CircleShape)
-                        .tvAndWebHoverEffect(shape = CircleShape)
-                        .clickable { onCloseClick() },
-                    contentAlignment = Alignment.Center
-                ) {
-                    Icon(
-                        imageVector = Lucide.X,
-                        contentDescription = stringResource(Res.string.player_btn_close),
-                        tint = Color.White.copy(alpha = 0.6f),
-                        modifier = Modifier.size(16.dp)
-                    )
-                }
+                // Иконка сворачивания / разворачивания
+                Icon(
+                    imageVector = if (isExpanded) Lucide.ChevronUp else Lucide.ChevronDown,
+                    contentDescription = if (isExpanded) "Свернуть" else "Развернуть",
+                    tint = Color.White.copy(alpha = 0.6f),
+                    modifier = Modifier.size(16.dp)
+                )
             }
 
-            HorizontalDivider(
-                color = Color.White.copy(alpha = 0.06f),
-                thickness = 1.dp
-            )
-
-            // Список участников
-            if (participants.isEmpty()) {
-                Box(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .padding(16.dp),
-                    contentAlignment = Alignment.Center
-                ) {
-                    Text(
-                        text = stringResource(Res.string.watch_rooms_history_empty),
-                        fontSize = 12.sp,
-                        color = Color.White.copy(alpha = 0.45f)
+            AnimatedVisibility(
+                visible = isExpanded,
+                enter = fadeIn() + expandVertically(),
+                exit = fadeOut() + shrinkVertically()
+            ) {
+                Column(modifier = Modifier.fillMaxWidth()) {
+                    HorizontalDivider(
+                        color = Color.White.copy(alpha = 0.08f),
+                        thickness = 1.dp
                     )
-                }
-            } else {
-                LazyColumn(
-                    modifier = Modifier.fillMaxSize(),
-                    contentPadding = PaddingValues(horizontal = 12.dp, vertical = 10.dp),
-                    verticalArrangement = Arrangement.spacedBy(8.dp)
-                ) {
-                    items(
-                        items = participants,
-                        key = { it.userId.toString() }
-                    ) { participant ->
-                        val isCurrentUser = participant.userId.toString() == currentUserId
-                        ParticipantPlayerItem(
-                            participant = participant,
-                            isCurrentUser = isCurrentUser,
-                            isLocalBuffering = isLocalBuffering
-                        )
+
+                    if (participants.isEmpty()) {
+                        Box(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(14.dp),
+                            contentAlignment = Alignment.Center
+                        ) {
+                            Text(
+                                text = stringResource(Res.string.watch_rooms_history_empty),
+                                fontSize = 12.sp,
+                                color = Color.White.copy(alpha = 0.45f)
+                            )
+                        }
+                    } else {
+                        LazyColumn(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .heightIn(max = 360.dp),
+                            contentPadding = PaddingValues(horizontal = 10.dp, vertical = 8.dp),
+                            verticalArrangement = Arrangement.spacedBy(6.dp)
+                        ) {
+                            items(
+                                items = participants,
+                                key = { it.userId.toString() }
+                            ) { participant ->
+                                val isCurrentUser = participant.userId.toString() == currentUserId
+                                ParticipantPlayerItem(
+                                    participant = participant,
+                                    isCurrentUser = isCurrentUser,
+                                    isLocalBuffering = isLocalBuffering
+                                )
+                            }
+                        }
                     }
                 }
             }

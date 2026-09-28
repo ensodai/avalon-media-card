@@ -2,7 +2,9 @@ package org.ensodai.avalonmediacard.presentation.screens.watchParty.action
 
 import androidx.lifecycle.viewModelScope
 import avalonmediacard.client.generated.resources.*
+import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.launch
+import org.ensodai.avalonmediacard.contract.logging.AppLogging
 import org.ensodai.avalonmediacard.contract.model.CreateRoomRequest
 import org.ensodai.avalonmediacard.contract.model.EntityType
 import org.ensodai.avalonmediacard.contract.model.JoinRoomResult
@@ -27,11 +29,19 @@ import org.ensodai.avalonmediacard.presentation.screens.watchParty.viewState.Wat
 import org.jetbrains.compose.resources.getString
 import kotlin.uuid.Uuid
 
+private val logger = AppLogging.logger("WatchParty")
+
 fun WatchPartyViewModel.initialize(
     mediaKey: MediaKey?,
     title: String?,
     initialStep: WatchPartyStep? = null
 ) {
+    if (viewState.value.activeRoom != null && viewState.value.step == WatchPartyStep.LOBBY) {
+        if (title != null && viewState.value.mediaTitle.isBlank()) {
+            updateViewState { it.copy(mediaTitle = title) }
+        }
+        return
+    }
     val currentUid = tokenStorage.cachedUserId?.let { runCatching { Uuid.parse(it) }.getOrNull() }
     val step = initialStep ?: if (mediaKey != null) WatchPartyStep.SETUP else WatchPartyStep.ENTRY
     updateViewState {
@@ -384,75 +394,81 @@ fun WatchPartyViewModel.onLeaveRoom() {
 fun WatchPartyViewModel.subscribeToLobbyState(roomId: Uuid) {
     eventStreamJob?.cancel()
     eventStreamJob = viewModelScope.launch {
-        streamLobbyStateUseCase(roomId).collect { event ->
-            when (event) {
-                is LobbyEvent.InitialSnapshot -> {
-                    val map = event.participants.associateBy { it.userId }
-                    val myId = viewState.value.myUserId
-                    val me = myId?.let { map[it] }
-                    updateViewState {
-                        it.copy(
-                            participantsMap = map,
-                            selectedSourceType = event.sourceType ?: it.selectedSourceType,
-                            selectedSourceId = event.sourceId ?: it.selectedSourceId,
-                            selectedSourceName = event.sourceName ?: it.selectedSourceName,
-                            selectedSeason = event.season ?: it.selectedSeason,
-                            selectedEpisode = event.episode ?: it.selectedEpisode,
-                            activeRoom = it.activeRoom?.copy(
-                                sourceType = event.sourceType ?: it.activeRoom.sourceType,
-                                sourceId = event.sourceId ?: it.activeRoom.sourceId,
-                                currentSeason = event.season ?: it.activeRoom.currentSeason,
-                                currentEpisode = event.episode ?: it.activeRoom.currentEpisode
-                            ),
-                            myIsReady = me?.isReady ?: it.myIsReady,
-                            myIntent = if (me?.isReady == true) me.intent else null,
-                            isActionPending = false
-                        )
-                    }
-                }
-                is LobbyEvent.ParticipantUpdated -> {
-                    val myId = viewState.value.myUserId
-                    val isMe = event.participant.userId == myId
-                    updateViewState {
-                        it.copy(
-                            participantsMap = it.participantsMap + (event.participant.userId to event.participant),
-                            myIsReady = if (isMe) event.participant.isReady else it.myIsReady,
-                            myIntent = if (isMe) (if (event.participant.isReady) event.participant.intent else null) else it.myIntent,
-                            isActionPending = if (isMe) false else it.isActionPending
-                        )
-                    }
-                }
-                is LobbyEvent.ParticipantRemoved -> {
-                    updateViewState {
-                        it.copy(participantsMap = it.participantsMap - event.userId)
-                    }
-                }
-                is LobbyEvent.SourceUpdated -> {
-                    updateViewState {
-                        it.copy(
-                            selectedSourceType = event.sourceType,
-                            selectedSourceId = event.sourceId,
-                            selectedSourceName = event.sourceName ?: it.selectedSourceName,
-                            selectedSeason = event.season ?: it.selectedSeason,
-                            selectedEpisode = event.episode ?: it.selectedEpisode,
-                            activeRoom = it.activeRoom?.copy(
-                                sourceType = event.sourceType,
-                                sourceId = event.sourceId,
-                                currentSeason = event.season ?: it.activeRoom.currentSeason,
-                                currentEpisode = event.episode ?: it.activeRoom.currentEpisode
+        try {
+            streamLobbyStateUseCase(roomId).collect { event ->
+                when (event) {
+                    is LobbyEvent.InitialSnapshot -> {
+                        val map = event.participants.associateBy { it.userId }
+                        val myId = viewState.value.myUserId
+                        val me = myId?.let { map[it] }
+                        updateViewState {
+                            it.copy(
+                                participantsMap = map,
+                                selectedSourceType = event.sourceType ?: it.selectedSourceType,
+                                selectedSourceId = event.sourceId ?: it.selectedSourceId,
+                                selectedSourceName = event.sourceName ?: it.selectedSourceName,
+                                selectedSeason = event.season ?: it.selectedSeason,
+                                selectedEpisode = event.episode ?: it.selectedEpisode,
+                                activeRoom = it.activeRoom?.copy(
+                                    sourceType = event.sourceType ?: it.activeRoom.sourceType,
+                                    sourceId = event.sourceId ?: it.activeRoom.sourceId,
+                                    currentSeason = event.season ?: it.activeRoom.currentSeason,
+                                    currentEpisode = event.episode ?: it.activeRoom.currentEpisode
+                                ),
+                                myIsReady = me?.isReady ?: it.myIsReady,
+                                myIntent = if (me?.isReady == true) me.intent else null,
+                                isActionPending = false
                             )
-                        )
+                        }
                     }
-                }
-                is LobbyEvent.TransitionToPlayer -> {
-                    eventStreamJob?.cancel()
-                    eventStreamJob = null
-                    onLaunchPlayerRequested?.invoke(roomId, event.season, event.episode, event.startPositionSeconds)
-                }
-                is LobbyEvent.SystemNotice -> {
-                    updateViewState { it.copy(systemNotice = event.message) }
+                    is LobbyEvent.ParticipantUpdated -> {
+                        val myId = viewState.value.myUserId
+                        val isMe = event.participant.userId == myId
+                        updateViewState {
+                            it.copy(
+                                participantsMap = it.participantsMap + (event.participant.userId to event.participant),
+                                myIsReady = if (isMe) event.participant.isReady else it.myIsReady,
+                                myIntent = if (isMe) (if (event.participant.isReady) event.participant.intent else null) else it.myIntent,
+                                isActionPending = if (isMe) false else it.isActionPending
+                            )
+                        }
+                    }
+                    is LobbyEvent.ParticipantRemoved -> {
+                        updateViewState {
+                            it.copy(participantsMap = it.participantsMap - event.userId)
+                        }
+                    }
+                    is LobbyEvent.SourceUpdated -> {
+                        updateViewState {
+                            it.copy(
+                                selectedSourceType = event.sourceType,
+                                selectedSourceId = event.sourceId,
+                                selectedSourceName = event.sourceName ?: it.selectedSourceName,
+                                selectedSeason = event.season ?: it.selectedSeason,
+                                selectedEpisode = event.episode ?: it.selectedEpisode,
+                                activeRoom = it.activeRoom?.copy(
+                                    sourceType = event.sourceType,
+                                    sourceId = event.sourceId,
+                                    currentSeason = event.season ?: it.activeRoom.currentSeason,
+                                    currentEpisode = event.episode ?: it.activeRoom.currentEpisode
+                                )
+                            )
+                        }
+                    }
+                    is LobbyEvent.TransitionToPlayer -> {
+                        eventStreamJob?.cancel()
+                        eventStreamJob = null
+                        onLaunchPlayerRequested?.invoke(roomId, event.season, event.episode, event.startPositionSeconds)
+                    }
+                    is LobbyEvent.SystemNotice -> {
+                        updateViewState { it.copy(systemNotice = event.message) }
+                    }
                 }
             }
+        } catch (e: CancellationException) {
+            throw e
+        } catch (e: Exception) {
+            logger.e(e) { "Lobby state stream failed for room $roomId" }
         }
     }
 }

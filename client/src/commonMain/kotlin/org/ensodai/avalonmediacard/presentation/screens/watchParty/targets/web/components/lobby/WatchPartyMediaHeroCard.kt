@@ -2,7 +2,6 @@ package org.ensodai.avalonmediacard.presentation.screens.watchParty.targets.web.
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Icon
@@ -24,6 +23,7 @@ import com.composables.icons.lucide.Lucide
 import com.composables.icons.lucide.RefreshCw
 import com.composables.icons.lucide.Tv
 import org.ensodai.avalonmediacard.presentation.components.ShimmerImage
+import org.ensodai.avalonmediacard.presentation.screens.commonComponents.tvAndWebHoverEffect
 import org.jetbrains.compose.resources.stringResource
 
 fun formatSourceProviderTitle(sourceType: String?): String? {
@@ -207,20 +207,23 @@ fun WatchPartyMediaHeroCard(
                 }
 
                 if (isHost) {
+                    val changeSourceShape = RoundedCornerShape(8.dp)
                     Row(
                         modifier = Modifier
-                            .clip(RoundedCornerShape(8.dp))
+                            .tvAndWebHoverEffect(
+                                scaleTarget = 1.05f,
+                                shape = changeSourceShape,
+                                activeBorderColor = Color.White,
+                                defaultBorderWidth = 1.dp,
+                                defaultBorderColor = if (isSelectingSource) Color.White.copy(alpha = 0.3f)
+                                else Color(0xFF6C63FF).copy(alpha = 0.6f),
+                                onClick = onToggleSelectSource
+                            )
                             .background(
                                 if (isSelectingSource) Color.White.copy(alpha = 0.18f)
-                                else Color(0xFF6C63FF).copy(alpha = 0.35f)
+                                else Color(0xFF6C63FF).copy(alpha = 0.35f),
+                                changeSourceShape
                             )
-                            .border(
-                                1.dp,
-                                if (isSelectingSource) Color.White.copy(alpha = 0.3f)
-                                else Color(0xFF6C63FF).copy(alpha = 0.6f),
-                                RoundedCornerShape(8.dp)
-                            )
-                            .clickable(onClick = onToggleSelectSource)
                             .padding(horizontal = 10.dp, vertical = 5.dp),
                         verticalAlignment = Alignment.CenterVertically,
                         horizontalArrangement = Arrangement.spacedBy(5.dp)

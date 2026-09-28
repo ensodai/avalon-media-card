@@ -10,6 +10,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import io.github.vinceglb.filekit.dialogs.FileKitType
@@ -81,22 +82,25 @@ fun WatchPartyScreen(
     val effectiveMediaSourcesList = if (mediaSourcesList.isNotEmpty()) mediaSourcesList else state.mediaSourcesList
     val effectiveInspectorState = torrentInspectorState ?: state.torrentInspectorSlot?.state
 
-    DisposableEffect(viewModel, onClose, onStartPlayback) {
-        viewModel.onCloseRequested = onClose
-        viewModel.onLaunchPlayerRequested = onStartPlayback
+    val currentOnClose by rememberUpdatedState(onClose)
+    val currentOnStartPlayback by rememberUpdatedState(onStartPlayback)
+
+    DisposableEffect(viewModel) {
+        viewModel.onCloseRequested = { currentOnClose() }
+        viewModel.onLaunchPlayerRequested = { roomId, season, episode, startPositionSeconds ->
+            currentOnStartPlayback?.invoke(roomId, season, episode, startPositionSeconds)
+        }
         onDispose {
             viewModel.onCloseRequested = null
             viewModel.onLaunchPlayerRequested = null
-            viewModel.eventStreamJob?.cancel()
-            viewModel.eventStreamJob = null
-            viewModel.sourcesStreamJob?.cancel()
-            viewModel.sourcesStreamJob = null
         }
     }
 
-    LaunchedEffect(isVisible, mediaKey, mediaTitle, initialStep) {
+    LaunchedEffect(isVisible, mediaKey, initialStep) {
         if (isVisible) {
             viewModel.initialize(mediaKey, mediaTitle, initialStep)
+        } else {
+            viewModel.actions.onClose()
         }
     }
 
@@ -104,16 +108,19 @@ fun WatchPartyScreen(
         mediaSourcesViewModel.updateRawSlots(effectiveMediaSourcesList, effectiveMediaKey)
     }
 
-    LaunchedEffect(mediaSourcesViewModel, onRefreshSources, onAction) {
+    val currentOnRefreshSources by rememberUpdatedState(onRefreshSources)
+    val currentOnAction by rememberUpdatedState(onAction)
+
+    LaunchedEffect(mediaSourcesViewModel) {
         mediaSourcesViewModel.onAction = { action ->
-            onAction(action)
+            currentOnAction(action)
             if (action is ServerAction) {
                 actions.onExecuteServerAction(action)
             }
         }
         mediaSourcesViewModel.onRefreshSources = {
-            if (onRefreshSources != null) {
-                onRefreshSources.invoke()
+            if (currentOnRefreshSources != null) {
+                currentOnRefreshSources?.invoke()
             } else {
                 actions.onRefreshSources()
             }

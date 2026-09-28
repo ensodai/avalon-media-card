@@ -2,7 +2,6 @@ package org.ensodai.avalonmediacard.presentation.screens.watchParty.targets.web.
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -16,6 +15,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import avalonmediacard.client.generated.resources.*
+import org.ensodai.avalonmediacard.presentation.screens.commonComponents.tvAndWebHoverEffect
 import org.jetbrains.compose.resources.stringResource
 
 @Composable
@@ -24,18 +24,20 @@ fun WatchPartyReadyToggle(
     onToggleReady: () -> Unit,
     modifier: Modifier = Modifier
 ) {
+    val shape = RoundedCornerShape(12.dp)
     Row(
         modifier = modifier
             .fillMaxWidth()
             .height(48.dp)
-            .clip(RoundedCornerShape(12.dp))
-            .background(if (isReady) Color(0xFF4CAF50).copy(alpha = 0.2f) else Color.White.copy(alpha = 0.06f))
-            .border(
-                1.dp,
-                if (isReady) Color(0xFF4CAF50) else Color.White.copy(alpha = 0.12f),
-                RoundedCornerShape(12.dp)
+            .tvAndWebHoverEffect(
+                scaleTarget = 1.02f,
+                shape = shape,
+                activeBorderColor = if (isReady) Color(0xFF4CAF50) else Color.White,
+                defaultBorderWidth = 1.dp,
+                defaultBorderColor = if (isReady) Color(0xFF4CAF50) else Color.White.copy(alpha = 0.12f),
+                onClick = onToggleReady
             )
-            .clickable(onClick = onToggleReady)
+            .background(if (isReady) Color(0xFF4CAF50).copy(alpha = 0.2f) else Color.White.copy(alpha = 0.06f), shape)
             .padding(horizontal = 16.dp),
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.SpaceBetween

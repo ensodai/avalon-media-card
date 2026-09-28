@@ -1,7 +1,6 @@
 package org.ensodai.avalonmediacard.presentation.screens.watchParty.targets.web.components.lobby
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.CircularProgressIndicator
@@ -37,12 +36,17 @@ fun WatchPartyLobbyBottomBar(
         verticalAlignment = Alignment.CenterVertically
     ) {
         // Кнопка "Покинуть"
+        val leaveShape = RoundedCornerShape(14.dp)
         Box(
             modifier = Modifier
                 .height(48.dp)
-                .clip(RoundedCornerShape(14.dp))
-                .background(Color.White.copy(alpha = 0.08f))
-                .clickable(onClick = onLeaveRoom)
+                .tvAndWebHoverEffect(
+                    scaleTarget = 1.02f,
+                    shape = leaveShape,
+                    activeBorderColor = Color.White.copy(alpha = 0.6f),
+                    onClick = onLeaveRoom
+                )
+                .background(Color.White.copy(alpha = 0.08f), leaveShape)
                 .padding(horizontal = 18.dp),
             contentAlignment = Alignment.Center
         ) {

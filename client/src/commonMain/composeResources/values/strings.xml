@@ -504,7 +504,7 @@
     <string name="watch_party_status_paused">Paused</string>
     <string name="watch_party_status_ready">Ready</string>
     <string name="watch_party_you">You</string>
-    <string name="watch_party_participants_header">Live</string>
+    <string name="watch_party_participants_header">Watching</string>
     <string name="watch_party_participants_count">%1$d online</string>
     <string name="watch_party_btn_join_playback">Join Playback</string>
     <string name="watch_party_live_badge">Live</string>

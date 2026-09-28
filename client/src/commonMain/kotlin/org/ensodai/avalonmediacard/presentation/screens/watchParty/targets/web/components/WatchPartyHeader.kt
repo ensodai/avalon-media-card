@@ -2,7 +2,6 @@ package org.ensodai.avalonmediacard.presentation.screens.watchParty.targets.web.
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -30,6 +29,7 @@ import com.composables.icons.lucide.Copy
 import com.composables.icons.lucide.Lucide
 import com.composables.icons.lucide.Users
 import com.composables.icons.lucide.X
+import org.ensodai.avalonmediacard.presentation.screens.commonComponents.tvAndWebHoverEffect
 import org.ensodai.avalonmediacard.presentation.screens.watchParty.viewState.WatchPartyStep
 import org.jetbrains.compose.resources.stringResource
 
@@ -65,12 +65,17 @@ fun WatchPartyHeader(
                 horizontalArrangement = Arrangement.spacedBy(14.dp)
             ) {
                 if (step == WatchPartyStep.SETUP) {
+                    val backShape = CircleShape
                     Box(
                         modifier = Modifier
                             .size(36.dp)
-                            .clip(CircleShape)
-                            .background(Color.White.copy(alpha = 0.08f))
-                            .clickable(onClick = onBack),
+                            .tvAndWebHoverEffect(
+                                scaleTarget = 1.08f,
+                                shape = backShape,
+                                activeBorderColor = Color.White,
+                                onClick = onBack
+                            )
+                            .background(Color.White.copy(alpha = 0.08f), backShape),
                         contentAlignment = Alignment.Center
                     ) {
                         Icon(
@@ -130,16 +135,22 @@ fun WatchPartyHeader(
                 var copied by remember { mutableStateOf(false) }
                 val formattedPin = if (joinPin.length == 6) "${joinPin.take(3)} ${joinPin.takeLast(3)}" else joinPin
 
+                val pinShape = RoundedCornerShape(10.dp)
                 Row(
                     modifier = Modifier
                         .height(34.dp)
-                        .clip(RoundedCornerShape(10.dp))
-                        .background(Color(0xFF6C63FF).copy(alpha = 0.15f))
-                        .border(1.dp, Color(0xFF6C63FF).copy(alpha = 0.40f), RoundedCornerShape(10.dp))
-                        .clickable {
-                            clipboard.setText(AnnotatedString(joinPin))
-                            copied = true
-                        }
+                        .tvAndWebHoverEffect(
+                            scaleTarget = 1.05f,
+                            shape = pinShape,
+                            activeBorderColor = Color(0xFF8C82FF),
+                            defaultBorderWidth = 1.dp,
+                            defaultBorderColor = Color(0xFF6C63FF).copy(alpha = 0.40f),
+                            onClick = {
+                                clipboard.setText(AnnotatedString(joinPin))
+                                copied = true
+                            }
+                        )
+                        .background(Color(0xFF6C63FF).copy(alpha = 0.15f), pinShape)
                         .padding(horizontal = 10.dp),
                     verticalAlignment = Alignment.CenterVertically,
                     horizontalArrangement = Arrangement.spacedBy(6.dp)
@@ -166,12 +177,17 @@ fun WatchPartyHeader(
                 }
             }
 
+            val closeShape = CircleShape
             Box(
                 modifier = Modifier
                     .size(36.dp)
-                    .clip(CircleShape)
-                    .background(Color.White.copy(alpha = 0.08f))
-                    .clickable(onClick = onClose),
+                    .tvAndWebHoverEffect(
+                        scaleTarget = 1.08f,
+                        shape = closeShape,
+                        activeBorderColor = Color.White,
+                        onClick = onClose
+                    )
+                    .background(Color.White.copy(alpha = 0.08f), closeShape),
                 contentAlignment = Alignment.Center
             ) {
                 Icon(

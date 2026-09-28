@@ -504,7 +504,7 @@
     <string name="watch_party_status_paused">На паузе</string>
     <string name="watch_party_status_ready">Готов</string>
     <string name="watch_party_you">Вы</string>
-    <string name="watch_party_participants_header">В эфире</string>
+    <string name="watch_party_participants_header">Смотрят</string>
     <string name="watch_party_participants_count">%1$d в сети</string>
     <string name="watch_party_btn_join_playback">Присоединиться к просмотру</string>
     <string name="watch_party_live_badge">Идет просмотр</string>

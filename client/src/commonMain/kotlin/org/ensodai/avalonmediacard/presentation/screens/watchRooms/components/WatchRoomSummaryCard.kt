@@ -20,7 +20,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import avalonmediacard.client.generated.resources.*
 import org.ensodai.avalonmediacard.contract.model.MediaType
-import org.ensodai.avalonmediacard.contract.model.WatchParticipantIntent
 import org.ensodai.avalonmediacard.contract.model.WatchRoomParticipantDto
 import org.ensodai.avalonmediacard.contract.model.WatchRoomParticipantRole
 import org.ensodai.avalonmediacard.contract.model.WatchRoomPhase
@@ -280,24 +279,6 @@ fun WatchRoomSummaryCard(
                         }
                     }
 
-                    // Эмодзи настроения (intent vibe)
-                    val dominantIntent = room.participants.firstOrNull { it.role == WatchRoomParticipantRole.HOST }?.intent
-                        ?: room.participants.firstOrNull()?.intent
-                    if (dominantIntent != null) {
-                        Box(
-                            modifier = Modifier
-                                .clip(RoundedCornerShape(6.dp))
-                                .background(Color.White.copy(alpha = 0.12f))
-                                .padding(horizontal = 5.dp, vertical = 2.dp),
-                            contentAlignment = Alignment.Center
-                        ) {
-                            Text(
-                                text = intentToEmoji(dominantIntent),
-                                fontSize = 11.sp
-                            )
-                        }
-                    }
-
                     // Счетчик участников
                     val hasOnline = room.onlineParticipantsCount > 0
                     val (participantsLabel, labelColor) = when {
@@ -371,15 +352,6 @@ private fun ParticipantMiniAvatar(
                 .border(1.dp, MaterialTheme.colorScheme.background, CircleShape)
         )
     }
-}
-
-private fun intentToEmoji(intent: WatchParticipantIntent): String = when (intent) {
-    WatchParticipantIntent.WATCHING_ATTENTIVELY -> "🍿"
-    WatchParticipantIntent.SILENT_NO_PAUSES -> "🤫"
-    WatchParticipantIntent.ACTIVE_DISCUSSION -> "💬"
-    WatchParticipantIntent.AWAY_FOR_SNACKS -> "☕"
-    WatchParticipantIntent.BACKGROUND_LISTENING -> "🎧"
-    WatchParticipantIntent.CHILLING -> "🛋️"
 }
 
 private fun formatTimeSeconds(seconds: Long): String {

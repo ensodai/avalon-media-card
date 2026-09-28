@@ -58,7 +58,9 @@ data class PlayerViewState(
             ?: playlist.firstOrNull()
 
     val currentQuality: String?
-        get() = currentEpisode?.qualityVariants?.find { it.url == currentStreamUrl }?.label ?: currentEpisode?.quality
+        get() = currentEpisode?.qualityVariants?.find {
+            it.url == currentStreamUrl || (!currentStreamUrl.isNullOrBlank() && currentStreamUrl.endsWith(it.url))
+        }?.label ?: currentEpisode?.quality
 
 
     val qualityVariants: List<VideoQuality>

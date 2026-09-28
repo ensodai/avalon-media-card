@@ -16,11 +16,10 @@ import org.ensodai.avalonmediacard.contract.rpc.StreamPlaybackResult
 import org.ensodai.avalonmediacard.plugin.PluginManager
 import org.ensodai.avalonmediacard.repository.UserSettingsRepository
 import org.ensodai.avalonmediacard.security.RpcSessionContext
-import org.ensodai.avalonmediacard.security.StreamTokenService
+import org.ensodai.avalonmediacard.security.StreamProxyService
 import org.koin.core.annotation.Factory
 import org.koin.core.annotation.InjectedParam
 import org.slf4j.LoggerFactory
-import java.util.Base64
 import kotlin.uuid.Uuid
 
 @Factory
@@ -29,7 +28,7 @@ class PlaybackRpcServiceImpl(
     private val userMediaBindings: UserMediaBindingProvider,
     private val pluginManager: PluginManager,
     private val mediaCatalog: MediaCatalog,
-    private val streamTokenService: StreamTokenService,
+    private val streamProxyService: StreamProxyService,
     private val userSettingsRepository: UserSettingsRepository
 ) : PlaybackRpcService {
 
@@ -94,6 +93,13 @@ class PlaybackRpcServiceImpl(
             val fallbackDuration = targetStream.durationSeconds
                 ?: customizedDetails?.runtime?.takeIf { it > 0 }?.let { (it * 60).toDouble() }
 
+            val preparedStream = runCatching { pluginManager.prepareStream(targetStream, userId) }.getOrDefault(targetStream)
+            val sanitizedPlaylist = streamProxyService.sanitizePlaylist(
+                streams = mappedStreams,
+                userId = userId,
+                defaultHeaders = preparedStream.headers
+            )
+
             return PlaybackMetadataResult.Ready(
                 currentSeason = targetStream.seasonNumber ?: targetCursor?.season,
                 currentEpisode = targetStream.episodeNumber ?: targetCursor?.episode,
@@ -101,7 +107,7 @@ class PlaybackRpcServiceImpl(
                 seriesTitle = canonicalSeriesTitle ?: targetStream.title,
                 durationSeconds = fallbackDuration,
                 startPositionSeconds = targetStream.watchedProgressSeconds ?: targetCursor?.progressSeconds,
-                playlist = mappedStreams,
+                playlist = sanitizedPlaylist,
                 boundSourceTitle = targetStream.sourceName.ifBlank { resolvedProviderId }
             )
         } catch (e: Exception) {
@@ -152,11 +158,14 @@ class PlaybackRpcServiceImpl(
                 ?: return StreamPlaybackResult.NoSourceBound("Серия не найдена в текущем источнике")
 
             val preparedStream = pluginManager.prepareStream(targetStream, userId)
-            val secureUrl = sanitizeAndWrapStreamUrl(
-                rawUrl = preparedStream.url,
+            val sanitizedTarget = streamProxyService.sanitizeStream(
+                stream = preparedStream,
+                userId = userId
+            )
+            val sanitizedPlaylist = streamProxyService.sanitizePlaylist(
+                streams = mappedStreams,
                 userId = userId,
-                streamType = preparedStream.type,
-                streamHeaders = preparedStream.headers
+                defaultHeaders = preparedStream.headers
             )
 
             val fallbackDuration = preparedStream.durationSeconds
@@ -164,82 +173,19 @@ class PlaybackRpcServiceImpl(
                 ?: runCatching { mediaCatalog.getMediaDetails(key, language = "ru") }.getOrNull()?.runtime?.takeIf { it > 0 }?.let { (it * 60).toDouble() }
 
             return StreamPlaybackResult.Ready(
-                streamUrl = secureUrl,
-                streamId = preparedStream.canonicalId,
+                streamUrl = sanitizedTarget.url,
+                streamId = sanitizedTarget.canonicalId,
                 durationSeconds = fallbackDuration,
                 startPositionSeconds = targetPair.second?.progressSeconds,
-                audioTracks = preparedStream.audioTracks,
-                subtitleTracks = preparedStream.subtitleTracks,
-                playlist = mappedStreams
+                audioTracks = sanitizedTarget.audioTracks,
+                subtitleTracks = sanitizedTarget.subtitleTracks,
+                playlist = sanitizedPlaylist
             )
         } catch (e: Exception) {
             if (e is CancellationException) throw e
             logger.error("Ошибка подготовки потока для key=${key.id}: ${e.message}", e)
             return StreamPlaybackResult.Error("Ошибка подготовки потока: ${e.message}")
         }
-    }
-
-    private fun sanitizeAndWrapStreamUrl(
-        rawUrl: String,
-        userId: Uuid?,
-        streamType: StreamType? = null,
-        streamHeaders: Map<String, String> = emptyMap()
-    ): String {
-        if (rawUrl.startsWith("/gst/")) {
-            return rawUrl
-        }
-        if (rawUrl.startsWith("/api/stream-proxy/") && !rawUrl.contains("?url=")) {
-            return rawUrl
-        }
-
-        // Если источник вернул query-формат /api/stream-proxy?url=base64...
-        if (rawUrl.startsWith("/api/stream-proxy") && rawUrl.contains("?url=")) {
-            try {
-                val queryParams = parseQueryString(rawUrl.substringAfter("?"))
-                val encodedUrl = queryParams["url"] ?: return rawUrl
-                val decodedTarget = String(Base64.getUrlDecoder().decode(encodedUrl), Charsets.UTF_8)
-                val customHeaders = streamHeaders.toMutableMap()
-
-                queryParams["referer"]?.let {
-                    val dec = runCatching { String(Base64.getUrlDecoder().decode(it), Charsets.UTF_8) }.getOrDefault(it)
-                    customHeaders[HttpHeaders.Referrer] = dec
-                }
-                queryParams["origin"]?.let {
-                    val dec = runCatching { String(Base64.getUrlDecoder().decode(it), Charsets.UTF_8) }.getOrDefault(it)
-                    customHeaders["Origin"] = dec
-                }
-                queryParams["userAgent"]?.let {
-                    val dec = runCatching { String(Base64.getUrlDecoder().decode(it), Charsets.UTF_8) }.getOrDefault(it)
-                    customHeaders[HttpHeaders.UserAgent] = dec
-                }
-                val authHeader = queryParams["auth"]?.let {
-                    if (it.startsWith("Basic ")) it
-                    else runCatching { String(Base64.getUrlDecoder().decode(it)) }.getOrDefault(it)
-                }
-
-                return streamTokenService.wrapUrl(
-                    targetUrl = decodedTarget,
-                    userId = userId,
-                    streamType = streamType,
-                    headers = customHeaders,
-                    authHeader = authHeader
-                )
-            } catch (e: Exception) {
-                logger.warn("Не удалось преобразовать старый URL стрим-прокси: {}", e.message)
-            }
-        }
-
-        // Если это прямой внешний URL (http/https)
-        if (rawUrl.startsWith("http://") || rawUrl.startsWith("https://")) {
-            return streamTokenService.wrapUrl(
-                targetUrl = rawUrl,
-                userId = userId,
-                streamType = streamType,
-                headers = streamHeaders
-            )
-        }
-
-        return rawUrl
     }
 
     override suspend fun selectSource(

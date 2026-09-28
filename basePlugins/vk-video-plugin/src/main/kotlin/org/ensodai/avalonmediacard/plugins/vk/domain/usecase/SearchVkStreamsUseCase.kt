@@ -5,6 +5,7 @@ import org.ensodai.avalonmediacard.contract.model.MediaKey
 import org.ensodai.avalonmediacard.contract.plugins.MediaStream
 import org.ensodai.avalonmediacard.contract.plugins.PluginContext
 import org.ensodai.avalonmediacard.contract.plugins.StreamType
+import org.ensodai.avalonmediacard.plugins.vk.VkPlugin
 import org.ensodai.avalonmediacard.plugins.vk.domain.model.VkVideoItem
 import org.ensodai.avalonmediacard.plugins.vk.domain.repository.VkRepository
 import kotlin.math.abs
@@ -130,7 +131,8 @@ class SearchVkStreamsUseCase(
                     isMapped = true,
                     episodeName = channelSubtitle,
                     qualityVariants = video.qualities,
-                    subtitleTracks = video.subtitles
+                    subtitleTracks = video.subtitles,
+                    headers = VkPlugin.STREAM_HEADERS
                 )
             )
         }

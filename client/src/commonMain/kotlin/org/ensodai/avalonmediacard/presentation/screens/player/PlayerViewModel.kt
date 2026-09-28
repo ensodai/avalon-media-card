@@ -228,7 +228,11 @@ class PlayerViewModel(
             when (metaResult) {
                 is PlaybackMetadataResult.Ready -> {
                     val fullPlaylist = metaResult.playlist.map { stream ->
-                        stream.copy(url = resolveAbsoluteUrl(stream.url))
+                        stream.copy(
+                            url = resolveAbsoluteUrl(stream.url),
+                            qualityVariants = stream.qualityVariants.map { it.copy(url = resolveAbsoluteUrl(it.url)) },
+                            subtitleTracks = stream.subtitleTracks.map { it.copy(url = it.url?.let(::resolveAbsoluteUrl)) }
+                        )
                     }
                     val currentEp = fullPlaylist.find {
                         it.seasonNumber == (metaResult.currentSeason ?: targetSeason) &&
@@ -283,7 +287,11 @@ class PlayerViewModel(
                 is StreamPlaybackResult.Ready -> {
                     val fullUrl = resolveAbsoluteUrl(result.streamUrl)
                     val fullPlaylist = (result.playlist.ifEmpty { viewState.value.playlist }).map { stream ->
-                        stream.copy(url = resolveAbsoluteUrl(stream.url))
+                        stream.copy(
+                            url = resolveAbsoluteUrl(stream.url),
+                            qualityVariants = stream.qualityVariants.map { it.copy(url = resolveAbsoluteUrl(it.url)) },
+                            subtitleTracks = stream.subtitleTracks.map { it.copy(url = it.url?.let(::resolveAbsoluteUrl)) }
+                        )
                     }
                     val targetEpisode = fullPlaylist.find { it.canonicalId == result.streamId }
                         ?: fullPlaylist.find { it.url == fullUrl }
@@ -294,6 +302,9 @@ class PlayerViewModel(
                         result.startPositionSeconds ?: targetEpisode?.watchedProgressSeconds ?: 0L
                     }
 
+                    val resolvedAudio = result.audioTracks.map { it.copy(url = it.url?.let(::resolveAbsoluteUrl)) }
+                    val resolvedSubs = result.subtitleTracks.map { it.copy(url = it.url?.let(::resolveAbsoluteUrl)) }
+
                     updateViewState {
                         it.copy(
                             title = resolvedTitle.ifBlank { it.title },
@@ -301,10 +312,10 @@ class PlayerViewModel(
                             currentStreamUrl = fullUrl,
                             duration = result.durationSeconds ?: targetEpisode?.durationSeconds ?: it.duration,
                             currentTime = startPosition.toDouble(),
-                            audioTracks = result.audioTracks.ifEmpty { it.audioTracks },
-                            subtitleTracks = result.subtitleTracks.ifEmpty { it.subtitleTracks },
+                            audioTracks = resolvedAudio.ifEmpty { it.audioTracks },
+                            subtitleTracks = resolvedSubs.ifEmpty { it.subtitleTracks },
                             selectedAudioTrackIndex = result.audioTrackIndex ?: it.selectedAudioTrackIndex,
-                            playlist = if (it.playlist.isEmpty()) fullPlaylist else it.playlist,
+                            playlist = if (result.playlist.isNotEmpty()) fullPlaylist else (if (it.playlist.isEmpty()) fullPlaylist else it.playlist),
                             status = PlaybackStatus.BUFFERING,
                             errorMessage = null
                         )

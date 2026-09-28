@@ -39,6 +39,13 @@ class CollapsPlugin : AvalonPlugin {
 
     private lateinit var logger: PluginLogger
 
+    companion object {
+        val STREAM_HEADERS: Map<String, String> = mapOf(
+            "Referer" to "https://kinokrad.my/",
+            "Origin" to "https://kinokrad.my"
+        )
+    }
+
     override fun onInitialize(context: PluginContext) {
         logger = context.logger
         logger.info("Initializing Collaps CDN Plugin [v$version]")
@@ -60,7 +67,7 @@ class CollapsPlugin : AvalonPlugin {
         }
 
         context.streams.onPrepare { stream, _ ->
-            stream
+            stream.copy(headers = STREAM_HEADERS)
         }
 
         context.streams.onPlaylist { key, sourceId, userId ->

@@ -7,6 +7,7 @@ import org.ensodai.avalonmediacard.contract.plugins.MediaStream
 import org.ensodai.avalonmediacard.contract.plugins.PluginContext
 import org.ensodai.avalonmediacard.contract.plugins.StreamType
 import org.ensodai.avalonmediacard.contract.plugins.SubtitleTrack
+import org.ensodai.avalonmediacard.plugins.collaps.CollapsPlugin
 import org.ensodai.avalonmediacard.plugins.collaps.domain.model.CollapsSearchResult
 import org.ensodai.avalonmediacard.plugins.collaps.domain.repository.CollapsRepository
 import kotlin.uuid.Uuid
@@ -110,24 +111,22 @@ class SearchCollapsStreamsUseCase(
             }
             val subtitleTracks = embed.subtitles.mapIndexedNotNull { idx, cc ->
                 val url = cc.url ?: return@mapIndexedNotNull null
-                SubtitleTrack(id = "$idx", name = cc.name ?: context.i18n.t("subtitles.index_fmt", idx), url = wrapProxyUrl(url))
+                SubtitleTrack(id = "$idx", name = cc.name ?: context.i18n.t("subtitles.index_fmt", idx), url = url)
             }
 
             val subtitleText = formatAudioNamesSummary(embed.audioNames)
 
             val streamUrl = embed.downloadUrl ?: resolved.primaryUrl
-            val proxyUrl = wrapProxyUrl(streamUrl)
             val isDirect = streamUrl.contains(".mp4", ignoreCase = true) || streamUrl.contains("dl.showvid.ws")
             val streamType = if (isDirect) StreamType.DirectUrl else StreamType.Hls
             val streamFormat = if (isDirect) "MP4" else "HLS"
-            val proxyVariants = resolved.qualityVariants.map { it.copy(url = wrapProxyUrl(it.url)) }
             val actualQuality = resolved.qualityVariants.firstOrNull()?.label ?: item.quality ?: "720p"
 
             streams.add(
                 MediaStream(
                     id = "collaps_movie_${item.id}",
                     title = item.name,
-                    url = proxyUrl,
+                    url = streamUrl,
                     type = streamType,
                     quality = actualQuality,
                     format = streamFormat,
@@ -140,7 +139,8 @@ class SearchCollapsStreamsUseCase(
                     episodeName = subtitleText,
                     audioTracks = audioTracks,
                     subtitleTracks = subtitleTracks,
-                    qualityVariants = proxyVariants
+                    qualityVariants = resolved.qualityVariants,
+                    headers = CollapsPlugin.STREAM_HEADERS
                 )
             )
         }
@@ -170,23 +170,21 @@ class SearchCollapsStreamsUseCase(
             }
             val subtitleTracks = embed.subtitles.mapIndexedNotNull { idx, cc ->
                 val url = cc.url ?: return@mapIndexedNotNull null
-                SubtitleTrack(id = "$idx", name = cc.name ?: context.i18n.t("subtitles.index_fmt", idx), url = wrapProxyUrl(url))
+                SubtitleTrack(id = "$idx", name = cc.name ?: context.i18n.t("subtitles.index_fmt", idx), url = url)
             }
 
             val subtitleText = "S${targetSeason}E$targetEpisode • ${formatAudioNamesSummary(embed.audioNames)}"
             val streamUrl = embed.downloadUrl ?: resolved.primaryUrl
-            val proxyUrl = wrapProxyUrl(streamUrl)
             val isDirect = streamUrl.contains(".mp4", ignoreCase = true) || streamUrl.contains("dl.showvid.ws")
             val streamType = if (isDirect) StreamType.DirectUrl else StreamType.Hls
             val streamFormat = if (isDirect) "MP4" else "HLS"
-            val proxyVariants = resolved.qualityVariants.map { it.copy(url = wrapProxyUrl(it.url)) }
             val actualQuality = resolved.qualityVariants.firstOrNull()?.label ?: item.quality ?: "720p"
 
             streams.add(
                 MediaStream(
                     id = "collaps_ep_${item.id}_s${targetSeason}e${targetEpisode}",
                     title = item.name,
-                    url = proxyUrl,
+                    url = streamUrl,
                     type = streamType,
                     quality = actualQuality,
                     format = streamFormat,
@@ -199,7 +197,8 @@ class SearchCollapsStreamsUseCase(
                     episodeName = subtitleText,
                     audioTracks = audioTracks,
                     subtitleTracks = subtitleTracks,
-                    qualityVariants = proxyVariants
+                    qualityVariants = resolved.qualityVariants,
+                    headers = CollapsPlugin.STREAM_HEADERS
                 )
             )
         }
@@ -277,13 +276,5 @@ class SearchCollapsStreamsUseCase(
 
         streams.sortBy { it.seasonNumber ?: 99 }
         return streams
-    }
-
-    private fun wrapProxyUrl(url: String): String {
-        if (url.startsWith("/api/stream-proxy")) return url
-        val encoded = java.util.Base64.getUrlEncoder().encodeToString(url.toByteArray(Charsets.UTF_8))
-        val refEncoded = java.util.Base64.getUrlEncoder().encodeToString("https://kinokrad.my/".toByteArray(Charsets.UTF_8))
-        val origEncoded = java.util.Base64.getUrlEncoder().encodeToString("https://kinokrad.my".toByteArray(Charsets.UTF_8))
-        return "/api/stream-proxy?url=$encoded&referer=$refEncoded&origin=$origEncoded"
     }
 }

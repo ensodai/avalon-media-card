@@ -9,7 +9,11 @@ import org.ensodai.avalonmediacard.contract.model.WatchRoomParticipantRole
 import org.ensodai.avalonmediacard.contract.model.WatchRoomPlaybackState
 import org.ensodai.avalonmediacard.contract.model.WatchRoomStatus
 import org.ensodai.avalonmediacard.contract.model.WatchRoomSummaryDto
+import org.ensodai.avalonmediacard.contract.model.MediaImageType
+import org.ensodai.avalonmediacard.contract.utils.toProxyImageUrl
+import org.ensodai.avalonmediacard.database.MediaImageTable
 import org.ensodai.avalonmediacard.database.MediaTable
+import org.ensodai.avalonmediacard.database.MediaTranslationTable
 import org.ensodai.avalonmediacard.database.UserTable
 import org.ensodai.avalonmediacard.database.WatchRoomParticipantTable
 import org.ensodai.avalonmediacard.database.WatchRoomTable
@@ -105,6 +109,8 @@ class WatchRoomRepositoryImpl : WatchRoomRepository {
 
         logger.info("Watch party room created: id={}, pin={}, mediaId={}", newRoomId, pin, request.mediaId)
 
+        val (backdrops, titles) = loadMediaMeta(listOf(internalMediaId))
+
         WatchRoomDto(
             id = newRoomId,
             title = roomTitle,
@@ -120,7 +126,9 @@ class WatchRoomRepositoryImpl : WatchRoomRepository {
             controlMode = request.controlMode,
             status = WatchRoomStatus.ACTIVE,
             isPrivate = request.isPrivate,
-            participants = listOf(hostParticipant)
+            participants = listOf(hostParticipant),
+            backdropUrl = backdrops[internalMediaId],
+            mediaTitle = titles[internalMediaId]
         )
     }
 
@@ -131,7 +139,14 @@ class WatchRoomRepositoryImpl : WatchRoomRepository {
             .singleOrNull() ?: return@dbQuery null
 
         val participants = loadParticipantsInternal(roomId)
-        mapToWatchRoomDto(row, participants)
+        val internalMediaId = row[WatchRoomTable.mediaId].value
+        val (backdrops, titles) = loadMediaMeta(listOf(internalMediaId))
+        mapToWatchRoomDto(
+            row = row,
+            participants = participants,
+            backdropUrl = backdrops[internalMediaId],
+            mediaTitle = titles[internalMediaId]
+        )
     }
 
     override suspend fun findRoomByPin(pin: String): WatchRoomDto? = dbQuery {
@@ -145,7 +160,14 @@ class WatchRoomRepositoryImpl : WatchRoomRepository {
 
         val roomId = row[WatchRoomTable.id].value
         val participants = loadParticipantsInternal(roomId)
-        mapToWatchRoomDto(row, participants)
+        val internalMediaId = row[WatchRoomTable.mediaId].value
+        val (backdrops, titles) = loadMediaMeta(listOf(internalMediaId))
+        mapToWatchRoomDto(
+            row = row,
+            participants = participants,
+            backdropUrl = backdrops[internalMediaId],
+            mediaTitle = titles[internalMediaId]
+        )
     }
 
     override suspend fun getRoomsForMedia(
@@ -174,6 +196,9 @@ class WatchRoomRepositoryImpl : WatchRoomRepository {
         if (rooms.isEmpty()) return@dbQuery emptyList()
 
         val roomIds = rooms.map { it[WatchRoomTable.id].value }
+        val mediaIds = rooms.map { it[WatchRoomTable.mediaId].value }.distinct()
+        val (backdrops, titles) = loadMediaMeta(mediaIds)
+
         val participantsByRoom = (WatchRoomParticipantTable innerJoin UserTable).selectAll()
             .where { WatchRoomParticipantTable.roomId inList roomIds }
             .groupBy { it[WatchRoomParticipantTable.roomId].value }
@@ -199,6 +224,8 @@ class WatchRoomRepositoryImpl : WatchRoomRepository {
                 return@mapNotNull null
             }
 
+            val currentMediaId = row[WatchRoomTable.mediaId].value
+
             WatchRoomSummaryDto(
                 id = roomId,
                 title = row[WatchRoomTable.title],
@@ -212,7 +239,9 @@ class WatchRoomRepositoryImpl : WatchRoomRepository {
                 isHost = isHost,
                 status = row[WatchRoomTable.status],
                 sourceType = row[WatchRoomTable.sourceType],
-                sourceId = row[WatchRoomTable.sourceId]
+                sourceId = row[WatchRoomTable.sourceId],
+                backdropUrl = backdrops[currentMediaId],
+                mediaTitle = titles[currentMediaId]
             )
         }
     }
@@ -246,6 +275,9 @@ class WatchRoomRepositoryImpl : WatchRoomRepository {
         if (rooms.isEmpty()) return@dbQuery emptyList()
 
         val roomIds = rooms.map { it[WatchRoomTable.id].value }
+        val mediaIds = rooms.map { it[WatchRoomTable.mediaId].value }.distinct()
+        val (backdrops, titles) = loadMediaMeta(mediaIds)
+
         val participantsByRoom = (WatchRoomParticipantTable innerJoin UserTable).selectAll()
             .where { WatchRoomParticipantTable.roomId inList roomIds }
             .groupBy { it[WatchRoomParticipantTable.roomId].value }
@@ -263,6 +295,8 @@ class WatchRoomRepositoryImpl : WatchRoomRepository {
                 )
             }
 
+            val currentMediaId = row[WatchRoomTable.mediaId].value
+
             WatchRoomSummaryDto(
                 id = roomId,
                 title = row[WatchRoomTable.title],
@@ -276,7 +310,9 @@ class WatchRoomRepositoryImpl : WatchRoomRepository {
                 isHost = isHost,
                 status = row[WatchRoomTable.status],
                 sourceType = row[WatchRoomTable.sourceType],
-                sourceId = row[WatchRoomTable.sourceId]
+                sourceId = row[WatchRoomTable.sourceId],
+                backdropUrl = backdrops[currentMediaId],
+                mediaTitle = titles[currentMediaId]
             )
         }
     }
@@ -396,9 +432,33 @@ class WatchRoomRepositoryImpl : WatchRoomRepository {
 
     private val WatchRoomParticipantRoleCol get() = WatchRoomParticipantTable.role
 
+    private fun loadMediaMeta(internalMediaIds: Collection<Uuid>): Pair<Map<Uuid, String>, Map<Uuid, String>> {
+        if (internalMediaIds.isEmpty()) return emptyMap<Uuid, String>() to emptyMap<Uuid, String>()
+        val backdrops = MediaImageTable.selectAll()
+            .where { (MediaImageTable.mediaId inList internalMediaIds) and (MediaImageTable.imageType inList listOf(MediaImageType.BACKDROP, MediaImageType.POSTER)) }
+            .groupBy { it[MediaImageTable.mediaId].value }
+            .mapValues { (_, images) ->
+                val backdrop = images.firstOrNull { it[MediaImageTable.imageType] == MediaImageType.BACKDROP }
+                val poster = images.firstOrNull { it[MediaImageTable.imageType] == MediaImageType.POSTER }
+                (backdrop ?: poster)?.get(MediaImageTable.url)?.toProxyImageUrl("w1280") ?: ""
+            }.filterValues { it.isNotBlank() }
+
+        val titles = MediaTranslationTable.selectAll()
+            .where { MediaTranslationTable.mediaId inList internalMediaIds }
+            .groupBy { it[MediaTranslationTable.mediaId].value }
+            .mapValues { (_, trans) ->
+                trans.firstOrNull { it[MediaTranslationTable.language] == "ru" }?.get(MediaTranslationTable.title)
+                    ?: trans.firstOrNull()?.get(MediaTranslationTable.title) ?: ""
+            }.filterValues { it.isNotBlank() }
+
+        return backdrops to titles
+    }
+
     private fun mapToWatchRoomDto(
         row: ResultRow,
-        participants: List<WatchRoomParticipantDto>
+        participants: List<WatchRoomParticipantDto>,
+        backdropUrl: String? = null,
+        mediaTitle: String? = null
     ): WatchRoomDto {
         return WatchRoomDto(
             id = row[WatchRoomTable.id].value,
@@ -415,7 +475,9 @@ class WatchRoomRepositoryImpl : WatchRoomRepository {
             controlMode = row[WatchRoomTable.controlMode],
             status = row[WatchRoomTable.status],
             isPrivate = row[WatchRoomTable.isPrivate],
-            participants = participants
+            participants = participants,
+            backdropUrl = backdropUrl,
+            mediaTitle = mediaTitle
         )
     }
 }

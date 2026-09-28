@@ -251,6 +251,11 @@ class TmdbApi(
         return try {
             val response = client.get("https://api.themoviedb.org/3/$type/$cleanId/keywords") {
                 header("Authorization", "Bearer $token")
+                timeout {
+                    requestTimeoutMillis = 15000
+                    connectTimeoutMillis = 5000
+                    socketTimeoutMillis = 15000
+                }
                 parameter("language", "en-US")
             }
             if (response.status.value != 200) return emptyList()
@@ -276,6 +281,11 @@ class TmdbApi(
         return try {
             val response = client.get("https://api.themoviedb.org/3/discover/$type") {
                 header("Authorization", "Bearer $token")
+                timeout {
+                    requestTimeoutMillis = 15000
+                    connectTimeoutMillis = 5000
+                    socketTimeoutMillis = 15000
+                }
                 parameter("language", language)
                 parameter("page", page)
                 parameter("sort_by", "popularity.desc")
@@ -307,6 +317,11 @@ class TmdbApi(
         return try {
             val response = client.get("https://api.themoviedb.org/3/discover/$type") {
                 header("Authorization", "Bearer $token")
+                timeout {
+                    requestTimeoutMillis = 15000
+                    connectTimeoutMillis = 5000
+                    socketTimeoutMillis = 15000
+                }
                 parameter("language", language)
                 parameter("page", page)
                 params.forEach { (k, v) -> parameter(k, v) }
@@ -328,6 +343,11 @@ class TmdbApi(
         return try {
             val response = client.get("https://api.themoviedb.org/3/genre/$type/list") {
                 header("Authorization", "Bearer $token")
+                timeout {
+                    requestTimeoutMillis = 15000
+                    connectTimeoutMillis = 5000
+                    socketTimeoutMillis = 15000
+                }
                 parameter("language", language)
             }
             if (response.status.value != 200) return emptyList()

@@ -1,14 +1,23 @@
 package org.ensodai.avalonmediacard.rpc
 
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.emitAll
 import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.launch
 import org.ensodai.avalonmediacard.contract.auth.AuthState
 import org.ensodai.avalonmediacard.contract.model.ClockSyncPing
 import org.ensodai.avalonmediacard.contract.model.ClockSyncPong
 import org.ensodai.avalonmediacard.contract.model.CreateRoomRequest
+import org.ensodai.avalonmediacard.contract.model.EntityType
 import org.ensodai.avalonmediacard.contract.model.JoinRoomResult
 import org.ensodai.avalonmediacard.contract.model.LobbyEvent
+import org.ensodai.avalonmediacard.contract.model.MediaCatalog
+import org.ensodai.avalonmediacard.contract.model.MediaKey
+import org.ensodai.avalonmediacard.contract.model.MediaProvider
+import org.ensodai.avalonmediacard.contract.model.MediaType
 import org.ensodai.avalonmediacard.contract.model.RoomPlaybackCommand
 import org.ensodai.avalonmediacard.contract.model.SetLobbyStatusRequest
 import org.ensodai.avalonmediacard.contract.model.WatchRoomDto
@@ -34,10 +43,12 @@ import kotlin.uuid.Uuid
 class WatchPartyRpcServiceImpl(
     @InjectedParam private val session: RpcSessionContext,
     private val watchRoomRepository: WatchRoomRepository,
-    private val watchRoomSessionManager: WatchRoomSessionManager
+    private val watchRoomSessionManager: WatchRoomSessionManager,
+    private val mediaCatalog: MediaCatalog
 ) : WatchPartyRpcService {
 
     private val logger = LoggerFactory.getLogger(WatchPartyRpcServiceImpl::class.java)
+    private val rpcScope = CoroutineScope(Dispatchers.IO + SupervisorJob())
 
     private fun currentAuthorizedUser(): AuthState.Authorized? {
         return session.state.value as? AuthState.Authorized
@@ -46,6 +57,17 @@ class WatchPartyRpcServiceImpl(
     override suspend fun createRoom(request: CreateRoomRequest): WatchRoomDto {
         val authUser = currentAuthorizedUser()
             ?: throw IllegalStateException("Пользователь не авторизован")
+
+        try {
+            val entityType = if (request.mediaType == MediaType.MOVIE) EntityType.MOVIE else EntityType.TV
+            mediaCatalog.getMediaDetails(
+                key = MediaKey(provider = MediaProvider.Tmdb, type = entityType, id = request.mediaId),
+                requireSeasons = false,
+                requireVideos = false
+            )
+        } catch (e: Exception) {
+            logger.warn("Could not pre-fetch media metadata for room creation: {}", e.message)
+        }
 
         var pin = generateRoomPin()
         var retries = 5
@@ -107,7 +129,19 @@ class WatchPartyRpcServiceImpl(
 
     override suspend fun getUserRooms(): List<WatchRoomSummaryDto> {
         val authUser = currentAuthorizedUser() ?: return emptyList()
-        return watchRoomSessionManager.getUserRooms(authUser.userId)
+        val rooms = watchRoomSessionManager.getUserRooms(authUser.userId)
+        rooms.filter { it.backdropUrl.isNullOrBlank() }.forEach { room ->
+            rpcScope.launch {
+                try {
+                    val entityType = if (room.mediaType == MediaType.MOVIE) EntityType.MOVIE else EntityType.TV
+                    mediaCatalog.getMediaDetails(MediaKey(provider = MediaProvider.Tmdb, type = entityType, id = room.mediaId), false, false)
+                    watchRoomSessionManager.notifyRoomUpdated(room.id)
+                } catch (e: Exception) {
+                    logger.debug("Failed background media enrichment for room {}: {}", room.id, e.message)
+                }
+            }
+        }
+        return rooms
     }
 
     override fun streamUserRooms(): Flow<List<WatchRoomSummaryDto>> = flow {

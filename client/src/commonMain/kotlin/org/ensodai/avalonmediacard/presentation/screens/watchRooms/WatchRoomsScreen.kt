@@ -1,8 +1,10 @@
 package org.ensodai.avalonmediacard.presentation.screens.watchRooms
 
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.grid.GridCells
+import androidx.compose.foundation.lazy.grid.GridItemSpan
+import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
+import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -16,9 +18,6 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import avalonmediacard.client.generated.resources.*
-import com.composables.icons.lucide.KeyRound
-import com.composables.icons.lucide.Lucide
-import com.composables.icons.lucide.Plus
 import org.ensodai.avalonmediacard.contract.model.EntityType
 import org.ensodai.avalonmediacard.contract.model.MediaKey
 import org.ensodai.avalonmediacard.contract.model.MediaProvider
@@ -31,7 +30,6 @@ import org.ensodai.avalonmediacard.presentation.screens.player.model.PlayerMode
 import org.ensodai.avalonmediacard.presentation.screens.watchParty.WatchPartyScreen
 import org.ensodai.avalonmediacard.presentation.screens.watchParty.WatchPartyViewModel
 import org.ensodai.avalonmediacard.presentation.screens.watchRooms.components.WatchRoomSummaryCard
-import org.ensodai.avalonmediacard.presentation.screens.watchRooms.components.WatchRoomsActionCard
 import org.ensodai.avalonmediacard.presentation.screens.watchRooms.components.WatchRoomsHeader
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.koinInject
@@ -52,45 +50,24 @@ fun WatchRoomsScreen(
             .fillMaxSize()
             .padding(horizontal = 32.dp, vertical = 24.dp)
     ) {
-        LazyColumn(
+        LazyVerticalGrid(
+            columns = GridCells.Adaptive(minSize = 340.dp),
             modifier = Modifier.fillMaxSize(),
-            verticalArrangement = Arrangement.spacedBy(24.dp)
+            horizontalArrangement = Arrangement.spacedBy(16.dp),
+            verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
-            // 1. Header
-            item {
-                WatchRoomsHeader()
+            // 1. Header with compact action toolbar (full width)
+            item(span = { GridItemSpan(maxLineSpan) }) {
+                WatchRoomsHeader(
+                    onCreateRoom = actions.onOpenCreateModal,
+                    onJoinByPin = actions.onOpenConnectModal
+                )
             }
 
-            // 2. Action Cards (Create / Join by PIN)
-            item {
+            // 2. User Rooms Section Title (full width)
+            item(span = { GridItemSpan(maxLineSpan) }) {
                 Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.spacedBy(16.dp)
-                ) {
-                    WatchRoomsActionCard(
-                        modifier = Modifier.weight(1f),
-                        icon = Lucide.Plus,
-                        title = stringResource(Res.string.watch_rooms_btn_create),
-                        subtitle = stringResource(Res.string.watch_rooms_create_desc),
-                        buttonText = stringResource(Res.string.watch_rooms_btn_create),
-                        onClick = actions.onOpenCreateModal
-                    )
-
-                    WatchRoomsActionCard(
-                        modifier = Modifier.weight(1f),
-                        icon = Lucide.KeyRound,
-                        title = stringResource(Res.string.watch_rooms_btn_connect),
-                        subtitle = stringResource(Res.string.watch_rooms_connect_desc),
-                        buttonText = stringResource(Res.string.watch_rooms_btn_connect),
-                        onClick = actions.onOpenConnectModal
-                    )
-                }
-            }
-
-            // 3. User Rooms Section Title
-            item {
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
+                    modifier = Modifier.fillMaxWidth().padding(top = 8.dp, bottom = 4.dp),
                     horizontalArrangement = Arrangement.SpaceBetween,
                     verticalAlignment = Alignment.CenterVertically
                 ) {
@@ -111,9 +88,9 @@ fun WatchRoomsScreen(
                 }
             }
 
-            // 4. User Rooms List or Empty State
+            // 3. User Rooms List or Empty State
             if (state.rooms.isEmpty() && !state.isLoading) {
-                item {
+                item(span = { GridItemSpan(maxLineSpan) }) {
                     Box(
                         modifier = Modifier
                             .fillMaxWidth()

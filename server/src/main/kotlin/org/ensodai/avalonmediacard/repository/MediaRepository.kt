@@ -5,6 +5,7 @@ import org.ensodai.avalonmediacard.contract.classification.AnimeSubType
 import org.ensodai.avalonmediacard.contract.model.ActorMetadata
 import org.ensodai.avalonmediacard.contract.model.GenreMetadata
 import org.ensodai.avalonmediacard.contract.model.KeywordMetadata
+import org.ensodai.avalonmediacard.contract.model.MediaImageType
 import org.ensodai.avalonmediacard.contract.model.MediaMetadata
 import org.ensodai.avalonmediacard.contract.model.SeasonMetadata
 import org.ensodai.avalonmediacard.contract.plugins.GenreDictionaryProvider
@@ -114,7 +115,7 @@ class MediaRepository(
             metadata.posterUrl?.let { url ->
                 MediaImageTable.insert {
                     it[this.mediaId] = mediaId
-                    it[imageType] = "POSTER"
+                    it[imageType] = MediaImageType.POSTER
                     it[this.language] = normLang
                     it[this.url] = url.take(255)
                 }
@@ -122,7 +123,7 @@ class MediaRepository(
             metadata.backgroundUrl?.let { url ->
                 MediaImageTable.insert {
                     it[this.mediaId] = mediaId
-                    it[imageType] = "BACKDROP"
+                    it[imageType] = MediaImageType.BACKDROP
                     it[this.language] = normLang
                     it[this.url] = url.take(255)
                 }
@@ -231,7 +232,7 @@ class MediaRepository(
                     MediaImageTable.insert {
                         it[this.mediaId] = mediaId
                         it[this.seasonId] = seasonId
-                        it[imageType] = "POSTER"
+                        it[imageType] = MediaImageType.POSTER
                         it[this.language] = normLang
                         it[this.url] = url.take(255)
                     }
@@ -290,12 +291,12 @@ class MediaRepository(
 
         if (safeAvatar != null) {
             val imgExists = MediaImageTable.selectAll()
-                .where { (MediaImageTable.personId eq pId) and (MediaImageTable.imageType eq "PROFILE") }.firstOrNull()
+                .where { (MediaImageTable.personId eq pId) and (MediaImageTable.imageType eq MediaImageType.PROFILE) }.firstOrNull()
             if (imgExists == null) {
                 MediaImageTable.insert {
                     it[this.mediaId] = mediaId
                     it[this.personId] = pId
-                    it[this.imageType] = "PROFILE"
+                    it[this.imageType] = MediaImageType.PROFILE
                     it[this.url] = safeAvatar
                 }
             } else {
@@ -364,7 +365,7 @@ class MediaRepository(
 
             val personImages = if (personIds.isNotEmpty()) {
                 MediaImageTable.selectAll()
-                    .where { (MediaImageTable.personId inList personIds) and (MediaImageTable.imageType eq "PROFILE") }
+                    .where { (MediaImageTable.personId inList personIds) and (MediaImageTable.imageType eq MediaImageType.PROFILE) }
                     .associateBy { it[MediaImageTable.personId] }
             } else emptyMap()
 
@@ -381,7 +382,7 @@ class MediaRepository(
 
             val seasonImages = if (seasonIds.isNotEmpty()) {
                 MediaImageTable.selectAll()
-                    .where { (MediaImageTable.seasonId inList seasonIds) and (MediaImageTable.imageType eq "POSTER") }
+                    .where { (MediaImageTable.seasonId inList seasonIds) and (MediaImageTable.imageType eq MediaImageType.POSTER) }
                     .associateBy { it[MediaImageTable.seasonId] }
             } else emptyMap()
 
@@ -396,10 +397,10 @@ class MediaRepository(
                     ?: return@mapNotNull null
                 val imgs = allImages[id] ?: emptyList()
                 
-                val posterRow = imgs.firstOrNull { it[MediaImageTable.imageType] == "POSTER" && normalizeLang(it[MediaImageTable.language]) == normLang }
-                    ?: imgs.firstOrNull { it[MediaImageTable.imageType] == "POSTER" }
-                val backdropRow = imgs.firstOrNull { it[MediaImageTable.imageType] == "BACKDROP" && normalizeLang(it[MediaImageTable.language]) == normLang }
-                    ?: imgs.firstOrNull { it[MediaImageTable.imageType] == "BACKDROP" }
+                val posterRow = imgs.firstOrNull { it[MediaImageTable.imageType] == MediaImageType.POSTER && normalizeLang(it[MediaImageTable.language]) == normLang }
+                    ?: imgs.firstOrNull { it[MediaImageTable.imageType] == MediaImageType.POSTER }
+                val backdropRow = imgs.firstOrNull { it[MediaImageTable.imageType] == MediaImageType.BACKDROP && normalizeLang(it[MediaImageTable.language]) == normLang }
+                    ?: imgs.firstOrNull { it[MediaImageTable.imageType] == MediaImageType.BACKDROP }
 
                 val genres = (allGenres[id] ?: emptyList()).map {
                     val gId = it[MediaGenreTable.genreId]
@@ -525,11 +526,11 @@ class MediaRepository(
                 .toList()
 
             val posterRow =
-                images.firstOrNull { it[MediaImageTable.imageType] == "POSTER" && normalizeLang(it[MediaImageTable.language]) == normLang }
-                    ?: images.firstOrNull { it[MediaImageTable.imageType] == "POSTER" }
+                images.firstOrNull { it[MediaImageTable.imageType] == MediaImageType.POSTER && normalizeLang(it[MediaImageTable.language]) == normLang }
+                    ?: images.firstOrNull { it[MediaImageTable.imageType] == MediaImageType.POSTER }
             val backdropRow =
-                images.firstOrNull { it[MediaImageTable.imageType] == "BACKDROP" && normalizeLang(it[MediaImageTable.language]) == normLang }
-                    ?: images.firstOrNull { it[MediaImageTable.imageType] == "BACKDROP" }
+                images.firstOrNull { it[MediaImageTable.imageType] == MediaImageType.BACKDROP && normalizeLang(it[MediaImageTable.language]) == normLang }
+                    ?: images.firstOrNull { it[MediaImageTable.imageType] == MediaImageType.BACKDROP }
 
             val genres = MediaGenreTable.selectAll()
                 .where { MediaGenreTable.mediaId eq id }
@@ -560,7 +561,7 @@ class MediaRepository(
             val directorId = directorPerson?.get(MediaPersonTable.personId)
             val directorImageUrl = directorPerson?.let { p ->
                 MediaImageTable.selectAll()
-                    .where { (MediaImageTable.personId eq p[MediaPersonTable.id]) and (MediaImageTable.imageType eq "PROFILE") }
+                    .where { (MediaImageTable.personId eq p[MediaPersonTable.id]) and (MediaImageTable.imageType eq MediaImageType.PROFILE) }
                     .firstOrNull()?.get(MediaImageTable.url)?.toProxyImageUrl("w185")
             }
 
@@ -583,7 +584,7 @@ class MediaRepository(
                     ?: cTransList.firstOrNull()
 
                 val pImg = MediaImageTable.selectAll()
-                    .where { (MediaImageTable.personId eq pId) and (MediaImageTable.imageType eq "PROFILE") }
+                    .where { (MediaImageTable.personId eq pId) and (MediaImageTable.imageType eq MediaImageType.PROFILE) }
                     .firstOrNull()
 
                 val actorName = pt?.get(MediaPersonTranslationTable.name)
@@ -608,7 +609,7 @@ class MediaRepository(
                 val st = sTransList.firstOrNull { normalizeLang(it[MediaSeasonTranslationTable.language]) == normLang }
                     ?: sTransList.firstOrNull()
                 val sImg = MediaImageTable.selectAll()
-                    .where { (MediaImageTable.seasonId eq sId) and (MediaImageTable.imageType eq "POSTER") }
+                    .where { (MediaImageTable.seasonId eq sId) and (MediaImageTable.imageType eq MediaImageType.POSTER) }
                     .firstOrNull()
 
                 SeasonMetadata(
@@ -778,7 +779,7 @@ class MediaRepository(
             ep.stillUrl?.let { url ->
                 val existingImg = MediaImageTable.selectAll().where {
                     (MediaImageTable.episodeId eq epId) and
-                            (MediaImageTable.imageType eq "POSTER")
+                            (MediaImageTable.imageType eq MediaImageType.POSTER)
                 }.firstOrNull()
 
                 if (existingImg != null) {
@@ -790,7 +791,7 @@ class MediaRepository(
                     MediaImageTable.insert {
                         it[this.mediaId] = mediaId
                         it[this.episodeId] = epId
-                        it[imageType] = "POSTER"
+                        it[imageType] = MediaImageType.POSTER
                         it[this.language] = language
                         it[this.url] = url.take(255)
                         it[this.updatedAt] = now
@@ -849,7 +850,7 @@ class MediaRepository(
 
         val imagesByEpId = MediaImageTable.selectAll().where {
             (MediaImageTable.episodeId inList epIds) and
-                    (MediaImageTable.imageType eq "POSTER")
+                    (MediaImageTable.imageType eq MediaImageType.POSTER)
         }.associateBy { it[MediaImageTable.episodeId] }
 
         val episodes = episodeRows.map { row ->

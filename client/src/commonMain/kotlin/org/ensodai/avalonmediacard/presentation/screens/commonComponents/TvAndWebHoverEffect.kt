@@ -43,7 +43,7 @@ fun Modifier.tvAndWebHoverEffect(
     shape: Shape,
     clickEnabled: Boolean = true,
     focusEnabled: Boolean = true,
-    tiltEnabled: Boolean = true,
+    tiltEnabled: Boolean = false,
     onClick: (() -> Unit)? = null,
     onStateChange: ((isActive: Boolean) -> Unit)? = null
 ): Modifier = composed {

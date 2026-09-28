@@ -1,5 +1,6 @@
 package org.ensodai.avalonmediacard.database
 
+import org.ensodai.avalonmediacard.contract.model.MediaImageType
 import org.jetbrains.exposed.v1.core.ReferenceOption
 
 object MediaImageTable : BaseUuidTable("media_images") {
@@ -7,7 +8,7 @@ object MediaImageTable : BaseUuidTable("media_images") {
     val seasonId = reference("season_id", MediaSeasonTable, onDelete = ReferenceOption.CASCADE).nullable()
     val episodeId = reference("episode_id", MediaEpisodeTable, onDelete = ReferenceOption.CASCADE).nullable()
     val personId = reference("person_id", MediaPersonTable, onDelete = ReferenceOption.CASCADE).nullable()
-    val imageType = varchar("image_type", 20)
+    val imageType = enumerationByName("image_type", 20, MediaImageType::class)
     val language = varchar("language", 10).nullable()
     val url = text("url")
 }

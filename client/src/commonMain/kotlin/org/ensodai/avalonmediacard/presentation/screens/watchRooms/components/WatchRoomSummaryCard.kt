@@ -11,16 +11,21 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import avalonmediacard.client.generated.resources.*
+import org.ensodai.avalonmediacard.contract.model.MediaType
+import org.ensodai.avalonmediacard.contract.model.WatchParticipantIntent
 import org.ensodai.avalonmediacard.contract.model.WatchRoomParticipantDto
 import org.ensodai.avalonmediacard.contract.model.WatchRoomParticipantRole
 import org.ensodai.avalonmediacard.contract.model.WatchRoomPhase
 import org.ensodai.avalonmediacard.contract.model.WatchRoomSummaryDto
-import org.ensodai.avalonmediacard.presentation.screens.commonComponents.AvalonButton
+import org.ensodai.avalonmediacard.presentation.components.ShimmerImage
 import org.ensodai.avalonmediacard.presentation.screens.commonComponents.tvAndWebHoverEffect
 import org.jetbrains.compose.resources.stringResource
 
@@ -34,248 +39,287 @@ fun WatchRoomSummaryCard(
     val isBuffering = room.phase == WatchRoomPhase.PREPARING || room.phase == WatchRoomPhase.PARTIAL_BUFFERING
     val isPaused = room.phase == WatchRoomPhase.FORCE_PAUSED
 
-    val borderColor = when {
-        isLive -> Color(0xFF4CAF50).copy(alpha = 0.35f)
-        isBuffering -> Color(0xFFFF9800).copy(alpha = 0.35f)
-        isPaused -> Color(0xFF2196F3).copy(alpha = 0.35f)
-        else -> MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.25f)
-    }
-
-    val backgroundColor = when {
-        isLive -> Color(0xFF4CAF50).copy(alpha = 0.08f)
-        isBuffering -> Color(0xFFFF9800).copy(alpha = 0.06f)
-        isPaused -> Color(0xFF2196F3).copy(alpha = 0.06f)
-        else -> MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.25f)
-    }
-
     Box(
         modifier = modifier
             .fillMaxWidth()
-            .clip(RoundedCornerShape(10.dp))
-            .background(backgroundColor)
-            .border(1.dp, borderColor, RoundedCornerShape(10.dp))
-            .tvAndWebHoverEffect(scaleTarget = 1.005f, shape = RoundedCornerShape(10.dp), onClick = onClick)
-            .padding(16.dp)
+            .height(210.dp)
+            .tvAndWebHoverEffect(
+                scaleTarget = 1.02f,
+                defaultBorderWidth = 1.dp,
+                defaultBorderColor = MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.20f),
+                activeBorderWidth = 2.dp,
+                activeBorderColor = MaterialTheme.colorScheme.primary,
+                shape = RoundedCornerShape(14.dp),
+                tiltEnabled = false,
+                onClick = onClick
+            )
+            .background(MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.25f))
     ) {
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.SpaceBetween,
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            Column(
-                modifier = Modifier.weight(1f),
-                verticalArrangement = Arrangement.spacedBy(6.dp)
-            ) {
-                Row(
-                    horizontalArrangement = Arrangement.spacedBy(8.dp),
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    Text(
-                        text = room.title,
-                        fontSize = 16.sp,
-                        fontWeight = FontWeight.SemiBold,
-                        color = MaterialTheme.colorScheme.onBackground
-                    )
+        // 1. Подложка арта (Backdrop)
+        if (!room.backdropUrl.isNullOrBlank()) {
+            ShimmerImage(
+                model = room.backdropUrl,
+                contentDescription = null,
+                contentScale = ContentScale.Crop,
+                shape = RoundedCornerShape(14.dp),
+                modifier = Modifier.fillMaxSize()
+            )
 
-                    if (room.isHost) {
+            // Светофильтр для идеальной читаемости текста и бейджей
+            Box(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .background(
+                        Brush.verticalGradient(
+                            colorStops = arrayOf(
+                                0.0f to Color.Black.copy(alpha = 0.45f),
+                                0.30f to Color.Black.copy(alpha = 0.15f),
+                                0.55f to Color.Black.copy(alpha = 0.60f),
+                                1.0f to Color.Black.copy(alpha = 0.95f)
+                            )
+                        )
+                    )
+            )
+        } else {
+            Box(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .background(
+                        Brush.verticalGradient(
+                            listOf(
+                                MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.35f),
+                                MaterialTheme.colorScheme.surface.copy(alpha = 0.65f)
+                            )
+                        )
+                    )
+            )
+        }
+
+        // 2. Контент карточки
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(16.dp),
+            verticalArrangement = Arrangement.SpaceBetween
+        ) {
+            // Верхняя строка: Бейдж активного статуса воспроизведения (слева) + Хост (справа)
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                // Левая группа: Статус (только активные фазы LIVE / Пауза / Буферизация)
+                when {
+                    isLive -> {
                         Box(
                             modifier = Modifier
-                                .clip(RoundedCornerShape(4.dp))
-                                .background(MaterialTheme.colorScheme.primary.copy(alpha = 0.2f))
-                                .padding(horizontal = 6.dp, vertical = 2.dp)
+                                .clip(RoundedCornerShape(6.dp))
+                                .background(Color(0xFF4CAF50).copy(alpha = 0.25f))
+                                .border(1.dp, Color(0xFF4CAF50).copy(alpha = 0.60f), RoundedCornerShape(6.dp))
+                                .padding(horizontal = 8.dp, vertical = 3.dp)
                         ) {
-                            Text(
-                                text = stringResource(Res.string.watch_party_host_badge),
-                                fontSize = 10.sp,
-                                fontWeight = FontWeight.Bold,
-                                color = MaterialTheme.colorScheme.primary
-                            )
-                        }
-                    }
-
-                    when (room.phase) {
-                        WatchRoomPhase.PLAYING_IN_SYNC -> {
-                            Box(
-                                modifier = Modifier
-                                    .clip(RoundedCornerShape(4.dp))
-                                    .background(Color(0xFF4CAF50).copy(alpha = 0.2f))
-                                    .border(1.dp, Color(0xFF4CAF50).copy(alpha = 0.4f), RoundedCornerShape(4.dp))
-                                    .padding(horizontal = 6.dp, vertical = 2.dp)
+                            Row(
+                                verticalAlignment = Alignment.CenterVertically,
+                                horizontalArrangement = Arrangement.spacedBy(5.dp)
                             ) {
-                                Row(
-                                    verticalAlignment = Alignment.CenterVertically,
-                                    horizontalArrangement = Arrangement.spacedBy(4.dp)
-                                ) {
-                                    Box(
-                                        modifier = Modifier
-                                            .size(6.dp)
-                                            .clip(CircleShape)
-                                            .background(Color(0xFF4CAF50))
-                                    )
-                                    Text(
-                                        text = stringResource(Res.string.watch_party_live_badge),
-                                        fontSize = 10.sp,
-                                        fontWeight = FontWeight.Bold,
-                                        color = Color(0xFF4CAF50)
-                                    )
-                                }
-                            }
-                        }
-                        WatchRoomPhase.STARTING_SCHEDULED -> {
-                            Box(
-                                modifier = Modifier
-                                    .clip(RoundedCornerShape(4.dp))
-                                    .background(Color(0xFF4CAF50).copy(alpha = 0.15f))
-                                    .padding(horizontal = 6.dp, vertical = 2.dp)
-                            ) {
+                                Box(
+                                    modifier = Modifier
+                                        .size(6.dp)
+                                        .clip(CircleShape)
+                                        .background(Color(0xFF4CAF50))
+                                )
+                                val timeStr = if (room.lastPositionSeconds > 0L) {
+                                    " • ${formatTimeSeconds(room.lastPositionSeconds)}"
+                                } else ""
                                 Text(
-                                    text = stringResource(Res.string.watch_party_btn_starting),
-                                    fontSize = 10.sp,
-                                    fontWeight = FontWeight.Medium,
+                                    text = "${stringResource(Res.string.watch_party_live_badge)}$timeStr",
+                                    fontSize = 11.sp,
+                                    fontWeight = FontWeight.Bold,
                                     color = Color(0xFF81C784)
                                 )
                             }
                         }
-                        WatchRoomPhase.PREPARING, WatchRoomPhase.PARTIAL_BUFFERING -> {
-                            Box(
-                                modifier = Modifier
-                                    .clip(RoundedCornerShape(4.dp))
-                                    .background(Color(0xFFFF9800).copy(alpha = 0.15f))
-                                    .padding(horizontal = 6.dp, vertical = 2.dp)
-                            ) {
-                                Text(
-                                    text = stringResource(Res.string.watch_party_status_buffering),
-                                    fontSize = 10.sp,
-                                    fontWeight = FontWeight.Medium,
-                                    color = Color(0xFFFFB74D)
-                                )
+                    }
+                    isPaused -> {
+                        Box(
+                            modifier = Modifier
+                                .clip(RoundedCornerShape(6.dp))
+                                .background(Color(0xFF2196F3).copy(alpha = 0.25f))
+                                .border(1.dp, Color(0xFF2196F3).copy(alpha = 0.60f), RoundedCornerShape(6.dp))
+                                .padding(horizontal = 8.dp, vertical = 3.dp)
+                        ) {
+                            val pauseLabel = if (room.lastPositionSeconds > 0L) {
+                                stringResource(Res.string.watch_party_paused_at, formatTimeSeconds(room.lastPositionSeconds))
+                            } else {
+                                stringResource(Res.string.watch_party_status_paused)
                             }
+                            Text(
+                                text = pauseLabel,
+                                fontSize = 11.sp,
+                                fontWeight = FontWeight.Medium,
+                                color = Color(0xFF90CAF9)
+                            )
                         }
-                        WatchRoomPhase.FORCE_PAUSED -> {
-                            Box(
-                                modifier = Modifier
-                                    .clip(RoundedCornerShape(4.dp))
-                                    .background(Color(0xFF2196F3).copy(alpha = 0.15f))
-                                    .padding(horizontal = 6.dp, vertical = 2.dp)
-                            ) {
-                                Text(
-                                    text = if (room.lastPositionSeconds > 0L) {
-                                        stringResource(Res.string.watch_party_paused_at, formatTimeSeconds(room.lastPositionSeconds))
-                                    } else {
-                                        stringResource(Res.string.watch_party_status_paused)
-                                    },
-                                    fontSize = 10.sp,
-                                    fontWeight = FontWeight.Medium,
-                                    color = Color(0xFF90CAF9)
-                                )
-                            }
+                    }
+                    isBuffering -> {
+                        Box(
+                            modifier = Modifier
+                                .clip(RoundedCornerShape(6.dp))
+                                .background(Color(0xFFFF9800).copy(alpha = 0.25f))
+                                .border(1.dp, Color(0xFFFF9800).copy(alpha = 0.60f), RoundedCornerShape(6.dp))
+                                .padding(horizontal = 8.dp, vertical = 3.dp)
+                        ) {
+                            Text(
+                                text = stringResource(Res.string.watch_party_status_buffering),
+                                fontSize = 11.sp,
+                                fontWeight = FontWeight.Medium,
+                                color = Color(0xFFFFB74D)
+                            )
                         }
-                        WatchRoomPhase.LOBBY -> {
-                            Box(
-                                modifier = Modifier
-                                    .clip(RoundedCornerShape(4.dp))
-                                    .background(MaterialTheme.colorScheme.onBackground.copy(alpha = 0.08f))
-                                    .padding(horizontal = 6.dp, vertical = 2.dp)
-                            ) {
-                                Text(
-                                    text = stringResource(Res.string.watch_party_in_lobby_badge),
-                                    fontSize = 10.sp,
-                                    fontWeight = FontWeight.Medium,
-                                    color = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.6f)
-                                )
-                            }
-                        }
+                    }
+                    else -> {
+                        // В лобби — не выводим серую плашку-заплатку, чтобы не засорять артворк
+                        Spacer(modifier = Modifier.width(1.dp))
                     }
                 }
 
-                Row(
-                    horizontalArrangement = Arrangement.spacedBy(16.dp),
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    Text(
-                        text = "PIN: ${room.joinPin}",
-                        fontSize = 13.sp,
-                        fontWeight = FontWeight.Bold,
-                        color = MaterialTheme.colorScheme.primary
-                    )
-
-                    val episodeInfo = if (room.currentSeason != null && room.currentEpisode != null) {
-                        "S${room.currentSeason} E${room.currentEpisode}"
-                    } else null
-
-                    if (episodeInfo != null) {
-                        Text(
-                            text = episodeInfo,
-                            fontSize = 12.sp,
-                            color = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.6f)
-                        )
-                    }
-
-                    if (isLive && room.lastPositionSeconds > 0L) {
-                        Text(
-                            text = formatTimeSeconds(room.lastPositionSeconds),
-                            fontSize = 12.sp,
-                            fontWeight = FontWeight.SemiBold,
-                            color = Color(0xFF4CAF50)
-                        )
-                    }
-
-                    Row(
-                        horizontalArrangement = Arrangement.spacedBy(8.dp),
-                        verticalAlignment = Alignment.CenterVertically
+                // Правая группа: Бейдж создателя (Хост)
+                if (room.isHost) {
+                    Box(
+                        modifier = Modifier
+                            .clip(RoundedCornerShape(6.dp))
+                            .background(MaterialTheme.colorScheme.primary.copy(alpha = 0.25f))
+                            .border(1.dp, MaterialTheme.colorScheme.primary.copy(alpha = 0.50f), RoundedCornerShape(6.dp))
+                            .padding(horizontal = 7.dp, vertical = 3.dp)
                     ) {
-                        if (room.participants.isNotEmpty()) {
-                            Row(
-                                horizontalArrangement = Arrangement.spacedBy((-6).dp),
-                                verticalAlignment = Alignment.CenterVertically
-                            ) {
-                                val displayed = room.participants.take(4)
-                                val remaining = room.participants.size - displayed.size
-                                displayed.forEach { participant ->
-                                    ParticipantMiniAvatar(participant = participant)
-                                }
-                                if (remaining > 0) {
-                                    Box(
-                                        modifier = Modifier
-                                            .size(24.dp)
-                                            .clip(CircleShape)
-                                            .background(MaterialTheme.colorScheme.surfaceVariant)
-                                            .border(1.5.dp, MaterialTheme.colorScheme.background, CircleShape),
-                                        contentAlignment = Alignment.Center
-                                    ) {
-                                        Text(
-                                            text = "+$remaining",
-                                            fontSize = 9.sp,
-                                            fontWeight = FontWeight.Bold,
-                                            color = MaterialTheme.colorScheme.onSurfaceVariant
-                                        )
-                                    }
-                                }
-                            }
-                        }
-
-                        val participantsLabel = if (isLive && room.onlineParticipantsCount > 0) {
-                            stringResource(Res.string.watch_party_online_watching, room.onlineParticipantsCount)
-                        } else if (room.onlineParticipantsCount > 0) {
-                            stringResource(Res.string.watch_party_online_in_lobby, room.onlineParticipantsCount)
-                        } else {
-                            stringResource(Res.string.watch_party_participants_label, room.participantsCount)
-                        }
-
                         Text(
-                            text = participantsLabel,
-                            fontSize = 12.sp,
-                            color = if (isLive) Color(0xFF81C784) else MaterialTheme.colorScheme.onBackground.copy(alpha = 0.6f)
+                            text = stringResource(Res.string.watch_party_host_badge),
+                            fontSize = 10.sp,
+                            fontWeight = FontWeight.Bold,
+                            color = MaterialTheme.colorScheme.primary
                         )
                     }
                 }
             }
 
-            AvalonButton(
-                text = if (isLive) stringResource(Res.string.watch_party_btn_join_playback)
-                else stringResource(Res.string.watch_rooms_enter_room),
-                onClick = onClick
-            )
+            // Нижний блок: Заголовок + Метаданные + Социальная строка
+            Column(verticalArrangement = Arrangement.spacedBy(6.dp)) {
+                // Название комнаты
+                Text(
+                    text = room.title,
+                    fontSize = 17.sp,
+                    fontWeight = FontWeight.Bold,
+                    color = Color.White,
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis
+                )
+
+                // Подзаголовок: Тайтл фильма/сериала + сезон/эпизод
+                val episodeInfo = if (room.currentSeason != null && room.currentEpisode != null) {
+                    "S${room.currentSeason.toString().padStart(2, '0')}E${room.currentEpisode.toString().padStart(2, '0')}"
+                } else null
+
+                val subtitleText = buildString {
+                    if (!room.mediaTitle.isNullOrBlank() && !room.mediaTitle.equals(room.title, ignoreCase = true)) {
+                        append(room.mediaTitle)
+                        if (episodeInfo != null) append(" • ")
+                    }
+                    if (episodeInfo != null) {
+                        append(episodeInfo)
+                    } else if (room.mediaType == MediaType.TV) {
+                        if (isNotEmpty()) append(" • ")
+                        append("Сериал")
+                    }
+                }
+
+                if (subtitleText.isNotBlank()) {
+                    Text(
+                        text = subtitleText,
+                        fontSize = 13.sp,
+                        color = Color.White.copy(alpha = 0.75f),
+                        maxLines = 1,
+                        overflow = TextOverflow.Ellipsis
+                    )
+                }
+
+                Spacer(modifier = Modifier.height(2.dp))
+
+                // Строка социальных активностей (участники, онлайн, вайб)
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.spacedBy(8.dp),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    if (room.participants.isNotEmpty()) {
+                        Row(
+                            horizontalArrangement = Arrangement.spacedBy((-6).dp),
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            val displayed = room.participants.take(4)
+                            val remaining = room.participants.size - displayed.size
+                            displayed.forEach { participant ->
+                                ParticipantMiniAvatar(participant = participant)
+                            }
+                            if (remaining > 0) {
+                                Box(
+                                    modifier = Modifier
+                                        .size(24.dp)
+                                        .clip(CircleShape)
+                                        .background(Color.White.copy(alpha = 0.20f))
+                                        .border(1.5.dp, MaterialTheme.colorScheme.background, CircleShape),
+                                    contentAlignment = Alignment.Center
+                                ) {
+                                    Text(
+                                        text = "+$remaining",
+                                        fontSize = 9.sp,
+                                        fontWeight = FontWeight.Bold,
+                                        color = Color.White
+                                    )
+                                }
+                            }
+                        }
+                    }
+
+                    // Эмодзи настроения (intent vibe)
+                    val dominantIntent = room.participants.firstOrNull { it.role == WatchRoomParticipantRole.HOST }?.intent
+                        ?: room.participants.firstOrNull()?.intent
+                    if (dominantIntent != null) {
+                        Box(
+                            modifier = Modifier
+                                .clip(RoundedCornerShape(6.dp))
+                                .background(Color.White.copy(alpha = 0.12f))
+                                .padding(horizontal = 5.dp, vertical = 2.dp),
+                            contentAlignment = Alignment.Center
+                        ) {
+                            Text(
+                                text = intentToEmoji(dominantIntent),
+                                fontSize = 11.sp
+                            )
+                        }
+                    }
+
+                    // Счетчик участников
+                    val hasOnline = room.onlineParticipantsCount > 0
+                    val (participantsLabel, labelColor) = when {
+                        isLive && hasOnline -> {
+                            "● " + stringResource(Res.string.watch_party_online_watching, room.onlineParticipantsCount) to Color(0xFF81C784)
+                        }
+                        hasOnline -> {
+                            "● " + stringResource(Res.string.watch_party_participants_count, room.onlineParticipantsCount) to MaterialTheme.colorScheme.primary
+                        }
+                        else -> {
+                            formatParticipantsCount(room.participantsCount) to Color.White.copy(alpha = 0.65f)
+                        }
+                    }
+
+                    Text(
+                        text = participantsLabel,
+                        fontSize = 12.sp,
+                        fontWeight = if (hasOnline) FontWeight.Medium else FontWeight.Normal,
+                        color = labelColor
+                    )
+                }
+            }
         }
     }
 }
@@ -298,9 +342,9 @@ private fun ParticipantMiniAvatar(
                 .clip(CircleShape)
                 .background(
                     when {
-                        !isOnline -> MaterialTheme.colorScheme.onBackground.copy(alpha = 0.08f)
+                        !isOnline -> Color.White.copy(alpha = 0.10f)
                         isHost -> Color(0xFF64B5F6).copy(alpha = 0.35f)
-                        else -> MaterialTheme.colorScheme.primary.copy(alpha = 0.25f)
+                        else -> MaterialTheme.colorScheme.primary.copy(alpha = 0.35f)
                     }
                 )
                 .border(1.5.dp, MaterialTheme.colorScheme.background, CircleShape),
@@ -311,9 +355,9 @@ private fun ParticipantMiniAvatar(
                 fontSize = 10.sp,
                 fontWeight = FontWeight.Bold,
                 color = when {
-                    !isOnline -> MaterialTheme.colorScheme.onBackground.copy(alpha = 0.4f)
+                    !isOnline -> Color.White.copy(alpha = 0.4f)
                     isHost -> Color(0xFF90CAF9)
-                    else -> MaterialTheme.colorScheme.onBackground
+                    else -> Color.White
                 }
             )
         }
@@ -329,6 +373,15 @@ private fun ParticipantMiniAvatar(
     }
 }
 
+private fun intentToEmoji(intent: WatchParticipantIntent): String = when (intent) {
+    WatchParticipantIntent.WATCHING_ATTENTIVELY -> "🍿"
+    WatchParticipantIntent.SILENT_NO_PAUSES -> "🤫"
+    WatchParticipantIntent.ACTIVE_DISCUSSION -> "💬"
+    WatchParticipantIntent.AWAY_FOR_SNACKS -> "☕"
+    WatchParticipantIntent.BACKGROUND_LISTENING -> "🎧"
+    WatchParticipantIntent.CHILLING -> "🛋️"
+}
+
 private fun formatTimeSeconds(seconds: Long): String {
     val hrs = seconds / 3600
     val mins = (seconds % 3600) / 60
@@ -338,4 +391,17 @@ private fun formatTimeSeconds(seconds: Long): String {
     } else {
         "${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}"
     }
+}
+
+@Composable
+private fun formatParticipantsCount(count: Int): String {
+    val mod10 = count % 10
+    val mod100 = count % 100
+    val res = when {
+        mod100 in 11..19 -> Res.string.watch_party_participants_total_many
+        mod10 == 1 -> Res.string.watch_party_participants_total_one
+        mod10 in 2..4 -> Res.string.watch_party_participants_total_few
+        else -> Res.string.watch_party_participants_total_many
+    }
+    return stringResource(res, count)
 }

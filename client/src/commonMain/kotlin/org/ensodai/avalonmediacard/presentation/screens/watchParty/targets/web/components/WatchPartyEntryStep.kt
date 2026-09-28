@@ -205,12 +205,11 @@ fun WatchPartyEntryStep(
                                 .clip(RoundedCornerShape(12.dp))
                                 .background(
                                     if (room.isPlaying) Color(0xFF4CAF50).copy(alpha = 0.08f)
-                                    else Color.White.copy(alpha = 0.05f)
+                                    else Color.White.copy(alpha = 0.04f)
                                 )
                                 .border(
                                     1.dp,
-                                    if (room.isPlaying) Color(0xFF4CAF50).copy(alpha = 0.35f)
-                                    else Color.Transparent,
+                                    Color.White.copy(alpha = 0.08f),
                                     RoundedCornerShape(12.dp)
                                 )
                                 .clickable { actions.onJoinById(room.id) }

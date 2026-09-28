@@ -41,48 +41,50 @@ fun WatchPartyEntryStep(
         modifier = modifier.fillMaxWidth(),
         verticalArrangement = Arrangement.spacedBy(16.dp)
     ) {
-        // Кнопка: Создать новую комнату
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .height(56.dp)
-                .tvAndWebHoverEffect(
-                    scaleTarget = 1.02f,
-                    defaultBorderWidth = 1.dp,
-                    defaultBorderColor = Color(0xFF6C63FF).copy(alpha = 0.4f),
-                    activeBorderWidth = 1.dp,
-                    activeBorderColor = Color(0xFF6C63FF),
-                    shape = RoundedCornerShape(16.dp),
-                    onClick = { actions.onSetStep(WatchPartyStep.SETUP) }
-                )
-                .background(Color(0xFF6C63FF).copy(alpha = 0.15f), RoundedCornerShape(16.dp))
-                .padding(horizontal = 20.dp),
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.SpaceBetween
-        ) {
+        // Кнопка: Создать новую комнату (только при наличии привязанного медиа)
+        if (state.mediaKey != null) {
             Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(56.dp)
+                    .tvAndWebHoverEffect(
+                        scaleTarget = 1.02f,
+                        defaultBorderWidth = 1.dp,
+                        defaultBorderColor = Color(0xFF6C63FF).copy(alpha = 0.4f),
+                        activeBorderWidth = 1.dp,
+                        activeBorderColor = Color(0xFF6C63FF),
+                        shape = RoundedCornerShape(16.dp),
+                        onClick = { actions.onSetStep(WatchPartyStep.SETUP) }
+                    )
+                    .background(Color(0xFF6C63FF).copy(alpha = 0.15f), RoundedCornerShape(16.dp))
+                    .padding(horizontal = 20.dp),
                 verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.spacedBy(12.dp)
+                horizontalArrangement = Arrangement.SpaceBetween
             ) {
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.spacedBy(12.dp)
+                ) {
+                    Icon(
+                        imageVector = Lucide.Plus,
+                        contentDescription = null,
+                        tint = Color.White,
+                        modifier = Modifier.size(20.dp)
+                    )
+                    Text(
+                        text = stringResource(Res.string.watch_party_btn_create_room),
+                        fontSize = 15.sp,
+                        fontWeight = FontWeight.SemiBold,
+                        color = Color.White
+                    )
+                }
                 Icon(
-                    imageVector = Lucide.Plus,
+                    imageVector = Lucide.ArrowRight,
                     contentDescription = null,
-                    tint = Color.White,
-                    modifier = Modifier.size(20.dp)
-                )
-                Text(
-                    text = stringResource(Res.string.watch_party_btn_create_room),
-                    fontSize = 15.sp,
-                    fontWeight = FontWeight.SemiBold,
-                    color = Color.White
+                    tint = Color.White.copy(alpha = 0.6f),
+                    modifier = Modifier.size(18.dp)
                 )
             }
-            Icon(
-                imageVector = Lucide.ArrowRight,
-                contentDescription = null,
-                tint = Color.White.copy(alpha = 0.6f),
-                modifier = Modifier.size(18.dp)
-            )
         }
 
         // Карточка: Войти по PIN-коду
@@ -180,7 +182,7 @@ fun WatchPartyEntryStep(
         }
 
         // Секция: Активные комнаты тайтла
-        if (state.savedRooms.isNotEmpty()) {
+        if (state.mediaKey != null && state.savedRooms.isNotEmpty()) {
             Column(
                 modifier = Modifier.fillMaxWidth(),
                 verticalArrangement = Arrangement.spacedBy(10.dp)

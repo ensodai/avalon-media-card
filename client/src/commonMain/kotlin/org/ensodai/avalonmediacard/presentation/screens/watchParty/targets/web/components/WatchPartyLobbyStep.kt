@@ -13,6 +13,8 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import avalonmediacard.client.generated.resources.*
+import org.ensodai.avalonmediacard.contract.model.EntityType
+import org.ensodai.avalonmediacard.contract.model.MediaType
 import org.ensodai.avalonmediacard.presentation.screens.watchParty.action.WatchPartyActions
 import org.ensodai.avalonmediacard.presentation.screens.watchParty.targets.web.components.lobby.*
 import org.ensodai.avalonmediacard.presentation.screens.watchParty.viewState.WatchPartyViewState
@@ -28,9 +30,10 @@ fun WatchPartyLobbyStep(
         ?: state.mediaTitle.takeIf { it.isNotBlank() && it != state.activeRoom?.title }
         ?: state.activeRoom?.title
         ?: ""
-    val seasonNum = state.selectedSeason ?: state.activeRoom?.currentSeason
-    val episodeNum = state.selectedEpisode ?: state.activeRoom?.currentEpisode
-    val rawSourceType = state.selectedSourceType ?: state.activeRoom?.sourceType
+    val isMovie = state.activeRoom?.mediaType == MediaType.MOVIE || state.mediaKey?.type == EntityType.MOVIE
+    val seasonNum = if (isMovie) null else (state.activeRoom?.currentSeason ?: state.selectedSeason)
+    val episodeNum = if (isMovie) null else (state.activeRoom?.currentEpisode ?: state.selectedEpisode)
+    val rawSourceType = state.activeRoom?.sourceType ?: state.selectedSourceType
     val sourceProvider = formatSourceProviderTitle(rawSourceType)
     val sourceDetails = state.selectedSourceName
     val backdropUrl = state.activeRoom?.backdropUrl

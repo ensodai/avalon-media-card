@@ -96,7 +96,7 @@ fun WatchPartyScreen(
         }
     }
 
-    LaunchedEffect(isVisible, mediaKey, initialStep) {
+    LaunchedEffect(isVisible, mediaKey, mediaTitle, initialStep) {
         if (isVisible) {
             viewModel.initialize(mediaKey, mediaTitle, initialStep)
         } else {

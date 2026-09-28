@@ -25,13 +25,11 @@ import androidx.compose.ui.unit.sp
 import avalonmediacard.client.generated.resources.*
 import com.composables.icons.lucide.KeyRound
 import com.composables.icons.lucide.Lucide
-import com.composables.icons.lucide.Plus
 import org.ensodai.avalonmediacard.presentation.screens.commonComponents.tvAndWebHoverEffect
 import org.jetbrains.compose.resources.stringResource
 
 @Composable
 fun WatchRoomsHeader(
-    onCreateRoom: () -> Unit,
     onJoinByPin: () -> Unit,
     modifier: Modifier = Modifier
 ) {
@@ -54,78 +52,39 @@ fun WatchRoomsHeader(
             )
         }
 
-        Row(
-            horizontalArrangement = Arrangement.spacedBy(12.dp),
-            verticalAlignment = Alignment.CenterVertically
+        // Кнопка: Войти по коду
+        Box(
+            modifier = Modifier
+                .height(42.dp)
+                .tvAndWebHoverEffect(
+                    scaleTarget = 1.03f,
+                    shape = RoundedCornerShape(12.dp),
+                    defaultBorderWidth = 1.dp,
+                    defaultBorderColor = Color.White.copy(alpha = 0.15f),
+                    activeBorderColor = Color.White,
+                    activeBorderWidth = 1.5.dp,
+                    onClick = onJoinByPin
+                )
+                .background(Color.White.copy(alpha = 0.08f), RoundedCornerShape(12.dp))
+                .padding(horizontal = 16.dp),
+            contentAlignment = Alignment.Center
         ) {
-            // Кнопка: Войти по коду
-            Box(
-                modifier = Modifier
-                    .height(42.dp)
-                    .tvAndWebHoverEffect(
-                        scaleTarget = 1.03f,
-                        shape = RoundedCornerShape(12.dp),
-                        defaultBorderWidth = 1.dp,
-                        defaultBorderColor = Color.White.copy(alpha = 0.15f),
-                        activeBorderColor = Color.White,
-                        activeBorderWidth = 1.5.dp,
-                        onClick = onJoinByPin
-                    )
-                    .background(Color.White.copy(alpha = 0.08f), RoundedCornerShape(12.dp))
-                    .padding(horizontal = 16.dp),
-                contentAlignment = Alignment.Center
+            Row(
+                horizontalArrangement = Arrangement.spacedBy(8.dp),
+                verticalAlignment = Alignment.CenterVertically
             ) {
-                Row(
-                    horizontalArrangement = Arrangement.spacedBy(8.dp),
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    Icon(
-                        imageVector = Lucide.KeyRound,
-                        contentDescription = null,
-                        tint = Color.White.copy(alpha = 0.9f),
-                        modifier = Modifier.size(16.dp)
-                    )
-                    Text(
-                        text = stringResource(Res.string.watch_rooms_btn_connect),
-                        fontSize = 13.sp,
-                        fontWeight = FontWeight.Medium,
-                        color = Color.White
-                    )
-                }
-            }
-
-            // Кнопка: Создать комнату
-            Box(
-                modifier = Modifier
-                    .height(42.dp)
-                    .tvAndWebHoverEffect(
-                        scaleTarget = 1.03f,
-                        shape = RoundedCornerShape(12.dp),
-                        activeBorderColor = Color.White,
-                        activeBorderWidth = 1.5.dp,
-                        onClick = onCreateRoom
-                    )
-                    .background(MaterialTheme.colorScheme.primary, RoundedCornerShape(12.dp))
-                    .padding(horizontal = 18.dp),
-                contentAlignment = Alignment.Center
-            ) {
-                Row(
-                    horizontalArrangement = Arrangement.spacedBy(8.dp),
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    Icon(
-                        imageVector = Lucide.Plus,
-                        contentDescription = null,
-                        tint = MaterialTheme.colorScheme.onPrimary,
-                        modifier = Modifier.size(18.dp)
-                    )
-                    Text(
-                        text = stringResource(Res.string.watch_rooms_btn_create),
-                        fontSize = 14.sp,
-                        fontWeight = FontWeight.SemiBold,
-                        color = MaterialTheme.colorScheme.onPrimary
-                    )
-                }
+                Icon(
+                    imageVector = Lucide.KeyRound,
+                    contentDescription = null,
+                    tint = Color.White.copy(alpha = 0.9f),
+                    modifier = Modifier.size(16.dp)
+                )
+                Text(
+                    text = stringResource(Res.string.watch_rooms_btn_connect),
+                    fontSize = 13.sp,
+                    fontWeight = FontWeight.Medium,
+                    color = Color.White
+                )
             }
         }
     }

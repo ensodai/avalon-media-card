@@ -97,6 +97,33 @@ class WatchPartyViewModel(
             savedRoomsStreamJob = null
             sourcesStreamJob?.cancel()
             sourcesStreamJob = null
+            updateViewState {
+                it.copy(
+                    activeRoom = null,
+                    participantsMap = emptyMap(),
+                    isHost = false,
+                    step = WatchPartyStep.ENTRY,
+                    mediaKey = null,
+                    mediaTitle = "",
+                    pinInput = "",
+                    selectedSeason = null,
+                    selectedEpisode = null,
+                    selectedSourceType = null,
+                    selectedSourceId = null,
+                    selectedSourceName = null,
+                    isSelectingSource = false,
+                    isSourceVerified = false,
+                    isTestingSource = false,
+                    roomTitleInput = "",
+                    joinError = null,
+                    createError = null,
+                    myIsReady = false,
+                    myIntent = null,
+                    isActionPending = false,
+                    isStartingPlayback = false,
+                    savedRooms = emptyList()
+                )
+            }
             onCloseRequested?.invoke()
         }
     )

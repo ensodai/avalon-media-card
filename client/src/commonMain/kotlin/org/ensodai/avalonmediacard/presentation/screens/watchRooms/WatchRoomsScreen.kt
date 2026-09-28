@@ -59,7 +59,6 @@ fun WatchRoomsScreen(
             // 1. Header with compact action toolbar (full width)
             item(span = { GridItemSpan(maxLineSpan) }) {
                 WatchRoomsHeader(
-                    onCreateRoom = actions.onOpenCreateModal,
                     onJoinByPin = actions.onOpenConnectModal
                 )
             }

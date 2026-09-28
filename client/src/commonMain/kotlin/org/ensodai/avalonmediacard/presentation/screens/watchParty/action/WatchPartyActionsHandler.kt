@@ -36,11 +36,62 @@ fun WatchPartyViewModel.initialize(
     title: String?,
     initialStep: WatchPartyStep? = null
 ) {
-    if (viewState.value.activeRoom != null && viewState.value.step == WatchPartyStep.LOBBY) {
-        if (title != null && viewState.value.mediaTitle.isBlank()) {
-            updateViewState { it.copy(mediaTitle = title) }
+    val isMovie = mediaKey?.type == EntityType.MOVIE
+    val currentKey = viewState.value.mediaKey
+    val isDifferentMedia = mediaKey != null && mediaKey != currentKey
+
+    if (initialStep == WatchPartyStep.ENTRY) {
+        eventStreamJob?.cancel()
+        eventStreamJob = null
+        val currentUid = tokenStorage.cachedUserId?.let { runCatching { Uuid.parse(it) }.getOrNull() }
+        updateViewState {
+            it.copy(
+                activeRoom = null,
+                participantsMap = emptyMap(),
+                isHost = false,
+                step = WatchPartyStep.ENTRY,
+                mediaKey = mediaKey,
+                mediaTitle = title ?: "",
+                pinInput = "",
+                selectedSeason = null,
+                selectedEpisode = null,
+                selectedSourceType = null,
+                selectedSourceId = null,
+                selectedSourceName = null,
+                isSelectingSource = false,
+                isSourceVerified = false,
+                isTestingSource = false,
+                roomTitleInput = "",
+                joinError = null,
+                createError = null,
+                myIsReady = false,
+                myIntent = null,
+                isActionPending = false,
+                isStartingPlayback = false,
+                myUserId = currentUid,
+                savedRooms = emptyList()
+            )
+        }
+        if (mediaKey != null) {
+            loadSavedRooms(mediaKey.id)
+            searchSources(mediaKey)
+            subscribeToMediaSources(mediaKey)
         }
         return
+    }
+
+    if (!isDifferentMedia && viewState.value.activeRoom != null && viewState.value.step == WatchPartyStep.LOBBY) {
+        if (initialStep == null || initialStep == WatchPartyStep.LOBBY) {
+            if (title != null && viewState.value.mediaTitle.isBlank()) {
+                updateViewState { it.copy(mediaTitle = title) }
+            }
+            return
+        }
+    }
+
+    if (isDifferentMedia || initialStep == WatchPartyStep.SETUP) {
+        eventStreamJob?.cancel()
+        eventStreamJob = null
     }
     val currentUid = tokenStorage.cachedUserId?.let { runCatching { Uuid.parse(it) }.getOrNull() }
     val step = initialStep ?: if (mediaKey != null) WatchPartyStep.SETUP else WatchPartyStep.ENTRY
@@ -48,8 +99,22 @@ fun WatchPartyViewModel.initialize(
         it.copy(
             step = step,
             mediaKey = mediaKey,
-            mediaTitle = title ?: it.mediaTitle,
-            myUserId = currentUid
+            mediaTitle = title ?: (if (mediaKey == null) "" else it.mediaTitle),
+            myUserId = currentUid,
+            activeRoom = if (isDifferentMedia || initialStep == WatchPartyStep.SETUP) null else it.activeRoom,
+            participantsMap = if (isDifferentMedia || initialStep == WatchPartyStep.SETUP) emptyMap() else it.participantsMap,
+            isHost = if (isDifferentMedia || initialStep == WatchPartyStep.SETUP) false else it.isHost,
+            selectedSeason = if (isMovie) null else (if (isDifferentMedia) null else it.selectedSeason),
+            selectedEpisode = if (isMovie) null else (if (isDifferentMedia) null else it.selectedEpisode),
+            selectedSourceType = if (isDifferentMedia) null else it.selectedSourceType,
+            selectedSourceId = if (isDifferentMedia) null else it.selectedSourceId,
+            selectedSourceName = if (isDifferentMedia) null else it.selectedSourceName,
+            isSourceVerified = if (isDifferentMedia) false else it.isSourceVerified,
+            isTestingSource = false,
+            isSelectingSource = false,
+            roomTitleInput = if (isDifferentMedia) "" else it.roomTitleInput,
+            createError = null,
+            joinError = null
         )
     }
     if (mediaKey != null) {
@@ -106,19 +171,25 @@ fun WatchPartyViewModel.onJoinByPin() {
                 val myId = viewState.value.myUserId
                 val isHost = room.hostUserId == myId
                 val mediaType = if (room.mediaType == MediaType.TV) EntityType.TV else EntityType.MOVIE
-                val resolvedKey = viewState.value.mediaKey ?: MediaKey(provider = MediaProvider.Tmdb, type = mediaType, id = room.mediaId)
+                val isRoomMovie = room.mediaType == MediaType.MOVIE || mediaType == EntityType.MOVIE
+                val resolvedKey = if (viewState.value.mediaKey?.id == room.mediaId && viewState.value.mediaKey?.type == mediaType) {
+                    viewState.value.mediaKey!!
+                } else {
+                    MediaKey(provider = MediaProvider.Tmdb, type = mediaType, id = room.mediaId)
+                }
                 updateViewState { state ->
                     val resolvedMediaTitle = room.mediaTitle?.takeIf { it.isNotBlank() }
-                        ?: state.mediaTitle.takeIf { t -> t.isNotBlank() && t != room.title }
-                        ?: ""
+                        ?: (if (state.mediaKey?.id == room.mediaId) state.mediaTitle.takeIf { t -> t.isNotBlank() && t != room.title } else null)
+                        ?: room.title
                     state.copy(
                         activeRoom = room,
                         mediaKey = resolvedKey,
                         mediaTitle = resolvedMediaTitle,
-                        selectedSeason = room.currentSeason ?: state.selectedSeason,
-                        selectedEpisode = room.currentEpisode ?: state.selectedEpisode,
-                        selectedSourceType = room.sourceType ?: state.selectedSourceType,
-                        selectedSourceId = room.sourceId ?: state.selectedSourceId,
+                        selectedSeason = if (isRoomMovie) null else room.currentSeason,
+                        selectedEpisode = if (isRoomMovie) null else room.currentEpisode,
+                        selectedSourceType = room.sourceType,
+                        selectedSourceId = room.sourceId,
+                        selectedSourceName = null,
                         participantsMap = room.participants.associateBy { p -> p.userId },
                         isHost = isHost,
                         step = WatchPartyStep.LOBBY,
@@ -145,19 +216,25 @@ fun WatchPartyViewModel.onJoinById(roomId: Uuid) {
                 val myId = viewState.value.myUserId
                 val isHost = room.hostUserId == myId
                 val mediaType = if (room.mediaType == MediaType.TV) EntityType.TV else EntityType.MOVIE
-                val resolvedKey = viewState.value.mediaKey ?: MediaKey(provider = MediaProvider.Tmdb, type = mediaType, id = room.mediaId)
+                val isRoomMovie = room.mediaType == MediaType.MOVIE || mediaType == EntityType.MOVIE
+                val resolvedKey = if (viewState.value.mediaKey?.id == room.mediaId && viewState.value.mediaKey?.type == mediaType) {
+                    viewState.value.mediaKey!!
+                } else {
+                    MediaKey(provider = MediaProvider.Tmdb, type = mediaType, id = room.mediaId)
+                }
                 updateViewState { state ->
                     val resolvedMediaTitle = room.mediaTitle?.takeIf { it.isNotBlank() }
-                        ?: state.mediaTitle.takeIf { t -> t.isNotBlank() && t != room.title }
-                        ?: ""
+                        ?: (if (state.mediaKey?.id == room.mediaId) state.mediaTitle.takeIf { t -> t.isNotBlank() && t != room.title } else null)
+                        ?: room.title
                     state.copy(
                         activeRoom = room,
                         mediaKey = resolvedKey,
                         mediaTitle = resolvedMediaTitle,
-                        selectedSeason = room.currentSeason ?: state.selectedSeason,
-                        selectedEpisode = room.currentEpisode ?: state.selectedEpisode,
-                        selectedSourceType = room.sourceType ?: state.selectedSourceType,
-                        selectedSourceId = room.sourceId ?: state.selectedSourceId,
+                        selectedSeason = if (isRoomMovie) null else room.currentSeason,
+                        selectedEpisode = if (isRoomMovie) null else room.currentEpisode,
+                        selectedSourceType = room.sourceType,
+                        selectedSourceId = room.sourceId,
+                        selectedSourceName = null,
                         participantsMap = room.participants.associateBy { p -> p.userId },
                         isHost = isHost,
                         step = WatchPartyStep.LOBBY,
@@ -197,19 +274,23 @@ fun WatchPartyViewModel.onSelectSource(
     val currentState = viewState.value
     val currentRoom = currentState.activeRoom
     val isLobby = currentState.step == WatchPartyStep.LOBBY
+    val isMovie = currentState.mediaKey?.type == EntityType.MOVIE || currentRoom?.mediaType == MediaType.MOVIE
+
+    val targetSeason = if (isMovie) null else (seasonNumber ?: currentState.selectedSeason)
+    val targetEpisode = if (isMovie) null else (episodeNumber ?: currentState.selectedEpisode)
 
     updateViewState {
         it.copy(
             selectedSourceType = sourceType,
             selectedSourceId = sourceId,
             selectedSourceName = sourceName,
-            selectedSeason = seasonNumber ?: it.selectedSeason,
-            selectedEpisode = episodeNumber ?: it.selectedEpisode,
+            selectedSeason = targetSeason,
+            selectedEpisode = targetEpisode,
             activeRoom = it.activeRoom?.copy(
                 sourceType = sourceType,
                 sourceId = sourceId,
-                currentSeason = seasonNumber ?: it.activeRoom.currentSeason,
-                currentEpisode = episodeNumber ?: it.activeRoom.currentEpisode
+                currentSeason = if (isMovie) null else (seasonNumber ?: it.activeRoom.currentSeason),
+                currentEpisode = if (isMovie) null else (episodeNumber ?: it.activeRoom.currentEpisode)
             ),
             isSelectingSource = false,
             isSourceVerified = false
@@ -225,8 +306,8 @@ fun WatchPartyViewModel.onSelectSource(
                         sourceType = sourceType,
                         sourceId = sourceId,
                         sourceName = sourceName,
-                        season = seasonNumber ?: currentRoom.currentSeason,
-                        episode = episodeNumber ?: currentRoom.currentEpisode
+                        season = targetSeason,
+                        episode = targetEpisode
                     )
                 )
             } catch (_: Exception) {
@@ -268,6 +349,7 @@ fun WatchPartyViewModel.onCreateRoom() {
         updateViewState { it.copy(isCreatingRoom = true, createError = null) }
         try {
             val mediaType = if (key.type == EntityType.TV) MediaType.TV else MediaType.MOVIE
+            val isMovie = key.type == EntityType.MOVIE
             val defaultTitle = if (state.mediaTitle.isNotBlank()) {
                 getString(Res.string.watch_party_title_format, state.mediaTitle)
             } else {
@@ -278,8 +360,8 @@ fun WatchPartyViewModel.onCreateRoom() {
                 mediaType = mediaType,
                 title = state.roomTitleInput.ifBlank { defaultTitle },
                 mediaTitle = state.mediaTitle.takeIf { it.isNotBlank() },
-                season = state.selectedSeason,
-                episode = state.selectedEpisode,
+                season = if (isMovie) null else state.selectedSeason,
+                episode = if (isMovie) null else state.selectedEpisode,
                 startPositionSeconds = 0L,
                 sourceType = state.selectedSourceType,
                 sourceId = state.selectedSourceId,
@@ -375,19 +457,38 @@ fun WatchPartyViewModel.onLeaveRoom() {
         }
         eventStreamJob?.cancel()
         eventStreamJob = null
+        savedRoomsStreamJob?.cancel()
+        savedRoomsStreamJob = null
+        sourcesStreamJob?.cancel()
+        sourcesStreamJob = null
         updateViewState {
             it.copy(
                 activeRoom = null,
                 participantsMap = emptyMap(),
                 isHost = false,
                 step = WatchPartyStep.ENTRY,
+                mediaKey = null,
+                mediaTitle = "",
+                pinInput = "",
+                selectedSeason = null,
+                selectedEpisode = null,
+                selectedSourceType = null,
+                selectedSourceId = null,
+                selectedSourceName = null,
+                isSelectingSource = false,
+                isSourceVerified = false,
+                isTestingSource = false,
+                roomTitleInput = "",
+                joinError = null,
+                createError = null,
                 myIsReady = false,
                 myIntent = null,
                 isActionPending = false,
-                isStartingPlayback = false
+                isStartingPlayback = false,
+                savedRooms = emptyList()
             )
         }
-        viewState.value.mediaKey?.let { loadSavedRooms(it.id) }
+        onCloseRequested?.invoke()
     }
 }
 
@@ -401,19 +502,20 @@ fun WatchPartyViewModel.subscribeToLobbyState(roomId: Uuid) {
                         val map = event.participants.associateBy { it.userId }
                         val myId = viewState.value.myUserId
                         val me = myId?.let { map[it] }
+                        val isMovie = viewState.value.mediaKey?.type == EntityType.MOVIE || viewState.value.activeRoom?.mediaType == MediaType.MOVIE
                         updateViewState {
                             it.copy(
                                 participantsMap = map,
-                                selectedSourceType = event.sourceType ?: it.selectedSourceType,
-                                selectedSourceId = event.sourceId ?: it.selectedSourceId,
-                                selectedSourceName = event.sourceName ?: it.selectedSourceName,
-                                selectedSeason = event.season ?: it.selectedSeason,
-                                selectedEpisode = event.episode ?: it.selectedEpisode,
+                                selectedSourceType = event.sourceType,
+                                selectedSourceId = event.sourceId,
+                                selectedSourceName = event.sourceName,
+                                selectedSeason = if (isMovie) null else event.season,
+                                selectedEpisode = if (isMovie) null else event.episode,
                                 activeRoom = it.activeRoom?.copy(
-                                    sourceType = event.sourceType ?: it.activeRoom.sourceType,
-                                    sourceId = event.sourceId ?: it.activeRoom.sourceId,
-                                    currentSeason = event.season ?: it.activeRoom.currentSeason,
-                                    currentEpisode = event.episode ?: it.activeRoom.currentEpisode
+                                    sourceType = event.sourceType,
+                                    sourceId = event.sourceId,
+                                    currentSeason = if (isMovie) null else event.season,
+                                    currentEpisode = if (isMovie) null else event.episode
                                 ),
                                 myIsReady = me?.isReady ?: it.myIsReady,
                                 myIntent = if (me?.isReady == true) me.intent else null,
@@ -439,18 +541,19 @@ fun WatchPartyViewModel.subscribeToLobbyState(roomId: Uuid) {
                         }
                     }
                     is LobbyEvent.SourceUpdated -> {
+                        val isMovie = viewState.value.mediaKey?.type == EntityType.MOVIE || viewState.value.activeRoom?.mediaType == MediaType.MOVIE
                         updateViewState {
                             it.copy(
                                 selectedSourceType = event.sourceType,
                                 selectedSourceId = event.sourceId,
-                                selectedSourceName = event.sourceName ?: it.selectedSourceName,
-                                selectedSeason = event.season ?: it.selectedSeason,
-                                selectedEpisode = event.episode ?: it.selectedEpisode,
+                                selectedSourceName = event.sourceName,
+                                selectedSeason = if (isMovie) null else event.season,
+                                selectedEpisode = if (isMovie) null else event.episode,
                                 activeRoom = it.activeRoom?.copy(
                                     sourceType = event.sourceType,
                                     sourceId = event.sourceId,
-                                    currentSeason = event.season ?: it.activeRoom.currentSeason,
-                                    currentEpisode = event.episode ?: it.activeRoom.currentEpisode
+                                    currentSeason = if (isMovie) null else event.season,
+                                    currentEpisode = if (isMovie) null else event.episode
                                 )
                             )
                         }

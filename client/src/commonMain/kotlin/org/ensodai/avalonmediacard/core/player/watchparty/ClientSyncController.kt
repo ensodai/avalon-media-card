@@ -68,6 +68,8 @@ class ClientSyncController(
     var isPrerolling: Boolean = false
         private set
 
+    private var currentPrerollAnchorTime: Instant? = null
+
     var isAttached: Boolean = false
         private set
 
@@ -120,6 +122,7 @@ class ClientSyncController(
         stopDriftLoop()
         prerollJob?.cancel()
         prerollJob = null
+        currentPrerollAnchorTime = null
 
         bufferMonitorJob?.cancel()
         bufferMonitorJob = null
@@ -175,6 +178,7 @@ class ClientSyncController(
             prerollJob?.cancel()
             prerollJob = null
             isPrerolling = false
+            currentPrerollAnchorTime = null
 
             underlyingController.pause()
             val currentPosMs = underlyingController.getCurrentPositionMs()
@@ -190,8 +194,15 @@ class ClientSyncController(
             // Режим воспроизведения
             if (syncState.anchorServerTime > serverNow) {
                 // Фаза Preroll: старт запланирован на будущее время
+                if (isPrerolling && currentPrerollAnchorTime == syncState.anchorServerTime) {
+                    logger.d {
+                        "[TrueSync:Client] Preroll already in progress for anchorServerTime=${syncState.anchorServerTime}, ignoring duplicate SyncState"
+                    }
+                    return
+                }
                 startPreroll(syncState)
             } else {
+                currentPrerollAnchorTime = null
                 // Старт в прошлом: немедленное воспроизведение с регулированием дрифта
                 val diffMs = (serverNow - syncState.anchorServerTime).inWholeMilliseconds
                 logger.i {
@@ -236,6 +247,7 @@ class ClientSyncController(
         stopDriftLoop()
         prerollJob?.cancel()
         isPrerolling = true
+        currentPrerollAnchorTime = syncState.anchorServerTime
 
         val startPosMs = syncState.anchorPositionMs
         val startPosSec = startPosMs / 1000.0
@@ -259,6 +271,7 @@ class ClientSyncController(
                 delay(waitDuration)
             }
             isPrerolling = false
+            currentPrerollAnchorTime = null
             val wakeServerNow = clockSync.estimatedServerTime()
             val wakeLocalNow = clockSync.clockProvider()
             underlyingController.evaluateBufferState()

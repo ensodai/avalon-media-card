@@ -125,9 +125,8 @@ object TorExoPlayerFactory {
             .setLoadControl(loadControl)
             .build()
 
-        // 5. Оптимизация перемотки (снижает нагрузку на p2p сеть при сканировании)
-        // Плеер прыгает только по ключевым I-frames
-        player.setSeekParameters(SeekParameters.CLOSEST_SYNC)
+        // 5. Точная покадровая перемотка (соответствует MPV absolute+exact и Web HTML5)
+        player.setSeekParameters(SeekParameters.EXACT)
 
         // 6. Прямой проброс аудио (Passthrough) на ресивер / саундбар
         val audioAttributes = AudioAttributes.Builder()

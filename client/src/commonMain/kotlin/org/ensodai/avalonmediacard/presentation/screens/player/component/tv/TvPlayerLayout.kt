@@ -186,7 +186,9 @@ fun TvPlayerLayout(
                     prevEpisode = prevEp,
                     nextEpisode = nextEp,
                     onSelectEpisode = { ep -> actions.onEpisodeSelected(ep) },
-                    playPauseFocusRequester = playPauseFocusRequester
+                    playPauseFocusRequester = playPauseFocusRequester,
+                    onPlayPauseClick = { actions.onPlayPauseClicked() },
+                    onSeek = { actions.onSeek(it) }
                 )
             }
 
@@ -295,7 +297,7 @@ fun TvPlayerLayout(
                                         currentTime = currentTime,
                                         duration = duration,
                                         bufferTime = currentTime + controller.state.bufferAheadSeconds,
-                                        onSeek = { controller.seek(it) },
+                                        onSeek = { actions.onSeek(it) },
                                         modifier = Modifier.fillMaxWidth()
                                     )
                                 }

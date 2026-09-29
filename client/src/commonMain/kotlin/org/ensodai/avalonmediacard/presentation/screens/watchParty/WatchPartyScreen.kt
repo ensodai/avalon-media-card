@@ -4,6 +4,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
@@ -12,6 +13,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.graphics.Color
 import io.github.vinceglb.filekit.dialogs.FileKitType
 import io.github.vinceglb.filekit.dialogs.compose.rememberFilePickerLauncher
@@ -25,6 +27,8 @@ import org.ensodai.avalonmediacard.contract.slot.SlotData
 import org.ensodai.avalonmediacard.presentation.core.SduiSlot
 import org.ensodai.avalonmediacard.presentation.core.SlotUiState
 import org.ensodai.avalonmediacard.presentation.overlay.TvModalSurface
+import org.ensodai.avalonmediacard.presentation.screens.commonComponents.AdaptiveLayout
+import org.ensodai.avalonmediacard.presentation.screens.commonComponents.LocalDeviceTarget
 import org.ensodai.avalonmediacard.presentation.screens.commonComponents.SlotErrorCard
 import org.ensodai.avalonmediacard.presentation.screens.mediaSources.MediaSourcesViewModel
 import org.ensodai.avalonmediacard.presentation.screens.mediaSources.action.updateRawSlots
@@ -33,12 +37,14 @@ import org.ensodai.avalonmediacard.presentation.screens.mediaSources.model.Movie
 import org.ensodai.avalonmediacard.presentation.screens.mediaSources.model.SeasonGroupSourceUiItem
 import org.ensodai.avalonmediacard.presentation.screens.mediaSources.model.SingleEpisodeSourceUiItem
 import org.ensodai.avalonmediacard.presentation.screens.mediaSources.model.TorrentSourceUiItem
+import org.ensodai.avalonmediacard.presentation.screens.mediaSources.targets.tv.MediaSourcesLayoutTv
 import org.ensodai.avalonmediacard.presentation.screens.mediaSources.targets.web.MediaSourcesLayoutWeb
 import org.ensodai.avalonmediacard.presentation.screens.player.PlayerScreen
 import org.ensodai.avalonmediacard.presentation.screens.player.model.PlayerInitParams
 import org.ensodai.avalonmediacard.presentation.screens.player.model.PlayerMode
 import org.ensodai.avalonmediacard.presentation.screens.watchParty.action.initialize
 import org.ensodai.avalonmediacard.presentation.screens.watchParty.action.onToggleSelectSource
+import org.ensodai.avalonmediacard.presentation.screens.watchParty.targets.tv.WatchPartyLayoutTv
 import org.ensodai.avalonmediacard.presentation.screens.watchParty.targets.web.WatchPartyLayoutWeb
 import org.ensodai.avalonmediacard.presentation.screens.watchParty.viewState.WatchPartyStep
 import org.koin.compose.koinInject
@@ -58,9 +64,13 @@ fun WatchPartyScreen(
     initialRoomId: Uuid? = null,
     onClose: () -> Unit,
     onStartPlayback: ((roomId: Uuid, season: Int?, episode: Int?, startPositionSeconds: Long) -> Unit)? = null,
+    callerFocusRequester: FocusRequester? = null,
     viewModel: WatchPartyViewModel = koinInject(),
     mediaSourcesViewModel: MediaSourcesViewModel = koinInject()
 ) {
+    val deviceTarget = LocalDeviceTarget.current
+    val isTv = deviceTarget.isTv
+
     val coroutineScope = rememberCoroutineScope()
     val filePicker = rememberFilePickerLauncher(
         type = FileKitType.File(extensions = listOf("torrent"))
@@ -227,17 +237,28 @@ fun WatchPartyScreen(
                 )
             }
             else -> {
-                MediaSourcesLayoutWeb(
-                    state = mediaSourcesState,
-                    actions = mediaSourcesViewModel.actions,
-                    modifier = Modifier.fillMaxWidth()
+                AdaptiveLayout(
+                    tv = {
+                        MediaSourcesLayoutTv(
+                            state = mediaSourcesState,
+                            actions = mediaSourcesViewModel.actions,
+                            modifier = Modifier.fillMaxSize()
+                        )
+                    },
+                    default = {
+                        MediaSourcesLayoutWeb(
+                            state = mediaSourcesState,
+                            actions = mediaSourcesViewModel.actions,
+                            modifier = Modifier.fillMaxWidth()
+                        )
+                    }
                 )
             }
         }
     }
 
     TvModalSurface(
-        modifier = modifier,
+        modifier = if (isTv) Modifier.fillMaxSize() else modifier,
         isOpen = isVisible,
         onDismissRequest = {
             if (state.isTestingSource) {
@@ -246,7 +267,8 @@ fun WatchPartyScreen(
                 actions.onClose()
             }
         },
-        scrimColor = Color.Black.copy(alpha = 0.85f),
+        callerFocusRequester = callerFocusRequester,
+        scrimColor = if (isTv) MaterialTheme.colorScheme.background else Color.Black.copy(alpha = 0.85f),
     ) {
         if (state.isTestingSource && effectiveMediaKey != null) {
             PlayerScreen(
@@ -269,10 +291,22 @@ fun WatchPartyScreen(
                 modifier = Modifier.fillMaxSize()
             )
         } else {
-            WatchPartyLayoutWeb(
-                state = state,
-                actions = actions,
-                sourcesContent = sourcesContent
+            AdaptiveLayout(
+                tv = {
+                    WatchPartyLayoutTv(
+                        state = state,
+                        actions = actions,
+                        modifier = Modifier.fillMaxSize(),
+                        sourcesContent = sourcesContent
+                    )
+                },
+                default = {
+                    WatchPartyLayoutWeb(
+                        state = state,
+                        actions = actions,
+                        sourcesContent = sourcesContent
+                    )
+                }
             )
         }
     }

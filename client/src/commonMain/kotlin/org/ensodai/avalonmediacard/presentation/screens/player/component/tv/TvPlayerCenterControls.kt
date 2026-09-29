@@ -44,6 +44,8 @@ fun TvPlayerCenterControls(
     nextEpisode: MediaStream?,
     onSelectEpisode: (MediaStream) -> Unit,
     playPauseFocusRequester: FocusRequester,
+    onPlayPauseClick: (() -> Unit)? = null,
+    onSeek: ((Double) -> Unit)? = null,
     modifier: Modifier = Modifier
 ) {
     val isPlaying = controller.state.isPlaying
@@ -80,7 +82,7 @@ fun TvPlayerCenterControls(
             iconSize = 24.dp,
             onClick = {
                 val target = (currentTime - 10.0).coerceAtLeast(0.0)
-                controller.seek(target)
+                if (onSeek != null) onSeek(target) else controller.seek(target)
             }
         )
 
@@ -94,7 +96,11 @@ fun TvPlayerCenterControls(
             iconSize = 34.dp,
             tint = Color.White,
             onClick = {
-                if (isPlaying) controller.pause() else controller.play()
+                if (onPlayPauseClick != null) {
+                    onPlayPauseClick()
+                } else {
+                    if (isPlaying) controller.pause() else controller.play()
+                }
             },
             modifier = Modifier.focusRequester(playPauseFocusRequester)
         )
@@ -109,7 +115,7 @@ fun TvPlayerCenterControls(
             iconSize = 24.dp,
             onClick = {
                 val target = (currentTime + 10.0).coerceAtMost(duration)
-                controller.seek(target)
+                if (onSeek != null) onSeek(target) else controller.seek(target)
             }
         )
 

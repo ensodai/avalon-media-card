@@ -34,6 +34,9 @@ class ClockSyncServiceTest {
             override fun streamRoomEvents(roomId: kotlin.uuid.Uuid): kotlinx.coroutines.flow.Flow<org.ensodai.avalonmediacard.contract.model.WatchRoomEvent> = TODO()
             override suspend fun sendPlaybackCommand(roomId: kotlin.uuid.Uuid, command: org.ensodai.avalonmediacard.contract.model.RoomPlaybackCommand): Boolean = TODO()
             override suspend fun sendReaction(roomId: kotlin.uuid.Uuid, emoji: String): Boolean = TODO()
+            override suspend fun updateRoomSource(request: org.ensodai.avalonmediacard.contract.model.UpdateRoomSourceRequest): Boolean = TODO()
+            override suspend fun sendChatMessage(roomId: kotlin.uuid.Uuid, text: String, playbackPositionMs: Long): Boolean = TODO()
+            override suspend fun getRoomChatHistory(roomId: kotlin.uuid.Uuid, season: Int?, episode: Int?): List<org.ensodai.avalonmediacard.contract.model.WatchRoomChatMessageDto> = emptyList()
         }
     }
 

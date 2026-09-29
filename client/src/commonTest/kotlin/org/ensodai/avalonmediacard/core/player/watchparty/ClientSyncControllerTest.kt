@@ -122,6 +122,9 @@ class ClientSyncControllerTest {
         override suspend fun setLobbyStatus(roomId: Uuid, request: SetLobbyStatusRequest): Boolean = TODO()
         override suspend fun triggerStartPlayback(roomId: Uuid): Boolean = TODO()
         override suspend fun sendReaction(roomId: Uuid, emoji: String): Boolean = true
+        override suspend fun updateRoomSource(request: org.ensodai.avalonmediacard.contract.model.UpdateRoomSourceRequest): Boolean = TODO()
+        override suspend fun sendChatMessage(roomId: Uuid, text: String, playbackPositionMs: Long): Boolean = true
+        override suspend fun getRoomChatHistory(roomId: Uuid, season: Int?, episode: Int?): List<org.ensodai.avalonmediacard.contract.model.WatchRoomChatMessageDto> = emptyList()
     }
 
     @Test

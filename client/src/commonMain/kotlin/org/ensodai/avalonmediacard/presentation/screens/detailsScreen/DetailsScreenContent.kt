@@ -40,6 +40,8 @@ fun DetailsContent(
                 onCloseSources = onCloseSources,
                 onSelectSource = onSelectSource,
                 onRefreshSources = onRefreshSources,
+                onOpenWatchParty = onOpenWatchParty,
+                onCloseWatchParty = onCloseWatchParty,
                 modifier = modifier
             )
         },

@@ -9,8 +9,11 @@ import androidx.compose.foundation.gestures.BringIntoViewSpec
 import androidx.compose.foundation.gestures.LocalBringIntoViewSpec
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.LaunchedEffect
@@ -30,15 +33,26 @@ import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
+import avalonmediacard.client.generated.resources.*
+import com.composables.icons.lucide.Lucide
+import com.composables.icons.lucide.Settings
+import org.ensodai.avalonmediacard.contract.logging.AppLogging
 import org.ensodai.avalonmediacard.contract.slot.Action
+import org.ensodai.avalonmediacard.presentation.screens.commonComponents.LocalRootOverlay
+import org.ensodai.avalonmediacard.presentation.screens.commonComponents.initialFocus
+import org.ensodai.avalonmediacard.presentation.screens.commonComponents.logFocus
+import org.ensodai.avalonmediacard.presentation.screens.commonComponents.tvAndWebHoverEffect
+import org.ensodai.avalonmediacard.presentation.screens.commonComponents.tvDrawer.LocalTvDrawerNavigator
 import org.ensodai.avalonmediacard.presentation.screens.detailsScreen.component.backdropImageSlot.BackdropImageSlot
 import org.ensodai.avalonmediacard.presentation.screens.detailsScreen.component.carouselsSlot.CarouselsSlot
 import org.ensodai.avalonmediacard.presentation.screens.detailsScreen.component.castSlot.CastSlot
 import org.ensodai.avalonmediacard.presentation.screens.detailsScreen.component.collectionButtonsSlot.CollectionButtonsSlot
+import org.ensodai.avalonmediacard.presentation.screens.detailsScreen.component.collectionButtonsSlot.SecondaryActionButton
 import org.ensodai.avalonmediacard.presentation.screens.detailsScreen.component.commentsSlot.CommentsSlot
 import org.ensodai.avalonmediacard.presentation.screens.detailsScreen.component.continueWatchingSlot.ContinueWatchingSlot
-import org.ensodai.avalonmediacard.presentation.screens.detailsScreen.component.criticsRatingsSlot.CriticsRatingsSlot
 import org.ensodai.avalonmediacard.presentation.screens.detailsScreen.component.mediaDescriptionSlot.MediaDescriptionSlot
 import org.ensodai.avalonmediacard.presentation.screens.detailsScreen.component.mediaSourcesSlot.MediaSourcesSlot
 import org.ensodai.avalonmediacard.presentation.screens.detailsScreen.component.metadataSlot.MetadataSlot
@@ -47,11 +61,16 @@ import org.ensodai.avalonmediacard.presentation.screens.detailsScreen.component.
 import org.ensodai.avalonmediacard.presentation.screens.detailsScreen.component.statusAndRatingSlot.StatusAndRatingSlot
 import org.ensodai.avalonmediacard.presentation.screens.detailsScreen.component.syncStatusSlot.SyncStatusSlot
 import org.ensodai.avalonmediacard.presentation.screens.detailsScreen.component.titleSlot.TitleSlot
+import org.ensodai.avalonmediacard.presentation.screens.detailsScreen.targets.tv.components.MediaDetailsSettingsDrawerScreen
 import org.ensodai.avalonmediacard.presentation.screens.detailsScreen.targets.tv.components.TvTvSeasonsSection
 import org.ensodai.avalonmediacard.presentation.screens.detailsScreen.viewState.DetailsViewState
-import org.ensodai.avalonmediacard.contract.logging.AppLogging
-import org.ensodai.avalonmediacard.presentation.screens.commonComponents.logFocus
-import org.ensodai.avalonmediacard.presentation.screens.commonComponents.initialFocus
+import org.ensodai.avalonmediacard.presentation.screens.player.launchPlayerOverlay
+import org.ensodai.avalonmediacard.presentation.screens.player.model.PlayerInitParams
+import org.ensodai.avalonmediacard.presentation.screens.player.model.PlayerMode
+import org.ensodai.avalonmediacard.presentation.screens.watchParty.WatchPartyScreen
+import org.ensodai.avalonmediacard.presentation.screens.watchParty.viewState.WatchPartyStep
+import org.jetbrains.compose.resources.stringResource
+import kotlin.uuid.Uuid
 
 private val logger = AppLogging.logger("MediaDetailsLayoutTv")
 
@@ -66,12 +85,16 @@ fun MediaDetailsLayoutTv(
     onCloseSources: (() -> Unit)? = null,
     onSelectSource: ((providerId: String, sourceId: String, seasonNumber: Int?, episodeNumber: Int?, onComplete: () -> Unit) -> Unit)? = null,
     onRefreshSources: (() -> Unit)? = null,
+    onOpenWatchParty: ((step: WatchPartyStep, roomId: Uuid?) -> Unit)? = null,
+    onCloseWatchParty: (() -> Unit)? = null,
 ) {
     val isPlayerOpen = state.playerState !is DetailsViewState.PlayerState.Idle
     val scrollState = rememberScrollState()
     val backgroundColor = MaterialTheme.colorScheme.background
     val buttonsFocusRequester = remember { FocusRequester() }
     val focusZone = remember { mutableStateOf(TvFocusZone.HEADER) }
+    val drawerNavigator = LocalTvDrawerNavigator.current
+    val rootOverlay = LocalRootOverlay.current
 
     val hasButtons = state.playButtons?.state?.data != null || state.collectionButtons?.state?.data != null
     LaunchedEffect(isPlayerOpen) {
@@ -205,7 +228,6 @@ fun MediaDetailsLayoutTv(
                     ) {
                         TitleSlot(state = state.header?.state)
                         MetadataSlot(state = state.header?.state, onAction = onAction)
-                        CriticsRatingsSlot(state = state.header?.state)
                     }
                 }
 
@@ -233,6 +255,29 @@ fun MediaDetailsLayoutTv(
                         ) {
                             PlayButtonsSlot(state = state.playButtons?.state, onAction = onAction)
                             CollectionButtonsSlot(state = state.collectionButtons?.state, onAction = onAction)
+
+                            if (onOpenWatchParty != null || onRequestOtherSource != null) {
+                                val settingsButtonFocusRequester = remember { FocusRequester() }
+                                val settingsDrawerTitle = stringResource(Res.string.settings_title)
+                                SecondaryActionButton(
+                                    icon = Lucide.Settings,
+                                    tint = Color.White,
+                                    modifier = Modifier.focusRequester(settingsButtonFocusRequester),
+                                    onClick = {
+                                        drawerNavigator.open(
+                                            screen = MediaDetailsSettingsDrawerScreen(
+                                                title = settingsDrawerTitle,
+                                                callerFocusRequester = settingsButtonFocusRequester,
+                                                onOpenWatchParty = onOpenWatchParty?.let { openWp ->
+                                                    { openWp(WatchPartyStep.SETUP, null) }
+                                                },
+                                                onRequestOtherSource = onRequestOtherSource
+                                            ),
+                                            caller = settingsButtonFocusRequester
+                                        )
+                                    }
+                                )
+                            }
                         }
 
                         // Эта часть смещает фокус вниз (pivot = 0.35f)
@@ -329,6 +374,43 @@ fun MediaDetailsLayoutTv(
                 onAction = onAction
             )
         }
+
+        // Watch Party Modal (if open)
+        WatchPartyScreen(
+            isVisible = state.isWatchPartyOpen,
+            mediaKey = state.mediaKey,
+            mediaTitle = state.header?.state?.data?.title,
+            mediaSourcesList = state.mediaSourcesList,
+            torrentInspectorState = state.torrentInspector?.state,
+            onRefreshSources = onRefreshSources,
+            onAction = onAction,
+            initialStep = state.watchPartyInitialStep,
+            initialRoomId = state.watchPartyRoomId,
+            callerFocusRequester = buttonsFocusRequester,
+            onClose = { onCloseWatchParty?.invoke() },
+            onStartPlayback = { roomId, season, episode, startPositionSeconds ->
+                onCloseWatchParty?.invoke()
+                state.mediaKey.let { key ->
+                    launchPlayerOverlay(
+                        rootOverlay = rootOverlay,
+                        params = PlayerInitParams(
+                            title = state.header?.state?.data?.title ?: "Watch Party",
+                            seriesTitle = state.header?.state?.data?.title,
+                            mediaKey = key,
+                            targetSeason = season,
+                            targetEpisode = episode,
+                            startPositionSeconds = startPositionSeconds,
+                            mode = PlayerMode.WATCH_PARTY,
+                            watchRoomId = roomId,
+                            isHost = true
+                        ),
+                        onReturnToLobby = { retRoomId ->
+                            onOpenWatchParty?.invoke(WatchPartyStep.LOBBY, retRoomId)
+                        }
+                    )
+                }
+            }
+        )
     }
 }
 

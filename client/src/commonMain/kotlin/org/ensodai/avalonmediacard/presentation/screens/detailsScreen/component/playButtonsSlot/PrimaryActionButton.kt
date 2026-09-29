@@ -34,7 +34,7 @@ fun PrimaryActionButton(
         verticalAlignment = Alignment.CenterVertically,
         modifier = modifier
             .height(46.dp)
-            .shimmerPlaceholder(isLoading, RoundedCornerShape(8.dp))
+            .shimmerPlaceholder(isLoading, RoundedCornerShape(24.dp))
             .onFocusChanged {
                 if (it.isFocused) {
                     logger.d { "[FOCUS_DEBUG] PrimaryActionButton text='$text' GOT FOCUS!" }
@@ -42,11 +42,11 @@ fun PrimaryActionButton(
             }
             .tvAndWebHoverEffect(
                 scaleTarget = 1.04f,
-                shape = RoundedCornerShape(8.dp),
+                shape = RoundedCornerShape(24.dp),
                 clickEnabled = !isLoading,
                 onClick = { onClick() }
             )
-            .background(if (isLoading) Color.Transparent else Color.White, RoundedCornerShape(8.dp))
+            .background(if (isLoading) Color.Transparent else Color.White, RoundedCornerShape(24.dp))
             .padding(horizontal = 24.dp)
     ) {
         Icon(

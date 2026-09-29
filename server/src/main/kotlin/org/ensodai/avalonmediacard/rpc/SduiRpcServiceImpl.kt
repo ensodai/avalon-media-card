@@ -17,6 +17,7 @@ import org.ensodai.avalonmediacard.repository.UserClickstreamRepository
 import org.ensodai.avalonmediacard.repository.UserSettingsRepository
 import org.ensodai.avalonmediacard.repository.WidgetSettingsRepository
 import org.ensodai.avalonmediacard.security.RpcSessionContext
+import org.ensodai.avalonmediacard.service.watchparty.WatchRoomSessionManager
 import org.koin.core.annotation.Factory
 import org.koin.core.annotation.InjectedParam
 import kotlin.uuid.Uuid
@@ -28,7 +29,8 @@ class SduiRpcServiceImpl(
     private val pluginManager: PluginManager,
     private val widgetSettingsRepository: WidgetSettingsRepository,
     private val userClickstreamRepository: UserClickstreamRepository,
-    private val userSettingsRepository: UserSettingsRepository
+    private val userSettingsRepository: UserSettingsRepository,
+    private val watchRoomSessionManager: WatchRoomSessionManager
 ) : SduiRpcService {
 
     private fun currentUserId(): Uuid? {
@@ -45,8 +47,24 @@ class SduiRpcServiceImpl(
         val userId = session.awaitUserId()
         val userLocale = getUserLocale(userId)
         withContext(session.pluginCoroutineContext(userLocale, userId)) {
+            val watchRoomsFlow: Flow<List<SidebarItem>> = if (userId != null) {
+                watchRoomSessionManager.streamUserRooms(userId).map { rooms ->
+                    listOf(
+                        SidebarItem(
+                            itemId = "watch_rooms",
+                            title = null,
+                            iconName = "users",
+                            screen = Screen.WatchRooms,
+                            group = 0,
+                            order = 100,
+                            itemsCount = rooms.size
+                        )
+                    )
+                }
+            } else flowOf(emptyList())
+
             pluginManager.pluginUpdates.flatMapLatest {
-                val flows = pluginManager.getSidebarFlows(userId)
+                val flows = pluginManager.getSidebarFlows(userId) + watchRoomsFlow
                 if (flows.isEmpty()) {
                     flowOf(emptyList())
                 } else {

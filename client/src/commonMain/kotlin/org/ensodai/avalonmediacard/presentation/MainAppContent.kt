@@ -21,7 +21,9 @@ import androidx.savedstate.serialization.SavedStateConfiguration
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import org.ensodai.avalonmediacard.contract.model.SidebarItem
+import org.ensodai.avalonmediacard.contract.model.SidebarItemType
 import org.ensodai.avalonmediacard.contract.model.UserRole
+import org.ensodai.avalonmediacard.domain.repository.WatchPartyRepository
 import org.ensodai.avalonmediacard.contract.rpc.ActionRpcService
 import org.ensodai.avalonmediacard.contract.rpc.AuthRpcService
 import org.ensodai.avalonmediacard.contract.rpc.SduiRpcService
@@ -85,6 +87,10 @@ fun MainAppContent(
     }
 
     val authRpcService = koinInject<AuthRpcService>()
+    val watchPartyRepository = koinInject<WatchPartyRepository>()
+    val userRooms by watchPartyRepository.userRoomsFlow.collectAsState()
+    val userRoomsCount = userRooms.size.takeIf { it > 0 }
+
     LaunchedEffect(Unit) {
         try {
             authRpcService.getIntegrationsStatus()
@@ -105,6 +111,40 @@ fun MainAppContent(
     val deviceTarget = LocalDeviceTarget.current
 
     val currentSidebarItems by rememberUpdatedState(sidebarItems)
+
+    val allSidebarItems by remember(currentSidebarItems, userRoomsCount) {
+        derivedStateOf {
+            if (currentSidebarItems.isEmpty()) {
+                emptyList()
+            } else if (currentSidebarItems.any { it.itemId == "watch_rooms" }) {
+                if (userRoomsCount != null) {
+                    currentSidebarItems.map {
+                        if (it.itemId == "watch_rooms" && it.itemsCount == null) it.copy(itemsCount = userRoomsCount) else it
+                    }
+                } else {
+                    currentSidebarItems
+                }
+            } else {
+                val fallback = SidebarItem(
+                    itemId = "watch_rooms",
+                    title = null,
+                    iconName = "users",
+                    screen = Screen.WatchRooms,
+                    group = 0,
+                    order = 100,
+                    itemsCount = userRoomsCount
+                )
+                val dividerIndex = currentSidebarItems.indexOfFirst { it.type == SidebarItemType.DIVIDER }
+                if (dividerIndex >= 0) {
+                    currentSidebarItems.toMutableList().apply {
+                        add(dividerIndex, fallback)
+                    }
+                } else {
+                    currentSidebarItems + fallback
+                }
+            }
+        }
+    }
 
     val mainLayout: @Composable () -> Unit = remember {
         @Composable {
@@ -338,7 +378,8 @@ fun MainAppContent(
                                                     }
 
                                                     is Screen.WatchRooms -> {
-                                                        WatchRoomsScreen()
+                                                        val expectedCount = allSidebarItems.find { it.itemId == "watch_rooms" }?.itemsCount
+                                                        WatchRoomsScreen(expectedItemsCount = expectedCount)
                                                     }
                                                 }
                                             }
@@ -350,23 +391,6 @@ fun MainAppContent(
                     }
                 }
 
-                val watchRoomsSidebarItem = remember {
-                    SidebarItem(
-                        itemId = "watch_rooms",
-                        title = null,
-                        iconName = "users",
-                        screen = Screen.WatchRooms,
-                        group = 0,
-                        order = 100
-                    )
-                }
-                val allSidebarItems = remember(currentSidebarItems, watchRoomsSidebarItem) {
-                    if (currentSidebarItems.isEmpty() || currentSidebarItems.any { it.itemId == "watch_rooms" }) {
-                        currentSidebarItems
-                    } else {
-                        currentSidebarItems + watchRoomsSidebarItem
-                    }
-                }
                 val currentSelectedItem = when (val tab = activeTabState.value) {
                     is RootTab.Plugin -> tab.item
                     is RootTab.WatchRooms -> allSidebarItems.find { it.itemId == "watch_rooms" }

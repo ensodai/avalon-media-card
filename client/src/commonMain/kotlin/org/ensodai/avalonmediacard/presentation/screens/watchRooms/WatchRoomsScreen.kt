@@ -33,7 +33,8 @@ import kotlin.uuid.Uuid
 fun WatchRoomsScreen(
     onStartPlayback: ((roomId: Uuid, season: Int?, episode: Int?, startPositionSeconds: Long) -> Unit)? = null,
     viewModel: WatchRoomsViewModel = koinInject(),
-    watchPartyViewModel: WatchPartyViewModel = koinInject()
+    watchPartyViewModel: WatchPartyViewModel = koinInject(),
+    expectedItemsCount: Int? = null
 ) {
     val state by viewModel.viewState.collectAsState()
     val actions = viewModel.actions
@@ -87,6 +88,7 @@ fun WatchRoomsScreen(
                     actions = actions,
                     onRoomClick = onRoomClick,
                     isPlayerOpen = isPlayerOpen,
+                    expectedItemsCount = expectedItemsCount,
                     modifier = Modifier.fillMaxSize()
                 )
             },
@@ -95,6 +97,7 @@ fun WatchRoomsScreen(
                     state = state,
                     actions = actions,
                     onRoomClick = onRoomClick,
+                    expectedItemsCount = expectedItemsCount,
                     modifier = Modifier.fillMaxSize()
                 )
             },
@@ -103,6 +106,7 @@ fun WatchRoomsScreen(
                     state = state,
                     actions = actions,
                     onRoomClick = onRoomClick,
+                    expectedItemsCount = expectedItemsCount,
                     modifier = Modifier.fillMaxSize()
                 )
             }

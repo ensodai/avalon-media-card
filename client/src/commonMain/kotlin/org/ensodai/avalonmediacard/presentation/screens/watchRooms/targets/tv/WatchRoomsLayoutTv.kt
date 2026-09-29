@@ -15,6 +15,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.GridItemSpan
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
+import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.lazy.grid.itemsIndexed
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
@@ -43,6 +44,7 @@ import kotlinx.coroutines.delay
 import org.ensodai.avalonmediacard.contract.model.WatchRoomSummaryDto
 import org.ensodai.avalonmediacard.presentation.screens.watchRooms.action.WatchRoomsActions
 import org.ensodai.avalonmediacard.presentation.screens.watchRooms.components.WatchRoomSummaryCard
+import org.ensodai.avalonmediacard.presentation.screens.watchRooms.components.WatchRoomSummaryCardSkeleton
 import org.ensodai.avalonmediacard.presentation.screens.watchRooms.components.WatchRoomsHeader
 import org.ensodai.avalonmediacard.presentation.screens.watchRooms.viewState.WatchRoomsViewState
 import org.jetbrains.compose.resources.stringResource
@@ -65,7 +67,8 @@ fun WatchRoomsLayoutTv(
     actions: WatchRoomsActions,
     onRoomClick: (WatchRoomSummaryDto) -> Unit,
     modifier: Modifier = Modifier,
-    isPlayerOpen: Boolean = false
+    isPlayerOpen: Boolean = false,
+    expectedItemsCount: Int? = null
 ) {
     val restoreFocusRequester = remember { FocusRequester() }
     val headerButtonFocusRequester = remember { FocusRequester() }
@@ -171,45 +174,54 @@ fun WatchRoomsLayoutTv(
                 }
             }
 
-            // 3. Список комнат (2-колоночная ТВ-сетка 16:9) либо пустое состояние
-            if (state.rooms.isEmpty() && !state.isLoading) {
-                item(span = { GridItemSpan(maxLineSpan) }) {
-                    Box(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(vertical = 32.dp),
-                        contentAlignment = Alignment.Center
-                    ) {
-                        Text(
-                            text = stringResource(Res.string.watch_rooms_history_empty),
-                            fontSize = 16.sp,
-                            color = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.5f)
-                        )
+            // 3. Список комнат (2-колоночная ТВ-сетка 16:9), скелетоны загрузки либо пустое состояние
+            when {
+                state.isLoading && state.rooms.isEmpty() -> {
+                    val skeletonCount = (expectedItemsCount ?: 4).coerceAtLeast(1)
+                    items(skeletonCount) {
+                        WatchRoomSummaryCardSkeleton()
                     }
                 }
-            } else {
-                itemsIndexed(state.rooms, key = { _, room -> room.id.toString() }) { index, room ->
-                    val isTargetForFocus = if (lastFocusedRoomId != null) {
-                        room.id == lastFocusedRoomId
-                    } else {
-                        index == 0
+                state.rooms.isEmpty() -> {
+                    item(span = { GridItemSpan(maxLineSpan) }) {
+                        Box(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(vertical = 32.dp),
+                            contentAlignment = Alignment.Center
+                        ) {
+                            Text(
+                                text = stringResource(Res.string.watch_rooms_history_empty),
+                                fontSize = 16.sp,
+                                color = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.5f)
+                            )
+                        }
                     }
-                    WatchRoomSummaryCard(
-                        room = room,
-                        onClick = {
-                            lastFocusedRoomId = room.id
-                            focusedIndex = index
-                            onRoomClick(room)
-                        },
-                        modifier = Modifier
-                            .then(if (isTargetForFocus) Modifier.focusRequester(restoreFocusRequester) else Modifier)
-                            .onFocusChanged {
-                                if (it.hasFocus) {
-                                    focusedIndex = index
-                                    lastFocusedRoomId = room.id
+                }
+                else -> {
+                    itemsIndexed(state.rooms, key = { _, room -> room.id.toString() }) { index, room ->
+                        val isTargetForFocus = if (lastFocusedRoomId != null) {
+                            room.id == lastFocusedRoomId
+                        } else {
+                            index == 0
+                        }
+                        WatchRoomSummaryCard(
+                            room = room,
+                            onClick = {
+                                lastFocusedRoomId = room.id
+                                focusedIndex = index
+                                onRoomClick(room)
+                            },
+                            modifier = Modifier
+                                .then(if (isTargetForFocus) Modifier.focusRequester(restoreFocusRequester) else Modifier)
+                                .onFocusChanged {
+                                    if (it.hasFocus) {
+                                        focusedIndex = index
+                                        lastFocusedRoomId = room.id
+                                    }
                                 }
-                            }
-                    )
+                        )
+                    }
                 }
             }
         }

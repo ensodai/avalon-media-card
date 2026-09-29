@@ -26,6 +26,7 @@ import avalonmediacard.client.generated.resources.watch_rooms_history_title
 import org.ensodai.avalonmediacard.contract.model.WatchRoomSummaryDto
 import org.ensodai.avalonmediacard.presentation.screens.watchRooms.action.WatchRoomsActions
 import org.ensodai.avalonmediacard.presentation.screens.watchRooms.components.WatchRoomSummaryCard
+import org.ensodai.avalonmediacard.presentation.screens.watchRooms.components.WatchRoomSummaryCardSkeleton
 import org.ensodai.avalonmediacard.presentation.screens.watchRooms.components.WatchRoomsHeader
 import org.ensodai.avalonmediacard.presentation.screens.watchRooms.viewState.WatchRoomsViewState
 import org.jetbrains.compose.resources.stringResource
@@ -35,7 +36,8 @@ fun WatchRoomsLayoutWeb(
     state: WatchRoomsViewState,
     actions: WatchRoomsActions,
     onRoomClick: (WatchRoomSummaryDto) -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    expectedItemsCount: Int? = null
 ) {
     Box(
         modifier = modifier
@@ -79,28 +81,37 @@ fun WatchRoomsLayoutWeb(
                 }
             }
 
-            // 3. User Rooms List or Empty State
-            if (state.rooms.isEmpty() && !state.isLoading) {
-                item(span = { GridItemSpan(maxLineSpan) }) {
-                    Box(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(vertical = 40.dp),
-                        contentAlignment = Alignment.Center
-                    ) {
-                        Text(
-                            text = stringResource(Res.string.watch_rooms_history_empty),
-                            fontSize = 14.sp,
-                            color = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.5f)
-                        )
+            // 3. User Rooms List, Skeletons or Empty State
+            when {
+                state.isLoading && state.rooms.isEmpty() -> {
+                    val skeletonCount = (expectedItemsCount ?: 4).coerceAtLeast(1)
+                    items(skeletonCount) {
+                        WatchRoomSummaryCardSkeleton()
                     }
                 }
-            } else {
-                items(state.rooms, key = { it.id.toString() }) { room ->
-                    WatchRoomSummaryCard(
-                        room = room,
-                        onClick = { onRoomClick(room) }
-                    )
+                state.rooms.isEmpty() -> {
+                    item(span = { GridItemSpan(maxLineSpan) }) {
+                        Box(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(vertical = 40.dp),
+                            contentAlignment = Alignment.Center
+                        ) {
+                            Text(
+                                text = stringResource(Res.string.watch_rooms_history_empty),
+                                fontSize = 14.sp,
+                                color = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.5f)
+                            )
+                        }
+                    }
+                }
+                else -> {
+                    items(state.rooms, key = { it.id.toString() }) { room ->
+                        WatchRoomSummaryCard(
+                            room = room,
+                            onClick = { onRoomClick(room) }
+                        )
+                    }
                 }
             }
         }

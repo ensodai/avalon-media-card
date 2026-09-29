@@ -310,9 +310,6 @@ fun Sidebar(
 
 
             if (collectionItems.isNotEmpty()) {
-                item {
-                    Spacer(modifier = Modifier.height(8.dp))
-                }
                 items(collectionItems) { item ->
                     val isSelected = selectedItem?.itemId == item.itemId
                     SidebarMenuItem(

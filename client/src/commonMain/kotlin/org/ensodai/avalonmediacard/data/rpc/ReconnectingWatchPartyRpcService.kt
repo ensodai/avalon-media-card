@@ -16,6 +16,7 @@ import org.ensodai.avalonmediacard.contract.model.LobbyEvent
 import org.ensodai.avalonmediacard.contract.model.RoomPlaybackCommand
 import org.ensodai.avalonmediacard.contract.model.SetLobbyStatusRequest
 import org.ensodai.avalonmediacard.contract.model.UpdateRoomSourceRequest
+import org.ensodai.avalonmediacard.contract.model.WatchRoomChatMessageDto
 import org.ensodai.avalonmediacard.contract.model.WatchRoomDto
 import org.ensodai.avalonmediacard.contract.model.WatchRoomEvent
 import org.ensodai.avalonmediacard.contract.model.WatchRoomSummaryDto
@@ -143,6 +144,16 @@ class ReconnectingWatchPartyRpcService(
     override suspend fun sendReaction(roomId: Uuid, emoji: String): Boolean =
         executor.execute("sendReaction", getService = { getService() }) {
             sendReaction(roomId, emoji)
+        }
+
+    override suspend fun sendChatMessage(roomId: Uuid, text: String, playbackPositionMs: Long): Boolean =
+        executor.execute("sendChatMessage", getService = { getService() }) {
+            sendChatMessage(roomId, text, playbackPositionMs)
+        }
+
+    override suspend fun getRoomChatHistory(roomId: Uuid, season: Int?, episode: Int?): List<WatchRoomChatMessageDto> =
+        executor.execute("getRoomChatHistory", getService = { getService() }) {
+            getRoomChatHistory(roomId, season, episode)
         }
 
     override suspend fun updateRoomSource(request: UpdateRoomSourceRequest): Boolean =

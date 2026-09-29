@@ -28,6 +28,7 @@ import org.ensodai.avalonmediacard.presentation.core.mvi.BaseViewModel
 import org.ensodai.avalonmediacard.presentation.screens.player.action.*
 import org.ensodai.avalonmediacard.presentation.screens.player.model.PlaybackStatus
 import org.ensodai.avalonmediacard.presentation.screens.player.model.PlayerInitParams
+import org.ensodai.avalonmediacard.presentation.screens.player.viewState.PlayerChatUiMessage
 import org.ensodai.avalonmediacard.presentation.screens.player.model.PlayerMode
 import org.ensodai.avalonmediacard.presentation.screens.player.viewState.PlayerViewState
 import org.koin.core.annotation.InjectedParam
@@ -125,6 +126,76 @@ class PlayerViewModel(
                                     onReturnToLobbyCallback?.invoke(roomId)
                                 }
                                 actions.onCloseClicked()
+                            }
+                            is WatchRoomEvent.ChatHistorySnapshot -> {
+                                val currentUid = viewState.value.currentUserId
+                                val uiMessages = event.messages.map { msg ->
+                                    val isMe = msg.senderUserId.toString() == currentUid
+                                    val isHost = viewState.value.watchRoomParticipants.find { it.userId == msg.senderUserId }?.role == WatchRoomParticipantRole.HOST
+                                    PlayerChatUiMessage(
+                                        id = msg.id,
+                                        senderUserId = msg.senderUserId,
+                                        senderUsername = msg.senderUsername,
+                                        senderAvatarUrl = msg.senderAvatarUrl,
+                                        text = msg.text,
+                                        formattedPosition = formatChatTimecode(msg.playbackPositionMs),
+                                        rawPositionMs = msg.playbackPositionMs,
+                                        isFromMe = isMe,
+                                        isHost = isHost,
+                                        isSending = false,
+                                        createdAt = msg.createdAt
+                                    )
+                                }
+                                updateViewState {
+                                    it.copy(
+                                        chatState = it.chatState.copy(
+                                            messages = uiMessages
+                                        )
+                                    )
+                                }
+                            }
+                            is WatchRoomEvent.ChatMessageReceived -> {
+                                val currentUid = viewState.value.currentUserId
+                                val msg = event.message
+                                val isMe = msg.senderUserId.toString() == currentUid
+                                val isHost = viewState.value.watchRoomParticipants.find { it.userId == msg.senderUserId }?.role == WatchRoomParticipantRole.HOST
+                                val uiMessage = PlayerChatUiMessage(
+                                    id = msg.id,
+                                    senderUserId = msg.senderUserId,
+                                    senderUsername = msg.senderUsername,
+                                    senderAvatarUrl = msg.senderAvatarUrl,
+                                    text = msg.text,
+                                    formattedPosition = formatChatTimecode(msg.playbackPositionMs),
+                                    rawPositionMs = msg.playbackPositionMs,
+                                    isFromMe = isMe,
+                                    isHost = isHost,
+                                    isSending = false,
+                                    createdAt = msg.createdAt
+                                )
+                                updateViewState { state ->
+                                    val existingMessages = state.chatState.messages
+                                    val filtered = if (isMe) {
+                                        val idx = existingMessages.indexOfFirst { it.isSending && it.text == msg.text }
+                                        if (idx != -1) {
+                                            existingMessages.toMutableList().apply { removeAt(idx) }
+                                        } else {
+                                            existingMessages
+                                        }
+                                    } else {
+                                        existingMessages
+                                    }
+                                    val newUnread = if (!state.chatState.isVisible && !state.chatState.isInputFocused) {
+                                        state.chatState.unreadCount + 1
+                                    } else {
+                                        0
+                                    }
+                                    state.copy(
+                                        chatState = state.chatState.copy(
+                                            messages = filtered + uiMessage,
+                                            unreadCount = newUnread
+                                        )
+                                    )
+                                }
                             }
                             else -> {}
                         }
@@ -446,7 +517,8 @@ class PlayerViewModel(
         onAttachController = ::attachController,
         onDetachController = ::detachController,
         onToggleParticipantsPanel = ::onToggleParticipantsPanel,
-        onReturnToLobby = ::onReturnToLobby
+        onReturnToLobby = ::onReturnToLobby,
+        chat = createPlayerChatActions()
     )
 
     fun onReturnToLobby() {

@@ -372,6 +372,8 @@ class ClientSyncController(
                         is WatchRoomEvent.SyncState -> handleSyncState(event)
                         is WatchRoomEvent.ParticipantsUpdated,
                         is WatchRoomEvent.ReactionTriggered,
+                        is WatchRoomEvent.ChatMessageReceived,
+                        is WatchRoomEvent.ChatHistorySnapshot,
                         is WatchRoomEvent.SystemNotice,
                         is WatchRoomEvent.ReturnedToLobby -> {
                             // Передаются подписчикам через flow roomEvents

@@ -20,17 +20,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
-import org.ensodai.avalonmediacard.contract.model.WatchRoomParticipantDto
 import org.ensodai.avalonmediacard.contract.plugins.MediaStream
 
 @Composable
 fun BoxScope.PlayerRightPanelOverlay(
     showEpisodes: Boolean,
-    showParticipants: Boolean,
-    participants: List<WatchRoomParticipantDto> = emptyList(),
-    currentUserId: String? = null,
-    onCloseParticipantsClick: () -> Unit = {},
-    isLocalBuffering: Boolean = false,
     seasonEpisodes: Map<Int, List<MediaStream>> = emptyMap(),
     currentStreamId: String = "",
     url: String? = null,
@@ -47,20 +41,6 @@ fun BoxScope.PlayerRightPanelOverlay(
         horizontalArrangement = Arrangement.spacedBy(16.dp),
         verticalAlignment = Alignment.Top
     ) {
-        // Панель участников совместного просмотра (слева от серий, либо у правого края если серий нет)
-        AnimatedVisibility(
-            visible = showParticipants,
-            enter = fadeIn(),
-            exit = fadeOut()
-        ) {
-            WatchPartyParticipantsPanel(
-                participants = participants,
-                currentUserId = currentUserId,
-                onCloseClick = onCloseParticipantsClick,
-                isLocalBuffering = isLocalBuffering
-            )
-        }
-
         // Панель списка серий
         AnimatedVisibility(
             visible = showEpisodes,

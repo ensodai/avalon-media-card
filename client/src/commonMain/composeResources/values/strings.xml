@@ -11,6 +11,8 @@
     <string name="common_loading">Loading...</string>
     <string name="common_next">Next</string>
     <string name="common_previous">Previous</string>
+    <string name="common_collapse">Collapse</string>
+    <string name="common_expand">Expand</string>
 
     <!-- Navigation / Sidebar -->
     <string name="nav_home">Home</string>
@@ -516,4 +518,14 @@
     <string name="watch_party_participants_total_few">%1$d participants</string>
     <string name="watch_party_participants_total_many">%1$d participants</string>
     <string name="watch_party_btn_return_to_lobby">Return to Lobby</string>
+
+    <!-- Watch Party Chat -->
+    <string name="watch_party_chat_title">Room Chat</string>
+    <string name="watch_party_chat_desc">Chat</string>
+    <string name="watch_party_chat_close">Close chat</string>
+    <string name="watch_party_chat_empty">No messages in this episode yet.\nBe the first to write!</string>
+    <string name="watch_party_chat_input_placeholder">Write a message... (Enter)</string>
+    <string name="watch_party_chat_send">Send</string>
+    <string name="watch_party_chat_sending">Sending...</string>
+    <string name="watch_party_chat_you_fmt">You (%1$s)</string>
 </resources>

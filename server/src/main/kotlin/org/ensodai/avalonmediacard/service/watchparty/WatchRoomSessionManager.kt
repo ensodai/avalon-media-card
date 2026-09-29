@@ -22,6 +22,7 @@ import org.ensodai.avalonmediacard.contract.model.MediaType
 import org.ensodai.avalonmediacard.contract.model.RoomPlaybackCommand
 import org.ensodai.avalonmediacard.contract.model.SetLobbyStatusRequest
 import org.ensodai.avalonmediacard.contract.model.UserMovieItem
+import org.ensodai.avalonmediacard.contract.model.WatchRoomChatMessageDto
 import org.ensodai.avalonmediacard.contract.model.WatchRoomDto
 import org.ensodai.avalonmediacard.contract.model.WatchRoomEvent
 import org.ensodai.avalonmediacard.contract.model.WatchRoomParticipantRole
@@ -335,6 +336,31 @@ class WatchRoomSessionManager(
     }
 
     /**
+     * Отправка текстового сообщения в чат комнаты.
+     */
+    suspend fun sendChatMessage(
+        roomId: Uuid,
+        userId: Uuid,
+        text: String,
+        playbackPositionMs: Long
+    ): Boolean {
+        val session = sessions[roomId] ?: return false
+        return session.sendChatMessage(userId, text, playbackPositionMs)
+    }
+
+    /**
+     * Получение истории сообщений для указанного эпизода.
+     */
+    fun getRoomChatHistory(
+        roomId: Uuid,
+        season: Int?,
+        episode: Int?
+    ): List<WatchRoomChatMessageDto> {
+        val session = sessions[roomId] ?: return emptyList()
+        return session.getChatHistory(season, episode)
+    }
+
+    /**
      * Подключение к реактивному потоку событий комнаты (TrueSync / Плеер).
      */
     suspend fun streamEvents(
@@ -351,6 +377,13 @@ class WatchRoomSessionManager(
             // Мгновенный начальный снимок состояния для синхронизации подключающегося участника
             emit(session.getCurrentSyncState())
             emit(WatchRoomEvent.ParticipantsUpdated(session.getParticipantList()))
+            emit(
+                WatchRoomEvent.ChatHistorySnapshot(
+                    season = session.currentSeason,
+                    episode = session.currentEpisode,
+                    messages = session.getChatHistory(session.currentSeason, session.currentEpisode)
+                )
+            )
             emitAll(session.events)
         }.onCompletion {
             withContext(NonCancellable) {

@@ -1,9 +1,15 @@
 package org.ensodai.avalonmediacard.presentation.screens.player.component
 
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.core.animateDpAsState
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.runtime.*
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.graphics.Color
@@ -18,6 +24,7 @@ import org.ensodai.avalonmediacard.presentation.screens.player.component.pc.Play
 import org.ensodai.avalonmediacard.presentation.screens.player.component.pc.PlayerRightPanelOverlay
 import org.ensodai.avalonmediacard.presentation.screens.player.component.pc.PlayerTopBar
 import org.ensodai.avalonmediacard.presentation.screens.player.component.pc.UnifiedVideoPlayerLayout
+import org.ensodai.avalonmediacard.presentation.screens.player.component.pc.chat.WatchPartyChatPanel
 import org.ensodai.avalonmediacard.presentation.screens.player.component.tv.TvPlayerLayout
 import org.ensodai.avalonmediacard.presentation.screens.player.model.PlayerMode
 import org.ensodai.avalonmediacard.presentation.screens.player.viewState.PlayerViewState
@@ -68,22 +75,17 @@ fun UnifiedVideoPlayer(
             modifier = modifier
         )
     } else {
-        val showUiOverlay = !state.isFullscreen || isMouseActive
+        val showUiOverlay = !state.isFullscreen || isMouseActive || state.chatState.isInputFocused
         val showEpisodesPanel = state.hasEpisodesContext && showUiOverlay
-        val showParticipantsPanel = state.mode == PlayerMode.WATCH_PARTY && state.isParticipantsPanelVisible && showUiOverlay
-        val showRightPanel = showEpisodesPanel || showParticipantsPanel
-
-        val episodesWidth = if (showEpisodesPanel) 360.dp else 0.dp
-        val participantsWidth = if (showParticipantsPanel) 280.dp else 0.dp
-        val spacingWidth = if (showEpisodesPanel && showParticipantsPanel) 16.dp else 0.dp
-        val totalPanelsWidth = episodesWidth + participantsWidth + spacingWidth
-        val rightPadding = if (totalPanelsWidth > 0.dp) totalPanelsWidth + 48.dp else 24.dp
+        val showChatPanel = state.mode == PlayerMode.WATCH_PARTY && showUiOverlay
+        val rightPadding = if (showEpisodesPanel) 360.dp + 48.dp else 24.dp
 
         PlayerInputHandler(
             actions = actions,
             controller = controller,
             isFullscreen = state.isFullscreen,
             showUiOverlay = showUiOverlay,
+            isChatInputFocused = state.chatState.isInputFocused,
             onFullscreenToggle = { actions.onToggleFullscreen() },
             onMouseMoved = { x, y ->
                 mouseX = x
@@ -96,10 +98,7 @@ fun UnifiedVideoPlayer(
                 .background(Color.Black)
         ) {
             UnifiedVideoPlayerLayout(
-                isFullscreen = state.isFullscreen,
                 showUiOverlay = showUiOverlay,
-                showRightPanel = showRightPanel,
-                hasEpisodesContext = state.hasEpisodesContext,
                 videoSurface = videoSurface,
                 centerOverlays = {
                     PlayerCenterOverlays(
@@ -112,10 +111,14 @@ fun UnifiedVideoPlayer(
                     )
                 },
                 topBar = {
+                    val animatedRightPadding by animateDpAsState(
+                        targetValue = rightPadding,
+                        label = "topBarRightPadding"
+                    )
                     PlayerTopBar(
                         state = state,
                         actions = actions,
-                        rightPadding = rightPadding
+                        rightPadding = animatedRightPadding
                     )
                 },
                 bottomBar = {
@@ -125,14 +128,25 @@ fun UnifiedVideoPlayer(
                         controller = controller
                     )
                 },
+                leftPanelOverlay = {
+                    AnimatedVisibility(
+                        visible = showChatPanel,
+                        enter = fadeIn(),
+                        exit = fadeOut(),
+                        modifier = Modifier
+                            .align(Alignment.TopStart)
+                            .padding(top = 84.dp, bottom = 100.dp, start = 24.dp)
+                    ) {
+                        WatchPartyChatPanel(
+                            chatState = state.chatState,
+                            actions = actions.chat,
+                            episodeTitle = state.displayTitleData.bottomText.takeIf { it.isNotBlank() && it != state.title }
+                        )
+                    }
+                },
                 rightPanelOverlay = {
                     PlayerRightPanelOverlay(
                         showEpisodes = showEpisodesPanel,
-                        showParticipants = showParticipantsPanel,
-                        participants = state.watchRoomParticipants,
-                        currentUserId = state.currentUserId,
-                        onCloseParticipantsClick = { actions.onToggleParticipantsPanel() },
-                        isLocalBuffering = controller.state.isBuffering,
                         seasonEpisodes = state.seasonEpisodes,
                         currentStreamId = state.currentStreamId,
                         url = state.currentStreamUrl,

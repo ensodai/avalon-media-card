@@ -19,6 +19,7 @@ fun PlayerInputHandler(
     controller: PlaybackController,
     isFullscreen: Boolean,
     showUiOverlay: Boolean = true,
+    isChatInputFocused: Boolean = false,
     onFullscreenToggle: () -> Unit,
     onMouseMoved: (x: Float, y: Float) -> Unit,
     focusRequester: FocusRequester,
@@ -26,11 +27,15 @@ fun PlayerInputHandler(
     content: @Composable () -> Unit
 ) {
     LaunchedEffect(Unit) {
-        runCatching { focusRequester.requestFocus() }
+        if (!isChatInputFocused) {
+            runCatching { focusRequester.requestFocus() }
+        }
     }
 
     LaunchedEffect(showUiOverlay) {
-        runCatching { focusRequester.requestFocus() }
+        if (!isChatInputFocused) {
+            runCatching { focusRequester.requestFocus() }
+        }
     }
 
     Box(
@@ -38,6 +43,9 @@ fun PlayerInputHandler(
             .focusRequester(focusRequester)
             .focusable()
             .onKeyEvent { event ->
+                if (isChatInputFocused) {
+                    return@onKeyEvent false
+                }
                 if (event.type == KeyEventType.KeyDown) {
                     val duration = if (controller.state.duration > 0.0) controller.state.duration else Double.MAX_VALUE
                     val code = event.utf16CodePoint
@@ -72,6 +80,11 @@ fun PlayerInputHandler(
                     }
 
                     when {
+                        event.key == Key.C || code == 'c'.code || code == 'C'.code || code == 'с'.code || code == 'С'.code -> {
+                            actions.chat.onToggleChatVisibility()
+                            true
+                        }
+
                         event.key == Key.Spacebar || code == ' '.code -> {
                             actions.onPlayPauseClicked()
                             true

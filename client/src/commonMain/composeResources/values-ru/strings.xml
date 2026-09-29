@@ -11,6 +11,8 @@
     <string name="common_loading">Загрузка...</string>
     <string name="common_next">Вперед</string>
     <string name="common_previous">Назад</string>
+    <string name="common_collapse">Свернуть</string>
+    <string name="common_expand">Развернуть</string>
 
     <!-- Navigation / Sidebar -->
     <string name="nav_home">Главная</string>
@@ -516,4 +518,14 @@
     <string name="watch_party_participants_total_few">%1$d участника</string>
     <string name="watch_party_participants_total_many">%1$d участников</string>
     <string name="watch_party_btn_return_to_lobby">В лобби</string>
+
+    <!-- Watch Party Chat -->
+    <string name="watch_party_chat_title">Чат комнаты</string>
+    <string name="watch_party_chat_desc">Чат</string>
+    <string name="watch_party_chat_close">Закрыть чат</string>
+    <string name="watch_party_chat_empty">В этой серии пока нет сообщений.\nНапишите первым!</string>
+    <string name="watch_party_chat_input_placeholder">Написать в чат... (Enter)</string>
+    <string name="watch_party_chat_send">Отправить</string>
+    <string name="watch_party_chat_sending">Отправка...</string>
+    <string name="watch_party_chat_you_fmt">Вы (%1$s)</string>
 </resources>

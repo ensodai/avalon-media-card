@@ -3,23 +3,24 @@ package org.ensodai.avalonmediacard.presentation.screens.player.component.pc
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.BoxScope
+import androidx.compose.foundation.layout.BoxWithConstraints
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 
 @Composable
 fun UnifiedVideoPlayerLayout(
-    isFullscreen: Boolean,
     showUiOverlay: Boolean,
-    showRightPanel: Boolean,
-    hasEpisodesContext: Boolean,
     videoSurface: @Composable () -> Unit,
     centerOverlays: @Composable () -> Unit,
     topBar: @Composable () -> Unit,
     bottomBar: @Composable () -> Unit,
     rightPanelOverlay: @Composable BoxScope.() -> Unit,
-
+    leftPanelOverlay: @Composable BoxScope.() -> Unit = {},
     modifier: Modifier = Modifier
 ) {
     BoxWithConstraints(modifier = modifier.fillMaxSize()) {
@@ -39,6 +40,9 @@ fun UnifiedVideoPlayerLayout(
                 topBar()
             }
         }
+
+        // Левая панель в виде оверлея (внутриплеерный чат)
+        leftPanelOverlay()
 
         // Правые панели в виде оверлея (серии и/или участники)
         rightPanelOverlay()

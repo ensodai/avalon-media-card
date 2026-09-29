@@ -8,7 +8,9 @@ import androidx.compose.animation.core.tween
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.focusable
+import androidx.compose.foundation.hoverable
 import androidx.compose.foundation.interaction.MutableInteractionSource
+import androidx.compose.foundation.interaction.collectIsHoveredAsState
 import androidx.compose.foundation.interaction.collectIsPressedAsState
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
@@ -57,9 +59,10 @@ fun Modifier.tvAndWebHoverEffect(
 
     val interactionSource = remember { MutableInteractionSource() }
     val isItemPressed by interactionSource.collectIsPressedAsState()
+    val isItemHovered by interactionSource.collectIsHoveredAsState()
 
     val isPressed = isItemPressed || tvPressed
-    val isActive = isHovered || isFocused
+    val isActive = isHovered || isItemHovered || isFocused
 
     val tvPressEvents = remember { MutableSharedFlow<Boolean>(extraBufferCapacity = 10) }
 
@@ -145,7 +148,8 @@ fun Modifier.tvAndWebHoverEffect(
         }
         .focusable(enabled = focusEnabled)
         .pointerHoverIcon(
-            if (onClick != null && clickEnabled) PointerIcon.Hand else PointerIcon.Default
+            if (onClick != null && clickEnabled) PointerIcon.Hand else PointerIcon.Default,
+            overrideDescendants = true
         )
         .then(
             if (clickEnabled && onClick != null) {
@@ -157,6 +161,10 @@ fun Modifier.tvAndWebHoverEffect(
                 )
             } else Modifier
         )
+        .hoverable(
+            interactionSource = interactionSource,
+            enabled = clickEnabled || focusEnabled
+        )
         .focusProperties { canFocus = focusEnabled }
         .pointerInput(tiltEnabled) {
             awaitPointerEventScope {
@@ -165,6 +173,7 @@ fun Modifier.tvAndWebHoverEffect(
                     when (event.type) {
                         PointerEventType.Enter -> isHovered = true
                         PointerEventType.Move -> {
+                            isHovered = true
                             if (tiltEnabled && componentSize.width > 0 && componentSize.height > 0) {
                                 val position = event.changes.firstOrNull()?.position ?: continue
                                 val nx = (position.x / componentSize.width) * 2f - 1f

@@ -23,6 +23,7 @@ import org.ensodai.avalonmediacard.contract.model.WatchRoomPhase
 import org.ensodai.avalonmediacard.contract.model.WatchRoomPlaybackState
 import org.ensodai.avalonmediacard.contract.model.WatchRoomStatus
 import org.ensodai.avalonmediacard.contract.model.WatchRoomEvent
+import org.ensodai.avalonmediacard.contract.model.WatchRoomChatMessageDto
 import org.slf4j.LoggerFactory
 import java.util.concurrent.ConcurrentHashMap
 import kotlin.time.Clock
@@ -123,6 +124,9 @@ class WatchRoomSession(
         private set
     var currentEpisode: Int? = initialEpisode
         private set
+
+    // In-memory хранилище сообщений чата сессии
+    private val chatStore = WatchRoomChatStore()
 
     // Участники сессии
     private val participants = ConcurrentHashMap<Uuid, ActiveParticipant>()
@@ -630,6 +634,13 @@ class WatchRoomSession(
 
                 emitCurrentSyncState(userId)
                 _events.emit(WatchRoomEvent.ParticipantsUpdated(getParticipantListLocked()))
+                _events.emit(
+                    WatchRoomEvent.ChatHistorySnapshot(
+                        season = command.season,
+                        episode = command.episode,
+                        messages = chatStore.getHistory(command.season, command.episode)
+                    )
+                )
                 _events.emit(WatchRoomEvent.SystemNotice("Смена серии (S${command.season}E${command.episode}). Загрузка видео всеми участниками..."))
 
                 startPreparationTimeoutLocked()
@@ -980,6 +991,39 @@ class WatchRoomSession(
     }
 
     /**
+     * Отправка текстового сообщения в чат совместного просмотра.
+     */
+    suspend fun sendChatMessage(
+        userId: Uuid,
+        text: String,
+        playbackPositionMs: Long
+    ): Boolean = mutex.withLock {
+        val participant = participants[userId] ?: return false
+        val cleanText = text.trim()
+        if (cleanText.isBlank() || cleanText.length > 1000) return false
+
+        val message = chatStore.addMessage(
+            roomId = roomId,
+            senderUserId = userId,
+            senderUsername = participant.username,
+            senderAvatarUrl = null,
+            text = cleanText,
+            playbackPositionMs = playbackPositionMs,
+            season = currentSeason,
+            episode = currentEpisode
+        )
+        _events.emit(WatchRoomEvent.ChatMessageReceived(message))
+        return true
+    }
+
+    /**
+     * Получение истории сообщений для указанного эпизода.
+     */
+    fun getChatHistory(season: Int?, episode: Int?): List<WatchRoomChatMessageDto> {
+        return chatStore.getHistory(season, episode)
+    }
+
+    /**
      * Проверка и передача прав хоста (Seniority-based) при отключении текущего.
      */
     private suspend fun checkHostMigrationLocked() {
@@ -1096,6 +1140,7 @@ class WatchRoomSession(
         disconnectJobs.values.forEach { it.cancel() }
         disconnectJobs.clear()
         userConnections.clear()
+        chatStore.clearAll()
         _events.emit(WatchRoomEvent.SystemNotice("Комната была закрыта хостом."))
         _lobbyEvents.emit(LobbyEvent.SystemNotice("Комната была закрыта хостом."))
     }

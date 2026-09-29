@@ -23,6 +23,7 @@ import org.ensodai.avalonmediacard.contract.model.SetLobbyStatusRequest
 import org.ensodai.avalonmediacard.contract.model.UpdateRoomSourceRequest
 import org.ensodai.avalonmediacard.contract.model.WatchRoomDto
 import org.ensodai.avalonmediacard.contract.model.WatchRoomEvent
+import org.ensodai.avalonmediacard.contract.model.WatchRoomChatMessageDto
 import org.ensodai.avalonmediacard.contract.model.WatchRoomPhase
 import org.ensodai.avalonmediacard.contract.model.WatchRoomStatus
 import org.ensodai.avalonmediacard.contract.model.WatchRoomSummaryDto
@@ -229,6 +230,15 @@ class WatchPartyRpcServiceImpl(
     override suspend fun sendReaction(roomId: Uuid, emoji: String): Boolean {
         val authUser = currentAuthorizedUser() ?: return false
         return watchRoomSessionManager.sendReaction(roomId, authUser.userId, emoji)
+    }
+
+    override suspend fun sendChatMessage(roomId: Uuid, text: String, playbackPositionMs: Long): Boolean {
+        val authUser = currentAuthorizedUser() ?: return false
+        return watchRoomSessionManager.sendChatMessage(roomId, authUser.userId, text, playbackPositionMs)
+    }
+
+    override suspend fun getRoomChatHistory(roomId: Uuid, season: Int?, episode: Int?): List<WatchRoomChatMessageDto> {
+        return watchRoomSessionManager.getRoomChatHistory(roomId, season, episode)
     }
 
     override suspend fun syncClock(ping: ClockSyncPing): ClockSyncPong {

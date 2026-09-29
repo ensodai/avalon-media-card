@@ -44,7 +44,8 @@ data class PlayerViewState(
     val watchRoomParticipants: List<WatchRoomParticipantDto> = emptyList(),
     val isParticipantsPanelVisible: Boolean = true,
     val currentUserId: String? = null,
-    val isHost: Boolean = false
+    val isHost: Boolean = false,
+    val chatState: WatchPartyChatViewState = WatchPartyChatViewState()
 ) : BaseViewState() {
     val isEffectiveHost: Boolean
         get() = isHost || currentUserId?.let { uid ->

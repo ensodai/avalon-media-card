@@ -1,37 +1,27 @@
 package org.ensodai.avalonmediacard.presentation.screens.watchRooms
 
-import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.lazy.grid.GridCells
-import androidx.compose.foundation.lazy.grid.GridItemSpan
-import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
-import androidx.compose.foundation.lazy.grid.items
-import androidx.compose.material3.CircularProgressIndicator
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
-import avalonmediacard.client.generated.resources.*
 import org.ensodai.avalonmediacard.contract.model.EntityType
 import org.ensodai.avalonmediacard.contract.model.MediaKey
 import org.ensodai.avalonmediacard.contract.model.MediaProvider
 import org.ensodai.avalonmediacard.contract.model.MediaType
 import org.ensodai.avalonmediacard.contract.model.WatchRoomPhase
+import org.ensodai.avalonmediacard.contract.model.WatchRoomSummaryDto
+import org.ensodai.avalonmediacard.presentation.screens.commonComponents.AdaptiveLayout
 import org.ensodai.avalonmediacard.presentation.screens.commonComponents.LocalRootOverlay
 import org.ensodai.avalonmediacard.presentation.screens.player.launchPlayerOverlay
 import org.ensodai.avalonmediacard.presentation.screens.player.model.PlayerInitParams
 import org.ensodai.avalonmediacard.presentation.screens.player.model.PlayerMode
 import org.ensodai.avalonmediacard.presentation.screens.watchParty.WatchPartyScreen
 import org.ensodai.avalonmediacard.presentation.screens.watchParty.WatchPartyViewModel
-import org.ensodai.avalonmediacard.presentation.screens.watchRooms.components.WatchRoomSummaryCard
-import org.ensodai.avalonmediacard.presentation.screens.watchRooms.components.WatchRoomsHeader
-import org.jetbrains.compose.resources.stringResource
+import org.ensodai.avalonmediacard.presentation.screens.watchRooms.targets.tv.WatchRoomsLayoutTv
+import org.ensodai.avalonmediacard.presentation.screens.watchRooms.targets.web.WatchRoomsLayoutWeb
 import org.koin.compose.koinInject
 import kotlin.uuid.Uuid
 
@@ -45,103 +35,65 @@ fun WatchRoomsScreen(
     val actions = viewModel.actions
     val rootOverlay = LocalRootOverlay.current
 
-    Box(
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(horizontal = 32.dp, vertical = 24.dp)
-    ) {
-        LazyVerticalGrid(
-            columns = GridCells.Adaptive(minSize = 340.dp),
-            modifier = Modifier.fillMaxSize(),
-            horizontalArrangement = Arrangement.spacedBy(16.dp),
-            verticalArrangement = Arrangement.spacedBy(16.dp)
-        ) {
-            // 1. Header with compact action toolbar (full width)
-            item(span = { GridItemSpan(maxLineSpan) }) {
-                WatchRoomsHeader(
-                    onJoinByPin = actions.onOpenConnectModal
+    val onRoomClick: (WatchRoomSummaryDto) -> Unit = { room ->
+        if (room.phase != WatchRoomPhase.LOBBY) {
+            if (onStartPlayback != null) {
+                onStartPlayback.invoke(room.id, room.currentSeason, room.currentEpisode, room.lastPositionSeconds)
+            } else {
+                val entityType = if (room.mediaType == MediaType.TV) EntityType.TV else EntityType.MOVIE
+                val mediaKey = MediaKey(provider = MediaProvider.Tmdb, type = entityType, id = room.mediaId)
+                launchPlayerOverlay(
+                    rootOverlay = rootOverlay,
+                    params = PlayerInitParams(
+                        title = room.title,
+                        seriesTitle = room.title,
+                        mediaKey = mediaKey,
+                        targetSeason = room.currentSeason,
+                        targetEpisode = room.currentEpisode,
+                        startPositionSeconds = room.lastPositionSeconds,
+                        mode = PlayerMode.WATCH_PARTY,
+                        sourceType = room.sourceType,
+                        sourceId = room.sourceId,
+                        watchRoomId = room.id,
+                        isHost = room.isHost
+                    ),
+                    onReturnToLobby = { roomId ->
+                        actions.onOpenRoom(roomId)
+                    }
                 )
             }
-
-            // 2. User Rooms Section Title (full width)
-            item(span = { GridItemSpan(maxLineSpan) }) {
-                Row(
-                    modifier = Modifier.fillMaxWidth().padding(top = 8.dp, bottom = 4.dp),
-                    horizontalArrangement = Arrangement.SpaceBetween,
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    Text(
-                        text = stringResource(Res.string.watch_rooms_history_title),
-                        fontSize = 20.sp,
-                        fontWeight = FontWeight.SemiBold,
-                        color = MaterialTheme.colorScheme.onBackground
-                    )
-
-                    if (state.isLoading) {
-                        CircularProgressIndicator(
-                            modifier = Modifier.size(20.dp),
-                            strokeWidth = 2.dp,
-                            color = MaterialTheme.colorScheme.primary
-                        )
-                    }
-                }
-            }
-
-            // 3. User Rooms List or Empty State
-            if (state.rooms.isEmpty() && !state.isLoading) {
-                item(span = { GridItemSpan(maxLineSpan) }) {
-                    Box(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(vertical = 40.dp),
-                        contentAlignment = Alignment.Center
-                    ) {
-                        Text(
-                            text = stringResource(Res.string.watch_rooms_history_empty),
-                            fontSize = 14.sp,
-                            color = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.5f)
-                        )
-                    }
-                }
-            } else {
-                items(state.rooms, key = { it.id.toString() }) { room ->
-                    WatchRoomSummaryCard(
-                        room = room,
-                        onClick = {
-                            if (room.phase != WatchRoomPhase.LOBBY) {
-                                if (onStartPlayback != null) {
-                                    onStartPlayback.invoke(room.id, room.currentSeason, room.currentEpisode, room.lastPositionSeconds)
-                                } else {
-                                    val entityType = if (room.mediaType == MediaType.TV) EntityType.TV else EntityType.MOVIE
-                                    val mediaKey = MediaKey(provider = MediaProvider.Tmdb, type = entityType, id = room.mediaId)
-                                    launchPlayerOverlay(
-                                        rootOverlay = rootOverlay,
-                                        params = PlayerInitParams(
-                                            title = room.title,
-                                            seriesTitle = room.title,
-                                            mediaKey = mediaKey,
-                                            targetSeason = room.currentSeason,
-                                            targetEpisode = room.currentEpisode,
-                                            startPositionSeconds = room.lastPositionSeconds,
-                                            mode = PlayerMode.WATCH_PARTY,
-                                            sourceType = room.sourceType,
-                                            sourceId = room.sourceId,
-                                            watchRoomId = room.id,
-                                            isHost = room.isHost
-                                        ),
-                                        onReturnToLobby = { roomId ->
-                                            actions.onOpenRoom(roomId)
-                                        }
-                                    )
-                                }
-                            } else {
-                                actions.onOpenRoom(room.id)
-                            }
-                        }
-                    )
-                }
-            }
+        } else {
+            actions.onOpenRoom(room.id)
         }
+    }
+
+    Box(modifier = Modifier.fillMaxSize()) {
+        AdaptiveLayout(
+            tv = {
+                WatchRoomsLayoutTv(
+                    state = state,
+                    actions = actions,
+                    onRoomClick = onRoomClick,
+                    modifier = Modifier.fillMaxSize()
+                )
+            },
+            web = {
+                WatchRoomsLayoutWeb(
+                    state = state,
+                    actions = actions,
+                    onRoomClick = onRoomClick,
+                    modifier = Modifier.fillMaxSize()
+                )
+            },
+            default = {
+                WatchRoomsLayoutWeb(
+                    state = state,
+                    actions = actions,
+                    onRoomClick = onRoomClick,
+                    modifier = Modifier.fillMaxSize()
+                )
+            }
+        )
 
         // 5. Watch Party Modal (if open)
         if (state.isModalOpen) {

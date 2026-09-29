@@ -94,6 +94,11 @@ android {
                 ?: ""
             buildConfigField("String", "SERVER_URL", "\"$prodServerUrl\"")
         }
+        // Локальная разработка:
+        // - Для стандартного Android Emulator (AVD): http://10.0.2.2:8080 (или ws://10.0.2.2:8080/api/rpc)
+        // - Для реального устройства по Wi-Fi: http://<IP_компьютера>:8080 (автоматически вычисляется getLocalIp())
+        // - Для реального устройства по USB: выполни `adb reverse tcp:8080 tcp:8080` (таска :androidApp:runDebugLocalSetup),
+        //   после чего доступен http://127.0.0.1:8080
         create("debugLocal") {
             initWith(buildTypes.getByName("debug"))
             matchingFallbacks += listOf("debug")

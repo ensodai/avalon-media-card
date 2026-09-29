@@ -17,9 +17,11 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
+import androidx.compose.ui.focus.FocusRequester
+import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import avalonmediacard.client.generated.resources.*
@@ -31,7 +33,10 @@ import org.jetbrains.compose.resources.stringResource
 @Composable
 fun WatchRoomsHeader(
     onJoinByPin: () -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    buttonFocusRequester: FocusRequester? = null,
+    titleFontSize: TextUnit = 28.sp,
+    subtitleFontSize: TextUnit = 14.sp
 ) {
     Row(
         modifier = modifier.fillMaxWidth(),
@@ -41,13 +46,13 @@ fun WatchRoomsHeader(
         Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
             Text(
                 text = stringResource(Res.string.watch_rooms_title),
-                fontSize = 28.sp,
+                fontSize = titleFontSize,
                 fontWeight = FontWeight.Bold,
                 color = MaterialTheme.colorScheme.onBackground
             )
             Text(
                 text = stringResource(Res.string.watch_rooms_subtitle),
-                fontSize = 14.sp,
+                fontSize = subtitleFontSize,
                 color = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.6f)
             )
         }
@@ -55,6 +60,7 @@ fun WatchRoomsHeader(
         // Кнопка: Войти по коду
         Box(
             modifier = Modifier
+                .then(if (buttonFocusRequester != null) Modifier.focusRequester(buttonFocusRequester) else Modifier)
                 .height(42.dp)
                 .tvAndWebHoverEffect(
                     scaleTarget = 1.03f,

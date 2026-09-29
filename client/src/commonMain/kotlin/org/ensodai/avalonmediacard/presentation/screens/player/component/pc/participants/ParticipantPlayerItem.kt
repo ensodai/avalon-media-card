@@ -13,6 +13,7 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -32,6 +33,7 @@ import org.ensodai.avalonmediacard.contract.model.WatchParticipantIntent
 import org.ensodai.avalonmediacard.contract.model.WatchRoomParticipantDto
 import org.ensodai.avalonmediacard.contract.model.WatchRoomParticipantRole
 import org.ensodai.avalonmediacard.contract.model.WatchRoomPlaybackState
+import org.ensodai.avalonmediacard.presentation.screens.commonComponents.tvAndWebHoverEffect
 import org.ensodai.avalonmediacard.presentation.screens.watchParty.targets.web.components.toLabelRes
 import org.jetbrains.compose.resources.stringResource
 
@@ -52,6 +54,15 @@ fun ParticipantPlayerItem(
     Row(
         modifier = modifier
             .fillMaxWidth()
+            .tvAndWebHoverEffect(
+                scaleTarget = 1.02f,
+                shape = RoundedCornerShape(14.dp),
+                activeBorderColor = MaterialTheme.colorScheme.primary.copy(alpha = 0.6f),
+                activeBorderWidth = 1.5.dp,
+                defaultBorderColor = Color.Transparent,
+                defaultBorderWidth = 0.dp,
+                onClick = {}
+            )
             .clip(RoundedCornerShape(14.dp))
             .background(Color.White.copy(alpha = if (isOnline) 0.05f else 0.02f))
             .padding(horizontal = 12.dp, vertical = 10.dp),

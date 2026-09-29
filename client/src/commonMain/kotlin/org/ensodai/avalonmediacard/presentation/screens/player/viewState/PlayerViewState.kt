@@ -42,7 +42,7 @@ data class PlayerViewState(
     val mode: PlayerMode = PlayerMode.STANDARD,
     val watchRoomId: Uuid? = null,
     val watchRoomParticipants: List<WatchRoomParticipantDto> = emptyList(),
-    val isParticipantsPanelVisible: Boolean = true,
+    val isParticipantsPanelVisible: Boolean = false,
     val currentUserId: String? = null,
     val isHost: Boolean = false,
     val chatState: WatchPartyChatViewState = WatchPartyChatViewState()

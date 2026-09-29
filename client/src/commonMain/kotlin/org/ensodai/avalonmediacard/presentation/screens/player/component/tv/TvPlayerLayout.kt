@@ -19,6 +19,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.focus.FocusRequester
+import androidx.compose.ui.focus.focusProperties
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.graphics.Color
@@ -41,7 +42,9 @@ import org.ensodai.avalonmediacard.presentation.screens.commonComponents.tvAndWe
 import org.ensodai.avalonmediacard.presentation.screens.player.action.PlayerActions
 import org.ensodai.avalonmediacard.presentation.screens.player.component.PlayerCenterOverlays
 import org.ensodai.avalonmediacard.presentation.screens.player.component.PremiumSeekBar
+import org.ensodai.avalonmediacard.presentation.screens.player.component.pc.chat.WatchPartyChatPanel
 import org.ensodai.avalonmediacard.presentation.screens.player.component.pc.formatTime
+import org.ensodai.avalonmediacard.presentation.screens.player.model.PlayerMode
 import org.ensodai.avalonmediacard.presentation.screens.player.viewState.PlayerViewState
 import avalonmediacard.client.generated.resources.*
 import org.jetbrains.compose.resources.stringResource
@@ -92,6 +95,7 @@ fun TvPlayerLayout(
     val settingsButtonFocusRequester = remember { FocusRequester() }
     val watchedButtonFocusRequester = remember { FocusRequester() }
     val ratingButtonFocusRequester = remember { FocusRequester() }
+    val participantsButtonFocusRequester = remember { FocusRequester() }
     val playerDomainFocusRequester = remember { FocusRequester() }
     val mainInputFocusRequester = remember { FocusRequester() }
     var lastInteractionTrigger by remember { mutableLongStateOf(0L) }
@@ -101,9 +105,9 @@ fun TvPlayerLayout(
         lastInteractionTrigger = Clock.System.now().toEpochMilliseconds()
     }
 
-    // Автоматическое скрытие UI через 5 секунд неактивности (если полка серий не раскрыта)
-    LaunchedEffect(isUiVisible, controller.state.isPlaying, isShelfExpanded, lastInteractionTrigger) {
-        if (isUiVisible && controller.state.isPlaying && !tvDrawerState.isOpen && !isShelfExpanded) {
+    // Автоматическое скрытие UI через 5 секунд неактивности (если полка серий не раскрыта, не идет ввод текста и список участников свернут)
+    LaunchedEffect(isUiVisible, controller.state.isPlaying, isShelfExpanded, state.chatState.isInputFocused, state.isParticipantsPanelVisible, lastInteractionTrigger) {
+        if (isUiVisible && controller.state.isPlaying && !tvDrawerState.isOpen && !isShelfExpanded && !state.chatState.isInputFocused && !state.isParticipantsPanelVisible) {
             delay(5000.milliseconds)
             isUiVisible = false
         }
@@ -138,6 +142,11 @@ fun TvPlayerLayout(
             controller = controller,
             isUiVisible = isUiVisible,
             isShelfVisible = isShelfExpanded,
+            isChatVisible = state.chatState.isVisible,
+            isChatInputFocused = state.chatState.isInputFocused,
+            isParticipantsVisible = state.isParticipantsPanelVisible,
+            onCloseChat = { actions.chat.onToggleChatVisibility() },
+            onCloseParticipants = { actions.onToggleParticipantsPanel() },
             onWakeUpUi = { wakeUpUi() },
             onHideUi = { isUiVisible = false },
             onToggleShelf = {
@@ -233,7 +242,17 @@ fun TvPlayerLayout(
                     },
                     settingsFocusRequester = settingsButtonFocusRequester,
                     watchedFocusRequester = watchedButtonFocusRequester,
-                    ratingFocusRequester = ratingButtonFocusRequester
+                    ratingFocusRequester = ratingButtonFocusRequester,
+                    isWatchParty = state.mode == PlayerMode.WATCH_PARTY,
+                    participants = state.watchRoomParticipants,
+                    currentUserId = state.currentUserId,
+                    isParticipantsExpanded = state.isParticipantsPanelVisible,
+                    onToggleParticipantsExpanded = {
+                        wakeUpUi()
+                        actions.onToggleParticipantsPanel()
+                    },
+                    isLocalBuffering = controller.state.isBuffering,
+                    participantsFocusRequester = participantsButtonFocusRequester
                 )
             }
 
@@ -386,6 +405,31 @@ fun TvPlayerLayout(
                         actions.onRateEpisode(currentEpisode, newRating)
                         showRatingPopup = false
                     }
+                )
+            }
+
+            // 7. Внутриплеерный чат совместного просмотра (левый оверлей)
+            val showChatPanel = state.mode == PlayerMode.WATCH_PARTY && isUiVisible
+            AnimatedVisibility(
+                visible = showChatPanel,
+                enter = fadeIn(),
+                exit = fadeOut(),
+                modifier = Modifier
+                    .align(Alignment.TopStart)
+                    .imePadding()
+                    .padding(
+                        top = 84.dp,
+                        bottom = if (isShelfExpanded) 220.dp else 100.dp,
+                        start = 24.dp
+                    )
+                    .focusProperties {
+                        left = FocusRequester.Cancel
+                    }
+            ) {
+                WatchPartyChatPanel(
+                    chatState = state.chatState,
+                    actions = actions.chat,
+                    episodeTitle = state.displayTitleData.bottomText.takeIf { it.isNotBlank() && it != state.title }
                 )
             }
         }

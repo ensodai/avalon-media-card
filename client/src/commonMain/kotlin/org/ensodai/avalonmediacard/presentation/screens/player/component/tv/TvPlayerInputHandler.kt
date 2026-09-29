@@ -20,6 +20,11 @@ fun TvPlayerInputHandler(
     controller: PlaybackController,
     isUiVisible: Boolean,
     isShelfVisible: Boolean,
+    isChatVisible: Boolean = false,
+    isChatInputFocused: Boolean = false,
+    isParticipantsVisible: Boolean = false,
+    onCloseChat: () -> Unit = {},
+    onCloseParticipants: () -> Unit = {},
     onWakeUpUi: () -> Unit,
     onHideUi: () -> Unit,
     onToggleShelf: () -> Unit,
@@ -30,7 +35,11 @@ fun TvPlayerInputHandler(
     content: @Composable () -> Unit
 ) {
     AvalonBackHandler(enabled = true) {
-        if (isShelfVisible) {
+        if (isParticipantsVisible) {
+            onCloseParticipants()
+        } else if (isChatVisible) {
+            onCloseChat()
+        } else if (isShelfVisible) {
             onCloseShelf()
         } else if (isUiVisible) {
             // Первое нажатие Back при открытом UI скрывает оверлей
@@ -44,10 +53,16 @@ fun TvPlayerInputHandler(
     Box(
         modifier = modifier
             .focusRequester(focusRequester)
-            .focusable()
+            .focusable(enabled = !isUiVisible)
             .onPreviewKeyEvent { event ->
+                if (isChatInputFocused) {
+                    // Клавиши не перехватываем, чтобы пользователь мог вводить текст в поле ввода
+                    return@onPreviewKeyEvent false
+                }
                 if (event.type == KeyEventType.KeyDown) {
-                    onWakeUpUi() // Любое нажатие пульта сбрасывает таймер сна и будит UI
+                    if (event.key != Key.Back && event.key != Key.Escape) {
+                        onWakeUpUi() // Любое нажатие пульта (кроме Назад/Esc) сбрасывает таймер сна и будит UI
+                    }
 
                     if (!isUiVisible) {
                         // Интерфейс скрыт: пробуждаем по любой кнопке
@@ -65,7 +80,7 @@ fun TvPlayerInputHandler(
                                 true
                             }
 
-                            Key.Back, Key.Escape -> {
+                            Key.Escape -> {
                                 onClosePlayer()
                                 true
                             }
@@ -80,8 +95,14 @@ fun TvPlayerInputHandler(
                                 true
                             }
 
-                            Key.Back, Key.Escape -> {
-                                if (isShelfVisible) {
+                            Key.Escape -> {
+                                if (isParticipantsVisible) {
+                                    onCloseParticipants()
+                                    true
+                                } else if (isChatVisible) {
+                                    onCloseChat()
+                                    true
+                                } else if (isShelfVisible) {
                                     onCloseShelf()
                                     true
                                 } else {

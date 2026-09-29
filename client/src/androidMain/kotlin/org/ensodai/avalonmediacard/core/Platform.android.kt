@@ -43,7 +43,9 @@ import org.ensodai.avalonmediacard.data.platformServerUrl
 import org.ensodai.avalonmediacard.contract.logging.AppLogging
 import org.ensodai.avalonmediacard.presentation.screens.player.action.PlayerActions
 import org.ensodai.avalonmediacard.presentation.screens.player.component.UnifiedVideoPlayer
+import org.ensodai.avalonmediacard.presentation.screens.player.model.PlaybackStatus
 import org.ensodai.avalonmediacard.presentation.screens.player.model.PlayerEngine
+import org.ensodai.avalonmediacard.presentation.screens.player.model.PlayerMode
 import org.ensodai.avalonmediacard.presentation.screens.player.viewState.PlayerViewState
 import org.koin.core.context.GlobalContext
 
@@ -195,15 +197,20 @@ actual fun VideoPlayer(
                 fallbackTimeMs = startPosMs
             }
 
+            val isWatchParty = state.mode == PlayerMode.WATCH_PARTY
+            val shouldAutoPlay = !isWatchParty && state.status != PlaybackStatus.PAUSED
+
             when (currentEngine) {
                 PlayerEngine.MEDIA3 -> {
                     val currentUri = exoPlayer.currentMediaItem?.localConfiguration?.uri?.toString()
                     if (currentUri != resolvedUrl) {
-                        logger.d { "ExoPlayer PREPARE & PLAY for resolvedUrl=$resolvedUrl (restorePos=${fallbackTimeMs}ms)" }
+                        logger.d { "ExoPlayer PREPARE for resolvedUrl=$resolvedUrl (restorePos=${fallbackTimeMs}ms, shouldAutoPlay=$shouldAutoPlay)" }
                         val mediaItem = MediaItem.fromUri(resolvedUrl)
                         exoPlayer.setMediaItem(mediaItem)
                         exoPlayer.prepare()
-                        exoPlayer.play()
+                        if (shouldAutoPlay) {
+                            exoPlayer.play()
+                        }
                         if (fallbackTimeMs > 0L) {
                             exoPlayer.seekTo(fallbackTimeMs)
                         }
@@ -212,8 +219,8 @@ actual fun VideoPlayer(
                     }
                 }
                 PlayerEngine.MPV -> {
-                    logger.d { "MPV LOAD & PLAY for resolvedUrl=$resolvedUrl at timeMs=$fallbackTimeMs" }
-                    mpvControllerLazy.value.loadAndPlay(resolvedUrl, fallbackTimeMs)
+                    logger.d { "MPV LOAD for resolvedUrl=$resolvedUrl at timeMs=$fallbackTimeMs (shouldAutoPlay=$shouldAutoPlay)" }
+                    mpvControllerLazy.value.loadAndPlay(resolvedUrl, fallbackTimeMs, autoPlay = shouldAutoPlay)
                 }
             }
         }

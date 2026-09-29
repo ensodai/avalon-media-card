@@ -1,6 +1,7 @@
 package org.ensodai.avalonmediacard.presentation.screens.watchRooms.targets.tv
 
 import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.focusGroup
 import androidx.compose.foundation.gestures.BringIntoViewSpec
 import androidx.compose.foundation.gestures.LocalBringIntoViewSpec
 import androidx.compose.foundation.layout.Arrangement
@@ -26,9 +27,11 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
+import androidx.compose.ui.focus.focusRestorer
 import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -36,12 +39,14 @@ import androidx.compose.ui.unit.sp
 import avalonmediacard.client.generated.resources.Res
 import avalonmediacard.client.generated.resources.watch_rooms_history_empty
 import avalonmediacard.client.generated.resources.watch_rooms_history_title
+import kotlinx.coroutines.delay
 import org.ensodai.avalonmediacard.contract.model.WatchRoomSummaryDto
 import org.ensodai.avalonmediacard.presentation.screens.watchRooms.action.WatchRoomsActions
 import org.ensodai.avalonmediacard.presentation.screens.watchRooms.components.WatchRoomSummaryCard
 import org.ensodai.avalonmediacard.presentation.screens.watchRooms.components.WatchRoomsHeader
 import org.ensodai.avalonmediacard.presentation.screens.watchRooms.viewState.WatchRoomsViewState
 import org.jetbrains.compose.resources.stringResource
+import kotlin.uuid.Uuid
 
 /**
  * ТВ-лейаут экрана комнат совместного просмотра:
@@ -53,23 +58,40 @@ import org.jetbrains.compose.resources.stringResource
  *   2. При навигации на нижние ряды экран плавно скроллится вниз ровно на размер выхода.
  *   3. При возврате стрелкой «Вверх» на 1-ю линию комнат экран плавно возвращается в нулевую позицию.
  */
-@OptIn(ExperimentalFoundationApi::class)
+@OptIn(ExperimentalFoundationApi::class, ExperimentalComposeUiApi::class)
 @Composable
 fun WatchRoomsLayoutTv(
     state: WatchRoomsViewState,
     actions: WatchRoomsActions,
     onRoomClick: (WatchRoomSummaryDto) -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    isPlayerOpen: Boolean = false
 ) {
-    val firstCardFocusRequester = remember { FocusRequester() }
+    val restoreFocusRequester = remember { FocusRequester() }
     val headerButtonFocusRequester = remember { FocusRequester() }
     var focusedIndex by remember { mutableStateOf<Int?>(null) }
+    var lastFocusedRoomId by remember { mutableStateOf<Uuid?>(null) }
 
-    LaunchedEffect(state.rooms.size) {
-        if (state.rooms.isNotEmpty()) {
-            runCatching { firstCardFocusRequester.requestFocus() }
-        } else {
-            runCatching { headerButtonFocusRequester.requestFocus() }
+    LaunchedEffect(state.rooms.size, isPlayerOpen) {
+        if (!isPlayerOpen) {
+            val success = runCatching {
+                if (focusedIndex == -1 || state.rooms.isEmpty()) {
+                    headerButtonFocusRequester.requestFocus()
+                } else {
+                    restoreFocusRequester.requestFocus()
+                }
+            }.isSuccess
+
+            if (!success) {
+                delay(50)
+                runCatching {
+                    if (focusedIndex == -1 || state.rooms.isEmpty()) {
+                        headerButtonFocusRequester.requestFocus()
+                    } else {
+                        restoreFocusRequester.requestFocus()
+                    }
+                }
+            }
         }
     }
 
@@ -95,10 +117,19 @@ fun WatchRoomsLayoutTv(
         }
     }
 
+    val fallbackRequester = if (focusedIndex == -1 || state.rooms.isEmpty()) {
+        headerButtonFocusRequester
+    } else {
+        restoreFocusRequester
+    }
+
     CompositionLocalProvider(LocalBringIntoViewSpec provides tvBringIntoViewSpec) {
         LazyVerticalGrid(
             columns = GridCells.Fixed(2),
-            modifier = modifier.fillMaxSize(),
+            modifier = modifier
+                .fillMaxSize()
+                .focusRestorer(fallbackRequester)
+                .focusGroup(),
             contentPadding = PaddingValues(start = 32.dp, end = 32.dp, top = 8.dp, bottom = 16.dp),
             horizontalArrangement = Arrangement.spacedBy(20.dp),
             verticalArrangement = Arrangement.spacedBy(16.dp)
@@ -158,12 +189,26 @@ fun WatchRoomsLayoutTv(
                 }
             } else {
                 itemsIndexed(state.rooms, key = { _, room -> room.id.toString() }) { index, room ->
+                    val isTargetForFocus = if (lastFocusedRoomId != null) {
+                        room.id == lastFocusedRoomId
+                    } else {
+                        index == 0
+                    }
                     WatchRoomSummaryCard(
                         room = room,
-                        onClick = { onRoomClick(room) },
+                        onClick = {
+                            lastFocusedRoomId = room.id
+                            focusedIndex = index
+                            onRoomClick(room)
+                        },
                         modifier = Modifier
-                            .then(if (index == 0) Modifier.focusRequester(firstCardFocusRequester) else Modifier)
-                            .onFocusChanged { if (it.hasFocus) focusedIndex = index }
+                            .then(if (isTargetForFocus) Modifier.focusRequester(restoreFocusRequester) else Modifier)
+                            .onFocusChanged {
+                                if (it.hasFocus) {
+                                    focusedIndex = index
+                                    lastFocusedRoomId = room.id
+                                }
+                            }
                     )
                 }
             }

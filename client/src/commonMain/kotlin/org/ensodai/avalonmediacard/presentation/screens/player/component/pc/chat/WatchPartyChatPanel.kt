@@ -38,6 +38,8 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.focus.FocusRequester
+import androidx.compose.ui.focus.focusProperties
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.pointer.PointerIcon
 import androidx.compose.ui.input.pointer.pointerHoverIcon
@@ -81,6 +83,9 @@ fun WatchPartyChatPanel(
     BoxWithConstraints(
         modifier = modifier
             .widthIn(max = 320.dp)
+            .focusProperties {
+                left = FocusRequester.Cancel
+            }
             .animateContentSize(
                 animationSpec = spring(
                     stiffness = Spring.StiffnessMediumLow,
@@ -110,6 +115,9 @@ fun WatchPartyChatPanel(
                     .then(
                         if (isExpanded) Modifier.width(320.dp) else Modifier.wrapContentWidth()
                     )
+                    .focusProperties {
+                        left = FocusRequester.Cancel
+                    }
                     .tvAndWebHoverEffect(
                         scaleTarget = if (isExpanded) 1.0f else 1.08f,
                         shape = headerShape,

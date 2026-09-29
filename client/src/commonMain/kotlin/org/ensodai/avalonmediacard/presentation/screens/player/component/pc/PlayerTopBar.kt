@@ -153,7 +153,8 @@ fun PlayerTopBar(
                         participants = state.watchRoomParticipants,
                         currentUserId = state.currentUserId,
                         isExpanded = state.isParticipantsPanelVisible,
-                        onToggleExpanded = { actions.onToggleParticipantsPanel() }
+                        onToggleExpanded = { actions.onToggleParticipantsPanel() },
+                        isLocalBuffering = state.isBuffering
                     )
                 }
             }

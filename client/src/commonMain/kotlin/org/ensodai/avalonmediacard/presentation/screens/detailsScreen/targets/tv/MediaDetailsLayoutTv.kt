@@ -51,6 +51,7 @@ import org.ensodai.avalonmediacard.presentation.screens.detailsScreen.targets.tv
 import org.ensodai.avalonmediacard.presentation.screens.detailsScreen.viewState.DetailsViewState
 import org.ensodai.avalonmediacard.contract.logging.AppLogging
 import org.ensodai.avalonmediacard.presentation.screens.commonComponents.logFocus
+import org.ensodai.avalonmediacard.presentation.screens.commonComponents.initialFocus
 
 private val logger = AppLogging.logger("MediaDetailsLayoutTv")
 
@@ -73,12 +74,19 @@ fun MediaDetailsLayoutTv(
     val focusZone = remember { mutableStateOf(TvFocusZone.HEADER) }
 
     val hasButtons = state.playButtons?.state?.data != null || state.collectionButtons?.state?.data != null
-    LaunchedEffect(hasButtons, isPlayerOpen) {
-        logger.d { "🎬 [DETAILS] LaunchedEffect(hasButtons=$hasButtons, isPlayerOpen=$isPlayerOpen)" }
-        if (hasButtons && !isPlayerOpen) {
-            logger.d { "🎬 [DETAILS] Кнопки готовы! Запрашиваем buttonsFocusRequester.requestFocus()..." }
+    LaunchedEffect(isPlayerOpen) {
+        logger.d { "🎬 [DETAILS] LaunchedEffect(isPlayerOpen=$isPlayerOpen)" }
+        if (!isPlayerOpen) {
+            logger.d { "🎬 [DETAILS] Экран деталей открыт / плеер закрыт -> запрашиваем buttonsFocusRequester.requestFocus()..." }
             val res = runCatching { buttonsFocusRequester.requestFocus() }
             logger.d { "🎬 [DETAILS] buttonsFocusRequester.requestFocus() результат: ${res.isSuccess}" }
+        }
+    }
+
+    LaunchedEffect(hasButtons) {
+        if (hasButtons && !isPlayerOpen) {
+            val res = runCatching { buttonsFocusRequester.requestFocus() }
+            logger.d { "🎬 [DETAILS] Подстраховка hasButtons -> результат: ${res.isSuccess}" }
         }
     }
 
@@ -213,6 +221,7 @@ fun MediaDetailsLayoutTv(
                         // Эта часть всё ещё держит фокус шапки (pivot = 0.9f)
                         Row(
                             modifier = Modifier
+                                .initialFocus(buttonsFocusRequester)
                                 .focusRequester(buttonsFocusRequester)
                                 .focusRestorer()
                                 .focusGroup()

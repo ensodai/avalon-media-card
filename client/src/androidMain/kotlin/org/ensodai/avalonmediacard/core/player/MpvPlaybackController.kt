@@ -50,6 +50,7 @@ class MpvPlaybackController(
     private var currentUrl: String? = null
     private var isInitialized = false
     private var pendingSeekSeconds: Double = 0.0
+    private var isAutoPlay: Boolean = true
 
     private val logObserver = object : MPV.LogObserver {
         override fun logMessage(prefix: String, level: Int, text: String) {
@@ -123,7 +124,9 @@ class MpvPlaybackController(
                 }
                 MPV.mpvEvent.MPV_EVENT_FILE_LOADED -> {
                     setBuffering(false)
-                    state.isPlaying = true
+                    if (isAutoPlay) {
+                        state.isPlaying = true
+                    }
 
                     if (pendingSeekSeconds > 0.0) {
                         val sec = pendingSeekSeconds.toInt()
@@ -145,7 +148,9 @@ class MpvPlaybackController(
                 }
                 MPV.mpvEvent.MPV_EVENT_PLAYBACK_RESTART -> {
                     setBuffering(false)
-                    state.isPlaying = true
+                    if (isAutoPlay) {
+                        state.isPlaying = true
+                    }
                 }
                 MPV.mpvEvent.MPV_EVENT_END_FILE -> {
                     state.isPlaying = false
@@ -523,8 +528,9 @@ class MpvPlaybackController(
         }
     }
 
-    fun loadAndPlay(url: String, startPositionMs: Long) {
+    fun loadAndPlay(url: String, startPositionMs: Long, autoPlay: Boolean = true) {
         currentUrl = url
+        isAutoPlay = autoPlay
         val startSec = (startPositionMs / 1000.0).coerceAtLeast(0.0)
         pendingSeekSeconds = startSec
 
@@ -549,7 +555,7 @@ class MpvPlaybackController(
                     mpv.setOptionString("demuxer-lavf-o", "")
                 }
                 mpv.command("loadfile", url)
-                mpv.setPropertyBoolean("pause", false)
+                mpv.setPropertyBoolean("pause", !autoPlay)
                 mpv.setPropertyString("vo", "gpu")
             } catch (e: Exception) {
                 Log.e("MpvPlaybackController", "Failed to loadfile in MPV", e)
@@ -558,12 +564,14 @@ class MpvPlaybackController(
     }
 
     override fun play() {
+        isAutoPlay = true
         scope.launch(Dispatchers.IO) {
             mpv.setPropertyBoolean("pause", false)
         }
     }
 
     override fun pause() {
+        isAutoPlay = false
         scope.launch(Dispatchers.IO) {
             mpv.setPropertyBoolean("pause", true)
         }

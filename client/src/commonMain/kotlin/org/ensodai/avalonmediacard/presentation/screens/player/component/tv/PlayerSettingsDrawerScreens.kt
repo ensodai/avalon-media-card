@@ -20,6 +20,7 @@ import com.composables.icons.lucide.Play
 import com.composables.icons.lucide.RefreshCcw
 import com.composables.icons.lucide.Settings
 import com.composables.icons.lucide.Sparkles
+import com.composables.icons.lucide.Users
 import org.ensodai.avalonmediacard.contract.plugins.AudioTrack
 import org.ensodai.avalonmediacard.contract.plugins.SubtitleTrack
 import org.ensodai.avalonmediacard.contract.plugins.VideoQuality
@@ -29,6 +30,7 @@ import org.ensodai.avalonmediacard.presentation.screens.commonComponents.tvDrawe
 import org.ensodai.avalonmediacard.presentation.screens.commonComponents.tvDrawer.TvDrawerScreen
 import org.ensodai.avalonmediacard.presentation.screens.player.action.PlayerActions
 import org.ensodai.avalonmediacard.presentation.screens.player.model.PlayerEngine
+import org.ensodai.avalonmediacard.presentation.screens.player.model.PlayerMode
 import org.ensodai.avalonmediacard.presentation.screens.player.viewState.PlayerViewState
 import org.jetbrains.compose.resources.stringResource
 
@@ -152,15 +154,30 @@ class PlayerSettingsDrawerScreen(
                 )
             }
 
-            item(key = "setting_other_source") {
-                AvalonTvDrawerItem(
-                    title = stringResource(Res.string.player_btn_select_other_source),
-                    icon = Lucide.RefreshCcw,
-                    onClick = {
-                        navigator.clear()
-                        actions.onRequestOtherSource()
+            if (state.mode == PlayerMode.WATCH_PARTY) {
+                if (state.isEffectiveHost) {
+                    item(key = "setting_return_to_lobby") {
+                        AvalonTvDrawerItem(
+                            title = stringResource(Res.string.watch_party_btn_return_to_lobby),
+                            icon = Lucide.Users,
+                            onClick = {
+                                navigator.clear()
+                                actions.onReturnToLobby()
+                            }
+                        )
                     }
-                )
+                }
+            } else {
+                item(key = "setting_other_source") {
+                    AvalonTvDrawerItem(
+                        title = stringResource(Res.string.player_btn_select_other_source),
+                        icon = Lucide.RefreshCcw,
+                        onClick = {
+                            navigator.clear()
+                            actions.onRequestOtherSource()
+                        }
+                    )
+                }
             }
         }
     }

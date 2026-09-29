@@ -448,9 +448,18 @@ class ClientSyncController(
                     RoomPlaybackCommand.ReportMediaReady(positionMs = reportedPos)
                 )
                 val state = latestSyncState
-                if (state != null && state.isPlaying && !isPrerolling) {
-                    underlyingController.play()
-                    startDriftLoop()
+                if (state != null) {
+                    if (state.isPlaying && !isPrerolling) {
+                        underlyingController.play()
+                        startDriftLoop()
+                    } else if (!state.isPlaying) {
+                        underlyingController.pause()
+                        val posMs = underlyingController.getCurrentPositionMs()
+                        val drift = state.anchorPositionMs - posMs
+                        if (abs(drift) > PAUSE_SEEK_THRESHOLD_MS) {
+                            safeSeek(state.anchorPositionMs / 1000.0, "Media ready pause drift alignment")
+                        }
+                    }
                 }
             } catch (e: CancellationException) {
                 throw e

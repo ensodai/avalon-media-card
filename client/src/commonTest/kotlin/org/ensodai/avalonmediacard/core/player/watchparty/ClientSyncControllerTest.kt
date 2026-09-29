@@ -701,5 +701,52 @@ class ClientSyncControllerTest {
             controller.stop()
         }
     }
+
+    @Test
+    fun testMediaReadyWhileRoomPausedEnforcesPauseAndAlignsPosition() = runTest {
+        val rpc = TestWatchPartyRpcService()
+        val player = TestPlaybackController(initialTime = 0.0, initialPlaying = false, initialDuration = 0.0)
+        player._isBufferingFlow.value = true
+        player.state.isBuffering = true
+
+        val clockSync = ClockSyncService(rpc)
+        val currentTime = Instant.fromEpochMilliseconds(2000)
+        clockSync.clockProvider = { currentTime }
+
+        val controller = ClientSyncController(
+            roomId = Uuid.random(),
+            underlyingController = player,
+            clockSync = clockSync,
+            rpcService = rpc,
+            coroutineScope = this
+        )
+
+        try {
+            controller.start()
+            testScheduler.runCurrent()
+
+            // Сервер присылает состояние паузы комнаты на 292 секунде (4:52)
+            controller.handleSyncState(
+                WatchRoomEvent.SyncState(
+                    isPlaying = false,
+                    anchorPositionMs = 292000L,
+                    anchorServerTime = currentTime
+                )
+            )
+            testScheduler.runCurrent()
+
+            // Поток завершил загрузку и буферизацию
+            player.state.duration = 1000.0
+            player.setBuffering(false)
+            testScheduler.runCurrent()
+
+            // Плеер должен остаться на паузе и быть выровнен на 292.0с
+            assertFalse(player.state.isPlaying, "Плеер обязан оставаться на паузе, если комната на паузе")
+            assertEquals(292.0, player.lastSeekTime, "Плеер должен выровнять позицию на anchorPositionMs")
+            assertTrue(rpc.sentCommands.any { it.second is RoomPlaybackCommand.ReportMediaReady }, "Должен быть отправлен ReportMediaReady")
+        } finally {
+            controller.stop()
+        }
+    }
 }
 

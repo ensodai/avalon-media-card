@@ -24,7 +24,7 @@ data class PlayerChatUiMessage(
  * Состояние компонента внутриплеерного чата совместного просмотра.
  */
 data class WatchPartyChatViewState(
-    val isVisible: Boolean = true,
+    val isVisible: Boolean = false,
     val inputText: String = "",
     val isInputFocused: Boolean = false,
     val unreadCount: Int = 0,

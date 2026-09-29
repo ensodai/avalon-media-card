@@ -78,6 +78,7 @@ class PlayerViewModel(
     private var syncEventsJob: Job? = null
     private var metadataJob: Job? = null
     private var playbackJob: Job? = null
+    private var controllerBufferingJob: Job? = null
 
     var activeController: PlaybackController? = null
         private set
@@ -86,6 +87,19 @@ class PlayerViewModel(
 
     fun attachController(controller: PlaybackController) {
         activeController = controller
+        controllerBufferingJob?.cancel()
+        controllerBufferingJob = viewModelScope.launch {
+            controller.isBufferingFlow.collect { isBuffering ->
+                updateViewState { s ->
+                    val newStatus = when {
+                        isBuffering -> PlaybackStatus.BUFFERING
+                        controller.state.isPlaying -> PlaybackStatus.PLAYING
+                        else -> PlaybackStatus.PAUSED
+                    }
+                    s.copy(status = newStatus)
+                }
+            }
+        }
         val roomId = viewState.value.watchRoomId
         if (viewState.value.mode == PlayerMode.WATCH_PARTY && roomId != null) {
             val existing = syncController
@@ -217,6 +231,8 @@ class PlayerViewModel(
     }
 
     fun detachController() {
+        controllerBufferingJob?.cancel()
+        controllerBufferingJob = null
         syncEventsJob?.cancel()
         syncEventsJob = null
         syncController?.stop()

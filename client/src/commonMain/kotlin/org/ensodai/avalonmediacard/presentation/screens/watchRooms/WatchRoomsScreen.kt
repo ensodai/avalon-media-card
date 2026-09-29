@@ -6,6 +6,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import org.ensodai.avalonmediacard.contract.model.EntityType
 import org.ensodai.avalonmediacard.contract.model.MediaKey
@@ -14,6 +17,7 @@ import org.ensodai.avalonmediacard.contract.model.MediaType
 import org.ensodai.avalonmediacard.contract.model.WatchRoomPhase
 import org.ensodai.avalonmediacard.contract.model.WatchRoomSummaryDto
 import org.ensodai.avalonmediacard.presentation.screens.commonComponents.AdaptiveLayout
+import org.ensodai.avalonmediacard.presentation.screens.commonComponents.LocalContentFocusRequester
 import org.ensodai.avalonmediacard.presentation.screens.commonComponents.LocalRootOverlay
 import org.ensodai.avalonmediacard.presentation.screens.player.launchPlayerOverlay
 import org.ensodai.avalonmediacard.presentation.screens.player.model.PlayerInitParams
@@ -34,6 +38,8 @@ fun WatchRoomsScreen(
     val state by viewModel.viewState.collectAsState()
     val actions = viewModel.actions
     val rootOverlay = LocalRootOverlay.current
+    val contentFocusRequester = LocalContentFocusRequester.current
+    var isPlayerOpen by remember { mutableStateOf(false) }
 
     val onRoomClick: (WatchRoomSummaryDto) -> Unit = { room ->
         if (room.phase != WatchRoomPhase.LOBBY) {
@@ -42,6 +48,7 @@ fun WatchRoomsScreen(
             } else {
                 val entityType = if (room.mediaType == MediaType.TV) EntityType.TV else EntityType.MOVIE
                 val mediaKey = MediaKey(provider = MediaProvider.Tmdb, type = entityType, id = room.mediaId)
+                isPlayerOpen = true
                 launchPlayerOverlay(
                     rootOverlay = rootOverlay,
                     params = PlayerInitParams(
@@ -57,7 +64,12 @@ fun WatchRoomsScreen(
                         watchRoomId = room.id,
                         isHost = room.isHost
                     ),
+                    onClose = {
+                        isPlayerOpen = false
+                        runCatching { contentFocusRequester.requestFocus() }
+                    },
                     onReturnToLobby = { roomId ->
+                        isPlayerOpen = false
                         actions.onOpenRoom(roomId)
                     }
                 )
@@ -74,6 +86,7 @@ fun WatchRoomsScreen(
                     state = state,
                     actions = actions,
                     onRoomClick = onRoomClick,
+                    isPlayerOpen = isPlayerOpen,
                     modifier = Modifier.fillMaxSize()
                 )
             },
@@ -107,6 +120,7 @@ fun WatchRoomsScreen(
                 isVisible = true,
                 initialStep = state.modalInitialStep,
                 viewModel = watchPartyViewModel,
+                callerFocusRequester = contentFocusRequester,
                 onClose = { actions.onCloseModal() },
                 onStartPlayback = { roomId, season, episode, startPositionSeconds ->
                     actions.onCloseModal()
@@ -117,6 +131,7 @@ fun WatchRoomsScreen(
                         val mediaKey = watchPartyViewModel.viewState.value.mediaKey
                         val isHost = watchPartyViewModel.viewState.value.isHost
                         if (mediaKey != null) {
+                            isPlayerOpen = true
                             launchPlayerOverlay(
                                 rootOverlay = rootOverlay,
                                 params = PlayerInitParams(
@@ -132,7 +147,12 @@ fun WatchRoomsScreen(
                                     watchRoomId = roomId,
                                     isHost = isHost
                                 ),
+                                onClose = {
+                                    isPlayerOpen = false
+                                    runCatching { contentFocusRequester.requestFocus() }
+                                },
                                 onReturnToLobby = { retRoomId ->
+                                    isPlayerOpen = false
                                     actions.onOpenRoom(retRoomId)
                                 }
                             )

@@ -35,6 +35,8 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.focus.FocusRequester
+import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.pointer.PointerIcon
 import androidx.compose.ui.input.pointer.pointerHoverIcon
@@ -57,6 +59,7 @@ fun WatchPartyParticipantsPanel(
     isExpanded: Boolean,
     onToggleExpanded: () -> Unit,
     isLocalBuffering: Boolean = false,
+    headerFocusRequester: FocusRequester? = null,
     modifier: Modifier = Modifier
 ) {
     val onlineCount = remember(participants) { participants.count { it.isOnline } }
@@ -91,6 +94,9 @@ fun WatchPartyParticipantsPanel(
                 modifier = Modifier
                     .then(
                         if (isExpanded) Modifier.width(280.dp) else Modifier.wrapContentWidth()
+                    )
+                    .then(
+                        if (headerFocusRequester != null) Modifier.focusRequester(headerFocusRequester) else Modifier
                     )
                     .tvAndWebHoverEffect(
                         scaleTarget = if (isExpanded) 1.0f else 1.08f,

@@ -85,14 +85,18 @@ fun MediaListContent(
 
             // Данные
             if (isLoading && grids.isEmpty()) {
-                items(12) {
+                items(12) { index ->
                     MediaGridCard(
                         item = MovieCarouselItem(
                             key = MediaKey(MediaProvider.Tmdb, EntityType.MOVIE, "mock"),
                             title = ""
                         ),
                         isLoading = true,
-                        onAction = {}
+                        onAction = {},
+                        modifier = Modifier.initialFocus(
+                            focusRequester = firstItemFocusRequester,
+                            enabled = index == 0
+                        )
                     )
                 }
             } else {

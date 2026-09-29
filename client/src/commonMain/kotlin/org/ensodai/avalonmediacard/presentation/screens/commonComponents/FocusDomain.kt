@@ -73,7 +73,8 @@ fun Modifier.initialFocus(
 @OptIn(ExperimentalComposeUiApi::class)
 fun Modifier.focusDomain(
     domainRequester: FocusRequester,
-    fallbackRequester: FocusRequester? = null
+    fallbackRequester: FocusRequester? = null,
+    trapFocus: Boolean = false
 ): Modifier = this
     .focusRequester(domainRequester)
     .focusProperties {
@@ -90,6 +91,10 @@ fun Modifier.focusDomain(
             logger.d { "🌀 [FOCUS_DOMAIN] onExit -> сохранение активного ребенка..." }
             val isSaved = domainRequester.saveFocusedChild()
             logger.d { "🌀 [FOCUS_DOMAIN] saveFocusedChild() = $isSaved" }
+            if (trapFocus) {
+                logger.d { "🌀 [FOCUS_DOMAIN] onExit -> trapFocus=true, блокируем выход фокуса за пределы домена" }
+                cancelFocusChange()
+            }
         }
     }
     .focusGroup()

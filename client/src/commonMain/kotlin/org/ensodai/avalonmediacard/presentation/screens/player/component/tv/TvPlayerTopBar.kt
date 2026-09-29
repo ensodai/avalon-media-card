@@ -10,6 +10,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
+import androidx.compose.ui.focus.focusProperties
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
@@ -20,11 +21,13 @@ import com.composables.icons.lucide.Eye
 import com.composables.icons.lucide.Lucide
 import com.composables.icons.lucide.Settings
 import com.composables.icons.lucide.Star
+import org.ensodai.avalonmediacard.contract.model.WatchRoomParticipantDto
 import org.ensodai.avalonmediacard.contract.plugins.MediaStream
 import org.ensodai.avalonmediacard.presentation.screens.player.component.PlayerIslandActionButton
 import org.ensodai.avalonmediacard.presentation.screens.player.component.PlayerIslandDynamicButton
 import org.ensodai.avalonmediacard.presentation.screens.player.component.PlayerIslandIconButton
 import org.ensodai.avalonmediacard.presentation.screens.player.component.PlayerIslandTitle
+import org.ensodai.avalonmediacard.presentation.screens.player.component.pc.WatchPartyParticipantsPanel
 import org.jetbrains.compose.resources.stringResource
 
 /**
@@ -43,7 +46,14 @@ fun TvPlayerTopBar(
     onRateEpisode: (() -> Unit)? = null,
     settingsFocusRequester: FocusRequester? = null,
     watchedFocusRequester: FocusRequester? = null,
-    ratingFocusRequester: FocusRequester? = null
+    ratingFocusRequester: FocusRequester? = null,
+    isWatchParty: Boolean = false,
+    participants: List<WatchRoomParticipantDto> = emptyList(),
+    currentUserId: String? = null,
+    isParticipantsExpanded: Boolean = false,
+    onToggleParticipantsExpanded: (() -> Unit)? = null,
+    isLocalBuffering: Boolean = false,
+    participantsFocusRequester: FocusRequester? = null
 ) {
     Row(
         modifier = modifier
@@ -61,7 +71,8 @@ fun TvPlayerTopBar(
             PlayerIslandIconButton(
                 icon = Lucide.ArrowLeft,
                 contentDescription = stringResource(Res.string.player_btn_close),
-                onClick = onClose
+                onClick = onClose,
+                modifier = Modifier.focusProperties { left = FocusRequester.Cancel }
             )
 
             Spacer(modifier = Modifier.width(14.dp))
@@ -107,13 +118,26 @@ fun TvPlayerTopBar(
                 )
             }
 
+            // Островок участников совместного просмотра: таблетка в свернутом виде, список при раскрытии
+            if (isWatchParty) {
+                WatchPartyParticipantsPanel(
+                    participants = participants,
+                    currentUserId = currentUserId,
+                    isExpanded = isParticipantsExpanded,
+                    onToggleExpanded = { onToggleParticipantsExpanded?.invoke() },
+                    isLocalBuffering = isLocalBuffering,
+                    headerFocusRequester = participantsFocusRequester
+                )
+            }
+
             // Островок 5: Настройки (Озвучки, Субтитры, Плеер, Другой источник)
             PlayerIslandIconButton(
                 icon = Lucide.Settings,
                 contentDescription = stringResource(Res.string.player_settings_title),
                 tint = if (hasCustomAudioOrSubtitle) Color(0xFF4CAF50) else Color.White,
                 onClick = onOpenSettings,
-                modifier = if (settingsFocusRequester != null) Modifier.focusRequester(settingsFocusRequester) else Modifier
+                modifier = (if (settingsFocusRequester != null) Modifier.focusRequester(settingsFocusRequester) else Modifier)
+                    .focusProperties { right = FocusRequester.Cancel }
             )
         }
     }

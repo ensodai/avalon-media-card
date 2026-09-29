@@ -13,11 +13,11 @@ fun CollectionButtonsSlot(
     onAction: (Action) -> Unit,
     modifier: Modifier = Modifier
 ) {
-    if (state == null) return
-    val data = state.data ?: SlotData.ButtonGroup(listOf(ButtonItem("")))
+    val data = state?.data ?: SlotData.ButtonGroup(emptyList())
+    val isLoading = state == null || state.isInitialLoading
     CollectionButtonsSlotContent(
         data = data,
-        isLoading = state.isInitialLoading,
+        isLoading = isLoading,
         onAction = onAction,
         modifier = modifier
     )

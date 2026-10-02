@@ -21,7 +21,7 @@ import kotlin.uuid.Uuid
 class MediaDetailsPlugin : AvalonPlugin {
     override val id: String = "org.ensodai.mediadetails"
     override val name: String = "Детали Медиа и Виджеты"
-    override val version: String = "1.1.0"
+    override val version: String = "1.2.0"
     override val author: String = "Avalon Media Card"
 
     override fun provideSerializers(): SerializersModule = SerializersModule {

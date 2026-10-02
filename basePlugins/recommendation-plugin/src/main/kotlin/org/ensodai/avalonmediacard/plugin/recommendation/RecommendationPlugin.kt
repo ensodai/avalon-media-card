@@ -9,7 +9,7 @@ import org.ensodai.avalonmediacard.plugin.recommendation.calculator.AffinityVect
 class RecommendationPlugin : AvalonPlugin {
     override val id: String = "org.ensodai.recommendation"
     override val name: String = "Premium Recommendation Engine"
-    override val version: String = "1.1.0"
+    override val version: String = "1.2.0"
     override val author: String = "Avalon Media Card"
 
     private var worker: AffinityRecalculationWorker? = null

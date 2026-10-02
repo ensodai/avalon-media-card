@@ -33,7 +33,7 @@ kotlinx-coroutines = "1.11.0"
 jna = "5.19.1"
 mpvLib = "0.1.12"
 kermit = "2.2.0"
-avalon-core-contract = "1.1.0"
+avalon-core-contract = "1.2.0"
 java-jwt = "4.6.1"
 
 [libraries]

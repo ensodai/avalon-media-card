@@ -22,7 +22,7 @@ import org.ensodai.avalonmediacard.contract.ui.navigation.Screen
 class MediaListPlugin : AvalonPlugin {
     override val id: String = "org.ensodai.medialist"
     override val name: String = "Списки Медиа"
-    override val version: String = "1.1.0"
+    override val version: String = "1.2.0"
     override val author: String = "Avalon Media Card"
 
     override fun provideSerializers(): SerializersModule = SerializersModule {

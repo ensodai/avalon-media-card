@@ -13,6 +13,7 @@ import org.ensodai.avalonmediacard.contract.model.RoomPlaybackCommand
 import org.ensodai.avalonmediacard.contract.model.WatchParticipantIntent
 import org.ensodai.avalonmediacard.contract.model.WatchRoomControlMode
 import org.ensodai.avalonmediacard.contract.model.WatchRoomParticipantRole
+import org.ensodai.avalonmediacard.contract.model.WatchRoomPhase
 import org.ensodai.avalonmediacard.contract.model.WatchRoomPlaybackState
 import kotlin.test.Test
 import kotlin.test.assertEquals
@@ -646,5 +647,59 @@ class WatchRoomSessionTest {
         assertFalse(finalParticipants.first { it.userId == guestId }.isOnline)
 
         hostCollectJob.cancel()
+    }
+
+    @Test
+    fun test_flushProgress_persists_current_position() = runTest {
+        var persistedPos: Long? = null
+        val roomId = Uuid.random()
+        val hostId = Uuid.random()
+        val session = WatchRoomSession(
+            roomId = roomId,
+            mediaId = "test_media_123",
+            title = "Test Party",
+            hostUserId = hostId,
+            controlMode = WatchRoomControlMode.HOST_ONLY,
+            initialSeason = 1,
+            initialEpisode = 1,
+            initialPositionSeconds = 145L,
+            scope = backgroundScope,
+            onProgressChanged = { _, _, pos -> persistedPos = pos },
+            onHostMigrated = { _ -> }
+        )
+
+        session.flushProgress()
+        assertEquals(145L, persistedPos)
+    }
+
+    @Test
+    fun test_disconnect_during_preparing_conserves_state_and_flushes_progress() = runTest {
+        var persistedPos: Long? = null
+        val roomId = Uuid.random()
+        val hostId = Uuid.random()
+        val session = WatchRoomSession(
+            roomId = roomId,
+            mediaId = "test_media_123",
+            title = "Test Party",
+            hostUserId = hostId,
+            controlMode = WatchRoomControlMode.HOST_ONLY,
+            initialSeason = 1,
+            initialEpisode = 1,
+            initialPositionSeconds = 250L,
+            scope = backgroundScope,
+            onProgressChanged = { _, _, pos -> persistedPos = pos },
+            onHostMigrated = { _ -> }
+        )
+
+        session.handleClientConnected(hostId, "HostUser", WatchRoomParticipantRole.HOST)
+        session.triggerStartPlayback(hostId)
+        assertEquals(WatchRoomPhase.PREPARING, session.phase)
+
+        persistedPos = null // Сбрасываем позицию перед тестом дисконнекта
+        session.handleClientDisconnected(hostId)
+        runCurrent()
+
+        assertEquals(WatchRoomPhase.LOBBY, session.phase)
+        assertEquals(250L, persistedPos)
     }
 }

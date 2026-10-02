@@ -305,7 +305,7 @@ class WatchRoomSession(
         notifyRoomStateChanged()
 
         val anyOnline = participants.values.any { it.isOnline }
-        if (!anyOnline && phase != RoomPhase.PREPARING) {
+        if (!anyOnline) {
             autoPauseAndConserveLocked()
         }
     }
@@ -800,6 +800,9 @@ class WatchRoomSession(
                         _events.emit(WatchRoomEvent.SystemNotice("Зритель $names буферизует видео..."))
 
                         startGracePeriodTimerLocked()
+                        scope.launch {
+                            onProgressChanged(currentSeason, currentEpisode, anchorPositionMs / 1000L)
+                        }
                     }
                 }
                 RoomPhase.PARTIAL_BUFFERING,
@@ -1123,6 +1126,14 @@ class WatchRoomSession(
                 }
             }
         }
+    }
+
+    /**
+     * Принудительный сброс текущего прогресса комнаты в БД.
+     */
+    suspend fun flushProgress() = mutex.withLock {
+        val currentPos = getCurrentPositionSeconds()
+        onProgressChanged(currentSeason, currentEpisode, currentPos)
     }
 
     /**

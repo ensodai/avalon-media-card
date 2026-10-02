@@ -488,4 +488,18 @@ class WatchRoomSessionManager(
             }
         }
     }
+
+    /**
+     * Сброс прогресса всех активных сессий в БД (например, при остановке сервера).
+     */
+    suspend fun flushAllSessions() {
+        logger.info("Flushing progress for all active watch room sessions ({} active)...", sessions.size)
+        sessions.values.forEach { session ->
+            try {
+                session.flushProgress()
+            } catch (e: Exception) {
+                logger.warn("Failed to flush session progress for room {}: {}", session.roomId, e.message)
+            }
+        }
+    }
 }

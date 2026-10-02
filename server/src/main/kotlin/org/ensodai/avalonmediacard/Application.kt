@@ -39,6 +39,7 @@ import org.ensodai.avalonmediacard.rpc.*
 import org.ensodai.avalonmediacard.security.RequestOriginResolver
 import org.ensodai.avalonmediacard.security.RpcSessionContext
 import org.ensodai.avalonmediacard.security.StreamTokenService
+import org.ensodai.avalonmediacard.service.watchparty.WatchRoomSessionManager
 import org.ensodai.avalonmediacard.sync.EpisodeNotificationSyncWorker
 import org.ensodai.avalonmediacard.sync.SyncWorker
 import org.ensodai.avalonmediacard.tmdb.MediaKeywordsEnrichmentWorker
@@ -78,6 +79,18 @@ fun Application.module() {
     val episodeNotificationSyncWorker by inject<EpisodeNotificationSyncWorker>()
     val streamTokenService by inject<StreamTokenService>()
     val safeProxyHttpClient by inject<HttpClient>(named("safeProxyHttpClient"))
+    val watchRoomSessionManager by inject<WatchRoomSessionManager>()
+
+    monitor.subscribe(ApplicationStopping) {
+        log.info("Application stopping: flushing active watch rooms to DB...")
+        runBlocking {
+            try {
+                watchRoomSessionManager.flushAllSessions()
+            } catch (e: Exception) {
+                log.error("Failed to flush watch rooms on shutdown: ${e.message}", e)
+            }
+        }
+    }
 
     val adminUsername = EnvHelper.getEnv("ADMIN_USERNAME") ?: "admin"
     val adminPassword = EnvHelper.getEnv("ADMIN_PASSWORD") ?: "admin"

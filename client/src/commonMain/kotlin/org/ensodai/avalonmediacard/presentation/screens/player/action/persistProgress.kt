@@ -16,7 +16,7 @@ import org.ensodai.avalonmediacard.presentation.screens.player.viewState.PlayerV
 private val logger = AppLogging.logger("PlayerProgress")
 
 fun PlayerViewModel.persistProgress(state: PlayerViewState, force: Boolean = false) {
-    if (state.mode == PlayerMode.TEST_PREVIEW) return
+    if (state.mode == PlayerMode.TEST_PREVIEW || state.mode == PlayerMode.WATCH_PARTY) return
     if (!force && state.status == PlaybackStatus.IDLE) return
     val mediaKey = state.mediaKey ?: return
     val current = state.currentTime

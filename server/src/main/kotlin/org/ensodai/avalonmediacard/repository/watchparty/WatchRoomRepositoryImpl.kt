@@ -32,6 +32,7 @@ import org.jetbrains.exposed.v1.jdbc.selectAll
 import org.jetbrains.exposed.v1.jdbc.update
 import org.koin.core.annotation.Single
 import org.slf4j.LoggerFactory
+import kotlin.time.Clock
 import kotlin.uuid.Uuid
 
 @Single
@@ -353,6 +354,7 @@ class WatchRoomRepositoryImpl : WatchRoomRepository {
             it[currentSeason] = season
             it[currentEpisode] = episode
             it[lastPositionSeconds] = positionSeconds
+            it[updatedAt] = Clock.System.now()
         }
         Unit
     }

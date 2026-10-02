@@ -2124,16 +2124,9 @@ media-typer@^1.1.0:
   resolved "https://registry.yarnpkg.com/media-typer/-/media-typer-1.1.1.tgz#6f035400dfe3ab9d5607bc77546ce30cc2f9c6b8"
   integrity sha512-yz3xRaG20c6/BOzvYoDaGtPmGscs7YivItZEEqe6GbwNfHuxu9YNmvnEkMzKldAGY4/80pRcQRZSEnhquk9XuQ==
 
-"mediabunny@file:../../../../../.cache/yarn/v6/.tmp/dddefd96ecf35ad8d50f8aa3626ce959/vendor/mediabunny-1.38.1-f0.5.tgz":
+mediabunny@1.38.1-f0.5, "mediabunny@file:../../libs/mediabunny-local.tgz":
   version "1.38.1-f0.5"
   uid "4c33690342703b2af0c0524883cb18d8c3691fde"
-  resolved "file:../../../../../.cache/yarn/v6/.tmp/dddefd96ecf35ad8d50f8aa3626ce959/vendor/mediabunny-1.38.1-f0.5.tgz#4c33690342703b2af0c0524883cb18d8c3691fde"
-  dependencies:
-    "@types/dom-mediacapture-transform" "^0.1.11"
-    "@types/dom-webcodecs" "0.1.13"
-
-"mediabunny@file:../../libs/mediabunny-local.tgz":
-  version "1.38.1-f0.5"
   resolved "file:../../libs/mediabunny-local.tgz#4c33690342703b2af0c0524883cb18d8c3691fde"
   dependencies:
     "@types/dom-mediacapture-transform" "^0.1.11"
@@ -2504,11 +2497,11 @@ pkijs@^3.3.3:
 
 "playsvideo@file:../../libs/playsvideo-0.4.7-f2.16.tgz":
   version "0.4.7-f2.16"
-  uid "25c32fc13508739e11428135ab91c8b19aaf8d2d"
-  resolved "file:../../libs/playsvideo-0.4.7-f2.16.tgz#25c32fc13508739e11428135ab91c8b19aaf8d2d"
+  uid fc53d8f6772e455753dd643e7d4fe3eb6bb6b316
+  resolved "file:../../libs/playsvideo-0.4.7-f2.16.tgz#fc53d8f6772e455753dd643e7d4fe3eb6bb6b316"
   dependencies:
     hls.js "^1.5.0"
-    mediabunny "file:../../../../../.cache/yarn/v6/.tmp/dddefd96ecf35ad8d50f8aa3626ce959/vendor/mediabunny-1.38.1-f0.5.tgz"
+    mediabunny "1.38.1-f0.5"
 
 powershell-utils@^0.1.0:
   version "0.1.0"

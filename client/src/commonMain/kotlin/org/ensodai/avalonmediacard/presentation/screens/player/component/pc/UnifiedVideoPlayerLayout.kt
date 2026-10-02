@@ -21,6 +21,7 @@ fun UnifiedVideoPlayerLayout(
     bottomBar: @Composable () -> Unit,
     rightPanelOverlay: @Composable BoxScope.() -> Unit,
     leftPanelOverlay: @Composable BoxScope.() -> Unit = {},
+    reactionOverlay: @Composable BoxScope.() -> Unit = {},
     modifier: Modifier = Modifier
 ) {
     BoxWithConstraints(modifier = modifier.fillMaxSize()) {
@@ -40,6 +41,9 @@ fun UnifiedVideoPlayerLayout(
                 topBar()
             }
         }
+
+        // Оверлей всплывающих реакций (слева снизу)
+        reactionOverlay()
 
         // Левая панель в виде оверлея (внутриплеерный чат)
         leftPanelOverlay()

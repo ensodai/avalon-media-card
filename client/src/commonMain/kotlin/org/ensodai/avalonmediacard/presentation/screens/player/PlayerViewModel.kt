@@ -28,8 +28,9 @@ import org.ensodai.avalonmediacard.presentation.core.mvi.BaseViewModel
 import org.ensodai.avalonmediacard.presentation.screens.player.action.*
 import org.ensodai.avalonmediacard.presentation.screens.player.model.PlaybackStatus
 import org.ensodai.avalonmediacard.presentation.screens.player.model.PlayerInitParams
-import org.ensodai.avalonmediacard.presentation.screens.player.viewState.PlayerChatUiMessage
 import org.ensodai.avalonmediacard.presentation.screens.player.model.PlayerMode
+import org.ensodai.avalonmediacard.presentation.screens.player.model.WatchPartyReaction
+import org.ensodai.avalonmediacard.presentation.screens.player.viewState.PlayerChatUiMessage
 import org.ensodai.avalonmediacard.presentation.screens.player.viewState.PlayerViewState
 import org.koin.core.annotation.InjectedParam
 import org.koin.core.annotation.KoinViewModel
@@ -79,6 +80,7 @@ class PlayerViewModel(
     private var metadataJob: Job? = null
     private var playbackJob: Job? = null
     private var controllerBufferingJob: Job? = null
+    private var reactionCounter: Long = 0L
 
     var activeController: PlaybackController? = null
         private set
@@ -209,6 +211,22 @@ class PlayerViewModel(
                                             unreadCount = newUnread
                                         )
                                     )
+                                }
+                            }
+                            is WatchRoomEvent.ReactionTriggered -> {
+                                val currentUid = viewState.value.currentUserId
+                                if (event.userId.toString() != currentUid) {
+                                    val nextId = ++reactionCounter
+                                    updateViewState { state ->
+                                        state.copy(
+                                            lastReaction = WatchPartyReaction(
+                                                id = nextId,
+                                                emoji = event.emoji,
+                                                senderUsername = event.username,
+                                                isFromMe = false
+                                            )
+                                        )
+                                    }
                                 }
                             }
                             else -> {}
@@ -534,8 +552,40 @@ class PlayerViewModel(
         onDetachController = ::detachController,
         onToggleParticipantsPanel = ::onToggleParticipantsPanel,
         onReturnToLobby = ::onReturnToLobby,
+        onSendReaction = ::onSendReaction,
         chat = createPlayerChatActions()
     )
+
+    fun onSendReaction(emoji: String) {
+        val roomId = viewState.value.watchRoomId ?: return
+        val currentUid = viewState.value.currentUserId
+        val username = viewState.value.watchRoomParticipants
+            .find { it.userId.toString() == currentUid }?.username ?: "Me"
+
+        val nextId = ++reactionCounter
+        updateViewState { state ->
+            state.copy(
+                lastReaction = WatchPartyReaction(
+                    id = nextId,
+                    emoji = emoji,
+                    senderUsername = username,
+                    isFromMe = true
+                )
+            )
+        }
+
+        viewModelScope.launch {
+            try {
+                val sc = syncController
+                if (sc != null) {
+                    sc.sendReaction(emoji)
+                } else {
+                    rpcService.sendReaction(roomId, emoji)
+                }
+            } catch (_: Exception) {
+            }
+        }
+    }
 
     fun onReturnToLobby() {
         val roomId = viewState.value.watchRoomId ?: return

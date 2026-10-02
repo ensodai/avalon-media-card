@@ -44,6 +44,8 @@ import org.ensodai.avalonmediacard.presentation.screens.player.component.PlayerC
 import org.ensodai.avalonmediacard.presentation.screens.player.component.PremiumSeekBar
 import org.ensodai.avalonmediacard.presentation.screens.player.component.pc.chat.WatchPartyChatPanel
 import org.ensodai.avalonmediacard.presentation.screens.player.component.pc.formatTime
+import org.ensodai.avalonmediacard.presentation.screens.player.component.reactions.WatchPartyReactionOverlay
+import org.ensodai.avalonmediacard.presentation.screens.player.component.reactions.WatchPartyReactionsBar
 import org.ensodai.avalonmediacard.presentation.screens.player.model.PlayerMode
 import org.ensodai.avalonmediacard.presentation.screens.player.viewState.PlayerViewState
 import avalonmediacard.client.generated.resources.*
@@ -72,6 +74,7 @@ fun TvPlayerLayout(
 ) {
     val tvDrawerState = LocalTvDrawerState.current
     var isUiVisible by remember { mutableStateOf(true) }
+    var showReactionsBar by remember { mutableStateOf(false) }
     var shelfState by remember { mutableStateOf(TvShelfState.COLLAPSED) }
     val isShelfExpanded = shelfState == TvShelfState.EXPANDED
     var showRatingPopup by remember { mutableStateOf(false) }
@@ -98,6 +101,8 @@ fun TvPlayerLayout(
     val participantsButtonFocusRequester = remember { FocusRequester() }
     val playerDomainFocusRequester = remember { FocusRequester() }
     val mainInputFocusRequester = remember { FocusRequester() }
+    val smileButtonFocusRequester = remember { FocusRequester() }
+    val reactionFirstItemFocusRequester = remember { FocusRequester() }
     var lastInteractionTrigger by remember { mutableLongStateOf(0L) }
 
     fun wakeUpUi() {
@@ -105,9 +110,17 @@ fun TvPlayerLayout(
         lastInteractionTrigger = Clock.System.now().toEpochMilliseconds()
     }
 
-    // Автоматическое скрытие UI через 5 секунд неактивности (если полка серий не раскрыта, не идет ввод текста и список участников свернут)
-    LaunchedEffect(isUiVisible, controller.state.isPlaying, isShelfExpanded, state.chatState.isInputFocused, state.isParticipantsPanelVisible, lastInteractionTrigger) {
-        if (isUiVisible && controller.state.isPlaying && !tvDrawerState.isOpen && !isShelfExpanded && !state.chatState.isInputFocused && !state.isParticipantsPanelVisible) {
+    // Автоматический перевод фокуса на первый смайлик при раскрытии плашки реакций
+    LaunchedEffect(showReactionsBar) {
+        if (showReactionsBar) {
+            delay(50.milliseconds)
+            runCatching { reactionFirstItemFocusRequester.requestFocus() }
+        }
+    }
+
+    // Автоматическое скрытие UI через 5 секунд неактивности (если полка серий не раскрыта, не идет ввод текста, список участников свернут и не открыта плашка реакций)
+    LaunchedEffect(isUiVisible, controller.state.isPlaying, isShelfExpanded, state.chatState.isInputFocused, state.isParticipantsPanelVisible, showReactionsBar, lastInteractionTrigger) {
+        if (isUiVisible && controller.state.isPlaying && !tvDrawerState.isOpen && !isShelfExpanded && !state.chatState.isInputFocused && !state.isParticipantsPanelVisible && !showReactionsBar) {
             delay(5000.milliseconds)
             isUiVisible = false
         }
@@ -145,8 +158,13 @@ fun TvPlayerLayout(
             isChatVisible = state.chatState.isVisible,
             isChatInputFocused = state.chatState.isInputFocused,
             isParticipantsVisible = state.isParticipantsPanelVisible,
+            isReactionsVisible = showReactionsBar,
             onCloseChat = { actions.chat.onToggleChatVisibility() },
             onCloseParticipants = { actions.onToggleParticipantsPanel() },
+            onCloseReactions = {
+                showReactionsBar = false
+                runCatching { smileButtonFocusRequester.requestFocus() }
+            },
             onWakeUpUi = { wakeUpUi() },
             onHideUi = { isUiVisible = false },
             onToggleShelf = {
@@ -307,6 +325,27 @@ fun TvPlayerLayout(
                                     .fillMaxWidth()
                                     .padding(horizontal = 24.dp, vertical = 6.dp)
                             ) {
+                                if (state.mode == PlayerMode.WATCH_PARTY) {
+                                    Box(
+                                        modifier = Modifier
+                                            .fillMaxWidth()
+                                            .padding(bottom = 6.dp),
+                                        contentAlignment = Alignment.BottomCenter
+                                    ) {
+                                        WatchPartyReactionsBar(
+                                            isVisible = showReactionsBar,
+                                            firstItemFocusRequester = reactionFirstItemFocusRequester,
+                                            onDismissRequest = {
+                                                showReactionsBar = false
+                                                runCatching { smileButtonFocusRequester.requestFocus() }
+                                            },
+                                            onSendReaction = { emoji ->
+                                                wakeUpUi()
+                                                actions.onSendReaction(emoji)
+                                            }
+                                        )
+                                    }
+                                }
                                 Box(
                                     modifier = Modifier
                                         .fillMaxWidth()
@@ -340,6 +379,37 @@ fun TvPlayerLayout(
                                             fontSize = 14.sp,
                                             fontWeight = FontWeight.Normal
                                         )
+                                    }
+
+                                    if (state.mode == PlayerMode.WATCH_PARTY) {
+                                        Box(
+                                            modifier = Modifier
+                                                .size(34.dp)
+                                                .focusRequester(smileButtonFocusRequester)
+                                                .tvAndWebHoverEffect(
+                                                    scaleTarget = 1.15f,
+                                                    shape = CircleShape,
+                                                    activeBorderColor = MaterialTheme.colorScheme.primary,
+                                                    activeBorderWidth = 2.dp,
+                                                    onClick = {
+                                                        wakeUpUi()
+                                                        showReactionsBar = !showReactionsBar
+                                                    }
+                                                )
+                                                .clip(CircleShape)
+                                                .background(
+                                                    if (showReactionsBar) MaterialTheme.colorScheme.primary.copy(alpha = 0.35f)
+                                                    else Color.White.copy(alpha = 0.12f)
+                                                ),
+                                            contentAlignment = Alignment.Center
+                                        ) {
+                                            Icon(
+                                                imageVector = Lucide.Smile,
+                                                contentDescription = "Reactions",
+                                                tint = if (showReactionsBar) MaterialTheme.colorScheme.primary else Color.White,
+                                                modifier = Modifier.size(18.dp)
+                                            )
+                                        }
                                     }
 
                                     // Оставшееся время
@@ -430,6 +500,14 @@ fun TvPlayerLayout(
                     chatState = state.chatState,
                     actions = actions.chat,
                     episodeTitle = state.displayTitleData.bottomText.takeIf { it.isNotBlank() && it != state.title }
+                )
+            }
+
+            // 8. Оверлей всплывающих реакций (слева снизу)
+            if (state.mode == PlayerMode.WATCH_PARTY) {
+                WatchPartyReactionOverlay(
+                    lastReaction = state.lastReaction,
+                    modifier = Modifier.fillMaxSize()
                 )
             }
         }

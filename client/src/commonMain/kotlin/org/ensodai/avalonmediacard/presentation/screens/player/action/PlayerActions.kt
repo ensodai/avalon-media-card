@@ -35,5 +35,6 @@ data class PlayerActions(
     val onDetachController: () -> Unit = {},
     val onToggleParticipantsPanel: () -> Unit = {},
     val onReturnToLobby: () -> Unit = {},
+    val onSendReaction: (String) -> Unit = {},
     val chat: PlayerChatActions = PlayerChatActions()
 ) : BaseActions()

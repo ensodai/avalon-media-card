@@ -23,8 +23,10 @@ fun TvPlayerInputHandler(
     isChatVisible: Boolean = false,
     isChatInputFocused: Boolean = false,
     isParticipantsVisible: Boolean = false,
+    isReactionsVisible: Boolean = false,
     onCloseChat: () -> Unit = {},
     onCloseParticipants: () -> Unit = {},
+    onCloseReactions: () -> Unit = {},
     onWakeUpUi: () -> Unit,
     onHideUi: () -> Unit,
     onToggleShelf: () -> Unit,
@@ -35,7 +37,9 @@ fun TvPlayerInputHandler(
     content: @Composable () -> Unit
 ) {
     AvalonBackHandler(enabled = true) {
-        if (isParticipantsVisible) {
+        if (isReactionsVisible) {
+            onCloseReactions()
+        } else if (isParticipantsVisible) {
             onCloseParticipants()
         } else if (isChatVisible) {
             onCloseChat()
@@ -96,7 +100,10 @@ fun TvPlayerInputHandler(
                             }
 
                             Key.Escape -> {
-                                if (isParticipantsVisible) {
+                                if (isReactionsVisible) {
+                                    onCloseReactions()
+                                    true
+                                } else if (isParticipantsVisible) {
                                     onCloseParticipants()
                                     true
                                 } else if (isChatVisible) {

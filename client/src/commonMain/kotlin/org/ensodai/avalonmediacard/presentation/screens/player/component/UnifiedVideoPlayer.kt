@@ -5,6 +5,8 @@ import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.rememberLazyListState
@@ -25,6 +27,8 @@ import org.ensodai.avalonmediacard.presentation.screens.player.component.pc.Play
 import org.ensodai.avalonmediacard.presentation.screens.player.component.pc.PlayerTopBar
 import org.ensodai.avalonmediacard.presentation.screens.player.component.pc.UnifiedVideoPlayerLayout
 import org.ensodai.avalonmediacard.presentation.screens.player.component.pc.chat.WatchPartyChatPanel
+import org.ensodai.avalonmediacard.presentation.screens.player.component.reactions.WatchPartyReactionOverlay
+import org.ensodai.avalonmediacard.presentation.screens.player.component.reactions.WatchPartyReactionsControl
 import org.ensodai.avalonmediacard.presentation.screens.player.component.tv.TvPlayerLayout
 import org.ensodai.avalonmediacard.presentation.screens.player.model.PlayerMode
 import org.ensodai.avalonmediacard.presentation.screens.player.viewState.PlayerViewState
@@ -128,6 +132,14 @@ fun UnifiedVideoPlayer(
                         controller = controller
                     )
                 },
+                reactionOverlay = {
+                    if (state.mode == PlayerMode.WATCH_PARTY) {
+                        WatchPartyReactionOverlay(
+                            lastReaction = state.lastReaction,
+                            modifier = Modifier.fillMaxSize()
+                        )
+                    }
+                },
                 leftPanelOverlay = {
                     AnimatedVisibility(
                         visible = showChatPanel,
@@ -137,11 +149,20 @@ fun UnifiedVideoPlayer(
                             .align(Alignment.TopStart)
                             .padding(top = 84.dp, bottom = 100.dp, start = 24.dp)
                     ) {
-                        WatchPartyChatPanel(
-                            chatState = state.chatState,
-                            actions = actions.chat,
-                            episodeTitle = state.displayTitleData.bottomText.takeIf { it.isNotBlank() && it != state.title }
-                        )
+                        Row(
+                            verticalAlignment = Alignment.Top,
+                            horizontalArrangement = Arrangement.spacedBy(8.dp)
+                        ) {
+                            WatchPartyChatPanel(
+                                chatState = state.chatState,
+                                actions = actions.chat,
+                                episodeTitle = state.displayTitleData.bottomText.takeIf { it.isNotBlank() && it != state.title }
+                            )
+
+                            WatchPartyReactionsControl(
+                                onSendReaction = actions.onSendReaction
+                            )
+                        }
                     }
                 },
                 rightPanelOverlay = {

@@ -12,6 +12,7 @@ import org.ensodai.avalonmediacard.presentation.core.mvi.BaseViewState
 import org.ensodai.avalonmediacard.presentation.screens.player.model.PlaybackStatus
 import org.ensodai.avalonmediacard.presentation.screens.player.model.PlayerEngine
 import org.ensodai.avalonmediacard.presentation.screens.player.model.PlayerMode
+import org.ensodai.avalonmediacard.presentation.screens.player.model.WatchPartyReaction
 import kotlin.uuid.Uuid
 
 data class PlayerTitleData(
@@ -45,7 +46,8 @@ data class PlayerViewState(
     val isParticipantsPanelVisible: Boolean = false,
     val currentUserId: String? = null,
     val isHost: Boolean = false,
-    val chatState: WatchPartyChatViewState = WatchPartyChatViewState()
+    val chatState: WatchPartyChatViewState = WatchPartyChatViewState(),
+    val lastReaction: WatchPartyReaction? = null
 ) : BaseViewState() {
     val isEffectiveHost: Boolean
         get() = isHost || currentUserId?.let { uid ->

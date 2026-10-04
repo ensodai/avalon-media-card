@@ -4,6 +4,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import org.ensodai.avalonmediacard.contract.slot.Action
+import org.ensodai.avalonmediacard.contract.slot.ActionPlayVideo
 import org.ensodai.avalonmediacard.contract.slot.SlotData
 import org.ensodai.avalonmediacard.presentation.core.SduiSlot
 import org.ensodai.avalonmediacard.presentation.core.SlotUiState
@@ -18,6 +19,7 @@ fun MediaSourcesSlot(
     onClose: () -> Unit,
     onSelectSource: ((providerId: String, sourceId: String, seasonNumber: Int?, episodeNumber: Int?, onComplete: () -> Unit) -> Unit)? = null,
     onRefreshSources: (() -> Unit)? = null,
+    onPlayVideo: ((ActionPlayVideo) -> Unit)? = null,
     onAction: (Action) -> Unit = {},
     modifier: Modifier = Modifier
 ) {
@@ -29,6 +31,7 @@ fun MediaSourcesSlot(
         onClose = onClose,
         onSelectSource = onSelectSource,
         onRefreshSources = onRefreshSources,
+        onPlayVideo = onPlayVideo ?: { onAction(it) },
         onAction = onAction,
         modifier = modifier
     )

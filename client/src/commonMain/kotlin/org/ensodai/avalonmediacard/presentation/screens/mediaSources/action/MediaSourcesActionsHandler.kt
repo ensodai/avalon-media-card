@@ -6,6 +6,7 @@ import org.ensodai.avalonmediacard.contract.model.EntityType
 import org.ensodai.avalonmediacard.contract.model.MediaKey
 import org.ensodai.avalonmediacard.contract.rpc.SourceSelectionResult
 import org.ensodai.avalonmediacard.contract.slot.ActionPlayVideo
+import org.ensodai.avalonmediacard.contract.slot.ActionResult
 import org.ensodai.avalonmediacard.contract.slot.SlotData
 import org.ensodai.avalonmediacard.contract.slot.UploadCustomTorrentCommand
 import org.ensodai.avalonmediacard.presentation.core.SduiSlot
@@ -207,8 +208,33 @@ fun MediaSourcesViewModel.onUploadTorrentFile(fileName: String, bytes: ByteArray
 
     viewModelScope.launch {
         try {
-            executeServerActionUseCase(UploadCustomTorrentCommand(key, fileName, bytes))
+            val result = executeServerActionUseCase(UploadCustomTorrentCommand(key, fileName, bytes))
             updateViewState { it.copy(isUploadingFile = false) }
+            when (result) {
+                is ActionResult.ExecuteAction -> {
+                    onCloseRequested?.invoke()
+                    val act = result.action
+                    if (act is ActionPlayVideo) {
+                        if (onPlayVideo != null) {
+                            onPlayVideo?.invoke(act)
+                        } else {
+                            onAction?.invoke(act)
+                        }
+                    } else {
+                        onAction?.invoke(act)
+                    }
+                }
+                is ActionResult.Error -> {
+                    updateViewState { it.copy(uploadErrorMessage = result.message) }
+                }
+                is ActionResult.ShowNotification -> {
+                    updateViewState { it.copy(uploadErrorMessage = result.message) }
+                }
+                else -> {
+                    onCloseRequested?.invoke()
+                    onRefreshSources?.invoke()
+                }
+            }
         } catch (e: Exception) {
             updateViewState {
                 it.copy(

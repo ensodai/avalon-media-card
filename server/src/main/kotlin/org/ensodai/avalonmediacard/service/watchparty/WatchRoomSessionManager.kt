@@ -1,6 +1,8 @@
 package org.ensodai.avalonmediacard.service.watchparty
 
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.NonCancellable
@@ -10,7 +12,6 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.debounce
-import kotlinx.coroutines.flow.emitAll
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.onCompletion
 import kotlinx.coroutines.launch
@@ -23,6 +24,7 @@ import org.ensodai.avalonmediacard.contract.model.RoomPlaybackCommand
 import org.ensodai.avalonmediacard.contract.model.SetLobbyStatusRequest
 import org.ensodai.avalonmediacard.contract.model.UserMovieItem
 import org.ensodai.avalonmediacard.contract.model.WatchRoomChatMessageDto
+import org.ensodai.avalonmediacard.contract.model.WatchRoomControlMode
 import org.ensodai.avalonmediacard.contract.model.WatchRoomDto
 import org.ensodai.avalonmediacard.contract.model.WatchRoomEvent
 import org.ensodai.avalonmediacard.contract.model.WatchRoomParticipantRole
@@ -32,6 +34,7 @@ import org.ensodai.avalonmediacard.contract.model.WatchRoomSummaryDto
 import org.ensodai.avalonmediacard.repository.UserEpisodeRepository
 import org.ensodai.avalonmediacard.repository.UserMovieRepository
 import org.ensodai.avalonmediacard.repository.watchparty.WatchRoomRepository
+import org.ensodai.avalonmediacard.service.TorrServerKeepAlivePinger
 import org.koin.core.annotation.Single
 import org.slf4j.LoggerFactory
 import java.util.concurrent.ConcurrentHashMap
@@ -40,21 +43,24 @@ import kotlin.time.Duration.Companion.milliseconds
 import kotlin.uuid.Uuid
 
 /**
- * Синглтон-сервис управления активными сессиями комнат совместного просмотра в памяти сервера.
+ * Синглтон-сервис управления активными сессиями комнат совместного (PARTY)
+ * и одиночного (SOLO) просмотра в памяти сервера.
  */
 @Single
 class WatchRoomSessionManager(
     private val watchRoomRepository: WatchRoomRepository,
     private val userMovieRepository: UserMovieRepository,
     private val userEpisodeRepository: UserEpisodeRepository,
+    private val torrServerPinger: TorrServerKeepAlivePinger? = null,
     private val scope: CoroutineScope = CoroutineScope(SupervisorJob() + Dispatchers.Default)
 ) {
     private val logger = LoggerFactory.getLogger(WatchRoomSessionManager::class.java)
 
     // Активные сессии комнат в оперативной памяти
     private val sessions = ConcurrentHashMap<Uuid, WatchRoomSession>()
+    private val soloCleanupJobs = ConcurrentHashMap<Uuid, Job>()
 
-    // Шина оповещений об изменениях в комнатах для реактивного стриминга
+    // Шина оповещений об изменениях в комнатах для реактивного стриминга дашборда
     private val _roomUpdatesFlow = MutableSharedFlow<Uuid>(
         extraBufferCapacity = 64,
         onBufferOverflow = BufferOverflow.DROP_OLDEST
@@ -63,6 +69,72 @@ class WatchRoomSessionManager(
 
     fun notifyRoomUpdated(roomId: Uuid) {
         _roomUpdatesFlow.tryEmit(roomId)
+    }
+
+    /**
+     * Создает или возвращает существующую сессию одиночного просмотра (SOLO).
+     * Сессия живет строго в оперативной памяти сервера (не персистится в таблицу БД watch_rooms).
+     */
+    fun getOrCreateSoloSession(
+        userId: Uuid,
+        mediaId: String,
+        title: String,
+        sourceType: String?,
+        sourceId: String?,
+        season: Int?,
+        episode: Int?,
+        startPositionSeconds: Long = 0L
+    ): WatchRoomSession {
+        val existing = sessions.values.firstOrNull { it.mode == RoomMode.SOLO && it.hostUserId == userId }
+        if (existing != null) {
+            soloCleanupJobs.remove(existing.roomId)?.cancel()
+            scope.launch {
+                existing.updateSource(
+                    newSourceType = sourceType ?: "",
+                    newSourceId = sourceId ?: "",
+                    newSeason = season,
+                    newEpisode = episode
+                )
+            }
+            return existing
+        }
+
+        val soloRoomId = Uuid.random()
+        val soloSession = WatchRoomSession(
+            roomId = soloRoomId,
+            mediaId = mediaId,
+            title = title,
+            hostUserId = userId,
+            controlMode = WatchRoomControlMode.HOST_ONLY,
+            initialSeason = season,
+            initialEpisode = episode,
+            initialPositionSeconds = startPositionSeconds,
+            initialSourceType = sourceType,
+            initialSourceId = sourceId,
+            scope = scope,
+            mode = RoomMode.SOLO,
+            torrServerPinger = torrServerPinger
+        )
+        sessions[soloRoomId] = soloSession
+        logger.info("[SoloSession] Created solo session {} for user {}, mediaId={}, sourceId={}", soloRoomId, userId, mediaId, sourceId)
+        return soloSession
+    }
+
+    /**
+     * Сброс прогресса всех активных комнат совместного просмотра в БД при выключении сервера.
+     */
+    suspend fun flushAllSessions() {
+        soloCleanupJobs.values.forEach { it.cancel() }
+        soloCleanupJobs.clear()
+        sessions.values.forEach { session ->
+            if (session.mode == RoomMode.PARTY) {
+                try {
+                    session.flushProgress()
+                } catch (e: Exception) {
+                    logger.warn("Failed to flush session {}: {}", session.roomId, e.message)
+                }
+            }
+        }
     }
 
     /**
@@ -101,7 +173,9 @@ class WatchRoomSessionManager(
             onHostMigrated = { newHostId ->
                 watchRoomRepository.transferHost(roomDto.id, newHostId)
             },
-            onRoomStateChanged = { updatedRoomId -> notifyRoomUpdated(updatedRoomId) }
+            onRoomStateChanged = { updatedRoomId -> notifyRoomUpdated(updatedRoomId) },
+            mode = RoomMode.PARTY,
+            torrServerPinger = torrServerPinger
         )
 
         // Загружаем постоянных участников комнаты из БД строго со статусом оффлайн
@@ -119,7 +193,7 @@ class WatchRoomSessionManager(
     }
 
     /**
-     * Регистрация только что созданной комнаты.
+     * Регистрация только что созданной комнаты совместного просмотра.
      */
     suspend fun registerNewRoom(roomDto: WatchRoomDto, hostUser: AuthState.Authorized): WatchRoomSession {
         val session = WatchRoomSession(
@@ -148,7 +222,9 @@ class WatchRoomSessionManager(
             onHostMigrated = { newHostId ->
                 watchRoomRepository.transferHost(roomDto.id, newHostId)
             },
-            onRoomStateChanged = { updatedRoomId -> notifyRoomUpdated(updatedRoomId) }
+            onRoomStateChanged = { updatedRoomId -> notifyRoomUpdated(updatedRoomId) },
+            mode = RoomMode.PARTY,
+            torrServerPinger = torrServerPinger
         )
 
         session.addOrUpdateParticipant(
@@ -261,7 +337,7 @@ class WatchRoomSessionManager(
 
     fun enrichRoomsWithLiveSessionState(rooms: List<WatchRoomSummaryDto>): List<WatchRoomSummaryDto> {
         return rooms.map { room ->
-            val session = sessions[room.id]
+            val session = sessions[room.id]?.takeIf { it.mode == RoomMode.PARTY }
             if (session != null) {
                 val sessionPhase = session.phase
                 val participants = session.getParticipantList()
@@ -284,10 +360,6 @@ class WatchRoomSessionManager(
         }
     }
 
-    /**
-     * Реактивный поток актуального списка комнат пользователя.
-     * При подключении отдает текущий слепок, а затем пушит свежий список при любых событиях комнат.
-     */
     @OptIn(FlowPreview::class)
     fun streamUserRooms(userId: Uuid): Flow<List<WatchRoomSummaryDto>> = flow {
         emit(getUserRooms(userId))
@@ -298,9 +370,6 @@ class WatchRoomSessionManager(
             }
     }
 
-    /**
-     * Реактивный поток актуального списка сохраненных комнат для конкретного тайтла.
-     */
     @OptIn(FlowPreview::class)
     fun streamSavedRoomsForMedia(mediaId: String, currentUserId: Uuid): Flow<List<WatchRoomSummaryDto>> = flow {
         emit(getSavedRoomsForMedia(mediaId, currentUserId))
@@ -311,9 +380,6 @@ class WatchRoomSessionManager(
             }
     }
 
-    /**
-     * Отправка команды управления воспроизведением.
-     */
     suspend fun sendPlaybackCommand(
         roomId: Uuid,
         userId: Uuid,
@@ -323,9 +389,6 @@ class WatchRoomSessionManager(
         return session.handleCommand(userId, command)
     }
 
-    /**
-     * Отправка быстрой реакции.
-     */
     suspend fun sendReaction(
         roomId: Uuid,
         userId: Uuid,
@@ -335,9 +398,6 @@ class WatchRoomSessionManager(
         return session.sendReaction(userId, emoji)
     }
 
-    /**
-     * Отправка текстового сообщения в чат комнаты.
-     */
     suspend fun sendChatMessage(
         roomId: Uuid,
         userId: Uuid,
@@ -348,9 +408,6 @@ class WatchRoomSessionManager(
         return session.sendChatMessage(userId, text, playbackPositionMs)
     }
 
-    /**
-     * Получение истории сообщений для указанного эпизода.
-     */
     fun getRoomChatHistory(
         roomId: Uuid,
         season: Int?,
@@ -360,41 +417,40 @@ class WatchRoomSessionManager(
         return session.getChatHistory(season, episode)
     }
 
-    /**
-     * Подключение к реактивному потоку событий комнаты (TrueSync / Плеер).
-     */
     suspend fun streamEvents(
         roomId: Uuid,
         user: AuthState.Authorized
     ): Flow<WatchRoomEvent>? {
-        val session = getOrCreateSession(roomId) ?: return null
+        val session = sessions[roomId] ?: getOrCreateSession(roomId) ?: return null
 
         val role = if (session.hostUserId == user.userId) WatchRoomParticipantRole.HOST else WatchRoomParticipantRole.MEMBER
         val connectionId = Uuid.random()
         session.handleClientConnected(user.userId, user.username, role, connectionId)
+        if (session.mode == RoomMode.SOLO) {
+            soloCleanupJobs.remove(roomId)?.cancel()
+        }
 
-        return flow {
-            // Мгновенный начальный снимок состояния для синхронизации подключающегося участника
-            emit(session.getCurrentSyncState())
-            emit(WatchRoomEvent.ParticipantsUpdated(session.getParticipantList()))
-            emit(
-                WatchRoomEvent.ChatHistorySnapshot(
-                    season = session.currentSeason,
-                    episode = session.currentEpisode,
-                    messages = session.getChatHistory(session.currentSeason, session.currentEpisode)
-                )
-            )
-            emitAll(session.events)
-        }.onCompletion {
+        return session.createEventsFlow(user, connectionId).onCompletion { cause ->
             withContext(NonCancellable) {
+                logger.info("[streamEvents] Client disconnected: room={}, user={}, cause={}", roomId, user.username, cause?.message ?: "Normal completion")
                 session.handleClientDisconnected(user.userId, connectionId)
+                if (session.mode == RoomMode.SOLO && session.getOnlineCount() == 0) {
+                    soloCleanupJobs[roomId]?.cancel()
+                    soloCleanupJobs[roomId] = scope.launch {
+                        delay(45_000L)
+                        val s = sessions[roomId]
+                        if (s != null && s.mode == RoomMode.SOLO && s.getOnlineCount() == 0) {
+                            logger.info("[SoloSession] 45s grace period expired. Cleaning up solo session {} for mediaId={}", roomId, s.mediaId)
+                            sessions.remove(roomId)
+                            s.close()
+                        }
+                        soloCleanupJobs.remove(roomId)
+                    }
+                }
             }
         }
     }
 
-    /**
-     * Подключение к реактивному потоку предстартового лобби (Snapshot + Upsert Item).
-     */
     suspend fun streamLobbyState(
         roomId: Uuid,
         user: AuthState.Authorized
@@ -411,9 +467,6 @@ class WatchRoomSessionManager(
         }
     }
 
-    /**
-     * Обновление готовности и намерения участника в лобби.
-     */
     suspend fun setLobbyStatus(
         roomId: Uuid,
         userId: Uuid,
@@ -423,9 +476,6 @@ class WatchRoomSessionManager(
         return session.setLobbyStatus(userId, request.intent, request.isReady)
     }
 
-    /**
-     * Запуск совместного просмотра хостом из лобби.
-     */
     suspend fun triggerStartPlayback(
         roomId: Uuid,
         userId: Uuid
@@ -434,9 +484,6 @@ class WatchRoomSessionManager(
         return session.triggerStartPlayback(userId)
     }
 
-    /**
-     * Фоновая синхронизация прогресса просмотра в личные истории всех участников.
-     */
     private fun syncProgressToParticipants(
         roomId: Uuid,
         mediaId: String,
@@ -485,20 +532,6 @@ class WatchRoomSessionManager(
                 }
             } catch (e: Exception) {
                 logger.warn("Failed to sync watch progress to participants for room {}: {}", roomId, e.message)
-            }
-        }
-    }
-
-    /**
-     * Сброс прогресса всех активных сессий в БД (например, при остановке сервера).
-     */
-    suspend fun flushAllSessions() {
-        logger.info("Flushing progress for all active watch room sessions ({} active)...", sessions.size)
-        sessions.values.forEach { session ->
-            try {
-                session.flushProgress()
-            } catch (e: Exception) {
-                logger.warn("Failed to flush session progress for room {}: {}", session.roomId, e.message)
             }
         }
     }

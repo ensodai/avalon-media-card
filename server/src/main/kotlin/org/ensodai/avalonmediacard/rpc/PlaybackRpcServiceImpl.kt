@@ -17,6 +17,7 @@ import org.ensodai.avalonmediacard.plugin.PluginManager
 import org.ensodai.avalonmediacard.repository.UserSettingsRepository
 import org.ensodai.avalonmediacard.security.RpcSessionContext
 import org.ensodai.avalonmediacard.security.StreamProxyService
+import org.ensodai.avalonmediacard.service.watchparty.WatchRoomSessionManager
 import org.koin.core.annotation.Factory
 import org.koin.core.annotation.InjectedParam
 import org.slf4j.LoggerFactory
@@ -29,7 +30,8 @@ class PlaybackRpcServiceImpl(
     private val pluginManager: PluginManager,
     private val mediaCatalog: MediaCatalog,
     private val streamProxyService: StreamProxyService,
-    private val userSettingsRepository: UserSettingsRepository
+    private val userSettingsRepository: UserSettingsRepository,
+    private val watchRoomSessionManager: WatchRoomSessionManager
 ) : PlaybackRpcService {
 
     private val logger = LoggerFactory.getLogger(PlaybackRpcServiceImpl::class.java)
@@ -83,7 +85,6 @@ class PlaybackRpcServiceImpl(
             val targetStream = targetPair.first
                 ?: return PlaybackMetadataResult.NoSourceBound
 
-            val targetCursor = targetPair.second
             val userSettings = if (userId != null) runCatching { userSettingsRepository.getUserSettings(userId) }.getOrNull() else null
             val targetLang = userSettings?.uiLocale?.takeIf { it.isNotBlank() } ?: "ru"
             val mediaDetails = runCatching { mediaCatalog.getMediaDetails(key, language = targetLang) }.getOrNull()
@@ -101,12 +102,12 @@ class PlaybackRpcServiceImpl(
             )
 
             return PlaybackMetadataResult.Ready(
-                currentSeason = targetStream.seasonNumber ?: targetCursor?.season,
-                currentEpisode = targetStream.episodeNumber ?: targetCursor?.episode,
+                currentSeason = targetStream.seasonNumber ?: targetPair.second?.season,
+                currentEpisode = targetStream.episodeNumber ?: targetPair.second?.episode,
                 episodeTitle = targetStream.episodeName ?: targetStream.title,
                 seriesTitle = canonicalSeriesTitle ?: targetStream.title,
                 durationSeconds = fallbackDuration,
-                startPositionSeconds = targetStream.watchedProgressSeconds ?: targetCursor?.progressSeconds,
+                startPositionSeconds = targetStream.watchedProgressSeconds ?: targetPair.second?.progressSeconds,
                 playlist = sanitizedPlaylist,
                 boundSourceTitle = targetStream.sourceName.ifBlank { resolvedProviderId }
             )
@@ -139,7 +140,7 @@ class PlaybackRpcServiceImpl(
                 resolvedSourceId = sourceId
             } else {
                 val activeBinding = userMediaBindings.getActiveBinding(userId, key.id)
-                    ?: return StreamPlaybackResult.NoSourceBound("Источник не выбран")
+                    ?: return StreamPlaybackResult.NoSourceBound("Источник не привязан к медиа")
                 resolvedProviderId = activeBinding.sourceType
                 resolvedSourceId = activeBinding.sourceId
             }
@@ -150,6 +151,10 @@ class PlaybackRpcServiceImpl(
                 userId = userId,
                 providerId = resolvedProviderId
             ) ?: emptyList()
+
+            if (mappedStreams.isEmpty()) {
+                return StreamPlaybackResult.NoSourceBound("Потоки не найдены для выбранного источника")
+            }
 
             val targetPair = resolveTargetStream(mappedStreams, targetSeason, targetEpisode)
                 ?: (mappedStreams.firstOrNull() to null)
@@ -172,6 +177,17 @@ class PlaybackRpcServiceImpl(
                 ?: targetStream.durationSeconds
                 ?: runCatching { mediaCatalog.getMediaDetails(key, language = "ru") }.getOrNull()?.runtime?.takeIf { it > 0 }?.let { (it * 60).toDouble() }
 
+            val soloSession = watchRoomSessionManager.getOrCreateSoloSession(
+                userId = userId,
+                mediaId = key.id,
+                title = targetStream.title,
+                sourceType = resolvedProviderId,
+                sourceId = resolvedSourceId,
+                season = targetSeason,
+                episode = targetEpisode,
+                startPositionSeconds = targetPair.second?.progressSeconds ?: 0L
+            )
+
             return StreamPlaybackResult.Ready(
                 streamUrl = sanitizedTarget.url,
                 streamId = sanitizedTarget.canonicalId,
@@ -179,7 +195,8 @@ class PlaybackRpcServiceImpl(
                 startPositionSeconds = targetPair.second?.progressSeconds,
                 audioTracks = sanitizedTarget.audioTracks,
                 subtitleTracks = sanitizedTarget.subtitleTracks,
-                playlist = sanitizedPlaylist
+                playlist = sanitizedPlaylist,
+                sessionId = soloSession.roomId
             )
         } catch (e: Exception) {
             if (e is CancellationException) throw e

@@ -1,13 +1,7 @@
 package org.ensodai.avalonmediacard.data.rpc
 
-import kotlinx.coroutines.CancellationException
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.emitAll
-import kotlinx.coroutines.flow.flow
-import kotlinx.coroutines.flow.retryWhen
 import kotlinx.rpc.withService
-import org.ensodai.avalonmediacard.contract.logging.AppLogging
 import org.ensodai.avalonmediacard.contract.model.ClockSyncPing
 import org.ensodai.avalonmediacard.contract.model.ClockSyncPong
 import org.ensodai.avalonmediacard.contract.model.CreateRoomRequest
@@ -21,16 +15,12 @@ import org.ensodai.avalonmediacard.contract.model.WatchRoomDto
 import org.ensodai.avalonmediacard.contract.model.WatchRoomEvent
 import org.ensodai.avalonmediacard.contract.model.WatchRoomSummaryDto
 import org.ensodai.avalonmediacard.contract.rpc.WatchPartyRpcService
-import kotlin.math.min
-import kotlin.time.Duration.Companion.milliseconds
 import kotlin.uuid.Uuid
 
 class ReconnectingWatchPartyRpcService(
     private val connectionManager: RpcConnectionManager,
     private val executor: RpcCallExecutor
 ) : WatchPartyRpcService {
-
-    private val logger = AppLogging.logger("ReconnectingWatchPartyRpcService")
 
     private suspend fun getService(): WatchPartyRpcService =
         connectionManager.getActiveClient().withService()
@@ -55,38 +45,20 @@ class ReconnectingWatchPartyRpcService(
             getSavedRoomsForMedia(mediaId)
         }
 
-    override fun streamSavedRoomsForMedia(mediaId: String): Flow<List<WatchRoomSummaryDto>> {
-        return flow {
-            emitAll(getService().streamSavedRoomsForMedia(mediaId))
-        }.retryWhen { cause, attempt ->
-            if (cause is CancellationException && !executor.isNetworkCancellation(cause)) {
-                return@retryWhen false
-            }
-            logger.w(cause) { "Saved Rooms for Media Stream failed (attempt $attempt). Retrying..." }
-            connectionManager.notifyStreamFailure(cause)
-            delay(min(1000L * (attempt + 1), 5000L).milliseconds)
-            true
+    override fun streamSavedRoomsForMedia(mediaId: String): Flow<List<WatchRoomSummaryDto>> =
+        executor.executeFlow("streamSavedRoomsForMedia", getService = { getService() }) {
+            streamSavedRoomsForMedia(mediaId)
         }
-    }
 
     override suspend fun getUserRooms(): List<WatchRoomSummaryDto> =
         executor.execute("getUserRooms", getService = { getService() }) {
             getUserRooms()
         }
 
-    override fun streamUserRooms(): Flow<List<WatchRoomSummaryDto>> {
-        return flow {
-            emitAll(getService().streamUserRooms())
-        }.retryWhen { cause, attempt ->
-            if (cause is CancellationException && !executor.isNetworkCancellation(cause)) {
-                return@retryWhen false
-            }
-            logger.w(cause) { "User Rooms Stream failed (attempt $attempt). Retrying..." }
-            connectionManager.notifyStreamFailure(cause)
-            delay(min(1000L * (attempt + 1), 5000L).milliseconds)
-            true
+    override fun streamUserRooms(): Flow<List<WatchRoomSummaryDto>> =
+        executor.executeFlow("streamUserRooms", getService = { getService() }) {
+            streamUserRooms()
         }
-    }
 
     override suspend fun leaveRoom(roomId: Uuid): Boolean =
         executor.execute("leaveRoom", getService = { getService() }) {
@@ -98,19 +70,10 @@ class ReconnectingWatchPartyRpcService(
             closeRoom(roomId)
         }
 
-    override fun streamLobbyState(roomId: Uuid): Flow<LobbyEvent> {
-        return flow {
-            emitAll(getService().streamLobbyState(roomId))
-        }.retryWhen { cause, attempt ->
-            if (cause is CancellationException && !executor.isNetworkCancellation(cause)) {
-                return@retryWhen false
-            }
-            logger.w(cause) { "Lobby State Stream failed for $roomId (attempt $attempt). Retrying..." }
-            connectionManager.notifyStreamFailure(cause)
-            delay(min(1000L * (attempt + 1), 5000L).milliseconds)
-            true
+    override fun streamLobbyState(roomId: Uuid): Flow<LobbyEvent> =
+        executor.executeFlow("streamLobbyState($roomId)", getService = { getService() }) {
+            streamLobbyState(roomId)
         }
-    }
 
     override suspend fun setLobbyStatus(roomId: Uuid, request: SetLobbyStatusRequest): Boolean =
         executor.execute("setLobbyStatus", getService = { getService() }) {
@@ -122,19 +85,10 @@ class ReconnectingWatchPartyRpcService(
             triggerStartPlayback(roomId)
         }
 
-    override fun streamRoomEvents(roomId: Uuid): Flow<WatchRoomEvent> {
-        return flow {
-            emitAll(getService().streamRoomEvents(roomId))
-        }.retryWhen { cause, attempt ->
-            if (cause is CancellationException && !executor.isNetworkCancellation(cause)) {
-                return@retryWhen false
-            }
-            logger.w(cause) { "Room Events Stream failed for $roomId (attempt $attempt). Retrying..." }
-            connectionManager.notifyStreamFailure(cause)
-            delay(min(1000L * (attempt + 1), 5000L).milliseconds)
-            true
+    override fun streamRoomEvents(roomId: Uuid): Flow<WatchRoomEvent> =
+        executor.executeFlow("streamRoomEvents($roomId)", getService = { getService() }) {
+            streamRoomEvents(roomId)
         }
-    }
 
     override suspend fun sendPlaybackCommand(roomId: Uuid, command: RoomPlaybackCommand): Boolean =
         executor.execute("sendPlaybackCommand", getService = { getService() }) {

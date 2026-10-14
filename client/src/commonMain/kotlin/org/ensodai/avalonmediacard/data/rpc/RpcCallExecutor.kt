@@ -3,8 +3,13 @@ package org.ensodai.avalonmediacard.data.rpc
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.currentCoroutineContext
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.emitAll
+import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.retryWhen
 import kotlinx.coroutines.isActive
 import org.ensodai.avalonmediacard.contract.logging.AppLogging
+import kotlin.math.min
 import kotlin.random.Random
 import kotlin.time.Clock
 import kotlin.time.Duration.Companion.milliseconds
@@ -73,6 +78,31 @@ open class RpcCallExecutor(
         }
 
         throw CancellationException("RpcCallExecutor scope was cancelled during $method")
+    }
+
+    /**
+     * Выполняет потоковый RPC-вызов (Flow) с прозрачным авто-реконнектом при сетевых сбоях.
+     * Не перезапускает поток, если отмена вызвана закрытием скоупа вызывающего кода (UI lifecycle).
+     */
+    fun <S : Any, T> executeFlow(
+        streamName: String,
+        getService: suspend () -> S,
+        block: suspend S.() -> Flow<T>
+    ): Flow<T> {
+        return flow {
+            val service = getService()
+            val upstreamFlow = service.block()
+            emitAll(upstreamFlow)
+        }.retryWhen { cause, attempt ->
+            if (cause is CancellationException && !isNetworkCancellation(cause)) {
+                return@retryWhen false
+            }
+            logger.w(cause) { "⚠️ $streamName stream failed (attempt $attempt). Notifying failure & retrying..." }
+            manager.notifyStreamFailure(cause)
+            val backoffMs = min(1000L * (attempt + 1), 5000L)
+            delay(backoffMs.milliseconds)
+            true
+        }
     }
 
     /**

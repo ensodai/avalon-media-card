@@ -2,33 +2,37 @@ package org.ensodai.avalonmediacard.service.watchparty
 
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
+import kotlinx.coroutines.awaitCancellation
 import kotlinx.coroutines.channels.BufferOverflow
+import kotlinx.coroutines.currentCoroutineContext
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.isActive
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.emitAll
 import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.merge
+import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
+import org.ensodai.avalonmediacard.contract.auth.AuthState
 import org.ensodai.avalonmediacard.contract.model.LobbyEvent
 import org.ensodai.avalonmediacard.contract.model.RoomPlaybackCommand
 import org.ensodai.avalonmediacard.contract.model.WatchParticipantIntent
+import org.ensodai.avalonmediacard.contract.model.WatchRoomChatMessageDto
 import org.ensodai.avalonmediacard.contract.model.WatchRoomControlMode
+import org.ensodai.avalonmediacard.contract.model.WatchRoomEvent
 import org.ensodai.avalonmediacard.contract.model.WatchRoomParticipantDto
 import org.ensodai.avalonmediacard.contract.model.WatchRoomParticipantRole
 import org.ensodai.avalonmediacard.contract.model.WatchRoomPhase
 import org.ensodai.avalonmediacard.contract.model.WatchRoomPlaybackState
 import org.ensodai.avalonmediacard.contract.model.WatchRoomStatus
-import org.ensodai.avalonmediacard.contract.model.WatchRoomEvent
-import org.ensodai.avalonmediacard.contract.model.WatchRoomChatMessageDto
+import org.ensodai.avalonmediacard.service.TorrServerKeepAlivePinger
 import org.slf4j.LoggerFactory
 import java.util.concurrent.ConcurrentHashMap
 import kotlin.time.Clock
 import kotlin.time.Duration.Companion.milliseconds
-import kotlin.time.Duration.Companion.seconds
 import kotlin.time.Instant
 import kotlin.uuid.Uuid
 
@@ -57,31 +61,34 @@ data class ActiveParticipant(
     )
 }
 
-/**
- * Фазы жизненного цикла воспроизведения комнаты совместного просмотра TrueSync.
- * Алиас к контракту WatchRoomPhase для полной совместимости.
- */
 typealias RoomPhase = WatchRoomPhase
 
 /**
- * In-Memory State Machine комнаты совместного просмотра.
- * Реализует канонический алгоритм синхронизации TrueSync на базе 5-состояний FSM.
+ * In-Memory State Machine комнаты / сессии воспроизведения.
+ * Поддерживает два режима:
+ * - PARTY: Совместный просмотр TrueSync (5 состояний FSM, прероллы, чат, реакции).
+ * - SOLO: Одиночный просмотр (легковесный, без спама событий синка, независимый плеер).
+ *
+ * Для обоих режимов обеспечивает автоматический keep-alive для TorrServer,
+ * пока в комнате есть хотя бы один живой онлайн-зритель.
  */
 class WatchRoomSession(
     val roomId: Uuid,
     val mediaId: String,
     val title: String,
     var hostUserId: Uuid,
-    var controlMode: WatchRoomControlMode,
-    initialSeason: Int?,
-    initialEpisode: Int?,
-    initialPositionSeconds: Long,
+    var controlMode: WatchRoomControlMode = WatchRoomControlMode.HOST_ONLY,
+    initialSeason: Int? = null,
+    initialEpisode: Int? = null,
+    initialPositionSeconds: Long = 0L,
     val initialSourceType: String? = null,
     val initialSourceId: String? = null,
     private val scope: CoroutineScope,
-    private val onProgressChanged: suspend (season: Int?, episode: Int?, positionSeconds: Long) -> Unit,
-    private val onHostMigrated: suspend (newHostUserId: Uuid) -> Unit,
-    val onRoomStateChanged: (roomId: Uuid) -> Unit = {}
+    private val onProgressChanged: suspend (season: Int?, episode: Int?, positionSeconds: Long) -> Unit = { _, _, _ -> },
+    private val onHostMigrated: suspend (newHostUserId: Uuid) -> Unit = {},
+    val onRoomStateChanged: (roomId: Uuid) -> Unit = {},
+    val mode: RoomMode = RoomMode.PARTY,
+    private val torrServerPinger: TorrServerKeepAlivePinger? = null
 ) {
     private val logger = LoggerFactory.getLogger(WatchRoomSession::class.java)
     private val mutex = Mutex()
@@ -92,6 +99,7 @@ class WatchRoomSession(
         private set
 
     private fun notifyRoomStateChanged() {
+        if (mode != RoomMode.PARTY) return
         try {
             onRoomStateChanged(roomId)
         } catch (e: Exception) {
@@ -99,7 +107,7 @@ class WatchRoomSession(
         }
     }
 
-    // Текущая фаза воспроизведения FSM
+    // Текущая фаза воспроизведения FSM (для режима PARTY)
     var phase: RoomPhase = RoomPhase.LOBBY
         private set(value) {
             val changed = field != value
@@ -131,12 +139,16 @@ class WatchRoomSession(
     // Участники сессии
     private val participants = ConcurrentHashMap<Uuid, ActiveParticipant>()
 
-    // Буферизующиеся участники и таймеры
+    // Буферизующиеся участники и таймеры (TrueSync)
     private val bufferingParticipants = ConcurrentHashMap.newKeySet<Uuid>()
     private var gracePeriodJob: Job? = null
     private var scheduledStartJob: Job? = null
     private var preparationTimeoutJob: Job? = null
     private var progressPersistenceJob: Job? = null
+
+    // Фоновый keep-alive для торрентов в TorrServer
+    private var torrServerKeepAliveJob: Job? = null
+    private var torrServerGraceJob: Job? = null
 
     // Реактивная шина событий комнаты (TrueSync / Плеер)
     private val _events = MutableSharedFlow<WatchRoomEvent>(
@@ -160,14 +172,93 @@ class WatchRoomSession(
     private val userConnections = ConcurrentHashMap<Uuid, MutableSet<Uuid>>()
 
     init {
-        // Эмитим начальный слепок состояния
-        emitCurrentSyncState(null)
+        if (mode == RoomMode.PARTY) {
+            emitCurrentSyncState(null)
+        }
     }
 
-    /**
-     * Поток событий предстартового лобби.
-     * При подключении всегда гарантированно отдает InitialSnapshot, затем шлет точечные события.
-     */
+    private fun isTorrServerSource(type: String?, id: String?): Boolean {
+        if (type?.contains("torrserver", ignoreCase = true) == true) return true
+        if (id?.startsWith("magnet:", ignoreCase = true) == true) return true
+        if (id != null && id.length == 40 && id.all { it.isDigit() || it.lowercaseChar() in 'a'..'f' }) return true
+        return false
+    }
+
+    private fun checkTorrServerKeepAliveLocked() {
+        val anyOnline = participants.values.any { it.isOnline }
+        val isTorr = isTorrServerSource(sourceType, sourceId)
+        val hash = sourceId
+
+        if (anyOnline && isTorr && !hash.isNullOrBlank() && torrServerPinger != null) {
+            torrServerGraceJob?.cancel()
+            torrServerGraceJob = null
+            if (torrServerKeepAliveJob == null || !torrServerKeepAliveJob!!.isActive) {
+                torrServerKeepAliveJob = scope.launch {
+                    logger.info("[TorrServerKeepAlive] Started for room {} (mode={}), sourceId={}", roomId, mode, hash)
+                    while (isActive) {
+                        try {
+                            torrServerPinger.ping(hash, hostUserId)
+                        } catch (e: Exception) {
+                            logger.debug("[TorrServerKeepAlive] Ping error: {}", e.message)
+                        }
+                        delay(12_000L)
+                    }
+                }
+            }
+        } else if (!anyOnline && isTorr && torrServerKeepAliveJob?.isActive == true) {
+            if (torrServerGraceJob == null || !torrServerGraceJob!!.isActive) {
+                logger.info("[TorrServerKeepAlive] All viewers disconnected. Starting 45s grace period for room {} before stopping ping", roomId)
+                torrServerGraceJob = scope.launch {
+                    delay(45_000L)
+                    mutex.withLock {
+                        val stillOnline = participants.values.any { it.isOnline }
+                        if (!stillOnline && torrServerKeepAliveJob != null) {
+                            logger.info("[TorrServerKeepAlive] Grace period expired, stopping keepalive for room {}", roomId)
+                            torrServerKeepAliveJob?.cancel()
+                            torrServerKeepAliveJob = null
+                        }
+                    }
+                }
+            }
+        } else if (!isTorr) {
+            torrServerGraceJob?.cancel()
+            torrServerGraceJob = null
+            if (torrServerKeepAliveJob != null) {
+                logger.info("[TorrServerKeepAlive] Stopped for room {} (not a TorrServer source)", roomId)
+                torrServerKeepAliveJob?.cancel()
+                torrServerKeepAliveJob = null
+            }
+        }
+    }
+
+    fun createEventsFlow(user: AuthState.Authorized, connectionId: Uuid): Flow<WatchRoomEvent> {
+        if (mode == RoomMode.SOLO) {
+            return flow {
+                logger.debug("[SoloRoom] Event stream opened for user {} in solo room {}", user.username, roomId)
+                emit(WatchRoomEvent.SystemNotice("Solo session active"))
+                val heartbeats = flow {
+                    while (currentCoroutineContext().isActive) {
+                        delay(20_000L)
+                        emit(WatchRoomEvent.SystemNotice("keepalive"))
+                    }
+                }
+                emitAll(merge(events, heartbeats))
+            }
+        }
+        return flow {
+            emit(getCurrentSyncState())
+            emit(WatchRoomEvent.ParticipantsUpdated(getParticipantList()))
+            emit(
+                WatchRoomEvent.ChatHistorySnapshot(
+                    season = currentSeason,
+                    episode = currentEpisode,
+                    messages = getChatHistory(currentSeason, currentEpisode)
+                )
+            )
+            emitAll(events)
+        }
+    }
+
     fun subscribeLobby(): Flow<LobbyEvent> = flow {
         emit(
             LobbyEvent.InitialSnapshot(
@@ -192,9 +283,6 @@ class WatchRoomSession(
         emitAll(lobbyEvents)
     }
 
-    /**
-     * Обновление медиа-источника комнаты на лету хостом.
-     */
     suspend fun updateSource(
         newSourceType: String,
         newSourceId: String,
@@ -206,22 +294,22 @@ class WatchRoomSession(
         sourceId = newSourceId
         if (newSeason != null) currentSeason = newSeason
         if (newEpisode != null) currentEpisode = newEpisode
-        _lobbyEvents.emit(
-            LobbyEvent.SourceUpdated(
-                sourceType = newSourceType,
-                sourceId = newSourceId,
-                sourceName = newSourceName,
-                season = newSeason ?: currentSeason,
-                episode = newEpisode ?: currentEpisode
+        checkTorrServerKeepAliveLocked()
+
+        if (mode == RoomMode.PARTY) {
+            _lobbyEvents.emit(
+                LobbyEvent.SourceUpdated(
+                    sourceType = newSourceType,
+                    sourceId = newSourceId,
+                    sourceName = newSourceName,
+                    season = newSeason ?: currentSeason,
+                    episode = newEpisode ?: currentEpisode
+                )
             )
-        )
-        notifyRoomStateChanged()
+            notifyRoomStateChanged()
+        }
     }
 
-    /**
-     * Обработка подключения клиента к лобби или плееру.
-     * Регистрирует connectionId и снимает таймер Grace-Period при переподключении.
-     */
     suspend fun handleClientConnected(
         userId: Uuid,
         username: String,
@@ -235,13 +323,17 @@ class WatchRoomSession(
         val p = if (existing != null) {
             existing.isOnline = true
             existing.lastPingAt = Clock.System.now().toEpochMilliseconds()
-            if (phase == RoomPhase.PREPARING) {
+            if (mode == RoomMode.PARTY && phase == RoomPhase.PREPARING) {
                 existing.playbackState = WatchRoomPlaybackState.BUFFERING
                 bufferingParticipants.add(userId)
             }
             existing
         } else {
-            val initialPlaybackState = if (phase == RoomPhase.PREPARING) WatchRoomPlaybackState.BUFFERING else WatchRoomPlaybackState.READY
+            val initialPlaybackState = if (mode == RoomMode.PARTY && phase == RoomPhase.PREPARING) {
+                WatchRoomPlaybackState.BUFFERING
+            } else {
+                WatchRoomPlaybackState.READY
+            }
             val newP = ActiveParticipant(
                 userId = userId,
                 username = username,
@@ -249,26 +341,26 @@ class WatchRoomSession(
                 isOnline = true,
                 playbackState = initialPlaybackState,
                 lastPingAt = Clock.System.now().toEpochMilliseconds(),
-                isDesynced = (role != WatchRoomParticipantRole.HOST && (phase == RoomPhase.PLAYING_IN_SYNC || phase == RoomPhase.STARTING_SCHEDULED))
+                isDesynced = (mode == RoomMode.PARTY && role != WatchRoomParticipantRole.HOST && (phase == RoomPhase.PLAYING_IN_SYNC || phase == RoomPhase.STARTING_SCHEDULED))
             )
-            if (phase == RoomPhase.PREPARING) {
+            if (mode == RoomMode.PARTY && phase == RoomPhase.PREPARING) {
                 bufferingParticipants.add(userId)
             }
             participants[userId] = newP
             newP
         }
 
+        checkTorrServerKeepAliveLocked()
+
         val dto = p.toDto()
-        _lobbyEvents.emit(LobbyEvent.ParticipantUpdated(dto))
-        _events.emit(WatchRoomEvent.ParticipantsUpdated(getParticipantListLocked()))
-        notifyRoomStateChanged()
+        if (mode == RoomMode.PARTY) {
+            _lobbyEvents.emit(LobbyEvent.ParticipantUpdated(dto))
+            _events.emit(WatchRoomEvent.ParticipantsUpdated(getParticipantListLocked()))
+            notifyRoomStateChanged()
+        }
         dto
     }
 
-    /**
-     * Обработка потери сетевого соединения.
-     * Если у пользователя больше нет других активных соединений, помечает оффлайн и запускает Grace-Period.
-     */
     suspend fun handleClientDisconnected(
         userId: Uuid,
         connectionId: Uuid? = null
@@ -293,26 +385,27 @@ class WatchRoomSession(
         if (phase != RoomPhase.PREPARING) {
             bufferingParticipants.remove(userId)
         }
-        if (phase == RoomPhase.PREPARING) {
-            checkMediaPreparationResolvedLocked()
-        } else {
-            checkBufferingResolvedLocked()
+        if (mode == RoomMode.PARTY) {
+            if (phase == RoomPhase.PREPARING) {
+                checkMediaPreparationResolvedLocked()
+            } else {
+                checkBufferingResolvedLocked()
+            }
+
+            val dto = p.toDto()
+            _lobbyEvents.emit(LobbyEvent.ParticipantUpdated(dto))
+            _events.emit(WatchRoomEvent.ParticipantsUpdated(getParticipantListLocked()))
+            notifyRoomStateChanged()
         }
 
-        val dto = p.toDto()
-        _lobbyEvents.emit(LobbyEvent.ParticipantUpdated(dto))
-        _events.emit(WatchRoomEvent.ParticipantsUpdated(getParticipantListLocked()))
-        notifyRoomStateChanged()
+        checkTorrServerKeepAliveLocked()
 
         val anyOnline = participants.values.any { it.isOnline }
-        if (!anyOnline) {
+        if (!anyOnline && mode == RoomMode.PARTY) {
             autoPauseAndConserveLocked()
         }
     }
 
-    /**
-     * Автоматическая консервация состояния и сброс в LOBBY при отсутствии активных участников онлайн.
-     */
     private fun autoPauseAndConserveLocked() {
         if (phase != RoomPhase.LOBBY) {
             val currentPosMs = getCurrentPositionMs()
@@ -337,15 +430,12 @@ class WatchRoomSession(
         }
     }
 
-
-    /**
-     * Обновление готовности и намерения участника в лобби.
-     */
     suspend fun setLobbyStatus(
         userId: Uuid,
         intent: WatchParticipantIntent,
         isReady: Boolean
     ): Boolean = mutex.withLock {
+        if (mode != RoomMode.PARTY) return@withLock true
         val p = participants[userId] ?: return@withLock false
         p.intent = intent
         p.isReady = isReady
@@ -356,12 +446,8 @@ class WatchRoomSession(
         true
     }
 
-    /**
-     * Запуск воспроизведения хостом из лобби.
-     * Переводит комнату в фазу PREPARING (барьер готовности), чтобы все участники
-     * успели открыть плеер, получить URL и демультиплексировать видеопоток перед синхронным стартом.
-     */
     suspend fun triggerStartPlayback(userId: Uuid): Boolean = mutex.withLock {
+        if (mode != RoomMode.PARTY) return@withLock true
         val p = participants[userId] ?: return@withLock false
         if (p.role != WatchRoomParticipantRole.HOST && controlMode == WatchRoomControlMode.HOST_ONLY) {
             logger.warn("Non-host {} tried to trigger start playback in room {}", userId, roomId)
@@ -382,7 +468,6 @@ class WatchRoomSession(
         anchorServerTime = Clock.System.now()
         bufferingParticipants.clear()
 
-        // Все активные онлайн-участники ожидают подготовки медиа
         participants.values.forEach { participant ->
             if (participant.isOnline) {
                 participant.playbackState = WatchRoomPlaybackState.BUFFERING
@@ -410,11 +495,6 @@ class WatchRoomSession(
         true
     }
 
-    /**
-     * Возвращает текущее интерполированное время воспроизведения в миллисекундах.
-     * Время идет только в фазе PLAYING_IN_SYNC. В фазе STARTING_SCHEDULED (преролл)
-     * время зафиксировано на anchorPositionMs.
-     */
     fun getCurrentPositionMs(): Long {
         if (phase != RoomPhase.PLAYING_IN_SYNC) return anchorPositionMs
         val now = Clock.System.now()
@@ -430,9 +510,6 @@ class WatchRoomSession(
 
     fun getCurrentPositionSeconds(): Long = getCurrentPositionMs() / 1000L
 
-    /**
-     * Добавление или обновление участника при подключении.
-     */
     suspend fun addOrUpdateParticipant(
         userId: Uuid,
         username: String,
@@ -458,24 +535,22 @@ class WatchRoomSession(
             )
         }
 
+        checkTorrServerKeepAliveLocked()
+
         val dtoList = getParticipantListLocked()
-        val p = participants[userId]
-        if (p != null) {
-            _lobbyEvents.emit(LobbyEvent.ParticipantUpdated(p.toDto()))
+        if (mode == RoomMode.PARTY) {
+            val p = participants[userId]
+            if (p != null) {
+                _lobbyEvents.emit(LobbyEvent.ParticipantUpdated(p.toDto()))
+            }
+            _events.emit(WatchRoomEvent.ParticipantsUpdated(dtoList))
+            notifyRoomStateChanged()
         }
-        _events.emit(WatchRoomEvent.ParticipantsUpdated(dtoList))
-        notifyRoomStateChanged()
         dtoList
     }
 
-    /**
-     * Отметка об отключении участника.
-     */
     suspend fun markParticipantOffline(userId: Uuid) = handleClientDisconnected(userId)
 
-    /**
-     * Полное удаление участника из комнаты (при выходе по кнопке).
-     */
     suspend fun removeParticipant(userId: Uuid) = mutex.withLock {
         disconnectJobs.remove(userId)?.cancel()
         userConnections.remove(userId)
@@ -487,27 +562,32 @@ class WatchRoomSession(
             checkBufferingResolvedLocked()
         }
 
-        _lobbyEvents.emit(LobbyEvent.ParticipantRemoved(userId))
-        _events.emit(WatchRoomEvent.ParticipantsUpdated(getParticipantListLocked()))
-        notifyRoomStateChanged()
+        checkTorrServerKeepAliveLocked()
 
-        if (userId == hostUserId) {
-            checkHostMigrationLocked()
-        }
+        if (mode == RoomMode.PARTY) {
+            _lobbyEvents.emit(LobbyEvent.ParticipantRemoved(userId))
+            _events.emit(WatchRoomEvent.ParticipantsUpdated(getParticipantListLocked()))
+            notifyRoomStateChanged()
 
-        val anyOnline = participants.values.any { it.isOnline }
-        if (!anyOnline) {
-            autoPauseAndConserveLocked()
+            if (userId == hostUserId) {
+                checkHostMigrationLocked()
+            }
+
+            val anyOnline = participants.values.any { it.isOnline }
+            if (!anyOnline) {
+                autoPauseAndConserveLocked()
+            }
         }
     }
 
-    /**
-     * Обработка команд управления воспроизведением.
-     */
     suspend fun handleCommand(userId: Uuid, command: RoomPlaybackCommand): Boolean = mutex.withLock {
+        if (mode == RoomMode.SOLO) {
+            logger.debug("[Solo] Handled command {} from user {} in room {}", command, userId, roomId)
+            return@withLock true
+        }
+
         val participant = participants[userId] ?: return@withLock false
 
-        // Проверка прав: в режиме HOST_ONLY управлять могут только хост или команда буферизации
         if (controlMode == WatchRoomControlMode.HOST_ONLY &&
             participant.role != WatchRoomParticipantRole.HOST &&
             command !is RoomPlaybackCommand.ReportBuffer &&
@@ -701,10 +781,6 @@ class WatchRoomSession(
         }
     }
 
-    /**
-     * Планирование детерминированного перехода в PLAYING_IN_SYNC через фазу STARTING_SCHEDULED (Preroll).
-     * Во время Preroll виртуальные часы стоят на месте, а отчеты о буферизации не вызывают паузу.
-     */
     private fun schedulePrerollTransitionLocked(
         targetStart: Instant,
         targetPosMs: Long,
@@ -761,9 +837,6 @@ class WatchRoomSession(
         }
     }
 
-    /**
-     * Обработка буферизации по алгоритму TrueSync на основе 5-состояний FSM.
-     */
     private suspend fun handleBufferReportLocked(
         participant: ActiveParticipant,
         isBuffering: Boolean
@@ -774,16 +847,12 @@ class WatchRoomSession(
 
             when (phase) {
                 RoomPhase.PREPARING -> {
-                    // Во время подготовки медиа буферизация ожидаема
                     logger.debug("[TrueSync:Server] Room {}: Participant {} buffering during PREPARING.", roomId, participant.userId)
                 }
                 RoomPhase.STARTING_SCHEDULED -> {
-                    // Во время преролла буферизация нормальна: идет загрузка чанков в MSE.
-                    // Паузу НЕ вызываем, участник учтен в bufferingParticipants.
                     logger.debug("[TrueSync:Server] Room {}: Participant {} buffering during STARTING_SCHEDULED (preroll). Recorded.", roomId, participant.userId)
                 }
                 RoomPhase.PLAYING_IN_SYNC -> {
-                    // Аварийный останов посреди активного просмотра
                     if (!participant.isDesynced || participant.role == WatchRoomParticipantRole.HOST) {
                         val currentPos = getCurrentPositionMs()
                         val now = Clock.System.now()
@@ -808,7 +877,6 @@ class WatchRoomSession(
                 RoomPhase.PARTIAL_BUFFERING,
                 RoomPhase.FORCE_PAUSED,
                 RoomPhase.LOBBY -> {
-                    // Уже на паузе или в лобби
                 }
             }
         } else {
@@ -940,10 +1008,6 @@ class WatchRoomSession(
         }
     }
 
-    /**
-     * Срабатывание 8-секундного таймера буферизации:
-     * Отставшие зрители помечаются как desynced, а комната возобновляет просмотр (+500мс lead time).
-     */
     private suspend fun onGracePeriodExpired() = mutex.withLock {
         if (phase != RoomPhase.PARTIAL_BUFFERING) return@withLock
 
@@ -978,10 +1042,8 @@ class WatchRoomSession(
         _events.emit(WatchRoomEvent.ParticipantsUpdated(getParticipantListLocked()))
     }
 
-    /**
-     * Отправка быстрой реакции (Danmaku).
-     */
     suspend fun sendReaction(userId: Uuid, emoji: String): Boolean {
+        if (mode != RoomMode.PARTY) return true
         val participant = participants[userId] ?: return false
         _events.emit(
             WatchRoomEvent.ReactionTriggered(
@@ -993,14 +1055,12 @@ class WatchRoomSession(
         return true
     }
 
-    /**
-     * Отправка текстового сообщения в чат совместного просмотра.
-     */
     suspend fun sendChatMessage(
         userId: Uuid,
         text: String,
         playbackPositionMs: Long
     ): Boolean = mutex.withLock {
+        if (mode != RoomMode.PARTY) return false
         val participant = participants[userId] ?: return false
         val cleanText = text.trim()
         if (cleanText.isBlank() || cleanText.length > 1000) return false
@@ -1019,21 +1079,14 @@ class WatchRoomSession(
         return true
     }
 
-    /**
-     * Получение истории сообщений для указанного эпизода.
-     */
     fun getChatHistory(season: Int?, episode: Int?): List<WatchRoomChatMessageDto> {
         return chatStore.getHistory(season, episode)
     }
 
-    /**
-     * Проверка и передача прав хоста (Seniority-based) при отключении текущего.
-     */
     private suspend fun checkHostMigrationLocked() {
         val currentHost = participants[hostUserId]
         if (currentHost != null && currentHost.isOnline) return
 
-        // Ищем первого доступного онлайн-участника
         val nextHost = participants.values.firstOrNull { it.isOnline && it.userId != hostUserId }
         if (nextHost != null) {
             hostUserId = nextHost.userId
@@ -1048,9 +1101,6 @@ class WatchRoomSession(
         }
     }
 
-    /**
-     * Возвращает список участников комнаты в виде DTO.
-     */
     fun getParticipantList(): List<WatchRoomParticipantDto> {
         return participants.values.map {
             WatchRoomParticipantDto(
@@ -1107,6 +1157,7 @@ class WatchRoomSession(
     }
 
     private fun startPeriodicProgressPersistenceLocked() {
+        if (mode != RoomMode.PARTY) return
         progressPersistenceJob?.cancel()
         progressPersistenceJob = scope.launch {
             var syncTicks = 0
@@ -1117,7 +1168,6 @@ class WatchRoomSession(
                         val posSeconds = getCurrentPositionSeconds()
                         onProgressChanged(currentSeason, currentEpisode, posSeconds)
                         syncTicks++
-                        // Каждые 60 секунд (12 тиков по 5 сек) делаем мягкую синхронизацию комнаты для дашборда
                         if (syncTicks >= 12) {
                             syncTicks = 0
                             notifyRoomStateChanged()
@@ -1128,18 +1178,16 @@ class WatchRoomSession(
         }
     }
 
-    /**
-     * Принудительный сброс текущего прогресса комнаты в БД.
-     */
     suspend fun flushProgress() = mutex.withLock {
         val currentPos = getCurrentPositionSeconds()
         onProgressChanged(currentSeason, currentEpisode, currentPos)
     }
 
-    /**
-     * Закрытие сессии: отменяет фоновые таймеры и уведомляет участников.
-     */
     suspend fun close() = mutex.withLock {
+        torrServerGraceJob?.cancel()
+        torrServerGraceJob = null
+        torrServerKeepAliveJob?.cancel()
+        torrServerKeepAliveJob = null
         progressPersistenceJob?.cancel()
         progressPersistenceJob = null
         scheduledStartJob?.cancel()
@@ -1152,8 +1200,10 @@ class WatchRoomSession(
         disconnectJobs.clear()
         userConnections.clear()
         chatStore.clearAll()
-        _events.emit(WatchRoomEvent.SystemNotice("Комната была закрыта хостом."))
-        _lobbyEvents.emit(LobbyEvent.SystemNotice("Комната была закрыта хостом."))
+        if (mode == RoomMode.PARTY) {
+            _events.emit(WatchRoomEvent.SystemNotice("Комната была закрыта хостом."))
+            _lobbyEvents.emit(LobbyEvent.SystemNotice("Комната была закрыта хостом."))
+        }
     }
 
     companion object {

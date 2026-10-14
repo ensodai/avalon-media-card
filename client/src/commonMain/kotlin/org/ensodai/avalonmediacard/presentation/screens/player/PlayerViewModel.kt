@@ -77,6 +77,9 @@ class PlayerViewModel(
     var seekDebounceJob: Job? = null
     private var syncJob: Job? = null
     private var syncEventsJob: Job? = null
+    private var soloSessionJob: Job? = null
+    private var currentSoloSessionId: Uuid? = null
+    private var currentLoadedKey: String? = null
     private var metadataJob: Job? = null
     private var playbackJob: Job? = null
     private var controllerBufferingJob: Job? = null
@@ -296,6 +299,11 @@ class PlayerViewModel(
     }
 
     fun updateStream(newParams: PlayerInitParams) {
+        val streamKey = "${newParams.mediaKey}_${newParams.targetSeason}_${newParams.targetEpisode}_${newParams.streamId}_${newParams.sourceType}_${newParams.sourceId}_${newParams.streamUrl}"
+        if (currentLoadedKey == streamKey) {
+            return
+        }
+        currentLoadedKey = streamKey
         if (newParams.mode == PlayerMode.TEST_PREVIEW && !newParams.streamUrl.isNullOrBlank()) {
             val fullUrl = resolveAbsoluteUrl(newParams.streamUrl)
             updateViewState {
@@ -319,11 +327,12 @@ class PlayerViewModel(
     }
 
     fun loadPlaybackSession(season: Int? = null, episode: Int? = null) {
-        metadataJob?.cancel()
-        playbackJob?.cancel()
-
         val targetSeason = season ?: params.targetSeason
         val targetEpisode = episode ?: params.targetEpisode
+        currentLoadedKey = "${params.mediaKey}_${targetSeason}_${targetEpisode}_${params.streamId}_${params.sourceType}_${params.sourceId}_${params.streamUrl}"
+
+        metadataJob?.cancel()
+        playbackJob?.cancel()
 
         updateViewState {
             it.copy(
@@ -426,6 +435,11 @@ class PlayerViewModel(
                     val resolvedAudio = result.audioTracks.map { it.copy(url = it.url?.let(::resolveAbsoluteUrl)) }
                     val resolvedSubs = result.subtitleTracks.map { it.copy(url = it.url?.let(::resolveAbsoluteUrl)) }
 
+                    val sid = result.sessionId
+                    if (viewState.value.mode == PlayerMode.STANDARD && sid != null) {
+                        startSoloPresence(sid)
+                    }
+
                     updateViewState {
                         it.copy(
                             title = resolvedTitle.ifBlank { it.title },
@@ -481,11 +495,31 @@ class PlayerViewModel(
         }
     }
 
+    private fun startSoloPresence(sessionId: Uuid) {
+        if (currentSoloSessionId == sessionId && soloSessionJob?.isActive == true) {
+            return
+        }
+        currentSoloSessionId = sessionId
+        soloSessionJob?.cancel()
+        soloSessionJob = viewModelScope.launch {
+            try {
+                rpcService.streamRoomEvents(sessionId).collect {
+                    // Solo presence stream: держит сокет открытым, пока открыт плеер
+                }
+            } catch (e: kotlinx.coroutines.CancellationException) {
+                throw e
+            } catch (_: Exception) {}
+        }
+    }
+
     fun stopPlaybackAndDispose() {
         syncJob?.cancel()
         syncJob = null
         syncEventsJob?.cancel()
         syncEventsJob = null
+        currentSoloSessionId = null
+        soloSessionJob?.cancel()
+        soloSessionJob = null
         syncController?.stop()
         syncController = null
         detachController()

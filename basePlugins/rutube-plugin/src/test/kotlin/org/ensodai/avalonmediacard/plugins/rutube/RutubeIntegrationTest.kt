@@ -628,4 +628,114 @@ class RutubeIntegrationTest {
 
         client.close()
     }
+
+    @Ignore
+    @Test
+    fun testDiagnosticVisitors() = runBlocking {
+        val client = HttpClient(CIO) {
+            install(HttpTimeout) {
+                requestTimeoutMillis = 30_000
+                connectTimeoutMillis = 15_000
+                socketTimeoutMillis = 30_000
+            }
+        }
+        val apiClient = RutubeApiClient(client, testLogger)
+        val repo = RutubeRepositoryImpl(apiClient)
+
+        val mainTitle = "Визитеры"
+        val originalTitle = "V"
+
+        println("=======================================================================")
+        println("🔍 ДИАГНОСТИКА ПОИСКА RUTUBE: '$mainTitle' / '$originalTitle'")
+        println("=======================================================================")
+
+        val authorVideos = apiClient.getAuthorVideos(authorId = "47652806", limit = 100, maxPages = 1)
+        println("📡 Person API для автора 'Сериал Vизитеры / V' (ID: 47652806) вернул ${authorVideos.size} видео:")
+        val matcher = org.ensodai.avalonmediacard.contract.parsers.EpisodeMatcher()
+        val s1ChannelEps = mutableSetOf<Int>()
+        val s2ChannelEps = mutableSetOf<Int>()
+        for (v in authorVideos) {
+            val m = matcher.parse(mainTitle, v.title)
+            val s = if (m is org.ensodai.avalonmediacard.contract.parsers.MappingResult.Success) m.seasons.firstOrNull() ?: 1 else 1
+            val e = if (m is org.ensodai.avalonmediacard.contract.parsers.MappingResult.Success) m.episodes.firstOrNull() else null
+            if (e != null) {
+                if (s == 1) s1ChannelEps.add(e)
+                if (s == 2) s2ChannelEps.add(e)
+            }
+            println("   -> '${v.title}' (S${s}E${e})")
+        }
+        println("Результат парсинга Person API:")
+        println("  Сезон 1: ${s1ChannelEps.sorted()} (всего ${s1ChannelEps.size} из 12)")
+        println("  Сезон 2: ${s2ChannelEps.sorted()} (всего ${s2ChannelEps.size} из 10)")
+
+        val mockCatalog = object : org.ensodai.avalonmediacard.contract.model.MediaCatalog {
+            override suspend fun getTrending(page: Int, language: String) = emptyList<org.ensodai.avalonmediacard.contract.model.TmdbMovieDto>()
+            override suspend fun getTopRated(page: Int, language: String) = emptyList<org.ensodai.avalonmediacard.contract.model.TmdbMovieDto>()
+            override suspend fun getUpcoming(page: Int, language: String) = emptyList<org.ensodai.avalonmediacard.contract.model.TmdbMovieDto>()
+            override suspend fun getTrendingShows(page: Int, language: String) = emptyList<org.ensodai.avalonmediacard.contract.model.TmdbMovieDto>()
+            override suspend fun getPopularShows(page: Int, language: String) = emptyList<org.ensodai.avalonmediacard.contract.model.TmdbMovieDto>()
+            override suspend fun getTopRatedShows(page: Int, language: String) = emptyList<org.ensodai.avalonmediacard.contract.model.TmdbMovieDto>()
+            override suspend fun getRecommendations(key: org.ensodai.avalonmediacard.contract.model.MediaKey, page: Int, language: String) = emptyList<org.ensodai.avalonmediacard.contract.model.TmdbMovieDto>()
+            override suspend fun getSimilar(key: org.ensodai.avalonmediacard.contract.model.MediaKey, page: Int, language: String) = emptyList<org.ensodai.avalonmediacard.contract.model.TmdbMovieDto>()
+            override suspend fun searchMedia(query: String, page: Int, language: String) = emptyList<org.ensodai.avalonmediacard.contract.model.TmdbMultiSearchDto>()
+            override suspend fun getMediaDetails(key: org.ensodai.avalonmediacard.contract.model.MediaKey, requireSeasons: Boolean, requireVideos: Boolean, language: String): org.ensodai.avalonmediacard.contract.model.MediaMetadata {
+                return org.ensodai.avalonmediacard.contract.model.MediaMetadata(
+                    title = mainTitle,
+                    originalTitle = originalTitle,
+                    numberOfSeasons = 2,
+                    runtime = 45,
+                    seasons = listOf(
+                        org.ensodai.avalonmediacard.contract.model.SeasonMetadata(id = "s1", seasonNumber = 1, name = "Season 1", episodeCount = 12),
+                        org.ensodai.avalonmediacard.contract.model.SeasonMetadata(id = "s2", seasonNumber = 2, name = "Season 2", episodeCount = 10)
+                    )
+                )
+            }
+            override suspend fun getMediaDetailsBatch(keys: List<org.ensodai.avalonmediacard.contract.model.MediaKey>, requireSeasons: Boolean, requireVideos: Boolean, language: String) = emptyMap<org.ensodai.avalonmediacard.contract.model.MediaKey, org.ensodai.avalonmediacard.contract.model.MediaMetadata>()
+            override suspend fun getPersonDetails(key: org.ensodai.avalonmediacard.contract.model.MediaKey, language: String) = error("Not needed")
+            override suspend fun getSeasonDetails(key: org.ensodai.avalonmediacard.contract.model.MediaKey, seasonNumber: Int, language: String) = emptyList<org.ensodai.avalonmediacard.contract.slot.EpisodeItem>()
+            override suspend fun discoverMedia(genres: List<Int>, keywords: List<Int>, page: Int, isTv: Boolean, language: String) = emptyList<org.ensodai.avalonmediacard.contract.model.TmdbMovieDto>()
+            override suspend fun discoverMediaByParams(params: Map<String, String>, targetType: org.ensodai.avalonmediacard.contract.model.EntityType, page: Int, language: String) = emptyList<org.ensodai.avalonmediacard.contract.model.TmdbMovieDto>()
+        }
+
+        val mockContext = createTestContext(mockCatalog)
+        val useCase = org.ensodai.avalonmediacard.plugins.rutube.domain.usecase.SearchRutubeStreamsUseCase(mockContext, repo)
+        val streamsS1 = useCase.execute(
+            key = org.ensodai.avalonmediacard.contract.model.MediaKey(
+                provider = org.ensodai.avalonmediacard.contract.model.MediaProvider.Tmdb,
+                type = org.ensodai.avalonmediacard.contract.model.EntityType.TV,
+                id = "4364"
+            ),
+            season = 1,
+            episode = null,
+            userId = null
+        )
+        println("\n✨ ПОТОКИ ДЛЯ СЕЗОНА 1 (season=1):")
+        for (st in streamsS1) {
+            println("  -> ID='${st.id}' Title='${st.title}' | Subtitle='${st.episodeName}' | Season=${st.seasonNumber} Count=${st.episodesCount}/${st.episodesTotal}")
+        }
+
+        val streamsS2 = useCase.execute(
+            key = org.ensodai.avalonmediacard.contract.model.MediaKey(
+                provider = org.ensodai.avalonmediacard.contract.model.MediaProvider.Tmdb,
+                type = org.ensodai.avalonmediacard.contract.model.EntityType.TV,
+                id = "4364"
+            ),
+            season = 2,
+            episode = null,
+            userId = null
+        )
+        println("\n✨ ПОТОКИ ДЛЯ СЕЗОНА 2 (season=2):")
+        for (st in streamsS2) {
+            println("  -> ID='${st.id}' Title='${st.title}' | Subtitle='${st.episodeName}' | Season=${st.seasonNumber} Count=${st.episodesCount}/${st.episodesTotal}")
+        }
+
+        val mappings = mockContext.sourceMappings.getMappingsByMediaId("4364")
+        val bySource = mappings.groupBy { it.sourceId }
+        for ((srcId, mapList) in bySource) {
+            println("Source: $srcId -> seasons: ${mapList.flatMap { it.seasons ?: emptyList() }.distinct()}, episodes: ${mapList.flatMap { it.episodes ?: emptyList() }.sorted()}")
+        }
+
+        client.close()
+    }
 }
+

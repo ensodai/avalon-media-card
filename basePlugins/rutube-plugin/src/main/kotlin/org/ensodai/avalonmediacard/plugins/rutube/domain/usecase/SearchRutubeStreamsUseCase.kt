@@ -83,6 +83,15 @@ class SearchRutubeStreamsUseCase(
         return cleaned.take(20)
     }
 
+    private fun normalizeTitleForSearch(text: String): String {
+        return text.lowercase()
+            .replace('ё', 'е')
+            .replace(Regex("""\bv(?=[а-яё])"""), "в")
+            .replace(Regex("""[^\p{L}\p{Nd}\s]"""), " ")
+            .replace(Regex("""\s+"""), " ")
+            .trim()
+    }
+
     /**
      * Executes stream discovery for movies or TV shows.
      *
@@ -295,10 +304,33 @@ class SearchRutubeStreamsUseCase(
         // =========================================================================
         val broadQueries = mutableListOf<String>()
         if (mainTitle.isNotBlank()) {
+            if (targetSeasonHint != null && targetSeasonHint > 0) {
+                broadQueries.add("$mainTitle $targetSeasonHint сезон")
+            }
             broadQueries.add("$mainTitle сериал")
+
+            // Поддержка гибридных названий латиница/кириллица (например, Vизитеры / Vизитёры)
+            if (originalTitle.equals("V", ignoreCase = true) && mainTitle.startsWith("В", ignoreCase = true)) {
+                val hybridTitle = "V" + mainTitle.drop(1)
+                if (targetSeasonHint != null && targetSeasonHint > 0) {
+                    broadQueries.add("$hybridTitle $targetSeasonHint сезон")
+                }
+                broadQueries.add("$hybridTitle сериал")
+            }
         }
-        if (!originalTitle.isNullOrBlank() && originalTitle != mainTitle) {
-            broadQueries.add(originalTitle)
+        if (!originalTitle.isNullOrBlank() && !originalTitle.equals(mainTitle, ignoreCase = true)) {
+            // Rutube API выдает 400 Bad Request на запросы <= 2 символов без контекста
+            if (originalTitle.length <= 2) {
+                broadQueries.add("$originalTitle сериал")
+                if (targetSeasonHint != null && targetSeasonHint > 0) {
+                    broadQueries.add("$originalTitle $targetSeasonHint season")
+                }
+            } else {
+                if (targetSeasonHint != null && targetSeasonHint > 0) {
+                    broadQueries.add("$originalTitle Season $targetSeasonHint")
+                }
+                broadQueries.add(originalTitle)
+            }
         }
 
         logger.info("Rutube: [Phase 1: Broad Search] Starting express search for '$mainTitle' (queries=$broadQueries, limit=100)")
@@ -325,22 +357,22 @@ class SearchRutubeStreamsUseCase(
 
         logger.info("Rutube: [Phase 1: Broad Search] Discovered ${allDiscoveredVideos.size} unique candidate videos")
 
-        // Keyword validation helper
-        val mainClean = mainTitle.lowercase().trim()
-        val origClean = (originalTitle ?: "").lowercase().trim()
-        val mainWords = mainClean.split(" ")
-            .map { it.trim('.', ',', ':', ';', '!', '?', '-', '/') }
+        // Keyword validation helper с нормализацией омоглифов и ё->е
+        val mainNorm = normalizeTitleForSearch(mainTitle)
+        val origNorm = normalizeTitleForSearch(originalTitle ?: "")
+        val mainWords = mainNorm.split(" ")
+            .map { it.trim() }
             .filter { it.length >= 3 && it !in listOf("сезон", "серия", "сериал", "season", "series", "episode", "фильм", "мир", "the", "world") }
 
         fun matchesKeywords(video: RutubeVideoItem): Boolean {
-            val titleLower = video.title.lowercase()
-            val authorLower = (video.authorName ?: "").lowercase()
+            val titleNorm = normalizeTitleForSearch(video.title)
+            val authorNorm = normalizeTitleForSearch(video.authorName ?: "")
 
-            if (mainClean.isNotBlank() && (titleLower.contains(mainClean) || authorLower.contains(mainClean))) return true
-            if (origClean.isNotBlank() && (titleLower.contains(origClean) || authorLower.contains(origClean))) return true
+            if (mainNorm.isNotBlank() && (titleNorm.contains(mainNorm) || authorNorm.contains(mainNorm))) return true
+            if (origNorm.isNotBlank() && origNorm.length >= 3 && (titleNorm.contains(origNorm) || authorNorm.contains(origNorm))) return true
 
             if (mainWords.isNotEmpty()) {
-                val matchedCount = mainWords.count { titleLower.contains(it) || authorLower.contains(it) }
+                val matchedCount = mainWords.count { titleNorm.contains(it) || authorNorm.contains(it) }
                 if (matchedCount >= 1) return true
             }
 
@@ -383,7 +415,7 @@ class SearchRutubeStreamsUseCase(
         allDiscoveredVideos.forEach { processVideoItem(it) }
 
         // =========================================================================
-        // PHASE 2: Gap Analysis against TMDB Metadata & Dominant Author Discovery
+        // PHASE 2: Gap Analysis against TMDB Metadata & Dominant Author Expansion
         // =========================================================================
         val seasonMetadataMap = metadataSeasons.associateBy { it.seasonNumber }
         val targetSeasons = if (targetSeasonHint != null && targetSeasonHint > 0) {
@@ -400,62 +432,100 @@ class SearchRutubeStreamsUseCase(
             val seasonMeta = seasonMetadataMap[seasonNum]
             val totalDeclaredEpisodes = seasonMeta?.episodeCount?.takeIf { it > 0 }
 
-            // Ongoing vs Completed determination
-            val expectedEpisodesCount = if (totalDeclaredEpisodes != null) {
-                val seasonAirDate = seasonMeta.airDate
-                if (seasonAirDate != null && seasonAirDate > todayStr) {
-                    // Season hasn't started yet
-                    0
-                } else {
-                    totalDeclaredEpisodes
-                }
-            } else null
-
-            if (expectedEpisodesCount == 0) {
-                logger.info("Rutube: [Gap Analysis] Season $seasonNum hasn't aired yet (airDate=${seasonMeta?.airDate}). Skipping.")
+            // Определение реально вышедших серий для онгоингов
+            val seasonAirDate = seasonMeta?.airDate
+            if (seasonAirDate != null && seasonAirDate > todayStr) {
+                logger.info("Rutube: [Gap Analysis] Season $seasonNum hasn't aired yet (airDate=$seasonAirDate). Skipping.")
                 continue
             }
 
-            val episodesForSeason = parsedEpisodes.filter { it.season == seasonNum }
-            val authorGroups = episodesForSeason.groupBy { it.video.authorName ?: "Rutube" }
-            val dominantAuthorEntry = authorGroups.maxByOrNull { it.value.distinctBy { ep -> ep.episode }.size }
-            val maxAuthorEpisodes = dominantAuthorEntry?.value?.distinctBy { it.episode }?.size ?: 0
-            val totalDistinctEpisodes = episodesForSeason.distinctBy { it.episode }.size
+            // Получаем детали сезона из TMDB для точного подсчета aired серий
+            val tmdbSeasonEpisodes = try {
+                context.catalog.getSeasonDetails(key, seasonNum)
+            } catch (_: Exception) {
+                emptyList()
+            }
+            val airedCountFromTmdb = if (tmdbSeasonEpisodes.isNotEmpty()) {
+                tmdbSeasonEpisodes.count { val d = it.airDate; d == null || d <= todayStr }
+            } else null
 
-            val completeness = when {
-                expectedEpisodesCount != null && expectedEpisodesCount > 0 -> {
-                    maxOf(maxAuthorEpisodes, totalDistinctEpisodes).toDouble() / expectedEpisodesCount
-                }
-                totalDistinctEpisodes >= 6 -> 1.0
-                totalDistinctEpisodes in 1..5 -> 0.5
-                else -> 0.0
+            val expectedEpisodesCount = airedCountFromTmdb ?: totalDeclaredEpisodes
+
+            if (expectedEpisodesCount == 0) {
+                logger.info("Rutube: [Gap Analysis] Season $seasonNum has 0 aired episodes on $todayStr. Skipping.")
+                continue
             }
 
-            val dominantAuthorName = dominantAuthorEntry?.key?.replace("✔", "")?.trim()
+            var episodesForSeason = parsedEpisodes.filter { it.season == seasonNum }
+            var authorGroups = episodesForSeason.groupBy { it.video.authorName ?: "Rutube" }
+            var dominantAuthorEntry = authorGroups.maxByOrNull { it.value.distinctBy { ep -> ep.episode }.size }
+            var dominantAuthorEpisodes = dominantAuthorEntry?.value?.map { it.episode }?.distinct()?.sorted() ?: emptyList()
+            var maxAuthorEpisodes = dominantAuthorEpisodes.size
+            var dominantAuthorName = dominantAuthorEntry?.key?.replace("✔", "")?.trim()
+            val dominantAuthorId = dominantAuthorEntry?.value?.firstOrNull()?.video?.authorId
 
-            logger.info("Rutube: [Phase 2: Gap Analysis] Season $seasonNum -> Completeness: ${(completeness * 100).toInt()}% (Found: $totalDistinctEpisodes, Expected: $expectedEpisodesCount, Dominant: '$dominantAuthorName' with $maxAuthorEpisodes eps)")
+            // Проверяем непрерывность серий автора (наличие внутренних дыр: например [1,2,3,5..] - пропущена 4)
+            val maxFoundEp = dominantAuthorEpisodes.maxOrNull() ?: 0
+            val missingInnerEpisodes = (1..maxFoundEp).filter { it !in dominantAuthorEpisodes }
+            val hasInnerGaps = missingInnerEpisodes.isNotEmpty()
+            val isAiredComplete = expectedEpisodesCount != null && maxAuthorEpisodes >= expectedEpisodesCount
+
+            logger.info("Rutube: [Phase 2: Gap Analysis] Season $seasonNum -> Dominant: '$dominantAuthorName' ($maxAuthorEpisodes eps, airedExpected: $expectedEpisodesCount, innerGaps: $missingInnerEpisodes)")
+
+            // AUTHOR EXPANSION (Person API):
+            // Если у автора найдено >= 2 серий, но есть внутренняя дыра или не все вышедшие серии
+            if (!isAiredComplete && dominantAuthorId != null && !dominantAuthorName.isNullOrBlank() && dominantAuthorName != "Rutube" && maxAuthorEpisodes >= 2) {
+                logger.info("Rutube: [Phase 2: Author Expansion] Fetching channel uploads via Person API for '$dominantAuthorName' (ID: $dominantAuthorId)...")
+                try {
+                    val authorVideos = repository.getAuthorVideos(authorId = dominantAuthorId, limit = 100)
+                    for (item in authorVideos) {
+                        if (seenIds.add(item.id)) {
+                            val titleLower = item.title.lowercase()
+                            if (!isStopWord(titleLower) && item.durationSeconds >= 300.0) {
+                                processVideoItem(item)
+                            }
+                        }
+                    }
+                } catch (e: Exception) {
+                    logger.warn("Rutube: Person API failed for author $dominantAuthorId: ${e.message}")
+                }
+
+                // Пересчитываем метрики после Person API
+                episodesForSeason = parsedEpisodes.filter { it.season == seasonNum }
+                authorGroups = episodesForSeason.groupBy { it.video.authorName ?: "Rutube" }
+                dominantAuthorEntry = authorGroups.maxByOrNull { it.value.distinctBy { ep -> ep.episode }.size }
+                dominantAuthorEpisodes = dominantAuthorEntry?.value?.map { it.episode }?.distinct()?.sorted() ?: emptyList()
+                maxAuthorEpisodes = dominantAuthorEpisodes.size
+                dominantAuthorName = dominantAuthorEntry?.key?.replace("✔", "")?.trim()
+            }
+
+            val updatedMaxFound = dominantAuthorEpisodes.maxOrNull() ?: 0
+            val remainingInnerGaps = (1..updatedMaxFound).filter { it !in dominantAuthorEpisodes }
+            val authorComplete = expectedEpisodesCount != null && maxAuthorEpisodes >= expectedEpisodesCount
 
             when {
-                completeness >= 0.90 -> {
-                    // Status: Complete (>=90% tolerance for merged pilot/finale files or DMCA)
-                    logger.info("Rutube: [Gap Analysis: COMPLETE] Season $seasonNum is complete (${(completeness * 100).toInt()}%). Further requests blocked ✅")
+                authorComplete -> {
+                    logger.info("Rutube: [Gap Analysis: COMPLETE] Season $seasonNum author '$dominantAuthorName' has all $maxAuthorEpisodes/$expectedEpisodesCount aired episodes ✅")
                 }
-                completeness in 0.15..<0.90 && !dominantAuthorName.isNullOrBlank() && dominantAuthorName != "Rutube" -> {
-                    // Status: Fragmented -> Trigger Sniper Search by Dominant Author
-                    val cleanAuthor = extractDistinctiveAuthorKeyword(dominantAuthorName)
-                    val sniperQuery = if (cleanAuthor.split(" ").size >= 2) {
-                        "$cleanAuthor $seasonNum сезон"
-                    } else {
-                        "$mainTitle $cleanAuthor $seasonNum сезон"
+                remainingInnerGaps.isNotEmpty() -> {
+                    // Точечный снайперский поиск по конкретным номерам пропущенных серий
+                    for (missingEp in remainingInnerGaps.take(3)) {
+                        val sniperQuery = "$mainTitle $seasonNum сезон $missingEp серия"
+                        logger.info("Rutube: [Gap Analysis: INNER GAP] Season $seasonNum missing ep $missingEp -> Scheduling sniper query: '$sniperQuery'")
+                        sniperSearches.add(sniperQuery)
                     }
-                    logger.info("Rutube: [Gap Analysis: FRAGMENTED] Season $seasonNum -> Scheduling Sniper Search: '$sniperQuery'")
-                    sniperSearches.add(sniperQuery)
+                }
+                maxAuthorEpisodes == 0 -> {
+                    val seasonQuery = "$mainTitle $seasonNum сезон"
+                    logger.info("Rutube: [Gap Analysis: MISSING] Season $seasonNum -> Scheduling season query: '$seasonQuery'")
+                    sniperSearches.add(seasonQuery)
+                    if (!originalTitle.isNullOrBlank() && originalTitle.length > 2) {
+                        sniperSearches.add("$originalTitle Season $seasonNum")
+                    }
                 }
                 else -> {
-                    // Status: Missing or Unknown Author -> General Season Search
-                    val seasonQuery = "$mainTitle $seasonNum сезон"
-                    logger.info("Rutube: [Gap Analysis: MISSING] Season $seasonNum -> Scheduling Season Query: '$seasonQuery'")
-                    sniperSearches.add(seasonQuery)
+                    // Серии идут подряд с 1 по maxAuthorEpisodes (онгоинг или ожидается выход перевода)
+                    logger.info("Rutube: [Gap Analysis: ONGOING TAIL] Season $seasonNum has continuous 1..$maxAuthorEpisodes episodes (out of $expectedEpisodesCount). No inner gaps.")
                 }
             }
         }
@@ -513,6 +583,9 @@ class SearchRutubeStreamsUseCase(
             val maxAllowedSeason = totalSeasonsCount ?: 20
             if (seasonNum < 1 || seasonNum > maxAllowedSeason) continue
 
+            // Если запрошен конкретный сезон — эмитируем релизы только этого сезона
+            if (targetSeasonHint != null && seasonNum != targetSeasonHint) continue
+
             val author = groupKey.second
             val distinctEpisodes = episodeList.distinctBy { it.episode }.sortedBy { it.episode }
             val epCount = distinctEpisodes.size
@@ -524,11 +597,11 @@ class SearchRutubeStreamsUseCase(
                 continue
             }
 
-            if (epCount >= (maxForSeason * 0.85).toInt()) {
+            val expectedTotal = seasonMetadataMap[seasonNum]?.episodeCount?.takeIf { it > 0 }
+            if (expectedTotal != null && epCount >= expectedTotal) {
                 seasonsWithFullReleases.add(seasonNum)
             }
 
-            val expectedTotal = seasonMetadataMap[seasonNum]?.episodeCount?.takeIf { it > 0 }
             val countLabel = when {
                 expectedTotal != null && expectedTotal > 0 && epCount >= expectedTotal -> "$epCount ${pluralizeEpisodes(epCount)} (все)"
                 expectedTotal != null && expectedTotal > 0 -> "$epCount из $expectedTotal ${pluralizeEpisodes(expectedTotal)}"
@@ -590,8 +663,11 @@ class SearchRutubeStreamsUseCase(
             val uniqueEpisodes = seasonEpisodes.distinctBy { it.episode }.sortedBy { it.episode }
             val epCount = uniqueEpisodes.size
 
-            if (epCount >= 2 && streams.none { it.seasonNumber == seasonNum && (it.episodesCount ?: 0) >= epCount }) {
-                val expectedTotal = seasonMetadataMap[seasonNum]?.episodeCount?.takeIf { it > 0 }
+            val expectedTotal = seasonMetadataMap[seasonNum]?.episodeCount?.takeIf { it > 0 }
+            val maxSingleAuthorCount = maxEpisodesPerSeason[seasonNum] ?: 0
+            val shouldEmitComposite = epCount >= 2 && (epCount > maxSingleAuthorCount || (expectedTotal != null && epCount == expectedTotal && maxSingleAuthorCount < expectedTotal))
+
+            if (shouldEmitComposite && streams.none { it.id == "rutube_season_${key.id}_${seasonNum}_composite" }) {
                 val countLabel = when {
                     expectedTotal != null && expectedTotal > 0 && epCount >= expectedTotal -> "$epCount ${pluralizeEpisodes(epCount)} (все)"
                     expectedTotal != null && expectedTotal > 0 -> "$epCount из $expectedTotal ${pluralizeEpisodes(expectedTotal)}"

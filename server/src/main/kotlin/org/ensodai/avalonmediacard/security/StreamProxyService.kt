@@ -42,12 +42,16 @@ class StreamProxyService(
 
         val safeVariants = stream.qualityVariants.map { variant ->
             variant.copy(
-                url = sanitizeUrl(
-                    rawUrl = variant.url,
-                    userId = userId,
-                    streamType = stream.type,
-                    streamHeaders = effectiveHeaders
-                )
+                url = if (variant.url.isNotBlank() && variant.url == stream.url) {
+                    safeUrl
+                } else {
+                    sanitizeUrl(
+                        rawUrl = variant.url,
+                        userId = userId,
+                        streamType = stream.type,
+                        streamHeaders = effectiveHeaders
+                    )
+                }
             )
         }
 

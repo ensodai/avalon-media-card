@@ -341,6 +341,8 @@ class PlayerViewModel(
                 errorMessage = null,
                 audioTracks = emptyList(),
                 subtitleTracks = emptyList(),
+                qualityVariants = emptyList(),
+                selectedQuality = null,
                 selectedAudioTrackIndex = null,
                 selectedSubtitleTrack = null
             )
@@ -375,6 +377,10 @@ class PlayerViewModel(
                         metaResult.startPositionSeconds ?: currentEp?.watchedProgressSeconds ?: 0L
                     }
                     val streamId = currentEp?.canonicalId ?: ""
+                    val epQualities = (currentEp?.qualityVariants ?: emptyList()).map {
+                        it.copy(url = resolveAbsoluteUrl(it.url))
+                    }
+                    val initialQualityLabel = currentEp?.quality ?: epQualities.firstOrNull()?.label
 
                     updateViewState {
                         it.copy(
@@ -382,6 +388,8 @@ class PlayerViewModel(
                             seriesTitle = metaResult.seriesTitle ?: it.seriesTitle,
                             currentStreamId = streamId.ifBlank { it.currentStreamId },
                             playlist = fullPlaylist,
+                            qualityVariants = if (epQualities.isNotEmpty()) epQualities else it.qualityVariants,
+                            selectedQuality = initialQualityLabel ?: it.selectedQuality,
                             duration = metaResult.durationSeconds ?: it.duration,
                             currentTime = initialPosition.toDouble()
                         )
@@ -440,6 +448,10 @@ class PlayerViewModel(
                         startSoloPresence(sid)
                     }
 
+                    val rawQualities = result.qualityVariants.ifEmpty { targetEpisode?.qualityVariants ?: emptyList() }
+                    val resolvedQualities = rawQualities.map { it.copy(url = resolveAbsoluteUrl(it.url)) }
+                    val activeQualityLabel = targetEpisode?.quality ?: resolvedQualities.firstOrNull()?.label
+
                     updateViewState {
                         it.copy(
                             title = resolvedTitle.ifBlank { it.title },
@@ -449,6 +461,8 @@ class PlayerViewModel(
                             currentTime = startPosition.toDouble(),
                             audioTracks = resolvedAudio.ifEmpty { it.audioTracks },
                             subtitleTracks = resolvedSubs.ifEmpty { it.subtitleTracks },
+                            qualityVariants = if (resolvedQualities.isNotEmpty()) resolvedQualities else it.qualityVariants,
+                            selectedQuality = activeQualityLabel ?: it.selectedQuality,
                             selectedAudioTrackIndex = result.audioTrackIndex ?: it.selectedAudioTrackIndex,
                             playlist = if (result.playlist.isNotEmpty()) fullPlaylist else (if (it.playlist.isEmpty()) fullPlaylist else it.playlist),
                             status = PlaybackStatus.BUFFERING,
@@ -541,6 +555,7 @@ class PlayerViewModel(
             it.copy(
                 currentStreamUrl = fullUrl,
                 currentTime = currentSec,
+                selectedQuality = variant.label,
                 status = PlaybackStatus.BUFFERING
             )
         }

@@ -38,6 +38,8 @@ fun PlayerViewModel.onEpisodeSelected(stream: MediaStream, isRemoteSync: Boolean
             status = PlaybackStatus.BUFFERING,
             audioTracks = stream.audioTracks,
             subtitleTracks = stream.subtitleTracks,
+            qualityVariants = emptyList(),
+            selectedQuality = null,
             selectedAudioTrackIndex = null,
             selectedSubtitleTrack = null,
             errorMessage = null

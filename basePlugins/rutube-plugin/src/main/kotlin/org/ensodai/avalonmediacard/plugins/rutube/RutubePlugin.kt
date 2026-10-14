@@ -57,7 +57,7 @@ class RutubePlugin : AvalonPlugin {
         }
 
         context.streams.onPrepare { stream, _ ->
-            val resolvedStream = if (stream.url.contains("/play/embed/") || stream.url.isBlank()) {
+            val resolvedStream = if (stream.url.contains("/play/embed/") || stream.url.isBlank() || stream.qualityVariants.isEmpty()) {
                 val videoId = stream.id.removePrefix("rutube_ep_").removePrefix("rutube_")
                 val streamInfo = repository.getStreamInfo(videoId)
                 if (streamInfo != null) {

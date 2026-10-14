@@ -215,7 +215,7 @@ class PlayerQualityDrawerScreen(
                 items = variants,
                 key = { it.url }
             ) { variant ->
-                val isSelected = variant.url == currentStreamUrl || variant.label == activeQuality
+                val isSelected = variant.label == activeQuality
                 val desc = when (variant.label.lowercase()) {
                     "1080p", "fhd" -> "Full High Definition"
                     "720p", "hd" -> "High Definition"

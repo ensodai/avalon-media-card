@@ -59,6 +59,7 @@ class StreamProxyServiceTest {
 
         // 2. Проверяем все варианты качества
         assertEquals(3, sanitized.qualityVariants.size)
+        assertEquals(sanitized.url, sanitized.qualityVariants[0].url, "Вариант качества, совпадающий с основным URL, должен делить идентичный безопасный URL")
         for (variant in sanitized.qualityVariants) {
             assertTrue(variant.url.startsWith("/api/stream-proxy/"), "Качество ${variant.label} должно идти через прокси")
             assertFalse(variant.url.contains("vkuser.net"), "Сырой CDN URL качества не должен быть открытым")

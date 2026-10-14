@@ -379,7 +379,7 @@ fun PlayerBottomBar(
                 if (state.qualityVariants.isNotEmpty()) {
                     Box(modifier = Modifier.wrapContentSize(Alignment.BottomEnd)) {
                         var showQualityMenu by remember { mutableStateOf(false) }
-                        val activeQuality = state.currentQuality ?: state.qualityVariants.firstOrNull()?.label ?: "HD"
+                        val activeQuality = state.selectedQuality ?: state.currentQuality ?: state.qualityVariants.firstOrNull()?.label ?: "HD"
 
                         Box(
                             modifier = Modifier
@@ -412,7 +412,7 @@ fun PlayerBottomBar(
                                 onDismissRequest = { showQualityMenu = false }
                             ) {
                                 state.qualityVariants.forEach { variant ->
-                                    val isSelected = variant.url == state.currentStreamUrl || variant.label == activeQuality
+                                    val isSelected = variant.label == activeQuality
                                     AvalonDropdownMenuItem(
                                         text = variant.label + if (isSelected) "  ✓" else "",
                                         icon = null,

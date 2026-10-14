@@ -47,7 +47,9 @@ data class PlayerViewState(
     val currentUserId: String? = null,
     val isHost: Boolean = false,
     val chatState: WatchPartyChatViewState = WatchPartyChatViewState(),
-    val lastReaction: WatchPartyReaction? = null
+    val lastReaction: WatchPartyReaction? = null,
+    val qualityVariants: List<VideoQuality> = emptyList(),
+    val selectedQuality: String? = null
 ) : BaseViewState() {
     val isEffectiveHost: Boolean
         get() = isHost || currentUserId?.let { uid ->
@@ -68,13 +70,7 @@ data class PlayerViewState(
             ?: playlist.firstOrNull()
 
     val currentQuality: String?
-        get() = currentEpisode?.qualityVariants?.find {
-            it.url == currentStreamUrl || (!currentStreamUrl.isNullOrBlank() && currentStreamUrl.endsWith(it.url))
-        }?.label ?: currentEpisode?.quality
-
-
-    val qualityVariants: List<VideoQuality>
-        get() = currentEpisode?.qualityVariants ?: emptyList()
+        get() = selectedQuality ?: currentEpisode?.quality ?: qualityVariants.firstOrNull()?.label
 
     val seasonEpisodes: Map<Int, List<MediaStream>>
         get() = playlist.groupBy { it.seasonNumber ?: 1 }

@@ -95,8 +95,11 @@ class PlaybackRpcServiceImpl(
                 ?: customizedDetails?.runtime?.takeIf { it > 0 }?.let { (it * 60).toDouble() }
 
             val preparedStream = runCatching { pluginManager.prepareStream(targetStream, userId) }.getOrDefault(targetStream)
+            val updatedStreams = mappedStreams.map {
+                if (it.canonicalId == targetStream.canonicalId) preparedStream else it
+            }
             val sanitizedPlaylist = streamProxyService.sanitizePlaylist(
-                streams = mappedStreams,
+                streams = updatedStreams,
                 userId = userId,
                 defaultHeaders = preparedStream.headers
             )
@@ -167,8 +170,11 @@ class PlaybackRpcServiceImpl(
                 stream = preparedStream,
                 userId = userId
             )
+            val updatedStreams = mappedStreams.map {
+                if (it.canonicalId == targetStream.canonicalId) preparedStream else it
+            }
             val sanitizedPlaylist = streamProxyService.sanitizePlaylist(
-                streams = mappedStreams,
+                streams = updatedStreams,
                 userId = userId,
                 defaultHeaders = preparedStream.headers
             )
@@ -196,7 +202,8 @@ class PlaybackRpcServiceImpl(
                 audioTracks = sanitizedTarget.audioTracks,
                 subtitleTracks = sanitizedTarget.subtitleTracks,
                 playlist = sanitizedPlaylist,
-                sessionId = soloSession.roomId
+                sessionId = soloSession.roomId,
+                qualityVariants = sanitizedTarget.qualityVariants
             )
         } catch (e: Exception) {
             if (e is CancellationException) throw e

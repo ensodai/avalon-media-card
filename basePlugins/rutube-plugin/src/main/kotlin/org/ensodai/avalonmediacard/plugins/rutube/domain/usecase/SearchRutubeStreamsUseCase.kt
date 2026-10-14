@@ -86,7 +86,16 @@ class SearchRutubeStreamsUseCase(
     private fun normalizeTitleForSearch(text: String): String {
         return text.lowercase()
             .replace('ё', 'е')
-            .replace(Regex("""\bv(?=[а-яё])"""), "в")
+            .replace(Regex("""\b[a-z](?=[а-яё])""")) { m ->
+                when (m.value) {
+                    "v", "w" -> "в"
+                    "z" -> "з"
+                    "x" -> "х"
+                    "s", "c" -> "с"
+                    "k" -> "к"
+                    else -> m.value
+                }
+            }
             .replace(Regex("""[^\p{L}\p{Nd}\s]"""), " ")
             .replace(Regex("""\s+"""), " ")
             .trim()
@@ -309,13 +318,26 @@ class SearchRutubeStreamsUseCase(
             }
             broadQueries.add("$mainTitle сериал")
 
-            // Поддержка гибридных названий латиница/кириллица (например, Vизитеры / Vизитёры)
-            if (originalTitle.equals("V", ignoreCase = true) && mainTitle.startsWith("В", ignoreCase = true)) {
-                val hybridTitle = "V" + mainTitle.drop(1)
-                if (targetSeasonHint != null && targetSeasonHint > 0) {
-                    broadQueries.add("$hybridTitle $targetSeasonHint сезон")
+            // Универсальная генерация гибридных названий для тайтлов с 1 латинской буквой
+            // (например, "V" + "Визитеры" -> "Vизитеры", "Z" + "Нация" -> "Zнация", "X" + "Хроники" -> "Xроники")
+            if (originalTitle != null && originalTitle.length == 1 && originalTitle.first().isLetter()) {
+                val origLetter = originalTitle.first().uppercaseChar()
+                val mainFirst = mainTitle.first().uppercaseChar()
+                val matchesPhonetic = when (origLetter) {
+                    'V', 'W' -> mainFirst == 'В'
+                    'Z' -> mainFirst == 'З'
+                    'X' -> mainFirst == 'Х'
+                    'S', 'C' -> mainFirst == 'С'
+                    'K' -> mainFirst == 'К'
+                    else -> false
                 }
-                broadQueries.add("$hybridTitle сериал")
+                if (matchesPhonetic) {
+                    val hybridTitle = "$origLetter" + mainTitle.drop(1)
+                    if (targetSeasonHint != null && targetSeasonHint > 0) {
+                        broadQueries.add("$hybridTitle $targetSeasonHint сезон")
+                    }
+                    broadQueries.add("$hybridTitle сериал")
+                }
             }
         }
         if (!originalTitle.isNullOrBlank() && !originalTitle.equals(mainTitle, ignoreCase = true)) {

@@ -153,7 +153,11 @@ class MpvPlaybackController(
                     }
                 }
                 MPV.mpvEvent.MPV_EVENT_END_FILE -> {
+                    setBuffering(false)
                     state.isPlaying = false
+                    if (state.duration <= 0.0) {
+                        state.playbackError = "Источник недоступен (ошибка 503 / сбой загрузки). Пожалуйста, выберите другой источник."
+                    }
                 }
             }
         }

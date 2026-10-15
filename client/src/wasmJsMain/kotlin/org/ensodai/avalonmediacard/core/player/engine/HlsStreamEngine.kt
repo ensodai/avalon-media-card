@@ -39,6 +39,7 @@ class HlsStreamEngine(
         }
 
         hls.on("hlsManifestParsed") {
+            println("[HlsStreamEngine] hlsManifestParsed")
             networkErrorRetries = 0
             if (pendingRestoreTime != null && pendingRestoreTime!! > 0) {
                 videoElement.currentTime = pendingRestoreTime!!
@@ -51,22 +52,33 @@ class HlsStreamEngine(
             val fatal = isHlsErrorFatalWasm(data)
             val errorType = getHlsErrorTypeWasm(data)
             val details = getHlsErrorDetailsWasm(data)
+            val httpCode = getHlsHttpResponseCodeWasm(data)
+            val errorUrl = getHlsErrorUrlWasm(data)
+
+            consoleWarnWasm("[HlsStreamEngine] hlsError: fatal=$fatal, type=$errorType, details=$details, httpCode=$httpCode, url=$errorUrl")
 
             if (fatal) {
                 when (errorType) {
                     "networkError" -> {
-                        networkErrorRetries++
-                        if (networkErrorRetries > 3) {
+                        if (httpCode in 400..599) {
                             controller.state.playbackError =
-                                "Failed to load video stream from server ($details). Format or torrent stream is not supported in web version."
+                                "Источник недоступен (ошибка $httpCode). Пожалуйста, выберите другой источник."
                             controller.state.isBuffering = false
                             hlsStopLoadWasm(hls)
                         } else {
-                            val currentTime = videoElement.currentTime
-                            val lastKnown = lastKnownTimeProvider()
-                            pendingRestoreTime = if (currentTime > 0) currentTime else lastKnown
-                            hlsLoadSourceWasm(hls, url)
-                            hlsStartLoadWasm(hls)
+                            networkErrorRetries++
+                            if (networkErrorRetries > 3) {
+                                controller.state.playbackError =
+                                    "Failed to load video stream from server ($details). Format or torrent stream is not supported in web version."
+                                controller.state.isBuffering = false
+                                hlsStopLoadWasm(hls)
+                            } else {
+                                val currentTime = videoElement.currentTime
+                                val lastKnown = lastKnownTimeProvider()
+                                pendingRestoreTime = if (currentTime > 0) currentTime else lastKnown
+                                hlsLoadSourceWasm(hls, url)
+                                hlsStartLoadWasm(hls)
+                            }
                         }
                     }
                     "mediaError" -> {
@@ -219,3 +231,6 @@ private external fun getHlsHttpResponseCodeWasm(data: JsAny): Int
 
 @JsFun("(data) => (data && data.url) ? String(data.url) : ((data && data.context && data.context.url) ? String(data.context.url) : '')")
 private external fun getHlsErrorUrlWasm(data: JsAny): String
+
+@JsFun("(msg) => console.warn(msg)")
+private external fun consoleWarnWasm(msg: String)

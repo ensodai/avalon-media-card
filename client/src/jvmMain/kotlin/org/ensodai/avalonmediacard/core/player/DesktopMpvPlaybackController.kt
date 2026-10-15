@@ -390,6 +390,18 @@ class DesktopMpvPlaybackController : CommonPlaybackController() {
                 state.isPlaying = true
                 renderSignal.trySend(Unit)
             }
+            MpvNative.MPV_EVENT_END_FILE -> {
+                val dataPtr = event.data
+                val endFile = if (dataPtr != null) MpvNative.MpvEventEndFile(dataPtr) else null
+                val reason = endFile?.reason ?: 0
+                val error = endFile?.error ?: 0
+                println("[MPV Event] END_FILE reason=$reason error=$error")
+                state.isBuffering = false
+                state.isPlaying = false
+                if (reason == MpvNative.MPV_END_FILE_REASON_ERROR) {
+                    state.playbackError = "Источник недоступен (ошибка 503 / сбой загрузки потока). Пожалуйста, выберите другой источник."
+                }
+            }
         }
     }
 

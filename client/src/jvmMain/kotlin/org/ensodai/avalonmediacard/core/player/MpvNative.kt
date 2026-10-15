@@ -21,9 +21,16 @@ interface MpvNative : Library {
 
         const val MPV_EVENT_NONE = 0
         const val MPV_EVENT_LOG_MESSAGE = 2
+        const val MPV_EVENT_END_FILE = 7
         const val MPV_EVENT_FILE_LOADED = 8
         const val MPV_EVENT_PLAYBACK_RESTART = 21
         const val MPV_EVENT_PROPERTY_CHANGE = 22
+
+        const val MPV_END_FILE_REASON_EOF = 0
+        const val MPV_END_FILE_REASON_STOP = 2
+        const val MPV_END_FILE_REASON_QUIT = 3
+        const val MPV_END_FILE_REASON_ERROR = 4
+        const val MPV_END_FILE_REASON_REDIRECT = 5
 
         const val MPV_RENDER_PARAM_INVALID = 0
         const val MPV_RENDER_PARAM_API_TYPE = 1
@@ -232,6 +239,18 @@ interface MpvNative : Library {
         @JvmField var level: String? = null
         @JvmField var text: String? = null
         @JvmField var log_level: Int = 0
+    }
+
+    @Structure.FieldOrder("reason", "error", "playlist_entry_id", "playlist_insert_id", "playlist_insert_num_entries")
+    open class MpvEventEndFile : Structure {
+        constructor() : super()
+        constructor(p: Pointer) : super(p) { read() }
+
+        @JvmField var reason: Int = 0
+        @JvmField var error: Int = 0
+        @JvmField var playlist_entry_id: Long = 0L
+        @JvmField var playlist_insert_id: Long = 0L
+        @JvmField var playlist_insert_num_entries: Int = 0
     }
 
     interface MpvRenderUpdateCallback : Callback {

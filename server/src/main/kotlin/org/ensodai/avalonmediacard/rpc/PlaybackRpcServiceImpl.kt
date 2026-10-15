@@ -105,8 +105,8 @@ class PlaybackRpcServiceImpl(
             )
 
             return PlaybackMetadataResult.Ready(
-                currentSeason = targetStream.seasonNumber ?: targetPair.second?.season,
-                currentEpisode = targetStream.episodeNumber ?: targetPair.second?.episode,
+                currentSeason = targetStream.seasonNumber ?: targetPair.second?.season?.takeIf { it > 0 },
+                currentEpisode = targetStream.episodeNumber ?: targetPair.second?.episode?.takeIf { it > 0 },
                 episodeTitle = targetStream.episodeName ?: targetStream.title,
                 seriesTitle = canonicalSeriesTitle ?: targetStream.title,
                 durationSeconds = fallbackDuration,

@@ -451,14 +451,15 @@ class DetailsViewModel(
             try {
                 when (val result = selectMediaSource(mediaKey, providerId, sourceId, seasonNumber, episodeNumber)) {
                     is SourceSelectionResult.Ready -> {
-                        toggleSources(false)
                         setPlayerState(
                             DetailsViewState.PlayerState.Preparing(
                                 title = viewState.value.header?.state?.data?.title ?: "",
                                 hasEpisodes = mediaKey.type == EntityType.TV,
                                 targetSeason = result.targetSeason ?: seasonNumber,
                                 targetEpisode = result.targetEpisode ?: episodeNumber,
-                                playlist = emptyList()
+                                playlist = emptyList(),
+                                sourceType = providerId,
+                                sourceId = sourceId
                             )
                         )
                     }

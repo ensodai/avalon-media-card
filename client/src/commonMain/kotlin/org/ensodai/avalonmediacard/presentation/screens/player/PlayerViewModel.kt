@@ -79,6 +79,7 @@ class PlayerViewModel(
     private var syncEventsJob: Job? = null
     private var soloSessionJob: Job? = null
     private var currentSoloSessionId: Uuid? = null
+    private var currentParams: PlayerInitParams = params
     private var currentLoadedKey: String? = null
     private var metadataJob: Job? = null
     private var playbackJob: Job? = null
@@ -299,8 +300,9 @@ class PlayerViewModel(
     }
 
     fun updateStream(newParams: PlayerInitParams) {
+        currentParams = newParams
         val streamKey = "${newParams.mediaKey}_${newParams.targetSeason}_${newParams.targetEpisode}_${newParams.streamId}_${newParams.sourceType}_${newParams.sourceId}_${newParams.streamUrl}"
-        if (currentLoadedKey == streamKey) {
+        if (currentLoadedKey == streamKey && viewState.value.status != PlaybackStatus.IDLE && viewState.value.status != PlaybackStatus.ERROR) {
             return
         }
         currentLoadedKey = streamKey
@@ -327,9 +329,9 @@ class PlayerViewModel(
     }
 
     fun loadPlaybackSession(season: Int? = null, episode: Int? = null) {
-        val targetSeason = season ?: params.targetSeason
-        val targetEpisode = episode ?: params.targetEpisode
-        currentLoadedKey = "${params.mediaKey}_${targetSeason}_${targetEpisode}_${params.streamId}_${params.sourceType}_${params.sourceId}_${params.streamUrl}"
+        val targetSeason = season ?: currentParams.targetSeason
+        val targetEpisode = episode ?: currentParams.targetEpisode
+        currentLoadedKey = "${currentParams.mediaKey}_${targetSeason}_${targetEpisode}_${currentParams.streamId}_${currentParams.sourceType}_${currentParams.sourceId}_${currentParams.streamUrl}"
 
         metadataJob?.cancel()
         playbackJob?.cancel()
@@ -351,11 +353,11 @@ class PlayerViewModel(
         // Фаза 1: Мгновенные метаданные UI из ядра (БД + TMDB)
         metadataJob = viewModelScope.launch {
             val metaResult = getPlaybackMetadata(
-                key = params.mediaKey,
+                key = currentParams.mediaKey,
                 seasonNumber = targetSeason,
                 episodeNumber = targetEpisode,
-                sourceType = params.sourceType,
-                sourceId = params.sourceId
+                sourceType = currentParams.sourceType,
+                sourceId = currentParams.sourceId
             )
             when (metaResult) {
                 is PlaybackMetadataResult.Ready -> {
@@ -367,12 +369,16 @@ class PlayerViewModel(
                         )
                     }
                     val currentEp = fullPlaylist.find {
-                        it.seasonNumber == (metaResult.currentSeason ?: targetSeason) &&
-                                it.episodeNumber == (metaResult.currentEpisode ?: targetEpisode)
-                    }
+                        if (it.seasonNumber == null && it.episodeNumber == null && (metaResult.currentSeason == null || metaResult.currentSeason == 0)) {
+                            true
+                        } else {
+                            it.seasonNumber == (metaResult.currentSeason ?: targetSeason) &&
+                                    it.episodeNumber == (metaResult.currentEpisode ?: targetEpisode)
+                        }
+                    } ?: fullPlaylist.firstOrNull()
                     val resolvedTitle = currentEp?.episodeName ?: currentEp?.title ?: metaResult.episodeTitle
                     val initialPosition = if (viewState.value.mode == PlayerMode.WATCH_PARTY) {
-                        params.startPositionSeconds ?: 0L
+                        currentParams.startPositionSeconds ?: 0L
                     } else {
                         metaResult.startPositionSeconds ?: currentEp?.watchedProgressSeconds ?: 0L
                     }
@@ -415,11 +421,11 @@ class PlayerViewModel(
         playbackJob?.cancel()
         playbackJob = viewModelScope.launch {
             val result = getPlaybackStream(
-                key = params.mediaKey,
-                seasonNumber = season ?: params.targetSeason,
-                episodeNumber = episode ?: params.targetEpisode,
-                sourceType = params.sourceType,
-                sourceId = params.sourceId
+                key = currentParams.mediaKey,
+                seasonNumber = season ?: currentParams.targetSeason,
+                episodeNumber = episode ?: currentParams.targetEpisode,
+                sourceType = currentParams.sourceType,
+                sourceId = currentParams.sourceId
             )
             when (result) {
                 is StreamPlaybackResult.Ready -> {
@@ -433,9 +439,10 @@ class PlayerViewModel(
                     }
                     val targetEpisode = fullPlaylist.find { it.canonicalId == result.streamId }
                         ?: fullPlaylist.find { it.url == fullUrl }
+                        ?: fullPlaylist.firstOrNull()
                     val resolvedTitle = targetEpisode?.episodeName ?: targetEpisode?.title ?: viewState.value.title
                     val startPosition = if (viewState.value.mode == PlayerMode.WATCH_PARTY) {
-                        params.startPositionSeconds ?: 0L
+                        currentParams.startPositionSeconds ?: 0L
                     } else {
                         result.startPositionSeconds ?: targetEpisode?.watchedProgressSeconds ?: 0L
                     }
@@ -540,6 +547,7 @@ class PlayerViewModel(
         if (viewState.value.mode != PlayerMode.TEST_PREVIEW) {
             persistProgress(viewState.value, force = true)
         }
+        currentLoadedKey = null
         updateViewState { it.copy(status = PlaybackStatus.IDLE, currentStreamUrl = null) }
     }
 

@@ -76,6 +76,8 @@ fun PlayerSectionSlot(
                             streamId = null,
                             targetSeason = preparing.targetSeason,
                             targetEpisode = preparing.targetEpisode,
+                            sourceType = preparing.sourceType,
+                            sourceId = preparing.sourceId,
                             durationSeconds = null,
                             startPositionSeconds = null,
                             playlist = emptyList(),

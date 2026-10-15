@@ -39,7 +39,9 @@ data class DetailsViewState(
             val hasEpisodes: Boolean,
             val playlist: List<MediaStream> = emptyList(),
             val targetSeason: Int? = null,
-            val targetEpisode: Int? = null
+            val targetEpisode: Int? = null,
+            val sourceType: String? = null,
+            val sourceId: String? = null
         ) : PlayerState
         data class Playing(
             val streamUrl: String,

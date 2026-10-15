@@ -10,7 +10,8 @@ import kotlinx.serialization.Serializable
 data class LampacBalancerDto(
     val name: String,
     val url: String,
-    val balanser: String
+    val balanser: String,
+    val show: Boolean = true
 )
 
 /**

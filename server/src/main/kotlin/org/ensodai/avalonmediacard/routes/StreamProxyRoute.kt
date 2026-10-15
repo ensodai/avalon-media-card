@@ -371,10 +371,11 @@ fun rewriteM3u8Playlist(
         val trimmed = line.trim()
         if (trimmed.isEmpty()) continue
 
-        // 1. Атрибуты URI внутри композитных тегов (#EXT-X-MEDIA, #EXT-X-KEY, #EXT-X-MAP)
+        // 1. Атрибуты URI внутри композитных тегов (#EXT-X-MEDIA, #EXT-X-KEY, #EXT-X-MAP, #EXT-X-I-FRAME-STREAM-INF)
         if (trimmed.startsWith("#EXT-X-MEDIA:") ||
             trimmed.startsWith("#EXT-X-KEY:") ||
-            trimmed.startsWith("#EXT-X-MAP:")
+            trimmed.startsWith("#EXT-X-MAP:") ||
+            trimmed.startsWith("#EXT-X-I-FRAME-STREAM-INF:")
         ) {
             val uriIndex = trimmed.indexOf("URI=\"")
             if (uriIndex != -1) {
@@ -393,7 +394,9 @@ fun rewriteM3u8Playlist(
                         headers = customHeaders,
                         authHeader = authHeader
                     )
-                    val ext = if (trimmed.startsWith("#EXT-X-MEDIA:") && !resolved.contains(".vtt", ignoreCase = true) && !resolved.contains(".webvtt", ignoreCase = true)) {
+                    val ext = if ((trimmed.startsWith("#EXT-X-MEDIA:") || trimmed.startsWith("#EXT-X-I-FRAME-STREAM-INF:")) &&
+                        !resolved.contains(".vtt", ignoreCase = true) && !resolved.contains(".webvtt", ignoreCase = true)
+                    ) {
                         "playlist.m3u8"
                     } else if (resolved.contains(".m3u8", ignoreCase = true)) {
                         "playlist.m3u8"

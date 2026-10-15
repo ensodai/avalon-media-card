@@ -40,13 +40,15 @@ class LampacRepositoryImpl(
             isAnime = isAnime,
             originalLanguage = originalLanguage
         )
-        return dtos.map { dto ->
-            LampacBalancer(
-                id = dto.balanser,
-                name = dto.name,
-                endpointUrl = dto.url
-            )
-        }
+        return dtos
+            .filter { it.show }
+            .map { dto ->
+                LampacBalancer(
+                    id = dto.balanser,
+                    name = dto.name,
+                    endpointUrl = dto.url
+                )
+            }
     }
 
     override suspend fun getMovieStreams(
@@ -83,7 +85,12 @@ class LampacRepositoryImpl(
         // 1. Follow "similar" link if present
         val similarResponse = responses.firstOrNull { it.type == "similar" && !it.data.isNullOrEmpty() }
         if (similarResponse != null) {
-            val bestCandidate = similarResponse.data?.find { it.year == year } ?: similarResponse.data?.firstOrNull()
+            val bestCandidate = if (year != null) {
+                similarResponse.data?.find { it.year == year }
+                    ?: similarResponse.data?.find { it.year != null && kotlin.math.abs(it.year - year) <= 1 }
+            } else {
+                similarResponse.data?.firstOrNull()
+            }
             val candidateUrl = bestCandidate?.url
             if (!candidateUrl.isNullOrBlank()) {
                 val nestedResponses = apiClient.fetchUrl(candidateUrl)
@@ -138,14 +145,7 @@ class LampacRepositoryImpl(
         val streamUrl = item.stream ?: qualities.firstOrNull()?.url ?: item.url ?: return null
         val translateName = item.translate ?: parent.translate
 
-        if (qualities.isEmpty() && streamUrl.contains(".m3u8")) {
-            val resolved = apiClient.resolveHls(streamUrl)
-            if (resolved.qualityVariants.isNotEmpty()) {
-                qualities = resolved.qualityVariants
-            }
-        }
-
-        val subtitles = item.subtitles?.map { sub ->
+        var subtitles = item.subtitles?.map { sub ->
             SubtitleTrack(
                 id = sub.label,
                 name = sub.label,
@@ -163,7 +163,7 @@ class LampacRepositoryImpl(
             )
         } ?: emptyList()
 
-        val audioTracks = item.voice?.mapNotNull { v ->
+        var audioTracks = item.voice?.mapNotNull { v ->
             val id = v.id ?: return@mapNotNull null
             AudioTrack(
                 id = "${balancer}_$id",
@@ -181,6 +181,19 @@ class LampacRepositoryImpl(
             listOf(AudioTrack(id = "${balancer}_def", name = translateName, isDefault = true))
         } else {
             emptyList()
+        }
+
+        if (streamUrl.contains(".m3u8")) {
+            val resolved = apiClient.resolveHls(streamUrl)
+            if (qualities.isEmpty() && resolved.qualityVariants.isNotEmpty()) {
+                qualities = resolved.qualityVariants
+            }
+            if (audioTracks.isEmpty() && resolved.audioTracks.isNotEmpty()) {
+                audioTracks = resolved.audioTracks
+            }
+            if (subtitles.isEmpty() && resolved.subtitleTracks.isNotEmpty()) {
+                subtitles = resolved.subtitleTracks
+            }
         }
 
         val title = item.title ?: item.name ?: parent.title ?: defaultTitle
@@ -208,14 +221,7 @@ class LampacRepositoryImpl(
         val streamUrl = resp.stream ?: qualities.firstOrNull()?.url ?: resp.url ?: return null
         val translateName = resp.translate
 
-        if (qualities.isEmpty() && streamUrl.contains(".m3u8")) {
-            val resolved = apiClient.resolveHls(streamUrl)
-            if (resolved.qualityVariants.isNotEmpty()) {
-                qualities = resolved.qualityVariants
-            }
-        }
-
-        val subtitles = resp.subtitles?.map { sub ->
+        var subtitles = resp.subtitles?.map { sub ->
             SubtitleTrack(
                 id = sub.label,
                 name = sub.label,
@@ -225,7 +231,7 @@ class LampacRepositoryImpl(
             )
         } ?: emptyList()
 
-        val audioTracks = resp.voice?.mapNotNull { v ->
+        var audioTracks = resp.voice?.mapNotNull { v ->
             val id = v.id ?: return@mapNotNull null
             AudioTrack(
                 id = "${balancer}_$id",
@@ -236,6 +242,19 @@ class LampacRepositoryImpl(
             listOf(AudioTrack(id = "${balancer}_def", name = translateName, isDefault = true))
         } else {
             emptyList()
+        }
+
+        if (streamUrl.contains(".m3u8")) {
+            val resolved = apiClient.resolveHls(streamUrl)
+            if (qualities.isEmpty() && resolved.qualityVariants.isNotEmpty()) {
+                qualities = resolved.qualityVariants
+            }
+            if (audioTracks.isEmpty() && resolved.audioTracks.isNotEmpty()) {
+                audioTracks = resolved.audioTracks
+            }
+            if (subtitles.isEmpty() && resolved.subtitleTracks.isNotEmpty()) {
+                subtitles = resolved.subtitleTracks
+            }
         }
 
         val title = resp.title ?: defaultTitle
@@ -274,7 +293,12 @@ class LampacRepositoryImpl(
         // If balancer responded with "similar", follow the candidate URL directly!
         val similarResponse = responses.firstOrNull { it.type == "similar" && !it.data.isNullOrEmpty() }
         if (similarResponse != null && responses.none { it.type == "season" }) {
-            val bestCandidate = similarResponse.data?.find { it.year == year } ?: similarResponse.data?.firstOrNull()
+            val bestCandidate = if (year != null) {
+                similarResponse.data?.find { it.year == year }
+                    ?: similarResponse.data?.find { it.year != null && kotlin.math.abs(it.year - year) <= 1 }
+            } else {
+                similarResponse.data?.firstOrNull()
+            }
             val candidateUrl = bestCandidate?.url
             if (!candidateUrl.isNullOrBlank()) {
                 responses = apiClient.fetchUrl(candidateUrl)

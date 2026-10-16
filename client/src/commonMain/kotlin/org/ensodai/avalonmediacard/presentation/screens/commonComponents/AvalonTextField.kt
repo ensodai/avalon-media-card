@@ -24,12 +24,15 @@ import androidx.compose.ui.focus.focusProperties
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.input.key.*
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.VisualTransformation
+import androidx.compose.ui.unit.Dp
+import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.composables.icons.lucide.Lucide
@@ -48,7 +51,10 @@ fun AvalonTextField(
     keyboardOptions: KeyboardOptions = KeyboardOptions.Default,
     keyboardActions: KeyboardActions = KeyboardActions.Default,
     singleLine: Boolean = true,
-    showClearButton: Boolean = true
+    showClearButton: Boolean = true,
+    fontSize: TextUnit = 24.sp,
+    height: Dp = 64.dp,
+    shape: Shape = RoundedCornerShape(24.dp)
 ) {
     val internalRequester = remember { FocusRequester() }
     val effectiveRequester = focusRequester ?: internalRequester
@@ -61,29 +67,30 @@ fun AvalonTextField(
     )
 
     val interactionSource = remember { MutableInteractionSource() }
+    val isCompact = height < 56.dp
 
     Row(
         modifier = modifier
-            .height(64.dp)
+            .height(height)
             .tvAndWebHoverEffect(
-                shape = RoundedCornerShape(24.dp),
+                shape = shape,
                 clickEnabled = false,
                 focusEnabled = false, // Row сам не является focusable-узлом, фокус принадлежит BasicTextField
                 activeBorderWidth = 0.dp,
                 defaultBorderWidth = 0.dp
             )
-            .clip(RoundedCornerShape(24.dp))
+            .clip(shape)
             .background(MaterialTheme.colorScheme.surface)
-            .border(1.dp, borderColor, RoundedCornerShape(24.dp))
+            .border(1.dp, borderColor, shape)
             .clickable(
                 interactionSource = interactionSource,
                 indication = null
             ) {
                 effectiveRequester.requestFocus()
             }
-            .padding(horizontal = 20.dp),
+            .padding(horizontal = if (isCompact) 14.dp else 20.dp),
         verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.spacedBy(16.dp)
+        horizontalArrangement = Arrangement.spacedBy(if (isCompact) 10.dp else 16.dp)
     ) {
         if (leadingIcon != null) {
             leadingIcon()
@@ -94,7 +101,7 @@ fun AvalonTextField(
             onValueChange = onValueChange,
             textStyle = TextStyle(
                 color = MaterialTheme.colorScheme.onSurface,
-                fontSize = 24.sp,
+                fontSize = fontSize,
                 fontWeight = FontWeight.Medium
             ),
             cursorBrush = SolidColor(MaterialTheme.colorScheme.primary),
@@ -137,7 +144,7 @@ fun AvalonTextField(
                         Text(
                             text = placeholder,
                             color = Color.Gray.copy(alpha = 0.6f),
-                            fontSize = 24.sp,
+                            fontSize = fontSize,
                             fontWeight = FontWeight.Medium
                         )
                     }
@@ -147,22 +154,31 @@ fun AvalonTextField(
         )
 
         if (showClearButton && value.isNotEmpty()) {
+            val clearBtnSize = if (isCompact) 28.dp else 36.dp
+            val clearIconSize = if (isCompact) 16.dp else 20.dp
             Box(
                 modifier = Modifier
-                    .size(36.dp)
+                    .size(clearBtnSize)
+                    .tvAndWebHoverEffect(
+                        shape = CircleShape,
+                        scaleTarget = 1.15f,
+                        clickEnabled = true,
+                        onClick = {
+                            onValueChange("")
+                            effectiveRequester.requestFocus()
+                        },
+                        activeBorderColor = Color.White.copy(alpha = 0.8f),
+                        activeBorderWidth = 1.5.dp
+                    )
                     .clip(CircleShape)
-                    .background(Color.White.copy(alpha = 0.1f))
-                    .clickable {
-                        onValueChange("")
-                        effectiveRequester.requestFocus()
-                    },
+                    .background(Color.White.copy(alpha = 0.12f)),
                 contentAlignment = Alignment.Center
             ) {
                 Icon(
                     Lucide.X,
                     contentDescription = "Clear",
                     tint = Color.White,
-                    modifier = Modifier.size(20.dp)
+                    modifier = Modifier.size(clearIconSize)
                 )
             }
         }

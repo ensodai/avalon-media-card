@@ -11,7 +11,10 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.unit.Dp
+import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 
@@ -23,34 +26,37 @@ fun AvalonButton(
     isLoading: Boolean = false,
     enabled: Boolean = true,
     containerColor: Color = MaterialTheme.colorScheme.primary,
-    contentColor: Color = MaterialTheme.colorScheme.onPrimary
+    contentColor: Color = MaterialTheme.colorScheme.onPrimary,
+    height: Dp = 56.dp,
+    fontSize: TextUnit = 18.sp,
+    shape: Shape = RoundedCornerShape(24.dp)
 ) {
     Box(
         modifier = modifier
-            .height(56.dp)
+            .height(height)
             .tvAndWebHoverEffect(
-                shape = RoundedCornerShape(24.dp),
+                shape = shape,
                 clickEnabled = enabled && !isLoading,
                 onClick = onClick,
                 activeBorderColor = Color.White,
                 activeBorderWidth = 2.dp
             )
-            .clip(RoundedCornerShape(24.dp))
+            .clip(shape)
             .background(if (enabled) containerColor else containerColor.copy(alpha = 0.5f))
-            .padding(horizontal = 24.dp),
+            .padding(horizontal = if (height < 50.dp) 16.dp else 24.dp),
         contentAlignment = Alignment.Center
     ) {
         if (isLoading) {
             CircularProgressIndicator(
                 color = contentColor,
-                modifier = Modifier.size(24.dp),
+                modifier = Modifier.size(if (height < 50.dp) 18.dp else 24.dp),
                 strokeWidth = 2.dp
             )
         } else {
             Text(
                 text = text,
                 color = if (enabled) contentColor else contentColor.copy(alpha = 0.5f),
-                fontSize = 18.sp,
+                fontSize = fontSize,
                 fontWeight = FontWeight.Bold
             )
         }

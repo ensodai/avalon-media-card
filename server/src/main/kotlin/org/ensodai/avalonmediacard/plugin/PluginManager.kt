@@ -6,6 +6,7 @@ import kotlinx.coroutines.channels.BufferOverflow
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.asSharedFlow
+import kotlinx.coroutines.runBlocking
 import kotlinx.serialization.modules.SerializersModule
 import kotlinx.serialization.modules.plus
 import org.ensodai.avalonmediacard.auth.TraktOAuthProvider
@@ -26,6 +27,7 @@ import org.ensodai.avalonmediacard.repository.UserExternalAuthRepository
 import org.ensodai.avalonmediacard.repository.UserFeedCacheRepository
 import org.ensodai.avalonmediacard.repository.UserIntegrationSettingsRepository
 import org.ensodai.avalonmediacard.repository.UserSettingsRepository
+import org.ensodai.avalonmediacard.service.PluginProxyService
 import org.ensodai.avalonmediacard.tmdb.TmdbApi
 import org.koin.core.annotation.Single
 import org.slf4j.LoggerFactory
@@ -38,6 +40,7 @@ import kotlin.uuid.Uuid
 class PluginManager(
     private val catalog: MediaCatalog,
     private val sharedHttpClient: HttpClient,
+    private val pluginProxyService: PluginProxyService,
     private val userMovieProvider: UserMovieProvider,
     private val userEpisodeProvider: UserEpisodeProvider,
     private val userCustomLists: UserCustomListProvider,
@@ -61,6 +64,7 @@ class PluginManager(
     private val loadedPlugins = mutableListOf<AvalonPlugin>()
     private val pluginContexts = mutableMapOf<String, PluginContext>()
     private val pluginClassLoaders = mutableMapOf<String, URLClassLoader>()
+    private val pluginJarFiles = mutableMapOf<String, File>()
     val serviceRegistry = ServiceRegistry()
     var serializersModule = SerializersModule {}
         private set
@@ -148,12 +152,14 @@ class PluginManager(
                 oldContext.scope.cancel()
             }
 
+            pluginJarFiles[plugin.id] = jarFile
             val i18n = PluginI18nLoader.loadI18n(classLoader, jarFile)
+            val pluginHttpClient = runBlocking { pluginProxyService.getHttpClientForPlugin(plugin.id) }
             val context = PluginContext(
                 pluginDir = jarFile.parentFile.absolutePath,
                 pluginName = plugin.name,
                 logger = DefaultPluginLogger(plugin.name),
-                httpClient = sharedHttpClient,
+                httpClient = pluginHttpClient,
                 catalog = catalog,
                 i18n = i18n,
                 userMovies = userMovieProvider,
@@ -349,6 +355,13 @@ class PluginManager(
         updateSerializersModule()
     }
 
+    fun reloadPlugin(pluginId: String): Boolean {
+        val jarFile = pluginJarFiles[pluginId] ?: return false
+        logger.info("Hot-reloading plugin {} from {}", pluginId, jarFile.name)
+        val reloaded = loadPlugin(jarFile)
+        return reloaded.any { it.id == pluginId }
+    }
+
     fun destroyAll() {
         loadedPlugins.forEach { plugin ->
             runCatching { plugin.onDestroy() }
@@ -358,6 +371,7 @@ class PluginManager(
         pluginContexts.clear()
         pluginClassLoaders.values.forEach { runCatching { it.close() } }
         pluginClassLoaders.clear()
+        pluginJarFiles.clear()
         _pluginUpdates.tryEmit(Unit)
         updateSerializersModule()
     }
@@ -376,6 +390,7 @@ class PluginManager(
 
         pluginClassLoaders.values.forEach { runCatching { it.close() } }
         pluginClassLoaders.clear()
+        pluginJarFiles.clear()
 
         // 2. Переинициализируем системные интеграции ядра (Core)
         coreIntegrations.initialize(

@@ -1,5 +1,7 @@
 package org.ensodai.avalonmediacard.presentation.screens.admin.viewState
 
+import org.ensodai.avalonmediacard.contract.admin.PluginProxySettingDto
+import org.ensodai.avalonmediacard.contract.admin.ProxyType
 import org.ensodai.avalonmediacard.contract.admin.ServerSystemInfoDto
 import org.ensodai.avalonmediacard.contract.admin.UserDto
 import org.ensodai.avalonmediacard.presentation.core.mvi.BaseViewState
@@ -58,5 +60,22 @@ data class AdminViewState(
     val systemInfo: ServerSystemInfoDto? = null,
     val isSystemLoading: Boolean = false,
     val systemActionMessage: String? = null,
-    val isSystemActionLoading: Boolean = false
+    val isSystemActionLoading: Boolean = false,
+
+    // Plugin Proxy Settings
+    val isPluginProxiesDialogOpen: Boolean = false,
+    val isPluginProxiesLoading: Boolean = false,
+    val pluginProxySettings: List<PluginProxySettingDto> = emptyList(),
+    val editingPluginId: String? = null,
+    val editProxyEnabled: Boolean = false,
+    val editProxyType: ProxyType = ProxyType.HTTP,
+    val editProxyHost: String = "",
+    val editProxyPort: String = "8080",
+    val editProxyUsername: String = "",
+    val editProxyPassword: String = "",
+    val isPluginProxyTesting: Boolean = false,
+    val pluginProxyTestResult: String? = null,
+    val pluginProxyTestSuccess: Boolean? = null,
+    val isPluginProxySaving: Boolean = false,
+    val pluginProxySaveResult: String? = null
 ) : BaseViewState()

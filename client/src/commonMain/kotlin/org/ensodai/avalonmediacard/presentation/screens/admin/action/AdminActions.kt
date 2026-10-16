@@ -1,5 +1,6 @@
 package org.ensodai.avalonmediacard.presentation.screens.admin.action
 
+import org.ensodai.avalonmediacard.contract.admin.ProxyType
 import org.ensodai.avalonmediacard.contract.model.UserRole
 import org.ensodai.avalonmediacard.contract.model.UserStatus
 import org.ensodai.avalonmediacard.presentation.core.mvi.BaseActions
@@ -47,5 +48,18 @@ data class AdminActions(
     val onClearDiscoverCache: () -> Unit,
     val onClearFeedCache: () -> Unit,
     val onClearMediaCache: () -> Unit,
-    val onReloadPlugins: () -> Unit
+    val onReloadPlugins: () -> Unit,
+
+    // Plugin Proxy Actions
+    val onOpenPluginProxiesDialog: () -> Unit,
+    val onClosePluginProxiesDialog: () -> Unit,
+    val onSelectPluginForEdit: (String) -> Unit,
+    val onEditProxyEnabledChanged: (Boolean) -> Unit,
+    val onEditProxyTypeChanged: (ProxyType) -> Unit,
+    val onEditProxyHostChanged: (String) -> Unit,
+    val onEditProxyPortChanged: (String) -> Unit,
+    val onEditProxyUsernameChanged: (String) -> Unit,
+    val onEditProxyPasswordChanged: (String) -> Unit,
+    val onTestPluginProxy: () -> Unit,
+    val onSavePluginProxy: () -> Unit
 ) : BaseActions()

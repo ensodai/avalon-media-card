@@ -8,9 +8,12 @@ import org.ensodai.avalonmediacard.ServerRuntimeInfo
 import org.ensodai.avalonmediacard.contract.admin.AdminActionResponse
 import org.ensodai.avalonmediacard.contract.admin.CreateUserRequest
 import org.ensodai.avalonmediacard.contract.admin.GlobalIntegrationSettingsDto
+import org.ensodai.avalonmediacard.contract.admin.PluginProxySettingDto
 import org.ensodai.avalonmediacard.contract.admin.ServerSystemInfoDto
+import org.ensodai.avalonmediacard.contract.admin.TestPluginProxyRequest
 import org.ensodai.avalonmediacard.contract.admin.UpdateGlobalIntegrationSettingsRequest
 import org.ensodai.avalonmediacard.contract.admin.UpdateJackettSettingsRequest
+import org.ensodai.avalonmediacard.contract.admin.UpdatePluginProxyRequest
 import org.ensodai.avalonmediacard.contract.admin.UpdateProwlarrSettingsRequest
 import org.ensodai.avalonmediacard.contract.admin.UpdateTmdbSettingsRequest
 import org.ensodai.avalonmediacard.contract.admin.UpdateTorrServerSettingsRequest
@@ -29,6 +32,7 @@ import org.ensodai.avalonmediacard.repository.UserFeedCacheRepository
 import org.ensodai.avalonmediacard.repository.UserRepository
 import org.ensodai.avalonmediacard.security.PasswordHasher
 import org.ensodai.avalonmediacard.security.RpcSessionContext
+import org.ensodai.avalonmediacard.service.PluginProxyService
 import org.ensodai.avalonmediacard.tmdb.TmdbApi
 import org.koin.core.annotation.Factory
 import org.koin.core.annotation.InjectedParam
@@ -41,6 +45,7 @@ import kotlin.uuid.Uuid
 class AdminRpcServiceImpl(
     @InjectedParam private val session: RpcSessionContext,
     private val pluginManager: PluginManager,
+    private val pluginProxyService: PluginProxyService,
     private val userRepository: UserRepository,
     private val systemSettingsRepository: SystemSettingsRepository,
     private val tmdbApi: TmdbApi,
@@ -464,5 +469,35 @@ class AdminRpcServiceImpl(
             logger.error("Failed to reload plugins", e)
             AdminActionResponse(success = false, error = "Ошибка перезагрузки плагинов: ${e.message}")
         }
+    }
+
+    override suspend fun getPluginProxySettings(): List<PluginProxySettingDto> {
+        requireAdmin()
+        val plugins = pluginManager.getLoadedPlugins()
+        return plugins.map { plugin ->
+            pluginProxyService.getProxySetting(
+                pluginId = plugin.id,
+                pluginName = plugin.name,
+                pluginVersion = plugin.version
+            )
+        }
+    }
+
+    override suspend fun updatePluginProxySetting(request: UpdatePluginProxyRequest): AdminActionResponse {
+        requireAdmin()
+        return try {
+            pluginProxyService.saveProxySetting(request)
+            val reloaded = pluginManager.reloadPlugin(request.pluginId)
+            val reloadMsg = if (reloaded) "Плагин успешно перезапущен с новыми настройками сети." else "Настройки сохранены. Перезапуск плагина не потребовался."
+            AdminActionResponse(success = true, error = reloadMsg)
+        } catch (e: Exception) {
+            logger.error("Failed to update proxy setting for plugin {}", request.pluginId, e)
+            AdminActionResponse(success = false, error = e.message ?: "Ошибка при сохранении настроек прокси")
+        }
+    }
+
+    override suspend fun testPluginProxy(request: TestPluginProxyRequest): AdminActionResponse {
+        requireAdmin()
+        return pluginProxyService.testProxy(request)
     }
 }

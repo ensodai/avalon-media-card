@@ -39,97 +39,105 @@ fun AdminScreen(
     val state by viewModel.viewState.collectAsState()
     val actions = viewModel.actions
 
-    Column(
+    Box(
         modifier = Modifier
             .fillMaxSize()
-            .background(MaterialTheme.colorScheme.background)
+            .background(MaterialTheme.colorScheme.background),
+        contentAlignment = Alignment.TopCenter
     ) {
-        // Header & Tab Navigation
         Column(
             modifier = Modifier
+                .fillMaxHeight()
+                .widthIn(max = 1100.dp)
                 .fillMaxWidth()
-                .padding(horizontal = 24.dp, vertical = 20.dp)
         ) {
-            Text(
-                text = stringResource(Res.string.admin_title),
-                fontSize = 28.sp,
-                fontWeight = FontWeight.Bold,
-                color = MaterialTheme.colorScheme.onBackground
-            )
-            Spacer(modifier = Modifier.height(4.dp))
-            Text(
-                text = stringResource(Res.string.admin_subtitle),
-                fontSize = 14.sp,
-                color = MaterialTheme.colorScheme.onSurfaceVariant
-            )
-
-            Spacer(modifier = Modifier.height(20.dp))
-
-            // Custom Pill Tab Row
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.spacedBy(12.dp)
+            // Header & Tab Navigation
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 24.dp, vertical = 20.dp)
             ) {
-                AdminTab.entries.forEach { tab ->
-                    val isSelected = state.selectedTab == tab
-                    val tabIcon: ImageVector = when (tab) {
-                        AdminTab.USERS -> Lucide.Users
-                        AdminTab.INTEGRATIONS -> Lucide.Wrench
-                        AdminTab.SYSTEM -> Lucide.Settings
-                    }
+                Text(
+                    text = stringResource(Res.string.admin_title),
+                    fontSize = 28.sp,
+                    fontWeight = FontWeight.Bold,
+                    color = MaterialTheme.colorScheme.onBackground
+                )
+                Spacer(modifier = Modifier.height(4.dp))
+                Text(
+                    text = stringResource(Res.string.admin_subtitle),
+                    fontSize = 14.sp,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                )
 
-                    val containerColor by animateColorAsState(
-                        targetValue = if (isSelected) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.3f)
-                    )
-                    val contentColor by animateColorAsState(
-                        targetValue = if (isSelected) MaterialTheme.colorScheme.onPrimary else MaterialTheme.colorScheme.onSurfaceVariant
-                    )
-                    val borderColor = if (isSelected) Color.Transparent else MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.3f)
+                Spacer(modifier = Modifier.height(20.dp))
 
-                    Row(
-                        modifier = Modifier
-                            .height(44.dp)
-                            .tvAndWebHoverEffect(
-                                shape = RoundedCornerShape(12.dp),
-                                clickEnabled = true,
-                                onClick = { actions.onTabSelected(tab) },
-                                activeBorderColor = Color.White,
-                                activeBorderWidth = 1.5.dp
+                // Custom Pill Tab Row
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.spacedBy(12.dp)
+                ) {
+                    AdminTab.entries.forEach { tab ->
+                        val isSelected = state.selectedTab == tab
+                        val tabIcon: ImageVector = when (tab) {
+                            AdminTab.USERS -> Lucide.Users
+                            AdminTab.INTEGRATIONS -> Lucide.Wrench
+                            AdminTab.SYSTEM -> Lucide.Settings
+                        }
+
+                        val containerColor by animateColorAsState(
+                            targetValue = if (isSelected) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.3f)
+                        )
+                        val contentColor by animateColorAsState(
+                            targetValue = if (isSelected) MaterialTheme.colorScheme.onPrimary else MaterialTheme.colorScheme.onSurfaceVariant
+                        )
+                        val borderColor = if (isSelected) Color.Transparent else MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.3f)
+
+                        Row(
+                            modifier = Modifier
+                                .height(44.dp)
+                                .tvAndWebHoverEffect(
+                                    shape = RoundedCornerShape(12.dp),
+                                    clickEnabled = true,
+                                    onClick = { actions.onTabSelected(tab) },
+                                    activeBorderColor = Color.White,
+                                    activeBorderWidth = 1.5.dp
+                                )
+                                .clip(RoundedCornerShape(12.dp))
+                                .background(containerColor)
+                                .border(1.dp, borderColor, RoundedCornerShape(12.dp))
+                                .padding(horizontal = 18.dp),
+                            verticalAlignment = Alignment.CenterVertically,
+                            horizontalArrangement = Arrangement.spacedBy(8.dp)
+                        ) {
+                            Icon(
+                                imageVector = tabIcon,
+                                contentDescription = null,
+                                tint = contentColor,
+                                modifier = Modifier.size(18.dp)
                             )
-                            .clip(RoundedCornerShape(12.dp))
-                            .background(containerColor)
-                            .border(1.dp, borderColor, RoundedCornerShape(12.dp))
-                            .padding(horizontal = 18.dp),
-                        verticalAlignment = Alignment.CenterVertically,
-                        horizontalArrangement = Arrangement.spacedBy(8.dp)
-                    ) {
-                        Icon(
-                            imageVector = tabIcon,
-                            contentDescription = null,
-                            tint = contentColor,
-                            modifier = Modifier.size(18.dp)
-                        )
-                        Text(
-                            text = stringResource(tab.titleRes),
-                            fontSize = 14.sp,
-                            fontWeight = if (isSelected) FontWeight.Bold else FontWeight.Medium,
-                            color = contentColor
-                        )
+                            Text(
+                                text = stringResource(tab.titleRes),
+                                fontSize = 14.sp,
+                                fontWeight = if (isSelected) FontWeight.Bold else FontWeight.Medium,
+                                color = contentColor
+                            )
+                        }
                     }
                 }
             }
-        }
 
-        // Tab Content
-        Box(
-            modifier = Modifier
-                .fillMaxSize()
-                .weight(1f)
-        ) {
-            when (state.selectedTab) {
-                AdminTab.USERS -> AdminUsersTab(state, actions)
-                AdminTab.INTEGRATIONS -> AdminIntegrationsTab(state, actions)
-                AdminTab.SYSTEM -> AdminSystemTab(state, actions)
+            // Tab Content
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .weight(1f)
+            ) {
+                when (state.selectedTab) {
+                    AdminTab.USERS -> AdminUsersTab(state, actions)
+                    AdminTab.INTEGRATIONS -> AdminIntegrationsTab(state, actions)
+                    AdminTab.SYSTEM -> AdminSystemTab(state, actions)
+                }
             }
         }
     }

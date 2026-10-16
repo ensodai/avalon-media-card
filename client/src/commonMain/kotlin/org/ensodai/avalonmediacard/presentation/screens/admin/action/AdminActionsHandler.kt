@@ -3,8 +3,11 @@ package org.ensodai.avalonmediacard.presentation.screens.admin.action
 import androidx.lifecycle.viewModelScope
 import avalonmediacard.client.generated.resources.*
 import kotlinx.coroutines.launch
+import org.ensodai.avalonmediacard.contract.admin.ProxyType
+import org.ensodai.avalonmediacard.contract.admin.TestPluginProxyRequest
 import org.ensodai.avalonmediacard.contract.admin.UpdateGlobalIntegrationSettingsRequest
 import org.ensodai.avalonmediacard.contract.admin.UpdateJackettSettingsRequest
+import org.ensodai.avalonmediacard.contract.admin.UpdatePluginProxyRequest
 import org.ensodai.avalonmediacard.contract.admin.UpdateProwlarrSettingsRequest
 import org.ensodai.avalonmediacard.contract.admin.UpdateTmdbSettingsRequest
 import org.ensodai.avalonmediacard.contract.admin.UpdateTorrServerSettingsRequest
@@ -815,6 +818,200 @@ fun AdminViewModel.reloadPlugins(
                     it.copy(
                         isSystemActionLoading = false,
                         systemActionMessage = msg
+                    )
+                }
+            }
+        )
+    }
+}
+
+fun AdminViewModel.openPluginProxiesDialog(getPluginProxySettingsUseCase: GetPluginProxySettingsUseCase) {
+    updateViewState {
+        it.copy(
+            isPluginProxiesDialogOpen = true,
+            isPluginProxiesLoading = true,
+            pluginProxyTestResult = null,
+            pluginProxyTestSuccess = null,
+            pluginProxySaveResult = null
+        )
+    }
+    viewModelScope.launch {
+        getPluginProxySettingsUseCase().fold(
+            onSuccess = { settings ->
+                val currentEditingId = viewState.value.editingPluginId
+                val targetPlugin = settings.find { it.pluginId == currentEditingId } ?: settings.firstOrNull()
+                updateViewState {
+                    it.copy(
+                        isPluginProxiesLoading = false,
+                        pluginProxySettings = settings,
+                        editingPluginId = targetPlugin?.pluginId,
+                        editProxyEnabled = targetPlugin?.isEnabled ?: false,
+                        editProxyType = targetPlugin?.type ?: ProxyType.HTTP,
+                        editProxyHost = targetPlugin?.host ?: "",
+                        editProxyPort = (targetPlugin?.port ?: 8080).toString(),
+                        editProxyUsername = targetPlugin?.username ?: "",
+                        editProxyPassword = targetPlugin?.password ?: ""
+                    )
+                }
+            },
+            onFailure = { err ->
+                updateViewState {
+                    it.copy(
+                        isPluginProxiesLoading = false,
+                        pluginProxySaveResult = "Ошибка загрузки списка плагинов: ${err.message}"
+                    )
+                }
+            }
+        )
+    }
+}
+
+fun AdminViewModel.closePluginProxiesDialog() {
+    updateViewState { it.copy(isPluginProxiesDialogOpen = false) }
+}
+
+fun AdminViewModel.selectPluginForEdit(pluginId: String) {
+    val setting = viewState.value.pluginProxySettings.find { it.pluginId == pluginId }
+    updateViewState {
+        it.copy(
+            editingPluginId = pluginId,
+            editProxyEnabled = setting?.isEnabled ?: false,
+            editProxyType = setting?.type ?: ProxyType.HTTP,
+            editProxyHost = setting?.host ?: "",
+            editProxyPort = (setting?.port ?: 8080).toString(),
+            editProxyUsername = setting?.username ?: "",
+            editProxyPassword = setting?.password ?: "",
+            pluginProxyTestResult = null,
+            pluginProxyTestSuccess = null,
+            pluginProxySaveResult = null
+        )
+    }
+}
+
+fun AdminViewModel.onEditProxyEnabledChanged(enabled: Boolean) {
+    updateViewState { it.copy(editProxyEnabled = enabled) }
+}
+
+fun AdminViewModel.onEditProxyTypeChanged(type: ProxyType) {
+    updateViewState { it.copy(editProxyType = type) }
+}
+
+fun AdminViewModel.onEditProxyHostChanged(host: String) {
+    updateViewState { it.copy(editProxyHost = host, pluginProxyTestResult = null, pluginProxyTestSuccess = null) }
+}
+
+fun AdminViewModel.onEditProxyPortChanged(port: String) {
+    val sanitized = port.filter { it.isDigit() }.take(5)
+    updateViewState { it.copy(editProxyPort = sanitized, pluginProxyTestResult = null, pluginProxyTestSuccess = null) }
+}
+
+fun AdminViewModel.onEditProxyUsernameChanged(username: String) {
+    updateViewState { it.copy(editProxyUsername = username) }
+}
+
+fun AdminViewModel.onEditProxyPasswordChanged(password: String) {
+    updateViewState { it.copy(editProxyPassword = password) }
+}
+
+fun AdminViewModel.testPluginProxy(testPluginProxyUseCase: TestPluginProxyUseCase) {
+    val state = viewState.value
+    val host = state.editProxyHost.trim()
+    val port = state.editProxyPort.toIntOrNull() ?: 8080
+
+    if (host.isBlank()) {
+        updateViewState {
+            it.copy(
+                isPluginProxyTesting = false,
+                pluginProxyTestSuccess = false,
+                pluginProxyTestResult = "Укажите хост или IP-адрес прокси"
+            )
+        }
+        return
+    }
+
+    updateViewState {
+        it.copy(
+            isPluginProxyTesting = true,
+            pluginProxyTestResult = null,
+            pluginProxyTestSuccess = null
+        )
+    }
+
+    viewModelScope.launch {
+        val request = TestPluginProxyRequest(
+            type = state.editProxyType,
+            host = host,
+            port = port,
+            username = state.editProxyUsername.takeIf { it.isNotBlank() },
+            password = state.editProxyPassword.takeIf { it.isNotBlank() }
+        )
+        testPluginProxyUseCase(request).fold(
+            onSuccess = { res ->
+                updateViewState {
+                    it.copy(
+                        isPluginProxyTesting = false,
+                        pluginProxyTestSuccess = res.success,
+                        pluginProxyTestResult = res.error ?: (if (res.success) "Прокси успешно проверен" else "Ошибка подключения")
+                    )
+                }
+            },
+            onFailure = { err ->
+                updateViewState {
+                    it.copy(
+                        isPluginProxyTesting = false,
+                        pluginProxyTestSuccess = false,
+                        pluginProxyTestResult = "Ошибка: ${err.message ?: "Сетевая ошибка"}"
+                    )
+                }
+            }
+        )
+    }
+}
+
+fun AdminViewModel.savePluginProxy(
+    updatePluginProxySettingUseCase: UpdatePluginProxySettingUseCase,
+    getPluginProxySettingsUseCase: GetPluginProxySettingsUseCase
+) {
+    val state = viewState.value
+    val pluginId = state.editingPluginId ?: return
+    val port = state.editProxyPort.toIntOrNull() ?: 8080
+
+    updateViewState {
+        it.copy(
+            isPluginProxySaving = true,
+            pluginProxySaveResult = null
+        )
+    }
+
+    viewModelScope.launch {
+        val request = UpdatePluginProxyRequest(
+            pluginId = pluginId,
+            isEnabled = state.editProxyEnabled,
+            type = state.editProxyType,
+            host = state.editProxyHost.trim(),
+            port = port,
+            username = state.editProxyUsername.takeIf { it.isNotBlank() },
+            password = state.editProxyPassword.takeIf { it.isNotBlank() }
+        )
+
+        updatePluginProxySettingUseCase(request).fold(
+            onSuccess = { res ->
+                updateViewState {
+                    it.copy(
+                        isPluginProxySaving = false,
+                        pluginProxySaveResult = res.error ?: "Настройки прокси успешно сохранены"
+                    )
+                }
+                // Refresh list
+                getPluginProxySettingsUseCase().getOrNull()?.let { updatedList ->
+                    updateViewState { it.copy(pluginProxySettings = updatedList) }
+                }
+            },
+            onFailure = { err ->
+                updateViewState {
+                    it.copy(
+                        isPluginProxySaving = false,
+                        pluginProxySaveResult = "Ошибка сохранения: ${err.message}"
                     )
                 }
             }

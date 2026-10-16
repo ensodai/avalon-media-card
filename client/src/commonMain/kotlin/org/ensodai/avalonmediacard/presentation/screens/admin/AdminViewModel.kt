@@ -14,16 +14,19 @@ import org.ensodai.avalonmediacard.domain.useCases.adminScreenUseCase.ClearFeedC
 import org.ensodai.avalonmediacard.domain.useCases.adminScreenUseCase.ClearMediaCacheUseCase
 import org.ensodai.avalonmediacard.domain.useCases.adminScreenUseCase.DeleteUserUseCase
 import org.ensodai.avalonmediacard.domain.useCases.adminScreenUseCase.GetGlobalIntegrationSettingsUseCase
+import org.ensodai.avalonmediacard.domain.useCases.adminScreenUseCase.GetPluginProxySettingsUseCase
 import org.ensodai.avalonmediacard.domain.useCases.adminScreenUseCase.GetSystemInfoUseCase
 import org.ensodai.avalonmediacard.domain.useCases.adminScreenUseCase.GetUsersUseCase
 import org.ensodai.avalonmediacard.domain.useCases.adminScreenUseCase.ReloadPluginsUseCase
 import org.ensodai.avalonmediacard.domain.useCases.adminScreenUseCase.ResetUserPasswordUseCase
 import org.ensodai.avalonmediacard.domain.useCases.adminScreenUseCase.TestJackettConnectionUseCase
+import org.ensodai.avalonmediacard.domain.useCases.adminScreenUseCase.TestPluginProxyUseCase
 import org.ensodai.avalonmediacard.domain.useCases.adminScreenUseCase.TestProwlarrConnectionUseCase
 import org.ensodai.avalonmediacard.domain.useCases.adminScreenUseCase.TestTmdbConnectionUseCase
 import org.ensodai.avalonmediacard.domain.useCases.adminScreenUseCase.TestTorrServerConnectionUseCase
 import org.ensodai.avalonmediacard.domain.useCases.adminScreenUseCase.UpdateGlobalIntegrationSettingsUseCase
 import org.ensodai.avalonmediacard.domain.useCases.adminScreenUseCase.UpdateJackettSettingsUseCase
+import org.ensodai.avalonmediacard.domain.useCases.adminScreenUseCase.UpdatePluginProxySettingUseCase
 import org.ensodai.avalonmediacard.domain.useCases.adminScreenUseCase.UpdateProwlarrSettingsUseCase
 import org.ensodai.avalonmediacard.domain.useCases.adminScreenUseCase.UpdateTmdbSettingsUseCase
 import org.ensodai.avalonmediacard.domain.useCases.adminScreenUseCase.UpdateTorrServerSettingsUseCase
@@ -69,6 +72,17 @@ import org.ensodai.avalonmediacard.presentation.screens.admin.action.testJackett
 import org.ensodai.avalonmediacard.presentation.screens.admin.action.testProwlarrConnection
 import org.ensodai.avalonmediacard.presentation.screens.admin.action.testTmdbConnection
 import org.ensodai.avalonmediacard.presentation.screens.admin.action.testTorrServerConnection
+import org.ensodai.avalonmediacard.presentation.screens.admin.action.openPluginProxiesDialog
+import org.ensodai.avalonmediacard.presentation.screens.admin.action.closePluginProxiesDialog
+import org.ensodai.avalonmediacard.presentation.screens.admin.action.selectPluginForEdit
+import org.ensodai.avalonmediacard.presentation.screens.admin.action.onEditProxyEnabledChanged
+import org.ensodai.avalonmediacard.presentation.screens.admin.action.onEditProxyTypeChanged
+import org.ensodai.avalonmediacard.presentation.screens.admin.action.onEditProxyHostChanged
+import org.ensodai.avalonmediacard.presentation.screens.admin.action.onEditProxyPortChanged
+import org.ensodai.avalonmediacard.presentation.screens.admin.action.onEditProxyUsernameChanged
+import org.ensodai.avalonmediacard.presentation.screens.admin.action.onEditProxyPasswordChanged
+import org.ensodai.avalonmediacard.presentation.screens.admin.action.testPluginProxy
+import org.ensodai.avalonmediacard.presentation.screens.admin.action.savePluginProxy
 import org.ensodai.avalonmediacard.presentation.screens.admin.model.AdminTab
 import org.ensodai.avalonmediacard.presentation.screens.admin.viewState.AdminViewState
 import org.koin.core.annotation.Factory
@@ -96,6 +110,9 @@ class AdminViewModel(
     private val clearFeedCacheUseCase: ClearFeedCacheUseCase,
     private val clearMediaCacheUseCase: ClearMediaCacheUseCase,
     private val reloadPluginsUseCase: ReloadPluginsUseCase,
+    private val getPluginProxySettingsUseCase: GetPluginProxySettingsUseCase,
+    private val updatePluginProxySettingUseCase: UpdatePluginProxySettingUseCase,
+    private val testPluginProxyUseCase: TestPluginProxyUseCase,
     private val appSettingsStorage: AppSettingsStorage,
     private val manifestRepository: GlobalManifestRepository,
     private val tokenStorage: TokenStorage
@@ -160,6 +177,17 @@ class AdminViewModel(
         onClearDiscoverCache = { clearDiscoverCache(clearDiscoverCacheUseCase, getSystemInfoUseCase) },
         onClearFeedCache = { clearFeedCache(clearFeedCacheUseCase, getSystemInfoUseCase) },
         onClearMediaCache = { clearMediaCache(clearMediaCacheUseCase, getSystemInfoUseCase) },
-        onReloadPlugins = { reloadPlugins(reloadPluginsUseCase, getSystemInfoUseCase) }
+        onReloadPlugins = { reloadPlugins(reloadPluginsUseCase, getSystemInfoUseCase) },
+        onOpenPluginProxiesDialog = { openPluginProxiesDialog(getPluginProxySettingsUseCase) },
+        onClosePluginProxiesDialog = ::closePluginProxiesDialog,
+        onSelectPluginForEdit = ::selectPluginForEdit,
+        onEditProxyEnabledChanged = ::onEditProxyEnabledChanged,
+        onEditProxyTypeChanged = ::onEditProxyTypeChanged,
+        onEditProxyHostChanged = ::onEditProxyHostChanged,
+        onEditProxyPortChanged = ::onEditProxyPortChanged,
+        onEditProxyUsernameChanged = ::onEditProxyUsernameChanged,
+        onEditProxyPasswordChanged = ::onEditProxyPasswordChanged,
+        onTestPluginProxy = { testPluginProxy(testPluginProxyUseCase) },
+        onSavePluginProxy = { savePluginProxy(updatePluginProxySettingUseCase, getPluginProxySettingsUseCase) }
     )
 }

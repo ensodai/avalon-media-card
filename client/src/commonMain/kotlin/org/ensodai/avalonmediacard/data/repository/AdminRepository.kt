@@ -3,9 +3,12 @@ package org.ensodai.avalonmediacard.data.repository
 import org.ensodai.avalonmediacard.contract.admin.AdminActionResponse
 import org.ensodai.avalonmediacard.contract.admin.CreateUserRequest
 import org.ensodai.avalonmediacard.contract.admin.GlobalIntegrationSettingsDto
+import org.ensodai.avalonmediacard.contract.admin.PluginProxySettingDto
 import org.ensodai.avalonmediacard.contract.admin.ServerSystemInfoDto
+import org.ensodai.avalonmediacard.contract.admin.TestPluginProxyRequest
 import org.ensodai.avalonmediacard.contract.admin.UpdateGlobalIntegrationSettingsRequest
 import org.ensodai.avalonmediacard.contract.admin.UpdateJackettSettingsRequest
+import org.ensodai.avalonmediacard.contract.admin.UpdatePluginProxyRequest
 import org.ensodai.avalonmediacard.contract.admin.UpdateProwlarrSettingsRequest
 import org.ensodai.avalonmediacard.contract.admin.UpdateTmdbSettingsRequest
 import org.ensodai.avalonmediacard.contract.admin.UpdateTorrServerSettingsRequest
@@ -99,5 +102,17 @@ class AdminRepository(private val adminRpcService: AdminRpcService) {
 
     suspend fun reloadPlugins(): AdminActionResponse {
         return adminRpcService.reloadPlugins()
+    }
+
+    suspend fun getPluginProxySettings(): List<PluginProxySettingDto> {
+        return adminRpcService.getPluginProxySettings()
+    }
+
+    suspend fun updatePluginProxySetting(request: UpdatePluginProxyRequest): AdminActionResponse {
+        return adminRpcService.updatePluginProxySetting(request)
+    }
+
+    suspend fun testPluginProxy(request: TestPluginProxyRequest): AdminActionResponse {
+        return adminRpcService.testPluginProxy(request)
     }
 }

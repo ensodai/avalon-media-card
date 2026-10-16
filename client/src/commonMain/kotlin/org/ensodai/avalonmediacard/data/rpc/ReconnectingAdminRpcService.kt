@@ -4,9 +4,12 @@ import kotlinx.rpc.withService
 import org.ensodai.avalonmediacard.contract.admin.AdminActionResponse
 import org.ensodai.avalonmediacard.contract.admin.CreateUserRequest
 import org.ensodai.avalonmediacard.contract.admin.GlobalIntegrationSettingsDto
+import org.ensodai.avalonmediacard.contract.admin.PluginProxySettingDto
 import org.ensodai.avalonmediacard.contract.admin.ServerSystemInfoDto
+import org.ensodai.avalonmediacard.contract.admin.TestPluginProxyRequest
 import org.ensodai.avalonmediacard.contract.admin.UpdateGlobalIntegrationSettingsRequest
 import org.ensodai.avalonmediacard.contract.admin.UpdateJackettSettingsRequest
+import org.ensodai.avalonmediacard.contract.admin.UpdatePluginProxyRequest
 import org.ensodai.avalonmediacard.contract.admin.UpdateProwlarrSettingsRequest
 import org.ensodai.avalonmediacard.contract.admin.UpdateTmdbSettingsRequest
 import org.ensodai.avalonmediacard.contract.admin.UpdateTorrServerSettingsRequest
@@ -88,4 +91,13 @@ class ReconnectingAdminRpcService(
 
     override suspend fun reloadPlugins(): AdminActionResponse =
         executor.execute("reloadPlugins", getService = { getService() }) { reloadPlugins() }
+
+    override suspend fun getPluginProxySettings(): List<PluginProxySettingDto> =
+        executor.execute("getPluginProxySettings", getService = { getService() }) { getPluginProxySettings() }
+
+    override suspend fun updatePluginProxySetting(request: UpdatePluginProxyRequest): AdminActionResponse =
+        executor.execute("updatePluginProxySetting", getService = { getService() }) { updatePluginProxySetting(request) }
+
+    override suspend fun testPluginProxy(request: TestPluginProxyRequest): AdminActionResponse =
+        executor.execute("testPluginProxy", getService = { getService() }) { testPluginProxy(request) }
 }

@@ -4,6 +4,8 @@ import io.ktor.client.call.*
 import io.ktor.client.request.*
 import io.ktor.http.*
 import org.ensodai.avalonmediacard.contract.model.EntityType
+import org.ensodai.avalonmediacard.contract.model.MediaKey
+import org.ensodai.avalonmediacard.contract.model.MediaProvider
 import org.ensodai.avalonmediacard.contract.parsers.EpisodeMatcher
 import org.ensodai.avalonmediacard.contract.parsers.MappingResult
 import org.ensodai.avalonmediacard.contract.plugins.PluginContext
@@ -114,23 +116,53 @@ class InspectAndMapTorrentUseCase(
         }
 
         val successCount = parseResults.values.count { it is MappingResult.Success }
+        val alignedEpisodesMap = mutableMapOf<String, List<Int>>()
+
         if (successCount > 0) {
+            if (mediaId != null && mediaType != EntityType.MOVIE) {
+                val mediaKey = MediaKey(MediaProvider.Tmdb, EntityType.TV, mediaId)
+                val successfulBySeason = parseResults.entries
+                    .filter { it.value is MappingResult.Success }
+                    .groupBy { (it.value as MappingResult.Success).seasons.firstOrNull() ?: 1 }
+
+                for ((seasonNum, seasonEntries) in successfulBySeason) {
+                    val tmdbRu = runCatching { context.catalog.getSeasonDetails(mediaKey, seasonNum, "ru") }.getOrNull().orEmpty()
+                    val tmdbEn = runCatching { context.catalog.getSeasonDetails(mediaKey, seasonNum, "en") }.getOrNull().orEmpty()
+
+                    val fileInputs = seasonEntries.map { (path, res) ->
+                        val sRes = res as MappingResult.Success
+                        EpisodeAligner.FileInput(
+                            filePath = path,
+                            parsedSeason = seasonNum,
+                            parsedEpisodes = sRes.episodes,
+                            isManual = false
+                        )
+                    }
+
+                    val alignedMap = EpisodeAligner.alignSeason(seasonNum, fileInputs, tmdbRu, tmdbEn)
+                    alignedMap.forEach { (path, aligned) ->
+                        alignedEpisodesMap[path] = listOf(aligned.episodeNumber)
+                    }
+                }
+            }
+
             logger.info("Парсинг завершен. Успешных файлов: $successCount. Сохраняем в БД.")
             parseResults.forEach { (path, result) ->
                 if (result is MappingResult.Success) {
                     val fileObj = files.find { it.path == path }
+                    val finalEpisodes = alignedEpisodesMap[path] ?: result.episodes
                     val mapping = context.torrentMappings.saveMapping(
                         torrentHash = hash,
                         filePath = path,
                         fileSize = fileObj?.length,
                         fileIndex = fileObj?.id,
                         seasons = result.seasons,
-                        episodes = result.episodes,
+                        episodes = finalEpisodes,
                         isAbsolute = result.isAbsolute,
                         isManual = false,
                         mediaId = mediaId
                     )
-                    logger.info("Сохранили маппинг в БД: hash=$hash, path=$path, mediaId=${mapping.mediaId}")
+                    logger.info("Сохранили маппинг в БД: hash=$hash, path=$path, mediaId=${mapping.mediaId}, episodes=$finalEpisodes")
                 }
             }
 
@@ -153,7 +185,7 @@ class InspectAndMapTorrentUseCase(
                     is MappingResult.Success -> match.seasons
                     else -> null
                 }
-                val mappedEpisodes: List<Int>? = when (match) {
+                val mappedEpisodes: List<Int>? = alignedEpisodesMap[file.path] ?: when (match) {
                     is MappingResult.Success -> match.episodes
                     is MappingResult.Partial -> match.episodes
                     else -> null

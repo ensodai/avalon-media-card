@@ -31,8 +31,8 @@ class GetMappedStreamsUseCase(
         }
 
         if (dbMappings.isNotEmpty()) {
-            val seasonCache = mutableMapOf<Int, List<EpisodeItem>>()
-            val seasonOffsets = mutableMapOf<Int, Int>()
+            val seasonCacheRu = mutableMapOf<Int, List<EpisodeItem>>()
+            val seasonCacheEn = mutableMapOf<Int, List<EpisodeItem>>()
 
             val sortedMappings = dbMappings.sortedWith(
                 compareBy(
@@ -41,32 +41,27 @@ class GetMappedStreamsUseCase(
                 )
             )
 
-            for (mapping in sortedMappings) {
-                val mappingSeasons = mapping.seasons
-                val mappingEpisodes = mapping.episodes
+            val isTvShow = key.type == EntityType.TV || sortedMappings.any { !it.seasons.isNullOrEmpty() }
 
-                val isMovie =
-                    key.type == EntityType.MOVIE || (mappingSeasons.isNullOrEmpty() && mappingEpisodes.isNullOrEmpty())
-                if (!isMovie && (mappingSeasons.isNullOrEmpty() || mappingEpisodes.isNullOrEmpty())) continue
+            if (!isTvShow || key.type == EntityType.MOVIE) {
+                for (mapping in sortedMappings) {
+                    val useGst = context.integrationManager.getTorrServerUseGst(userId)
+                    val finalUrlDirect = torrServerRepository.buildStreamUrl(
+                        hash = mapping.torrentHash,
+                        fileIndex = mapping.fileIndex,
+                        filePath = mapping.filePath,
+                        userId = userId,
+                        useGst = false
+                    )
 
-                val useGst = context.integrationManager.getTorrServerUseGst(userId)
-                val finalUrlDirect = torrServerRepository.buildStreamUrl(
-                    hash = mapping.torrentHash,
-                    fileIndex = mapping.fileIndex,
-                    filePath = mapping.filePath,
-                    userId = userId,
-                    useGst = false
-                )
-                
-                val finalUrlGst = if (useGst) torrServerRepository.buildStreamUrl(
-                    hash = mapping.torrentHash,
-                    fileIndex = mapping.fileIndex,
-                    filePath = mapping.filePath,
-                    userId = userId,
-                    useGst = true
-                ) else null
+                    val finalUrlGst = if (useGst) torrServerRepository.buildStreamUrl(
+                        hash = mapping.torrentHash,
+                        fileIndex = mapping.fileIndex,
+                        filePath = mapping.filePath,
+                        userId = userId,
+                        useGst = true
+                    ) else null
 
-                if (isMovie) {
                     val userMovie = if (userId != null) {
                         context.userMovies.getUserMovies(userId).find { it.mediaId == key.id }
                     } else null
@@ -74,117 +69,122 @@ class GetMappedStreamsUseCase(
                     val progressSec = userMovie?.progressSeconds?.takeIf { it > 0 }
                     val isWatched = userMovie?.status == MediaStatus.COMPLETED
 
-                    if (finalUrlGst != null) {
-                        mappedStreams.add(
-                            MediaStream(
-                                id = "movie",
-                                title = "[GST] " + mapping.filePath.substringAfterLast('/'),
-                                url = finalUrlGst,
-                                type = StreamType.DirectUrl,
-                                sourceName = "TorrServer",
-                                isMapped = true,
-                                episodeName = mapping.filePath.substringAfterLast('/'),
-                                sizeBytes = null,
-                                durationSeconds = userMovie?.durationSeconds?.toDouble(),
-                                watchedProgressSeconds = progressSec,
-                                isWatched = isWatched
-                            )
-                        )
-                    } else {
-                        mappedStreams.add(
-                            MediaStream(
-                                id = "movie",
-                                title = mapping.filePath.substringAfterLast('/'),
-                                url = finalUrlDirect,
-                                type = StreamType.DirectUrl,
-                                sourceName = "TorrServer",
-                                isMapped = true,
-                                episodeName = mapping.filePath.substringAfterLast('/'),
-                                sizeBytes = null,
-                                durationSeconds = userMovie?.durationSeconds?.toDouble(),
-                                watchedProgressSeconds = progressSec,
-                                isWatched = isWatched
-                            )
-                        )
-                    }
-                    continue
-                }
-
-                val season = mappingSeasons!!.first()
-                val baseEpisode = mappingEpisodes!!.first()
-
-                val currentOffset = seasonOffsets.getOrDefault(season, 0)
-                val targetTmdbEpisode = baseEpisode - currentOffset
-
-                // Обновляем сдвиг для последующих файлов в этом сезоне
-                seasonOffsets[season] = currentOffset + (mappingEpisodes.size - 1)
-
-                var tmdbEpisodeName: String? = null
-                var tmdbPosterUrl: String? = null
-                var tmdbDuration: Double? = null
-
-                val episodes = seasonCache.getOrPut(season) {
-                    try {
-                        context.catalog.getSeasonDetails(key, season)
-                    } catch (e: Exception) {
-                        context.logger.warn("GetMappedStreamsUseCase: Failed to fetch metadata for season $season: ${e.message}")
-                        emptyList()
-                    }
-                }
-
-                val ep = episodes.find { it.episodeNumber == targetTmdbEpisode }
-                if (ep != null) {
-                    tmdbEpisodeName = ep.name
-                    tmdbPosterUrl = ep.stillUrl
-                    tmdbDuration = ep.runtime?.toDouble()
-                }
-
-                val progress = progressHistory.find { it.season == season && it.episode == baseEpisode }
-
-                val streamId = "s${season}e${baseEpisode}"
-
-                if (finalUrlGst != null) {
                     mappedStreams.add(
                         MediaStream(
-                            id = streamId,
-                            title = "[GST] " + mapping.filePath.substringAfterLast('/'),
-                            url = finalUrlGst,
+                            id = "movie",
+                            title = if (finalUrlGst != null) "[GST] " + mapping.filePath.substringAfterLast('/') else mapping.filePath.substringAfterLast('/'),
+                            url = finalUrlGst ?: finalUrlDirect,
                             type = StreamType.DirectUrl,
                             sourceName = "TorrServer",
                             isMapped = true,
-                            episodeName = tmdbEpisodeName ?: context.i18n.t("stream.episode_fmt", baseEpisode),
-                            episodePosterUrl = tmdbPosterUrl,
-                            durationSeconds = tmdbDuration?.let { it * 60 },
-                            seasonNumber = season,
-                            episodeNumber = baseEpisode,
+                            episodeName = mapping.filePath.substringAfterLast('/'),
                             sizeBytes = null,
-                            watchedProgressSeconds = progress?.progressSeconds,
-                            isWatched = progress?.isWatched ?: false,
-                            userRating = progress?.userRating,
-                            lastWatchedAtEpochMs = progress?.lastWatchedAtEpochMs
+                            durationSeconds = userMovie?.durationSeconds?.toDouble(),
+                            watchedProgressSeconds = progressSec,
+                            isWatched = isWatched
                         )
                     )
-                } else {
-                    mappedStreams.add(
-                        MediaStream(
-                            id = streamId,
-                            title = mapping.filePath.substringAfterLast('/'),
-                            url = finalUrlDirect,
-                            type = StreamType.DirectUrl,
-                            sourceName = "TorrServer",
-                            isMapped = true,
-                            episodeName = tmdbEpisodeName ?: context.i18n.t("stream.episode_fmt", baseEpisode),
-                            episodePosterUrl = tmdbPosterUrl,
-                            durationSeconds = tmdbDuration?.let { it * 60 },
-                            seasonNumber = season,
-                            episodeNumber = baseEpisode,
-                            sizeBytes = null,
-                            watchedProgressSeconds = progress?.progressSeconds,
-                            isWatched = progress?.isWatched ?: false,
-                            userRating = progress?.userRating,
-                            lastWatchedAtEpochMs = progress?.lastWatchedAtEpochMs
+                }
+            } else {
+                val tvMappings = sortedMappings.filter { !it.seasons.isNullOrEmpty() && !it.episodes.isNullOrEmpty() }
+                val bySeason = tvMappings.groupBy { it.seasons!!.first() }
+
+                for ((season, seasonMappings) in bySeason) {
+                    val episodesRu = seasonCacheRu.getOrPut(season) {
+                        try {
+                            context.catalog.getSeasonDetails(key, season, "ru")
+                        } catch (e: Exception) {
+                            context.logger.warn("GetMappedStreamsUseCase: Failed to fetch metadata (ru) for season $season: ${e.message}")
+                            emptyList()
+                        }
+                    }
+                    val episodesEn = seasonCacheEn.getOrPut(season) {
+                        try {
+                            context.catalog.getSeasonDetails(key, season, "en")
+                        } catch (e: Exception) {
+                            emptyList()
+                        }
+                    }
+
+                    val fileInputs = seasonMappings.map { mapping ->
+                        EpisodeAligner.FileInput(
+                            filePath = mapping.filePath,
+                            parsedSeason = season,
+                            parsedEpisodes = mapping.episodes ?: emptyList(),
+                            isManual = mapping.isManual
                         )
-                    )
+                    }
+
+                    val alignedMap = EpisodeAligner.alignSeason(season, fileInputs, episodesRu, episodesEn)
+
+                    for (mapping in seasonMappings) {
+                        val aligned = alignedMap[mapping.filePath]
+                        val finalEpisodeNumber = aligned?.episodeNumber ?: mapping.episodes?.firstOrNull() ?: 1
+                        val matchedTmdb = aligned?.matchedEpisode ?: episodesRu.find { it.episodeNumber == finalEpisodeNumber }
+
+                        // Self-healing: if mapping was not manual and episode number changed, update DB
+                        if (aligned != null && !mapping.isManual && mapping.episodes?.firstOrNull() != finalEpisodeNumber) {
+                            try {
+                                context.torrentMappings.saveMapping(
+                                    torrentHash = mapping.torrentHash,
+                                    filePath = mapping.filePath,
+                                    fileSize = mapping.fileSize,
+                                    fileIndex = mapping.fileIndex,
+                                    seasons = listOf(season),
+                                    episodes = listOf(finalEpisodeNumber),
+                                    isAbsolute = mapping.isAbsolute,
+                                    isManual = false,
+                                    mediaId = key.id
+                                )
+                                context.logger.info("GetMappedStreamsUseCase: Auto-aligned S${season} mapping for ${mapping.filePath} -> Episode $finalEpisodeNumber")
+                            } catch (e: Exception) {
+                                context.logger.warn("GetMappedStreamsUseCase: Failed to auto-align mapping in DB: ${e.message}")
+                            }
+                        }
+
+                        val useGst = context.integrationManager.getTorrServerUseGst(userId)
+                        val finalUrlDirect = torrServerRepository.buildStreamUrl(
+                            hash = mapping.torrentHash,
+                            fileIndex = mapping.fileIndex,
+                            filePath = mapping.filePath,
+                            userId = userId,
+                            useGst = false
+                        )
+                        val finalUrlGst = if (useGst) torrServerRepository.buildStreamUrl(
+                            hash = mapping.torrentHash,
+                            fileIndex = mapping.fileIndex,
+                            filePath = mapping.filePath,
+                            userId = userId,
+                            useGst = true
+                        ) else null
+
+                        val progress = progressHistory.find { it.season == season && it.episode == finalEpisodeNumber }
+                        val streamId = "s${season}e${finalEpisodeNumber}"
+
+                        val streamUrl = finalUrlGst ?: finalUrlDirect
+                        val streamTitle = if (finalUrlGst != null) "[GST] " + mapping.filePath.substringAfterLast('/') else mapping.filePath.substringAfterLast('/')
+
+                        mappedStreams.add(
+                            MediaStream(
+                                id = streamId,
+                                title = streamTitle,
+                                url = streamUrl,
+                                type = StreamType.DirectUrl,
+                                sourceName = "TorrServer",
+                                isMapped = true,
+                                episodeName = matchedTmdb?.name?.ifBlank { null } ?: context.i18n.t("stream.episode_fmt", finalEpisodeNumber),
+                                episodePosterUrl = matchedTmdb?.stillUrl,
+                                durationSeconds = matchedTmdb?.runtime?.let { (it * 60).toDouble() },
+                                seasonNumber = season,
+                                episodeNumber = finalEpisodeNumber,
+                                sizeBytes = null,
+                                watchedProgressSeconds = progress?.progressSeconds,
+                                isWatched = progress?.isWatched ?: false,
+                                userRating = progress?.userRating,
+                                lastWatchedAtEpochMs = progress?.lastWatchedAtEpochMs
+                            )
+                        )
+                    }
                 }
             }
         }

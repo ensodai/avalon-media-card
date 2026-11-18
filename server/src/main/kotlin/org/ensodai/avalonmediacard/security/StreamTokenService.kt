@@ -222,6 +222,8 @@ class StreamTokenService(
             targetUrl.contains(".ts", ignoreCase = true) || targetUrl.contains("format=ts", ignoreCase = true) -> "segment.ts"
             else -> "video.mp4"
         }
-        return "/api/stream-proxy/$token/$name"
+        val isGst = targetUrl.contains("/gst/")
+        val gstSuffix = if (isGst) "?gst=true" else ""
+        return "/api/stream-proxy/$token/$name$gstSuffix"
     }
 }

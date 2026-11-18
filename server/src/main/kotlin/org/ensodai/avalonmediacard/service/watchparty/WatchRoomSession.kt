@@ -187,6 +187,7 @@ class WatchRoomSession(
     private fun checkTorrServerKeepAliveLocked() {
         val anyOnline = participants.values.any { it.isOnline }
         val isTorr = isTorrServerSource(sourceType, sourceId)
+        val isGst = sourceType?.contains("gst", ignoreCase = true) == true
         val hash = sourceId
 
         if (anyOnline && isTorr && !hash.isNullOrBlank() && torrServerPinger != null) {
@@ -194,10 +195,10 @@ class WatchRoomSession(
             torrServerGraceJob = null
             if (torrServerKeepAliveJob == null || !torrServerKeepAliveJob!!.isActive) {
                 torrServerKeepAliveJob = scope.launch {
-                    logger.info("[TorrServerKeepAlive] Started for room {} (mode={}), sourceId={}", roomId, mode, hash)
+                    logger.info("[TorrServerKeepAlive] Started for room {} (mode={}), sourceId={}, isGst={}", roomId, mode, hash, isGst)
                     while (isActive) {
                         try {
-                            torrServerPinger.ping(hash, hostUserId)
+                            torrServerPinger.ping(hash, hostUserId, if (isGst) true else null)
                         } catch (e: Exception) {
                             logger.debug("[TorrServerKeepAlive] Ping error: {}", e.message)
                         }

@@ -55,18 +55,35 @@ class StreamProxyService(
             )
         }
 
+        val safeAudioTracks = stream.audioTracks.map { track ->
+            val trackUrl = track.url
+            if (trackUrl.isNullOrBlank()) {
+                track
+            } else {
+                track.copy(
+                    url = sanitizeUrl(
+                        rawUrl = trackUrl,
+                        userId = userId,
+                        streamType = stream.type,
+                        streamHeaders = effectiveHeaders
+                    )
+                )
+            }
+        }
+
         val safeSubtitles = stream.subtitleTracks.map { sub ->
             val subUrl = sub.url
             if (subUrl.isNullOrBlank()) {
                 sub
             } else {
+                val filename = if (subUrl.contains(".m3u8") || subUrl.contains("/subs/")) "subs.m3u8" else "subtitles.vtt"
                 sub.copy(
                     url = sanitizeUrl(
                         rawUrl = subUrl,
                         userId = userId,
                         streamType = StreamType.DirectUrl,
                         streamHeaders = effectiveHeaders,
-                        filename = "subtitles.vtt"
+                        filename = filename
                     )
                 )
             }
@@ -75,6 +92,7 @@ class StreamProxyService(
         return stream.copy(
             url = safeUrl,
             qualityVariants = safeVariants,
+            audioTracks = safeAudioTracks,
             subtitleTracks = safeSubtitles
         )
     }

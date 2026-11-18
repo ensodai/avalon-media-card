@@ -20,6 +20,7 @@ class HlsStreamEngine(
     private var hlsInstance: Hls? = null
     private var pendingRestoreTime: Double? = null
     private var networkErrorRetries = 0
+    private var fragmentErrorSkips = 0
     private var isInitialLoad = true
 
     override fun load(url: String, startPosition: Double, audioTrackIndex: Int?) {
@@ -27,6 +28,7 @@ class HlsStreamEngine(
         hlsInstance = hls
         pendingRestoreTime = if (startPosition > 0) startPosition else null
         networkErrorRetries = 0
+        fragmentErrorSkips = 0
         isInitialLoad = true
 
         hls.attachMedia(videoElement)
@@ -48,6 +50,11 @@ class HlsStreamEngine(
             safePlayWasm(videoElement)
         }
 
+        onHlsEventWasm(hls, "hlsFragLoaded") {
+            fragmentErrorSkips = 0
+            networkErrorRetries = 0
+        }
+
         onHlsEventWasm(hls, "hlsError") { data ->
             val fatal = isHlsErrorFatalWasm(data)
             val errorType = getHlsErrorTypeWasm(data)
@@ -57,10 +64,29 @@ class HlsStreamEngine(
 
             consoleWarnWasm("[HlsStreamEngine] hlsError: fatal=$fatal, type=$errorType, details=$details, httpCode=$httpCode, url=$errorUrl")
 
+            val isFragError = details.startsWith("frag", ignoreCase = true)
+            val isManifestError = details.startsWith("manifest", ignoreCase = true) || details.startsWith("level", ignoreCase = true)
+
             if (fatal) {
                 when (errorType) {
                     "networkError" -> {
-                        if (httpCode in 400..599) {
+                        if (isFragError) {
+                            fragmentErrorSkips++
+                            consoleWarnWasm("[HlsStreamEngine] Fatal fragLoadError ($details, code $httpCode). Skip attempt $fragmentErrorSkips/5")
+                            if (fragmentErrorSkips <= 5) {
+                                val current = videoElement.currentTime
+                                val skipTo = current + 3.5
+                                consoleWarnWasm("[HlsStreamEngine] Skipping broken fragment: $current -> $skipTo")
+                                videoElement.currentTime = skipTo
+                                hlsStartLoadAtWasm(hls, skipTo)
+                                safePlayWasm(videoElement)
+                            } else {
+                                controller.state.playbackError =
+                                    "Не удалось загрузить видеопоток (ошибка фрагментов $httpCode). Пожалуйста, выберите другой источник."
+                                controller.state.isBuffering = false
+                                hlsStopLoadWasm(hls)
+                            }
+                        } else if (isManifestError && httpCode in 400..599) {
                             controller.state.playbackError =
                                 "Источник недоступен (ошибка $httpCode). Пожалуйста, выберите другой источник."
                             controller.state.isBuffering = false
@@ -115,7 +141,7 @@ class HlsStreamEngine(
                     )
                 )
             }
-            if (ktTracks.isNotEmpty()) {
+            if (ktTracks.isNotEmpty() && ktTracks.size >= controller.audioTracks.size) {
                 controller.setTracks(ktTracks, controller.subtitleTracks)
             }
         }
@@ -139,7 +165,7 @@ class HlsStreamEngine(
                     )
                 )
             }
-            if (ktTracks.isNotEmpty()) {
+            if (ktTracks.isNotEmpty() && ktTracks.size >= controller.subtitleTracks.size) {
                 controller.setTracks(controller.audioTracks, ktTracks)
             }
         }
@@ -201,6 +227,9 @@ private external fun setHlsSubtitleTrackWasm(hls: JsAny, trackId: Int)
 
 @JsFun("(hls) => { if (hls && hls.startLoad) hls.startLoad(); }")
 private external fun hlsStartLoadWasm(hls: JsAny)
+
+@JsFun("(hls, pos) => { if (hls && hls.startLoad) hls.startLoad(pos); }")
+private external fun hlsStartLoadAtWasm(hls: JsAny, pos: Double)
 
 @JsFun("(hls) => { if (hls && hls.recoverMediaError) hls.recoverMediaError(); }")
 private external fun hlsRecoverMediaErrorWasm(hls: JsAny)

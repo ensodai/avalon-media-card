@@ -71,7 +71,7 @@ class TorrServerKeepAlivePinger(
         return null
     }
 
-    suspend fun ping(hash: String, userId: Uuid?): Boolean {
+    suspend fun ping(hash: String, userId: Uuid?, isGst: Boolean? = null): Boolean {
         if (hash.isBlank()) return false
         val cleanHash = if (hash.startsWith("magnet:", ignoreCase = true)) {
             val match = Regex("xt=urn:btih:([a-zA-Z0-9]+)", RegexOption.IGNORE_CASE).find(hash)
@@ -83,9 +83,9 @@ class TorrServerKeepAlivePinger(
         return try {
             val host = getTorrServerHost(userId)
             val auth = getAuthHeader(userId)
-            val url = "$host/stream/video.mp4?link=$cleanHash&stat"
+            val statUrl = "$host/stream/video.mp4?link=$cleanHash&stat"
 
-            val response = httpClient.get(url) {
+            val statResponse = httpClient.get(statUrl) {
                 if (auth != null) {
                     header(HttpHeaders.Authorization, auth)
                 }
@@ -95,11 +95,37 @@ class TorrServerKeepAlivePinger(
                     socketTimeoutMillis = 5000L
                 }
             }
-            if (response.status == HttpStatusCode.OK) {
-                logger.debug("[TorrServerKeepAlive] Ping OK for hash={} on {}", cleanHash, host)
+
+            val shouldPingGst = isGst ?: run {
+                val userUseGst = if (userId != null) {
+                    userIntegrationSettingsRepository.getSetting(userId, "torrserver-plugin", "use_torrserver_gst")?.toBooleanStrictOrNull()
+                } else null
+                userUseGst ?: systemSettingsRepository.getSetting("plugin:torrserver-plugin:use_torrserver_gst")?.toBooleanStrictOrNull() ?: true
+            }
+
+            if (shouldPingGst) {
+                try {
+                    val gstUrl = "$host/gst/$cleanHash/heartbeat"
+                    httpClient.get(gstUrl) {
+                        if (auth != null) {
+                            header(HttpHeaders.Authorization, auth)
+                        }
+                        timeout {
+                            requestTimeoutMillis = 5000L
+                            connectTimeoutMillis = 5000L
+                            socketTimeoutMillis = 5000L
+                        }
+                    }
+                } catch (e: Exception) {
+                    logger.debug("[TorrServerKeepAlive] GST heartbeat ping failed for hash={}: {}", cleanHash, e.message)
+                }
+            }
+
+            if (statResponse.status == HttpStatusCode.OK) {
+                logger.debug("[TorrServerKeepAlive] Ping OK for hash={} on {} (gst={})", cleanHash, host, shouldPingGst)
                 true
             } else {
-                logger.warn("[TorrServerKeepAlive] Ping non-OK ({}) for hash={} on {}", response.status, cleanHash, host)
+                logger.warn("[TorrServerKeepAlive] Ping non-OK ({}) for hash={} on {}", statResponse.status, cleanHash, host)
                 false
             }
         } catch (e: Exception) {

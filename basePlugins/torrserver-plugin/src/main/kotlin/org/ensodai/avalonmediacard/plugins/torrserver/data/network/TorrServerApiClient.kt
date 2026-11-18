@@ -188,7 +188,8 @@ class TorrServerApiClient(
         fileIndex: Int?,
         filePath: String,
         userId: kotlin.uuid.Uuid?,
-        useGst: Boolean = false
+        useGst: Boolean = false,
+        audioTrackIndex: Int? = null
     ): String {
         val externalProxyUrl = context.settings.getString("server_url")?.takeIf { it.isNotBlank() } ?: ""
         val host = getTorrserverUrl(userId)
@@ -199,9 +200,12 @@ class TorrServerApiClient(
         val indexParam = if (fileIndex != null) {
             if (useGst) "?index=$fileIndex" else "&index=$fileIndex"
         } else ""
+        val audioParam = if (useGst && audioTrackIndex != null) {
+            if (indexParam.isEmpty()) "?audio=$audioTrackIndex" else "&audio=$audioTrackIndex"
+        } else ""
 
         val rawUrl = if (useGst) {
-            "$host/gst/$hash/master.m3u8$indexParam"
+            "$host/gst/$hash/master.m3u8$indexParam$audioParam"
         } else {
             "$host/stream/video.$ext?link=$hash$indexParam&play"
         }
@@ -217,6 +221,31 @@ class TorrServerApiClient(
                 append(java.net.URLEncoder.encode(auth, "UTF-8"))
             }
             append("&format=$format")
+        }
+    }
+
+    suspend fun buildSubtitleUrl(
+        hash: String,
+        fileIndex: Int?,
+        trackIndex: Int,
+        userId: kotlin.uuid.Uuid?
+    ): String {
+        val externalProxyUrl = context.settings.getString("server_url")?.takeIf { it.isNotBlank() } ?: ""
+        val host = getTorrserverUrl(userId)
+        val auth = getAuthHeader(userId)
+        val indexParam = if (fileIndex != null) "?index=$fileIndex" else ""
+        val rawUrl = "$host/gst/$hash/subs/$trackIndex.m3u8$indexParam"
+        val encodedUrl = java.util.Base64.getUrlEncoder().withoutPadding().encodeToString(rawUrl.toByteArray())
+
+        return buildString {
+            append(externalProxyUrl)
+            append("/api/stream-proxy/subs.m3u8?url=")
+            append(encodedUrl)
+            if (auth != null) {
+                append("&auth=")
+                append(java.net.URLEncoder.encode(auth, "UTF-8"))
+            }
+            append("&format=m3u8")
         }
     }
 

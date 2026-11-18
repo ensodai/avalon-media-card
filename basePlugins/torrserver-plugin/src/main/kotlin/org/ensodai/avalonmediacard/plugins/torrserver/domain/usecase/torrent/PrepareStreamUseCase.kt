@@ -243,10 +243,24 @@ class PrepareStreamUseCase(
                 probeInfo?.tracks?.forEach { track ->
                     if (track.type == "audio") {
                         val trackName = track.title.takeIf { !it.isNullOrBlank() } ?: track.language.takeIf { !it.isNullOrBlank() } ?: ("Track " + track.index)
-                        audioTracks.add(AudioTrack(track.index.toString(), trackName, track.language, track.channels ?: 2, false))
+                        val trackUrl = torrServerRepository.buildStreamUrl(
+                            hash = hash,
+                            fileIndex = fileIndex,
+                            filePath = fileName,
+                            userId = userId,
+                            useGst = true,
+                            audioTrackIndex = track.index
+                        )
+                        audioTracks.add(AudioTrack(track.index.toString(), trackName, track.language, track.channels ?: 2, isDefault = (track.index == 0), url = trackUrl))
                     } else if (track.type == "subtitle") {
                         val trackName = track.title.takeIf { !it.isNullOrBlank() } ?: track.language.takeIf { !it.isNullOrBlank() } ?: ("Subtitle " + track.index)
-                        subtitleTracks.add(SubtitleTrack(track.index.toString(), trackName, track.language))
+                        val subUrl = torrServerRepository.buildSubtitleUrl(
+                            hash = hash,
+                            fileIndex = fileIndex,
+                            trackIndex = track.index,
+                            userId = userId
+                        )
+                        subtitleTracks.add(SubtitleTrack(track.index.toString(), trackName, track.language, isExternal = false, url = subUrl))
                     }
                 }
             }

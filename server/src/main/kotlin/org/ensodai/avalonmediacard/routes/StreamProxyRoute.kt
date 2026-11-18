@@ -76,6 +76,8 @@ private suspend fun handleProxyRequest(
         requestedSubPath != "playlist.m3u8" &&
         requestedSubPath != "manifest.mpd" &&
         requestedSubPath != "video.mp4" &&
+        requestedSubPath != "subs.m3u8" &&
+        requestedSubPath != "subtitles.vtt" &&
         requestedSubPath != "meta" &&
         requestedSubPath != "segment.ts" &&
         requestedSubPath != "segment.m4s"
@@ -89,7 +91,11 @@ private suspend fun handleProxyRequest(
                 call.respond(HttpStatusCode.Forbidden, "Cross-origin subpath resolution forbidden")
                 return
             }
-            resolvedUri.toString()
+            if (resolvedUri.query == null && baseUri.query != null) {
+                URI(resolvedUri.scheme, resolvedUri.authority, resolvedUri.path, baseUri.query, resolvedUri.fragment).toString()
+            } else {
+                resolvedUri.toString()
+            }
         } catch (_: Exception) {
             baseTargetUrl
         }
@@ -97,8 +103,26 @@ private suspend fun handleProxyRequest(
         baseTargetUrl
     }
 
+    val effectiveTargetUrl = if (call.request.queryParameters.isEmpty()) {
+        targetUrl
+    } else {
+        try {
+            val urlBuilder = URLBuilder(targetUrl)
+            call.request.queryParameters.forEach { key, values ->
+                if (key != "token" && key != "filename" && key != "gst") {
+                    if (!urlBuilder.parameters.contains(key)) {
+                        values.forEach { v -> urlBuilder.parameters.append(key, v) }
+                    }
+                }
+            }
+            urlBuilder.buildString()
+        } catch (_: Exception) {
+            targetUrl
+        }
+    }
+
     // Резолвинг эффективных заголовков для безопасного upstream-запроса
-    val targetUri = runCatching { URI(targetUrl) }.getOrNull()
+    val targetUri = runCatching { URI(effectiveTargetUrl) }.getOrNull()
     val effectiveHeaders = customHeaders.toMutableMap()
 
     if (!effectiveHeaders.containsKey(HttpHeaders.Referrer) && !effectiveHeaders.containsKey("Referer")) {
@@ -112,7 +136,7 @@ private suspend fun handleProxyRequest(
     }
 
     try {
-        val statement = proxyHttpClient.prepareRequest(targetUrl) {
+        val statement = proxyHttpClient.prepareRequest(effectiveTargetUrl) {
             this.method = if (isHead) HttpMethod.Head else HttpMethod.Get
 
             call.request.headers.forEach { key, values ->

@@ -456,12 +456,34 @@ actual fun VideoPlayer(
 
     LaunchedEffect(state.selectedAudioTrackIndex, activeEngine) {
         val selectedIdx = state.selectedAudioTrackIndex
-        if (selectedIdx != null && !StreamUrlResolver.isGstStream(url)) {
-            activeEngine?.selectAudioTrack(selectedIdx)
+        if (selectedIdx != null) {
+            if (StreamUrlResolver.isGstStream(url)) {
+                val currentSec = if (videoElement.currentTime > 0) videoElement.currentTime else lastKnownTime
+                val resolvedWithAudio = StreamUrlResolver.resolve(
+                    rawUrl = url,
+                    serverUrl = null,
+                    fallbackServerUrl = "",
+                    audioTrackIndex = selectedIdx
+                )
+                if (resolvedWithAudio != null && resolvedWithAudio != currentUrl) {
+                    currentUrl = resolvedWithAudio
+                    lastKnownTime = currentSec
+                    activeEngine?.load(resolvedWithAudio, lastKnownTime, selectedIdx)
+                }
+            } else {
+                activeEngine?.selectAudioTrack(selectedIdx)
+            }
             val track = controller.audioTracks.find { it.id == selectedIdx.toString() }
             if (track != null && controller.selectedAudioTrack?.id != track.id) {
                 controller.selectAudioTrack(track)
             }
+        }
+    }
+
+    LaunchedEffect(state.selectedSubtitleTrack) {
+        val track = state.selectedSubtitleTrack
+        if (controller.selectedSubtitleTrack?.id != track?.id) {
+            controller.selectSubtitleTrack(track)
         }
     }
 
@@ -475,18 +497,19 @@ actual fun VideoPlayer(
     
     LaunchedEffect(controller.selectedSubtitleTrack, url) {
         val track = controller.selectedSubtitleTrack
-        val trackId = track?.id?.toIntOrNull()
-        if (trackId == null || url == null || !StreamUrlResolver.isGstStream(url)) {
+        val subUrl = track?.url
+        if (track == null || subUrl.isNullOrBlank()) {
             activeSubtitleChunks = emptyList()
             controller.state.currentSubtitleText = ""
             return@LaunchedEffect
         }
         
-        val baseUrl = url.substringBefore("master.m3u8")
-        val queryStr = if (url.contains("?")) "?" + url.substringAfter("?") else ""
-        val m3u8Url = "${baseUrl}subs/$trackId.m3u8$queryStr"
-        
-        activeSubtitleChunks = VttSubtitleFetcher.fetchSubtitleChunks(m3u8Url)
+        val resolvedSubUrl = StreamUrlResolver.resolveAbsoluteUrl(subUrl, "")
+        if (resolvedSubUrl.contains(".m3u8") || resolvedSubUrl.contains("/subs/")) {
+            activeSubtitleChunks = VttSubtitleFetcher.fetchSubtitleChunks(resolvedSubUrl)
+        } else {
+            activeSubtitleChunks = emptyList()
+        }
     }
 
     LaunchedEffect(activeSubtitleChunks) {

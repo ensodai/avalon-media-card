@@ -29,8 +29,12 @@ class TorrServerRepositoryImpl(
         apiClient.dropTorrent(hash, userId)
     }
 
-    override suspend fun buildStreamUrl(hash: String, fileIndex: Int?, filePath: String, userId: Uuid?, useGst: Boolean): String {
-        return apiClient.buildStreamUrl(hash, fileIndex, filePath, userId, useGst)
+    override suspend fun buildStreamUrl(hash: String, fileIndex: Int?, filePath: String, userId: Uuid?, useGst: Boolean, audioTrackIndex: Int?): String {
+        return apiClient.buildStreamUrl(hash, fileIndex, filePath, userId, useGst, audioTrackIndex)
+    }
+
+    override suspend fun buildSubtitleUrl(hash: String, fileIndex: Int?, trackIndex: Int, userId: Uuid?): String {
+        return apiClient.buildSubtitleUrl(hash, fileIndex, trackIndex, userId)
     }
 
     override suspend fun getGstProbe(hash: String, fileIndex: Int?, userId: Uuid?): org.ensodai.avalonmediacard.plugins.torrserver.domain.model.TorrServerGstProbeInfo? {

@@ -102,7 +102,7 @@ kotlin {
             implementation(
                 npm(
                     "playsvideo",
-                    "file:${project.projectDir.parentFile.absolutePath}/libs/playsvideo-0.4.7-f2.16.tgz"
+                    "file:${project.projectDir.parentFile.absolutePath}/libs/playsvideo-0.4.7-f2.17.tgz"
                 )
             )
             implementation(npm("hls.js", "^1.5.0"))
@@ -116,7 +116,7 @@ kotlin {
                 implementation(
                     npm(
                         "playsvideo",
-                        "file:${project.projectDir.parentFile.absolutePath}/libs/playsvideo-0.4.7-f2.16.tgz"
+                        "file:${project.projectDir.parentFile.absolutePath}/libs/playsvideo-0.4.7-f2.17.tgz"
                     )
                 )
                 implementation(npm("hls.js", "^1.5.0"))

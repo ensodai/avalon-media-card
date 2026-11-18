@@ -45,7 +45,7 @@ object StreamUrlResolver {
     }
 
     fun isGstStream(url: String?): Boolean {
-        return url != null && url.contains("/gst/")
+        return url != null && (url.contains("/gst/") || url.contains("gst=true"))
     }
 
     private fun appendQueryParameter(url: String, key: String, value: String): String {

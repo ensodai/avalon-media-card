@@ -467,10 +467,15 @@ fun rewriteM3u8Playlist(
             val ext = if (isStreamInfPlaylist) {
                 "playlist.m3u8"
             } else {
-                if (resolved.substringBefore("?").endsWith(".m4s", ignoreCase = true) || resolved.contains(".m4s", ignoreCase = true)) {
+                val cleanResolved = resolved.substringBefore("?")
+                if (cleanResolved.endsWith(".m4s", ignoreCase = true) || resolved.contains(".m4s", ignoreCase = true)) {
                     "segment.m4s"
-                } else if (resolved.substringBefore("?").endsWith(".m3u8", ignoreCase = true)) {
+                } else if (cleanResolved.endsWith(".m3u8", ignoreCase = true) || resolved.contains(".m3u8", ignoreCase = true)) {
                     "playlist.m3u8"
+                } else if (cleanResolved.endsWith(".vtt", ignoreCase = true) || cleanResolved.endsWith(".webvtt", ignoreCase = true) ||
+                    resolved.contains(".vtt", ignoreCase = true) || resolved.contains(".webvtt", ignoreCase = true)
+                ) {
+                    "subtitles.vtt"
                 } else {
                     "segment.ts"
                 }

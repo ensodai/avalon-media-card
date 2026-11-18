@@ -504,7 +504,7 @@ actual fun VideoPlayer(
             return@LaunchedEffect
         }
         
-        val resolvedSubUrl = StreamUrlResolver.resolveAbsoluteUrl(subUrl, "")
+        val resolvedSubUrl = StreamUrlResolver.resolveAbsoluteUrl(subUrl, url ?: "")
         if (resolvedSubUrl.contains(".m3u8") || resolvedSubUrl.contains("/subs/")) {
             activeSubtitleChunks = VttSubtitleFetcher.fetchSubtitleChunks(resolvedSubUrl)
         } else {
@@ -534,7 +534,7 @@ actual fun VideoPlayer(
                 chunk.state = ChunkState.Loading
                 
                 val rawCues = VttSubtitleFetcher.fetchAndParseVtt(chunk.url)
-                if (rawCues.isNotEmpty()) {
+                if (rawCues != null) {
                     val shiftedCues = rawCues.map { cue -> 
                         cue.copy(
                             start = cue.start + chunk.start, 
@@ -551,8 +551,21 @@ actual fun VideoPlayer(
     }
 
     LaunchedEffect(state.audioTracks, state.subtitleTracks) {
-        if (state.audioTracks.isNotEmpty() && controller.audioTracks.isEmpty()) {
-            controller.setTracks(state.audioTracks, state.subtitleTracks)
+        val effectiveAudio = if (controller.audioTracks.isNotEmpty()) controller.audioTracks else state.audioTracks
+        val currentControllerSubs = controller.subtitleTracks
+        val effectiveSubs = if (state.subtitleTracks.isNotEmpty()) {
+            state.subtitleTracks.map { stateTrack ->
+                val matching = currentControllerSubs.find { it.id == stateTrack.id }
+                stateTrack.copy(
+                    name = matching?.name?.takeIf { it.isNotBlank() } ?: stateTrack.name,
+                    url = stateTrack.url?.takeIf { it.isNotBlank() } ?: matching?.url
+                )
+            }
+        } else {
+            currentControllerSubs
+        }
+        if (effectiveAudio != controller.audioTracks || effectiveSubs != controller.subtitleTracks) {
+            controller.setTracks(effectiveAudio, effectiveSubs)
         }
     }
 

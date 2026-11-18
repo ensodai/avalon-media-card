@@ -10,6 +10,7 @@ import io.ktor.server.plugins.compression.*
 import io.ktor.server.plugins.cors.routing.*
 import io.ktor.server.plugins.forwardedheaders.*
 import io.ktor.server.plugins.partialcontent.*
+import io.ktor.server.request.path
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
 import io.ktor.server.websocket.*
@@ -153,7 +154,58 @@ fun Application.module() {
 
         val webDir = File(EnvHelper.getEnv("WEB_DIR") ?: "web")
         if (webDir.exists() && webDir.isDirectory) {
-            staticFiles("/", webDir, index = "index.html")
+            staticFiles("/", webDir, index = "index.html") {
+                preCompressed(CompressedFileType.GZIP)
+                enableAutoHeadResponse()
+                contentType { file ->
+                    if (file.extension == "wasm") ContentType("application", "wasm") else null
+                }
+                modify { file, call ->
+                    val name = file.name
+                    when {
+                        name == "index.html" -> {
+                            call.response.headers.append(HttpHeaders.CacheControl, "no-cache, must-revalidate")
+                            call.response.headers.append(HttpHeaders.Vary, "Accept-Encoding")
+                            call.response.headers.append("X-Content-Type-Options", "nosniff")
+                        }
+                        name == "version.json" -> {
+                            call.response.headers.append(HttpHeaders.CacheControl, "no-store, no-cache, must-revalidate")
+                            call.response.headers.append("X-Content-Type-Options", "nosniff")
+                        }
+                        name in setOf("web.js", "styles.css", "hls.js", "dash.all.min.js") -> {
+                            call.response.headers.append(HttpHeaders.CacheControl, "no-cache, must-revalidate")
+                            call.response.headers.append(HttpHeaders.Vary, "Accept-Encoding")
+                            call.response.headers.append("X-Content-Type-Options", "nosniff")
+                        }
+                        file.extension == "wasm" || name.matches(Regex("""^(?:.+[.-][0-9a-f]{8,}|[0-9a-f]{16,}|\d+)(?:\.chunk)?\.(wasm|js)$""")) -> {
+                            call.response.headers.append(HttpHeaders.CacheControl, "public, max-age=31536000, immutable")
+                            call.response.headers.append(HttpHeaders.Vary, "Accept-Encoding")
+                            call.response.headers.append("X-Content-Type-Options", "nosniff")
+                        }
+                        else -> {
+                            call.response.headers.append(HttpHeaders.CacheControl, "no-cache, must-revalidate")
+                            call.response.headers.append("X-Content-Type-Options", "nosniff")
+                        }
+                    }
+                }
+                fallback { requestedPath, call ->
+                    val fileName = requestedPath.substringAfterLast('/')
+                    val hasFileExtension = fileName.contains('.')
+                    if (hasFileExtension) {
+                        call.respond(HttpStatusCode.NotFound)
+                    } else {
+                        val indexFile = File(webDir, "index.html")
+                        if (indexFile.exists()) {
+                            call.response.headers.append(HttpHeaders.CacheControl, "no-cache, must-revalidate")
+                            call.response.headers.append(HttpHeaders.Vary, "Accept-Encoding")
+                            call.response.headers.append("X-Content-Type-Options", "nosniff")
+                            call.respondFile(indexFile)
+                        } else {
+                            call.respond(HttpStatusCode.NotFound)
+                        }
+                    }
+                }
+            }
         } else {
             get("/") {
                 call.respondText("Avalon Media Card Server API (RPC is running)")

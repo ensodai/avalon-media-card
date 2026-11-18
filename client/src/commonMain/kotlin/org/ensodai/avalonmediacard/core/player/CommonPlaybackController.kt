@@ -86,7 +86,7 @@ abstract class CommonPlaybackController : PlaybackController {
 
         val url = track.url
         println("[SUBTITLE DEBUG] selectSubtitleTrack: name='${track.name}', url='$url'")
-        if (!url.isNullOrBlank()) {
+        if (!url.isNullOrBlank() && !url.contains(".m3u8") && !url.contains("/subs/")) {
             playbackScope.launch {
                 try {
                     val rawText = httpClient.get(url).bodyAsText()

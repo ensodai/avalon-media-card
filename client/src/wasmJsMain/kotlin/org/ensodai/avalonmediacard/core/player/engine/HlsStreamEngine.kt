@@ -155,17 +155,21 @@ class HlsStreamEngine(
                 val id = getHlsTrackIdWasm(trackObj)
                 val language = getHlsTrackLanguageWasm(trackObj)
                 val trackName = getHlsTrackNameWasm(trackObj) ?: "Subtitle ${i + 1}"
+                val hlsUrl = getHlsTrackUrlWasm(trackObj)
+                val existing = controller.subtitleTracks.find { it.id == id.toString() }
+                val resolvedUrl = existing?.url?.takeIf { it.isNotBlank() } ?: hlsUrl
+                val resolvedName = existing?.name?.takeIf { it.isNotBlank() } ?: trackName
                 ktTracks.add(
                     SubtitleTrack(
                         id = id.toString(),
-                        name = trackName,
-                        language = language,
+                        name = resolvedName,
+                        language = language ?: existing?.language,
                         isExternal = false,
-                        url = null
+                        url = resolvedUrl
                     )
                 )
             }
-            if (ktTracks.isNotEmpty() && ktTracks.size >= controller.subtitleTracks.size) {
+            if (ktTracks.isNotEmpty()) {
                 controller.setTracks(controller.audioTracks, ktTracks)
             }
         }
@@ -209,6 +213,9 @@ private external fun getHlsTrackIdWasm(obj: JsAny): Int
 
 @JsFun("(obj) => obj.name || null")
 private external fun getHlsTrackNameWasm(obj: JsAny): String?
+
+@JsFun("(obj) => obj.url || null")
+private external fun getHlsTrackUrlWasm(obj: JsAny): String?
 
 @JsFun("(obj) => obj.language || null")
 private external fun getHlsTrackLanguageWasm(obj: JsAny): String?

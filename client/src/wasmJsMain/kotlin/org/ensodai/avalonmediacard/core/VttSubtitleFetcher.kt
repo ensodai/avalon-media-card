@@ -26,7 +26,8 @@ data class SubtitleChunk(
 object VttSubtitleFetcher {
 
     private fun parseTime(timeStr: String): Double {
-        val parts = timeStr.trim().split(":")
+        val cleanTime = timeStr.trim().split(Regex("\\s+")).firstOrNull() ?: return 0.0
+        val parts = cleanTime.replace(',', '.').split(":")
         var seconds = 0.0
         if (parts.size == 3) {
             seconds += (parts[0].toDoubleOrNull() ?: 0.0) * 3600
@@ -37,6 +38,26 @@ object VttSubtitleFetcher {
             seconds += (parts[1].toDoubleOrNull() ?: 0.0)
         }
         return seconds
+    }
+
+    private fun resolveChunkUrl(baseUrl: String, m3u8Url: String, nextLine: String, queryStr: String): String {
+        return when {
+            nextLine.startsWith("http://") || nextLine.startsWith("https://") -> nextLine
+            nextLine.startsWith("/") -> {
+                val origin = if (m3u8Url.startsWith("http://") || m3u8Url.startsWith("https://")) {
+                    val schemeEnd = m3u8Url.indexOf("://") + 3
+                    val slashIndex = m3u8Url.indexOf('/', schemeEnd)
+                    if (slashIndex != -1) m3u8Url.substring(0, slashIndex) else m3u8Url
+                } else {
+                    ""
+                }
+                origin + nextLine
+            }
+            else -> {
+                val q = if (queryStr.isNotEmpty() && !nextLine.contains("?")) queryStr else ""
+                baseUrl + nextLine + q
+            }
+        }
     }
 
     @OptIn(ExperimentalWasmJsInterop::class)
@@ -59,7 +80,7 @@ object VttSubtitleFetcher {
                     val duration = line.substringAfter(":").substringBefore(",").toDoubleOrNull() ?: 0.0
                     val nextLine = lines.getOrNull(i + 1) ?: ""
                     if (!nextLine.startsWith("#") && nextLine.isNotEmpty()) {
-                        val chunkUrl = baseUrl + nextLine + queryStr
+                        val chunkUrl = resolveChunkUrl(baseUrl, m3u8Url, nextLine, queryStr)
                         chunks.add(SubtitleChunk(chunkUrl, timeAccumulator, timeAccumulator + duration))
                         timeAccumulator += duration
                     }
@@ -73,21 +94,21 @@ object VttSubtitleFetcher {
     }
 
     @OptIn(ExperimentalWasmJsInterop::class)
-    suspend fun fetchAndParseVtt(url: String): List<SubtitleCue> {
+    suspend fun fetchAndParseVtt(url: String): List<SubtitleCue>? {
         return try {
             val response = window.fetch(url).await()
-            if (!response.ok) return emptyList()
+            if (!response.ok) return null
             val text = response.text().await().toString()
             parseVttContent(text)
         } catch (e: Exception) {
             println("Failed to fetch VTT: ${e.message}")
-            emptyList()
+            null
         }
     }
 
     private fun parseVttContent(content: String): List<SubtitleCue> {
         val cues = mutableListOf<SubtitleCue>()
-        val lines = content.lines().map { it.trim() }
+        val lines = content.replace("\r\n", "\n").replace("\r", "\n").lines().map { it.trim() }
         
         var currentStart = -1.0
         var currentEnd = -1.0
@@ -103,14 +124,13 @@ object VttSubtitleFetcher {
                 }
             } else if (line.isEmpty()) {
                 if (currentStart != -1.0 && currentEnd != -1.0 && currentText.isNotEmpty()) {
-                    cues.add(SubtitleCue(currentStart, currentEnd, currentText.toString().trim()))
+                    val cleanText = currentText.toString().trim().replace(Regex("<[^>]*>"), "")
+                    cues.add(SubtitleCue(currentStart, currentEnd, cleanText))
                     currentStart = -1.0
                     currentEnd = -1.0
                     currentText.clear()
                 }
             } else if (!line.startsWith("WEBVTT") && !line.startsWith("X-TIMESTAMP-MAP") && !line.startsWith("NOTE")) {
-                // If it's a timestamp line or ID line, we just append if we already parsed a timestamp
-                // But VTT can have IDs above the timestamp. We ignore IDs.
                 if (currentStart != -1.0) {
                     if (currentText.isNotEmpty()) currentText.append("\n")
                     currentText.append(line)
@@ -118,9 +138,9 @@ object VttSubtitleFetcher {
             }
         }
         
-        // Add the last cue if file didn't end with a blank line
         if (currentStart != -1.0 && currentEnd != -1.0 && currentText.isNotEmpty()) {
-            cues.add(SubtitleCue(currentStart, currentEnd, currentText.toString().trim()))
+            val cleanText = currentText.toString().trim().replace(Regex("<[^>]*>"), "")
+            cues.add(SubtitleCue(currentStart, currentEnd, cleanText))
         }
         
         return cues

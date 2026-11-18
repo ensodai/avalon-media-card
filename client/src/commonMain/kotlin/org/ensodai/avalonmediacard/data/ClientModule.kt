@@ -10,6 +10,8 @@ import org.ensodai.avalonmediacard.contract.rpc.SduiRpcService
 import org.ensodai.avalonmediacard.contract.rpc.TelemetryRpcService
 import org.ensodai.avalonmediacard.contract.rpc.UserSettingsRpcService
 import org.ensodai.avalonmediacard.contract.rpc.WatchPartyRpcService
+import org.ensodai.avalonmediacard.core.AppUpdateManager
+import org.ensodai.avalonmediacard.core.createPlatformUpdateManager
 import org.ensodai.avalonmediacard.data.rpc.ReconnectingActionRpcService
 import org.ensodai.avalonmediacard.data.rpc.ReconnectingAdminRpcService
 import org.ensodai.avalonmediacard.data.rpc.ReconnectingAuthRpcService
@@ -84,6 +86,9 @@ class AppClientModule {
 
     @Single
     fun dialogManager() = DialogManager()
+
+    @Single
+    fun provideAppUpdateManager(): AppUpdateManager = createPlatformUpdateManager()
 }
 
 @org.koin.core.annotation.KoinApplication(modules = [AppClientModule::class])

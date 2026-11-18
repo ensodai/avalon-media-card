@@ -105,3 +105,8 @@ client/src/jvmMain/resources/linux-x86-64/
 desktopApp/src/jvmMain/resources/linux-x86-64/
 mpv-libs/
 client/src/jvmMain/resources/mpv/
+
+# ==========================================
+# 🚀 Deployment configs (server-specific)
+# ==========================================
+deploy/

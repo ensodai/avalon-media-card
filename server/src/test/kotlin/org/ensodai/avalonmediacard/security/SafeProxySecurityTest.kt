@@ -145,6 +145,42 @@ class SafeProxySecurityTest {
     }
 
     @Test
+    fun testSubtitleM3u8RewriterPreservesVttExtension() {
+        val mockSettings = MockSystemSettingsRepository()
+        val tokenService = StreamTokenService(mockSettings)
+        val userId = Uuid.random()
+
+        val sampleSubM3u8 = """
+            #EXTM3U
+            #EXT-X-VERSION:7
+            #EXT-X-TARGETDURATION:6
+            #EXTINF:6.000000,
+            0/0.vtt
+            #EXTINF:6.000000,
+            0/1.vtt
+        """.trimIndent()
+
+        val rewritten = rewriteM3u8Playlist(
+            content = sampleSubM3u8,
+            baseUrlStr = "http://torrserver:8090/gst/abc/subs/0.m3u8",
+            userId = userId,
+            flags = 0x00,
+            customHeaders = emptyMap(),
+            authHeader = null,
+            tokenService = tokenService
+        )
+
+        assertTrue(rewritten.contains("/subtitles.vtt"))
+        assertFalse(rewritten.contains("/segment.ts"))
+
+        val tokenLine = rewritten.lines().first { it.contains("subtitles.vtt") }
+        val extractedToken = tokenLine.substringAfter("/api/stream-proxy/").substringBefore("/subtitles.vtt")
+        val payload = tokenService.decryptAndValidate(extractedToken)
+        assertNotNull(payload)
+        assertEquals("http://torrserver:8090/gst/abc/subs/0/0.vtt", payload.targetUrl)
+    }
+
+    @Test
     fun testMpdRewriter() {
         val mockSettings = MockSystemSettingsRepository()
         val tokenService = StreamTokenService(mockSettings)

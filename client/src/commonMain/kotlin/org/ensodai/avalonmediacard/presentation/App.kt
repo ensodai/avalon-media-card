@@ -32,6 +32,7 @@ import org.ensodai.avalonmediacard.contract.rpc.ActionRpcService
 import org.ensodai.avalonmediacard.contract.rpc.AuthRpcService
 import org.ensodai.avalonmediacard.contract.rpc.SduiRpcService
 import org.ensodai.avalonmediacard.contract.slot.RefreshIntegrationsCommand
+import org.ensodai.avalonmediacard.core.AppUpdateManager
 import org.ensodai.avalonmediacard.core.clearUrlQueryParameters
 import org.ensodai.avalonmediacard.core.getUrlQueryParameters
 import org.ensodai.avalonmediacard.data.AppSettingsStorage
@@ -39,6 +40,7 @@ import org.ensodai.avalonmediacard.data.TokenStorage
 import org.ensodai.avalonmediacard.data.UiModeOverride
 import org.ensodai.avalonmediacard.data.repository.GlobalManifestRepository
 import org.ensodai.avalonmediacard.data.rpc.RpcConnectionManager
+import org.ensodai.avalonmediacard.presentation.components.UpdateBannerOverlay
 import org.ensodai.avalonmediacard.presentation.locale.setAppLocale
 import org.ensodai.avalonmediacard.presentation.navigation.ScreenKey
 import org.ensodai.avalonmediacard.presentation.screens.commonComponents.DeviceTarget
@@ -62,6 +64,7 @@ fun App() {
     val dialogManager = koinInject<DialogManager>()
     val telemetryTracker = koinInject<TelemetryTracker>()
     val appSettingsStorage = koinInject<AppSettingsStorage>()
+    val appUpdateManager = koinInject<AppUpdateManager>()
 
     val tokenState by tokenStorage.token.collectAsState()
     val userRoleState by tokenStorage.userRole.collectAsState()
@@ -295,18 +298,21 @@ fun App() {
                         LocalTelemetryTracker provides telemetryTracker,
                         LocalDeviceTarget provides finalTarget
                     ) {
-                        MainAppContent(
-                            sidebarItems = sidebarItems,
-                            tokenStorage = tokenStorage,
-                            sduiRpcService = sduiRpcService,
-                            actionRpcService = actionRpcService,
-                            dialogManager = dialogManager,
-                            configuration = configuration,
-                            uploadStatus = uploadStatus,
-                            onUploadStatusChange = { uploadStatus = it },
-                            userRole = userRoleState,
-                            scope = scope
-                        )
+                        Box(modifier = Modifier.fillMaxSize()) {
+                            MainAppContent(
+                                sidebarItems = sidebarItems,
+                                tokenStorage = tokenStorage,
+                                sduiRpcService = sduiRpcService,
+                                actionRpcService = actionRpcService,
+                                dialogManager = dialogManager,
+                                configuration = configuration,
+                                uploadStatus = uploadStatus,
+                                onUploadStatusChange = { uploadStatus = it },
+                                userRole = userRoleState,
+                                scope = scope
+                            )
+                            UpdateBannerOverlay(updateManager = appUpdateManager)
+                        }
                     }
                 }
             }

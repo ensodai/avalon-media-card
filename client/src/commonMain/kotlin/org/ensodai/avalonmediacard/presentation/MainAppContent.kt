@@ -48,6 +48,7 @@ import org.ensodai.avalonmediacard.presentation.screens.myCollectionScreen.MyCol
 import org.ensodai.avalonmediacard.presentation.screens.person.PersonScreen
 import org.ensodai.avalonmediacard.presentation.screens.search.SearchScreen
 import org.ensodai.avalonmediacard.presentation.screens.settings.SettingsScreen
+import org.ensodai.avalonmediacard.presentation.screens.statsScreen.StatsScreen
 import org.ensodai.avalonmediacard.presentation.screens.trendsScreen.TrendsScreen
 import avalonmediacard.client.generated.resources.*
 import org.ensodai.avalonmediacard.presentation.screens.tvShowsScreen.TvShowsScreen
@@ -380,6 +381,10 @@ fun MainAppContent(
                                                     is Screen.WatchRooms -> {
                                                         val expectedCount = allSidebarItems.find { it.itemId == "watch_rooms" }?.itemsCount
                                                         WatchRoomsScreen(expectedItemsCount = expectedCount)
+                                                    }
+
+                                                    is Screen.Stats -> {
+                                                        StatsScreen()
                                                     }
                                                 }
                                             }

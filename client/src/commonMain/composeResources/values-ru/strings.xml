@@ -558,4 +558,96 @@
     <string name="update_banner_version_ready">Новая версия %1$s готова</string>
     <string name="update_banner_click_to_apply">Нажмите, чтобы применить свежую версию</string>
     <string name="update_banner_btn_update">Обновить</string>
+
+    <!-- Stats Screen -->
+    <string name="stats_screen_title">Статистика синефила</string>
+    <string name="stats_screen_subtitle">Персональный дашборд привычек и вкусов</string>
+    <string name="stats_refresh">Обновить статистику</string>
+    <string name="stats_retry">Повторить попытку</string>
+    <string name="stats_loading_error">Не удалось загрузить статистику</string>
+    <string name="stats_btn_view_stats">Статистика</string>
+
+    <!-- Stats: Hero Time -->
+    <string name="stats_hero_time_title">ЭКРАННОЕ ВРЕМЯ</string>
+    <string name="stats_hero_time_movies_fmt">Фильмы: %1$d ч (%2$d%%)</string>
+    <string name="stats_hero_time_shows_fmt">Сериалы: %1$d ч (%2$d%%)</string>
+    <string name="stats_hero_time_days_hours_fmt">%1$d д %2$d ч</string>
+    <string name="stats_hero_time_hours_mins_fmt">%1$d ч %2$d м</string>
+    <string name="stats_hero_time_mins_fmt">%1$d мин</string>
+
+    <!-- Stats: Time Milestones -->
+    <string name="stats_milestone_first_steps_title">Первые шаги синефила</string>
+    <string name="stats_milestone_first_steps_desc">Отличное начало для персональной коллекции впечатлений</string>
+    <string name="stats_milestone_lotr_title">Марафон «Властелина Колец»</string>
+    <string name="stats_milestone_lotr_desc">Эквивалентно %1$d полным просмотрам трилогии в режиссёрской версии</string>
+    <string name="stats_milestone_apollo_title">Полёт на Луну</string>
+    <string name="stats_milestone_apollo_desc">Сравнимо со временем полёта экспедиции Apollo-11 до Луны (72 часа)</string>
+    <string name="stats_milestone_orbital_title">Орбитальная миссия</string>
+    <string name="stats_milestone_orbital_desc">Сравнимо с неделями исследовательской вахты космонавтов на МКС</string>
+    <string name="stats_milestone_archivist_title">Кинематографический Архивариус</string>
+    <string name="stats_milestone_archivist_desc">Целых %1$d суток чистого экранного времени в истории кино</string>
+
+    <!-- Stats: Archetypes -->
+    <string name="stats_archetype_badge">ВАШ КИНОАРХЕТИП</string>
+    <string name="stats_archetype_share">Поделиться</string>
+    <string name="stats_archetype_forming_title">Формирование архетипа</string>
+    <string name="stats_archetype_forming_subtitle">Продолжайте исследовать кино</string>
+    <string name="stats_archetype_forming_desc">Отметьте больше фильмов и сериалов, чтобы алгоритм вычислил ваш кинематографический психотип.</string>
+
+    <string name="stats_archetype_scifi_title">Sci-Fi Визионер</string>
+    <string name="stats_archetype_scifi_subtitle">Взгляд в далёкие галактики и будущее</string>
+    <string name="stats_archetype_scifi_desc">Вас влекут технологические сингулярности, космические одиссеи и философские вопросы о месте человека во Вселенной.</string>
+
+    <string name="stats_archetype_suspense_title">Охотник за саспенсом</string>
+    <string name="stats_archetype_suspense_subtitle">Напряжение, адреналин и тайны</string>
+    <string name="stats_archetype_suspense_desc">Вы цените леденящую атмосферу, закрученные детективные узлы и непредсказуемые сюжетные твисты до самого финала.</string>
+
+    <string name="stats_archetype_empath_title">Глубокий эмпат</string>
+    <string name="stats_archetype_empath_subtitle">Человеческие истории и тонкий психологизм</string>
+    <string name="stats_archetype_empath_desc">Ваше сердце открыто глубоким драмам, сложным межличностным дилеммам и искренним эмоциональным переживаниям.</string>
+
+    <string name="stats_archetype_dopamine_title">Искатель дофамина</string>
+    <string name="stats_archetype_dopamine_subtitle">Яркие эмоции, юмор и чистый драйв</string>
+    <string name="stats_archetype_dopamine_desc">Вы выбираете кино для вдохновения, заряда бодрости, искромётных комедий и динамичного визуального зрелища.</string>
+
+    <string name="stats_archetype_voyager_title">Любознательный странник</string>
+    <string name="stats_archetype_voyager_subtitle">История, эпохи и редкие хроники</string>
+    <string name="stats_archetype_voyager_desc">Ваш вкус не признаёт шаблонов: вы исследуете мировое наследие, классические десятилетия и документальные архивы.</string>
+
+    <!-- Stats: Library -->
+    <string name="stats_library_title">БИБЛИОТЕКА И ПРОГРЕСС</string>
+    <string name="stats_library_movies">Фильмов</string>
+    <string name="stats_library_episodes">Серий</string>
+    <string name="stats_library_shows">Сериалов</string>
+    <string name="stats_library_backlog_status">СТАТУС СЕРИАЛОВ</string>
+    <string name="stats_library_status_watching">Смотрю</string>
+    <string name="stats_library_status_completed">Завершено</string>
+    <string name="stats_library_status_planned">В планах</string>
+    <string name="stats_library_status_dropped">Брошено</string>
+
+    <!-- Stats: Ratings -->
+    <string name="stats_ratings_title">РАСПРЕДЕЛЕНИЕ ОЦЕНОК</string>
+    <string name="stats_ratings_total_fmt">Всего оценено: %1$d тайтлов</string>
+    <string name="stats_critic_no_ratings">Нет оценок</string>
+    <string name="stats_critic_enthusiast">Киноэнтузиаст — ищет и ценит только лучшие шедевры</string>
+    <string name="stats_critic_generous">Щедрый зритель — искренне наслаждается просмотром</string>
+    <string name="stats_critic_balanced">Взвешенный критик — объективен и беспристрастен</string>
+    <string name="stats_critic_strict">Строгий эстет — высший балл заслужить крайне нелегко</string>
+
+    <!-- Stats: Genres -->
+    <string name="stats_genres_title">ДНК ЖАНРОВ</string>
+    <string name="stats_genres_empty">Пока недостаточно данных по жанрам</string>
+    <string name="stats_genres_count_fmt">%1$d тайтлов</string>
+
+    <!-- Stats: Top People -->
+    <string name="stats_people_title">ЛИДЕРБОРД ПЕРСОН</string>
+    <string name="stats_people_directors">Режиссеры</string>
+    <string name="stats_people_actors">Актеры</string>
+    <string name="stats_people_empty_directors">Пока нет данных по режиссерам</string>
+    <string name="stats_people_empty_actors">Пока нет данных по актерам</string>
+    <string name="stats_people_watched_count_fmt">%1$d работ просмотрено</string>
+
+    <!-- Stats: Decades -->
+    <string name="stats_decades_title">МАШИНА ВРЕМЕНИ (ЭПОХИ)</string>
+    <string name="stats_decades_empty">Пока нет данных по годам выпуска</string>
 </resources>

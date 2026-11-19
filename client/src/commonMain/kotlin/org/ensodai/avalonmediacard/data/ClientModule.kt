@@ -7,6 +7,7 @@ import org.ensodai.avalonmediacard.contract.rpc.AdminRpcService
 import org.ensodai.avalonmediacard.contract.rpc.AuthRpcService
 import org.ensodai.avalonmediacard.contract.rpc.PlaybackRpcService
 import org.ensodai.avalonmediacard.contract.rpc.SduiRpcService
+import org.ensodai.avalonmediacard.contract.rpc.StatsRpcService
 import org.ensodai.avalonmediacard.contract.rpc.TelemetryRpcService
 import org.ensodai.avalonmediacard.contract.rpc.UserSettingsRpcService
 import org.ensodai.avalonmediacard.contract.rpc.WatchPartyRpcService
@@ -17,6 +18,7 @@ import org.ensodai.avalonmediacard.data.rpc.ReconnectingAdminRpcService
 import org.ensodai.avalonmediacard.data.rpc.ReconnectingAuthRpcService
 import org.ensodai.avalonmediacard.data.rpc.ReconnectingPlaybackRpcService
 import org.ensodai.avalonmediacard.data.rpc.ReconnectingSduiRpcService
+import org.ensodai.avalonmediacard.data.rpc.ReconnectingStatsRpcService
 import org.ensodai.avalonmediacard.data.rpc.ReconnectingTelemetryRpcService
 import org.ensodai.avalonmediacard.data.rpc.ReconnectingUserSettingsRpcService
 import org.ensodai.avalonmediacard.data.rpc.ReconnectingWatchPartyRpcService
@@ -75,6 +77,10 @@ class AppClientModule {
     @Single
     fun provideUserSettingsRpcService(rpcConnectionManager: RpcConnectionManager, executor: RpcCallExecutor): UserSettingsRpcService =
         ReconnectingUserSettingsRpcService(rpcConnectionManager, executor)
+
+    @Single
+    fun provideStatsRpcService(rpcConnectionManager: RpcConnectionManager, executor: RpcCallExecutor): StatsRpcService =
+        ReconnectingStatsRpcService(rpcConnectionManager, executor)
 
     @Single
     fun provideWatchPartyRpcService(rpcConnectionManager: RpcConnectionManager, executor: RpcCallExecutor): WatchPartyRpcService =

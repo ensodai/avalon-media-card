@@ -67,7 +67,7 @@ abstract class CommonPlaybackController : PlaybackController {
         }
 
         val currentSub = _selectedSubtitleTrack
-        if (currentSub != null && subtitleTracks.none { it.id == currentSub.id }) {
+        if (currentSub != null && subtitleTracks.isNotEmpty() && subtitleTracks.none { it.id == currentSub.id }) {
             _selectedSubtitleTrack = null
         }
     }

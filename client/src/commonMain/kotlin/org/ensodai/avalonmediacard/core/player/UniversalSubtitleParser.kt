@@ -87,7 +87,7 @@ object UniversalSubtitleParser {
     }
 
     private fun sanitizeTags(input: String): String {
-        return input.replace(Regex("<[^>]*>"), "")
+        return SubtitleSanitizer.sanitize(input)
     }
 
     fun binarySearchActiveCues(cues: List<SubtitleCue>, currentTimeMs: Long): List<SubtitleCue> {

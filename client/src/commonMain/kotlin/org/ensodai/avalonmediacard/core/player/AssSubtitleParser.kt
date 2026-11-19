@@ -73,11 +73,6 @@ object AssSubtitleParser {
     }
 
     private fun sanitizeAssTags(text: String): String {
-        return text
-            .replace(Regex("\\{[^}]*\\}"), "")
-            .replace("\\N", "\n")
-            .replace("\\n", "\n")
-            .replace("\\h", " ")
-            .trim()
+        return SubtitleSanitizer.sanitize(text)
     }
 }

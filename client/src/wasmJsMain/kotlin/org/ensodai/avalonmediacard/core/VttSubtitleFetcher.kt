@@ -2,6 +2,7 @@ package org.ensodai.avalonmediacard.core
 
 import kotlinx.browser.window
 import kotlinx.coroutines.await
+import org.ensodai.avalonmediacard.core.player.SubtitleSanitizer
 
 data class SubtitleCue(
     val start: Double,
@@ -124,7 +125,7 @@ object VttSubtitleFetcher {
                 }
             } else if (line.isEmpty()) {
                 if (currentStart != -1.0 && currentEnd != -1.0 && currentText.isNotEmpty()) {
-                    val cleanText = currentText.toString().trim().replace(Regex("<[^>]*>"), "")
+                    val cleanText = SubtitleSanitizer.sanitize(currentText.toString())
                     cues.add(SubtitleCue(currentStart, currentEnd, cleanText))
                     currentStart = -1.0
                     currentEnd = -1.0
@@ -139,7 +140,7 @@ object VttSubtitleFetcher {
         }
         
         if (currentStart != -1.0 && currentEnd != -1.0 && currentText.isNotEmpty()) {
-            val cleanText = currentText.toString().trim().replace(Regex("<[^>]*>"), "")
+            val cleanText = SubtitleSanitizer.sanitize(currentText.toString())
             cues.add(SubtitleCue(currentStart, currentEnd, cleanText))
         }
         

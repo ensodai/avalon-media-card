@@ -552,4 +552,10 @@
     <string name="watch_party_chat_send">Отправить</string>
     <string name="watch_party_chat_sending">Отправка...</string>
     <string name="watch_party_chat_you_fmt">Вы (%1$s)</string>
+
+    <!-- App Update -->
+    <string name="update_banner_title">Доступно обновление</string>
+    <string name="update_banner_version_ready">Новая версия %1$s готова</string>
+    <string name="update_banner_click_to_apply">Нажмите, чтобы применить свежую версию</string>
+    <string name="update_banner_btn_update">Обновить</string>
 </resources>

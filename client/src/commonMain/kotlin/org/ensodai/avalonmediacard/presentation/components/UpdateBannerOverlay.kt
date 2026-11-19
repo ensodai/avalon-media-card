@@ -38,6 +38,8 @@ import com.composables.icons.lucide.Lucide
 import com.composables.icons.lucide.RefreshCw
 import com.composables.icons.lucide.Sparkles
 import com.composables.icons.lucide.X
+import avalonmediacard.client.generated.resources.*
+import org.jetbrains.compose.resources.stringResource
 import org.ensodai.avalonmediacard.core.AppUpdateManager
 
 @Composable
@@ -94,13 +96,17 @@ fun UpdateBannerOverlay(
 
                     Column {
                         Text(
-                            text = "Доступно обновление",
+                            text = stringResource(Res.string.update_banner_title),
                             fontSize = 14.sp,
                             fontWeight = FontWeight.SemiBold,
                             color = MaterialTheme.colorScheme.onSurface
                         )
                         Text(
-                            text = if (!versionName.isNullOrBlank()) "Новая версия $versionName готова" else "Нажмите, чтобы применить свежую версию",
+                            text = if (!versionName.isNullOrBlank()) {
+                                stringResource(Res.string.update_banner_version_ready, versionName!!)
+                            } else {
+                                stringResource(Res.string.update_banner_click_to_apply)
+                            },
                             fontSize = 12.sp,
                             color = MaterialTheme.colorScheme.onSurfaceVariant
                         )
@@ -119,7 +125,7 @@ fun UpdateBannerOverlay(
                             modifier = Modifier.size(16.dp)
                         )
                         Spacer(modifier = Modifier.width(6.dp))
-                        Text(text = "Обновить", fontSize = 13.sp)
+                        Text(text = stringResource(Res.string.update_banner_btn_update), fontSize = 13.sp)
                     }
 
                     IconButton(
@@ -128,7 +134,7 @@ fun UpdateBannerOverlay(
                     ) {
                         Icon(
                             imageVector = Lucide.X,
-                            contentDescription = "Закрыть",
+                            contentDescription = stringResource(Res.string.common_close),
                             modifier = Modifier.size(18.dp),
                             tint = MaterialTheme.colorScheme.onSurfaceVariant
                         )

@@ -377,7 +377,7 @@ fun SidebarMenuItem(
         "search" -> Lucide.Search
         "bell" -> Lucide.Bell
         "users" -> Lucide.Users
-        "stats", "chart" -> Lucide.Sparkles
+        "stats", "chart" -> Lucide.ChartColumn
         else -> if (isMainGroup) Lucide.LayoutGrid else Lucide.Hash
     }
 

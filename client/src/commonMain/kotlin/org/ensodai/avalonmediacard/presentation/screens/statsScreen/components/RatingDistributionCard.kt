@@ -95,40 +95,29 @@ fun RatingDistributionCard(
                     Spacer(modifier = Modifier.width(8.dp))
                     Text(
                         text = stringResource(Res.string.stats_ratings_title),
-                        style = MaterialTheme.typography.labelSmall.copy(
-                            letterSpacing = 1.2.sp
-                        ),
-                        fontWeight = FontWeight.Bold,
-                        color = colors.textSecondary
+                        style = AvalonTheme.typography.sectionTitle,
+                        color = colors.textPrimary
                     )
                 }
 
                 if (avg != null) {
-                    // Бейдж среднего балла: фон bgElevated, радиус control (10dp), без внутренней рамки
-                    Surface(
-                        shape = shapes.control,
-                        color = colors.bgElevated
-                    ) {
-                        Row(
-                            verticalAlignment = Alignment.CenterVertically,
-                            modifier = Modifier.padding(horizontal = 10.dp, vertical = 5.dp)
-                        ) {
-                            Icon(
-                                imageVector = Lucide.Star,
-                                contentDescription = null,
-                                tint = colors.accentGold,
-                                modifier = Modifier.size(12.dp)
-                            )
-                            Spacer(modifier = Modifier.width(5.dp))
-                            Text(
-                                text = ((avg * 10).toInt() / 10.0).toString(),
-                                style = MaterialTheme.typography.labelSmall.copy(
-                                    fontFeatureSettings = "tnum"
-                                ),
-                                fontWeight = FontWeight.Bold,
-                                color = colors.accentGold
-                            )
-                        }
+                    // Чистая типографика среднего балла: золотая звезда + число с tnum без псевдокнопки
+                    Row(verticalAlignment = Alignment.CenterVertically) {
+                        Icon(
+                            imageVector = Lucide.Star,
+                            contentDescription = null,
+                            tint = colors.accentGold,
+                            modifier = Modifier.size(14.dp)
+                        )
+                        Spacer(modifier = Modifier.width(4.dp))
+                        Text(
+                            text = ((avg * 10).toInt() / 10.0).toString(),
+                            style = AvalonTheme.typography.uiLabel.copy(
+                                fontFeatureSettings = "tnum"
+                            ),
+                            fontWeight = FontWeight.Bold,
+                            color = colors.textPrimary
+                        )
                     }
                 }
             }

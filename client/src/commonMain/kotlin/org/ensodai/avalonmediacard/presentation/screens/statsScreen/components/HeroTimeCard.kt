@@ -212,11 +212,8 @@ fun HeroTimeCard(
                     Spacer(modifier = Modifier.width(8.dp))
                     Text(
                         text = stringResource(Res.string.stats_hero_time_title),
-                        style = MaterialTheme.typography.labelSmall.copy(
-                            letterSpacing = 1.2.sp
-                        ),
-                        fontWeight = FontWeight.Bold,
-                        color = colors.textSecondary
+                        style = AvalonTheme.typography.sectionTitle,
+                        color = colors.textPrimary
                     )
                 }
 

@@ -569,7 +569,7 @@
     <string name="stats_btn_view_stats">Stats</string>
 
     <!-- Stats: Hero Time -->
-    <string name="stats_hero_time_title">SCREEN TIME</string>
+    <string name="stats_hero_time_title">Screen Time</string>
     <string name="stats_hero_time_movies_fmt">Movies: %1$d h (%2$d%)</string>
     <string name="stats_hero_time_shows_fmt">Shows: %1$d h (%2$d%)</string>
     <string name="stats_hero_time_days_hours_fmt">%1$d d %2$d h</string>
@@ -589,7 +589,7 @@
     <string name="stats_milestone_archivist_desc">A total of %1$d days of pure screen time in film history</string>
 
     <!-- Stats: Archetypes -->
-    <string name="stats_archetype_badge">YOUR CINE ARCHETYPE</string>
+    <string name="stats_archetype_badge">Your Cine Archetype</string>
     <string name="stats_archetype_share">Share</string>
     <string name="stats_archetype_forming_title">Archetype Forming</string>
     <string name="stats_archetype_forming_subtitle">Keep exploring cinema</string>
@@ -616,12 +616,12 @@
     <string name="stats_archetype_voyager_desc">Your taste knows no conventions: you explore global heritage, classical decades, and documentary archives.</string>
 
     <!-- Stats: Library -->
-    <string name="stats_library_title">LIBRARY &amp; PROGRESS</string>
+    <string name="stats_library_title">Library &amp; Progress</string>
     <string name="stats_library_movies">Movies</string>
     <string name="stats_library_episodes">Episodes</string>
     <string name="stats_library_shows">Shows</string>
-    <string name="stats_library_backlog_status">SHOWS STATUS</string>
-    <string name="stats_library_movies_status">MOVIES STATUS</string>
+    <string name="stats_library_backlog_status">Shows Status</string>
+    <string name="stats_library_movies_status">Movies Status</string>
     <string name="stats_library_tab_shows">Shows</string>
     <string name="stats_library_tab_movies">Movies</string>
     <string name="stats_library_status_watching">Watching</string>
@@ -634,7 +634,7 @@
     <string name="stats_decade_list_title_fmt">Era • %1$s</string>
 
     <!-- Stats: Ratings -->
-    <string name="stats_ratings_title">RATINGS DISTRIBUTION</string>
+    <string name="stats_ratings_title">Ratings Distribution</string>
     <string name="stats_ratings_total_fmt">Total rated: %1$d titles</string>
     <string name="stats_ratings_list_title_fmt">Rating: ★ %1$d</string>
     <string name="stats_critic_no_ratings">No ratings yet</string>
@@ -644,13 +644,13 @@
     <string name="stats_critic_strict">Strict Aesthete — top score is extremely hard to earn</string>
 
     <!-- Stats: Genres -->
-    <string name="stats_genres_title">GENRE DNA</string>
+    <string name="stats_genres_title">Genre DNA</string>
     <string name="stats_genres_empty">Not enough genre data yet</string>
     <string name="stats_genres_count_fmt">%1$d</string>
     <string name="stats_genres_total_fmt">Total: %1$d</string>
 
     <!-- Stats: Top People -->
-    <string name="stats_people_title">TOP PEOPLE LEADERBOARD</string>
+    <string name="stats_people_title">Top People Leaderboard</string>
     <string name="stats_people_directors">Directors</string>
     <string name="stats_people_actors">Actors</string>
     <string name="stats_people_empty_directors">No director data yet</string>
@@ -658,7 +658,7 @@
     <string name="stats_people_watched_count_fmt">%1$d works watched</string>
 
     <!-- Stats: Decades -->
-    <string name="stats_decades_title">TIME MACHINE (ERAS)</string>
+    <string name="stats_decades_title">Time Machine (Eras)</string>
     <string name="stats_decades_empty">No release year data yet</string>
     <string name="stats_decades_list_title_fmt">Era: %1$s</string>
     <string name="stats_decade_before_70">&lt;70</string>
@@ -670,7 +670,7 @@
     <string name="stats_decade_20s">20s</string>
 
     <!-- Stats: Activity Heatmap -->
-    <string name="stats_heatmap_title">ACTIVITY HEATMAP</string>
+    <string name="stats_heatmap_title">Activity Heatmap</string>
     <string name="stats_heatmap_subtitle">365 days of cinema rhythm</string>
     <string name="stats_heatmap_mode_volume">Volume</string>
     <string name="stats_heatmap_mode_ratings">Day Rating</string>

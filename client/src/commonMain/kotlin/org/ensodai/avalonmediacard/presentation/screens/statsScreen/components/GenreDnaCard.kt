@@ -102,11 +102,8 @@ fun GenreDnaCard(
                     Spacer(modifier = Modifier.width(8.dp))
                     Text(
                         text = genresTitle,
-                        style = MaterialTheme.typography.labelSmall.copy(
-                            letterSpacing = 1.2.sp
-                        ),
-                        fontWeight = FontWeight.Bold,
-                        color = colors.textSecondary
+                        style = AvalonTheme.typography.sectionTitle,
+                        color = colors.textPrimary
                     )
                 }
 

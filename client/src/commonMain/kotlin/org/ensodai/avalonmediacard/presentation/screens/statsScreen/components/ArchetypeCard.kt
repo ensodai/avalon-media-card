@@ -94,11 +94,8 @@ fun ArchetypeCard(
                     Spacer(modifier = Modifier.width(8.dp))
                     Text(
                         text = stringResource(Res.string.stats_archetype_badge),
-                        style = MaterialTheme.typography.labelSmall.copy(
-                            letterSpacing = 1.2.sp
-                        ),
-                        fontWeight = FontWeight.Bold,
-                        color = colors.textSecondary
+                        style = AvalonTheme.typography.sectionTitle,
+                        color = colors.textPrimary
                     )
                 }
 
@@ -135,8 +132,7 @@ fun ArchetypeCard(
             // Название архетипа
             Text(
                 text = title,
-                style = MaterialTheme.typography.headlineMedium,
-                fontWeight = FontWeight.Black,
+                style = AvalonTheme.typography.kpiTile,
                 color = colors.textPrimary
             )
 
@@ -148,8 +144,7 @@ fun ArchetypeCard(
             ) {
                 Text(
                     text = subtitle,
-                    style = MaterialTheme.typography.labelSmall,
-                    fontWeight = FontWeight.SemiBold,
+                    style = AvalonTheme.typography.metadata,
                     color = colors.textSecondary,
                     modifier = Modifier.padding(horizontal = 10.dp, vertical = 4.dp)
                 )
@@ -159,9 +154,8 @@ fun ArchetypeCard(
 
             Text(
                 text = description,
-                style = MaterialTheme.typography.bodyMedium,
-                color = colors.textSecondary,
-                lineHeight = 21.sp
+                style = AvalonTheme.typography.bodySynopsis,
+                color = colors.textSecondary
             )
         }
     }

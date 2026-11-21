@@ -117,11 +117,8 @@ fun ActivityHeatmapCard(
                         )
                         Text(
                             text = stringResource(Res.string.stats_heatmap_title),
-                            style = MaterialTheme.typography.labelSmall.copy(
-                                letterSpacing = 1.2.sp
-                            ),
-                            fontWeight = FontWeight.Bold,
-                            color = colors.textSecondary
+                            style = AvalonTheme.typography.sectionTitle,
+                            color = colors.textPrimary
                         )
                     }
 

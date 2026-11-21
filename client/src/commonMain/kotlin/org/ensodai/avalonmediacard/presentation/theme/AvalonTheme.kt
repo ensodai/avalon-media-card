@@ -2,8 +2,11 @@ package org.ensodai.avalonmediacard.presentation.theme
 
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.ReadOnlyComposable
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
+import org.ensodai.avalonmediacard.presentation.screens.commonComponents.LocalDeviceTarget
 
 /**
  * Avalon MediaCard Design Tokens («Obsidian Cinema»).
@@ -65,4 +68,9 @@ object AvalonTheme {
     val colors: AvalonColors = AvalonColors
     val shapes: AvalonShapes = AvalonShapes
     val spacing: AvalonSpacing = AvalonSpacing
+
+    val typography: AvalonTypography
+        @Composable
+        @ReadOnlyComposable
+        get() = if (LocalDeviceTarget.current.isTv) AvalonTypographyTv else AvalonTypographyDesktop
 }

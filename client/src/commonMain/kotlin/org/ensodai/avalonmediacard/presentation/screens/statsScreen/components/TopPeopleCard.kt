@@ -91,11 +91,8 @@ fun TopPeopleCard(
                         Spacer(modifier = Modifier.width(8.dp))
                         Text(
                             text = stringResource(Res.string.stats_people_title),
-                            style = MaterialTheme.typography.labelSmall.copy(
-                                letterSpacing = 1.2.sp
-                            ),
-                            fontWeight = FontWeight.Bold,
-                            color = colors.textSecondary
+                            style = AvalonTheme.typography.sectionTitle,
+                            color = colors.textPrimary
                         )
                     }
 
@@ -167,10 +164,7 @@ fun TopPeopleCard(
 private fun SectionHeader(title: String) {
     Text(
         text = title,
-        style = MaterialTheme.typography.labelSmall.copy(
-            letterSpacing = 0.8.sp
-        ),
-        fontWeight = FontWeight.Bold,
+        style = AvalonTheme.typography.uiLabel,
         color = AvalonTheme.colors.textSecondary
     )
 }

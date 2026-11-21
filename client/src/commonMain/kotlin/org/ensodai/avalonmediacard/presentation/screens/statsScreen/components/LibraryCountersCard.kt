@@ -151,11 +151,8 @@ fun LibraryCountersCard(
                 Spacer(modifier = Modifier.width(8.dp))
                 Text(
                     text = stringResource(Res.string.stats_library_title),
-                    style = MaterialTheme.typography.labelSmall.copy(
-                        letterSpacing = 1.2.sp
-                    ),
-                    fontWeight = FontWeight.Bold,
-                    color = colors.textSecondary
+                    style = AvalonTheme.typography.sectionTitle,
+                    color = colors.textPrimary
                 )
             }
 
@@ -226,10 +223,7 @@ fun LibraryCountersCard(
                     } else {
                         stringResource(Res.string.stats_library_movies_status)
                     },
-                    style = MaterialTheme.typography.labelSmall.copy(
-                        letterSpacing = 0.8.sp
-                    ),
-                    fontWeight = FontWeight.SemiBold,
+                    style = AvalonTheme.typography.uiLabel,
                     color = colors.textSecondary
                 )
 
@@ -433,20 +427,11 @@ private fun KpiPill(
 
     val animatedBg by animateColorAsState(
         if (isSelected) {
-            colors.borderSubtle.copy(alpha = 0.7f)
+            colors.bgOverlay
         } else if (isHovered) {
             colors.borderSubtle.copy(alpha = 0.4f)
         } else {
             colors.bgElevated
-        }
-    )
-    val animatedBorderColor by animateColorAsState(
-        if (isSelected) {
-            colors.borderStrong
-        } else if (isHovered) {
-            colors.borderStrong.copy(alpha = 0.5f)
-        } else {
-            Color.Transparent
         }
     )
     val animatedIconColor by animateColorAsState(
@@ -471,7 +456,7 @@ private fun KpiPill(
             },
         shape = shapes.control,
         color = animatedBg,
-        border = BorderStroke(1.dp, animatedBorderColor)
+        border = null
     ) {
         Column(
             modifier = Modifier.padding(horizontal = 14.dp, vertical = 12.dp),
@@ -483,19 +468,17 @@ private fun KpiPill(
                 tint = animatedIconColor,
                 modifier = Modifier.size(16.dp)
             )
-            Spacer(modifier = Modifier.height(8.dp))
+            Spacer(modifier = Modifier.height(6.dp))
             Text(
                 text = count.toString(),
-                style = MaterialTheme.typography.titleLarge.copy(
-                    fontFeatureSettings = "tnum"
-                ),
-                fontWeight = FontWeight.Black,
+                style = AvalonTheme.typography.kpiTile,
                 color = colors.textPrimary
             )
+            Spacer(modifier = Modifier.height(2.dp))
             Text(
                 text = label,
-                style = MaterialTheme.typography.labelSmall,
-                color = if (isSelected) colors.textPrimary.copy(alpha = 0.9f) else colors.textSecondary
+                style = AvalonTheme.typography.metadata,
+                color = if (isSelected) colors.textPrimary else colors.textSecondary
             )
         }
     }
@@ -656,9 +639,6 @@ private fun StatusTag(
     val animatedBg by animateColorAsState(
         if (isHovered) colors.borderSubtle.copy(alpha = 0.5f) else colors.bgElevated
     )
-    val animatedBorderColor by animateColorAsState(
-        if (isHovered) colors.borderStrong else Color.Transparent
-    )
     val animatedDotSize by animateDpAsState(
         if (isHovered) 8.dp else 6.dp
     )
@@ -691,7 +671,7 @@ private fun StatusTag(
             },
         shape = shapes.control,
         color = animatedBg,
-        border = BorderStroke(1.dp, animatedBorderColor)
+        border = null
     ) {
         Row(
             modifier = Modifier
@@ -711,7 +691,7 @@ private fun StatusTag(
                 Spacer(modifier = Modifier.width(8.dp))
                 Text(
                     text = label,
-                    style = MaterialTheme.typography.labelMedium,
+                    style = AvalonTheme.typography.uiLabel,
                     fontWeight = if (isHovered) FontWeight.SemiBold else FontWeight.Medium,
                     color = animatedLabelColor
                 )
@@ -721,7 +701,7 @@ private fun StatusTag(
             Row(verticalAlignment = Alignment.CenterVertically) {
                 Text(
                     text = count.toString(),
-                    style = MaterialTheme.typography.labelMedium.copy(
+                    style = AvalonTheme.typography.uiLabel.copy(
                         fontFeatureSettings = "tnum"
                     ),
                     fontWeight = FontWeight.Bold,
@@ -731,7 +711,7 @@ private fun StatusTag(
                     Spacer(modifier = Modifier.width(6.dp))
                     Text(
                         text = percent,
-                        style = MaterialTheme.typography.bodySmall.copy(fontSize = 11.sp),
+                        style = AvalonTheme.typography.microCaption,
                         color = colors.textSecondary.copy(alpha = if (isHovered) 0.85f else 0.5f)
                     )
                 }

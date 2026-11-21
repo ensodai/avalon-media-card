@@ -21,6 +21,7 @@
     <string name="nav_trends">Trending</string>
     <string name="nav_search">Search</string>
     <string name="nav_my_collection">Favorites</string>
+    <string name="nav_stats">Stats</string>
     <string name="nav_profile">Profile</string>
     <string name="nav_settings">Settings</string>
     <string name="nav_external_integrations">External Integrations</string>
@@ -569,8 +570,8 @@
 
     <!-- Stats: Hero Time -->
     <string name="stats_hero_time_title">SCREEN TIME</string>
-    <string name="stats_hero_time_movies_fmt">Movies: %1$d h (%2$d%%)</string>
-    <string name="stats_hero_time_shows_fmt">Shows: %1$d h (%2$d%%)</string>
+    <string name="stats_hero_time_movies_fmt">Movies: %1$d h (%2$d%)</string>
+    <string name="stats_hero_time_shows_fmt">Shows: %1$d h (%2$d%)</string>
     <string name="stats_hero_time_days_hours_fmt">%1$d d %2$d h</string>
     <string name="stats_hero_time_hours_mins_fmt">%1$d h %2$d m</string>
     <string name="stats_hero_time_mins_fmt">%1$d min</string>
@@ -620,10 +621,17 @@
     <string name="stats_library_episodes">Episodes</string>
     <string name="stats_library_shows">Shows</string>
     <string name="stats_library_backlog_status">SHOWS STATUS</string>
+    <string name="stats_library_movies_status">MOVIES STATUS</string>
+    <string name="stats_library_tab_shows">Shows</string>
+    <string name="stats_library_tab_movies">Movies</string>
     <string name="stats_library_status_watching">Watching</string>
     <string name="stats_library_status_completed">Completed</string>
     <string name="stats_library_status_planned">Planned</string>
     <string name="stats_library_status_dropped">Dropped</string>
+    <string name="stats_library_list_title_fmt">%1$s • %2$s</string>
+    <string name="stats_genre_list_title_fmt">Genre • %1$s</string>
+    <string name="stats_rating_list_title_fmt">Rating • %1$d</string>
+    <string name="stats_decade_list_title_fmt">Era • %1$s</string>
 
     <!-- Stats: Ratings -->
     <string name="stats_ratings_title">RATINGS DISTRIBUTION</string>
@@ -650,4 +658,22 @@
     <!-- Stats: Decades -->
     <string name="stats_decades_title">TIME MACHINE (ERAS)</string>
     <string name="stats_decades_empty">No release year data yet</string>
+
+    <!-- Stats: Activity Heatmap -->
+    <string name="stats_heatmap_title">ACTIVITY HEATMAP</string>
+    <string name="stats_heatmap_subtitle">365 days of cinema rhythm</string>
+    <string name="stats_heatmap_mode_volume">Volume</string>
+    <string name="stats_heatmap_mode_ratings">Day Rating</string>
+    <string name="stats_heatmap_active_days">Active days</string>
+    <string name="stats_heatmap_current_streak">Current streak</string>
+    <string name="stats_heatmap_longest_streak">Best streak</string>
+    <string name="stats_heatmap_peak_day">Peak evening</string>
+    <string name="stats_heatmap_legend_less">Less</string>
+    <string name="stats_heatmap_legend_more">More</string>
+    <string name="stats_heatmap_days_suffix">d</string>
+    <string name="stats_heatmap_hours_suffix">h</string>
+    <string name="stats_heatmap_min_suffix">m</string>
+    <string name="stats_heatmap_no_activity">No watches</string>
+    <string name="stats_heatmap_watches_fmt">%1$d titles</string>
+    <string name="stats_heatmap_rating_fmt">★ %1$.1f</string>
 </resources>

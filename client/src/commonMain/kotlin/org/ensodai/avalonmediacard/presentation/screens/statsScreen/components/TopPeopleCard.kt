@@ -1,9 +1,11 @@
 package org.ensodai.avalonmediacard.presentation.screens.statsScreen.components
 
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -14,7 +16,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
@@ -39,6 +40,7 @@ import com.composables.icons.lucide.Users
 import org.ensodai.avalonmediacard.contract.model.PersonStatDto
 import org.ensodai.avalonmediacard.contract.model.TopPeopleStatsDto
 import org.ensodai.avalonmediacard.presentation.components.ShimmerImage
+import org.ensodai.avalonmediacard.presentation.theme.AvalonTheme
 import org.jetbrains.compose.resources.stringResource
 
 @Composable
@@ -49,88 +51,105 @@ fun TopPeopleCard(
 ) {
     var selectedTab by remember { mutableStateOf(0) } // 0: Режиссеры, 1: Актеры
 
-    val list = if (selectedTab == 0) topPeople.directors else topPeople.actors
+    val colors = AvalonTheme.colors
+    val shapes = AvalonTheme.shapes
 
     Surface(
         modifier = modifier.defaultMinSize(minHeight = 260.dp),
-        shape = RoundedCornerShape(24.dp),
-        color = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.5f),
-        tonalElevation = 2.dp
+        shape = shapes.container,
+        color = colors.bgSurface,
+        border = BorderStroke(1.dp, colors.borderSubtle)
     ) {
-        Column(
+        BoxWithConstraints(
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(24.dp)
         ) {
-            // Заголовок и переключатель
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceBetween,
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                Row(verticalAlignment = Alignment.CenterVertically) {
-                    Box(
-                        modifier = Modifier
-                            .size(40.dp)
-                            .clip(CircleShape)
-                            .background(Color(0xFF3B82F6).copy(alpha = 0.15f)),
-                        contentAlignment = Alignment.Center
-                    ) {
+            val isDualColumn = maxWidth >= 680.dp
+
+            Column(modifier = Modifier.fillMaxWidth()) {
+                // Заголовок категории и переключатель
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Row(verticalAlignment = Alignment.CenterVertically) {
                         Icon(
                             imageVector = Lucide.Users,
                             contentDescription = null,
-                            tint = Color(0xFF3B82F6),
-                            modifier = Modifier.size(20.dp)
+                            tint = colors.textSecondary,
+                            modifier = Modifier.size(16.dp)
+                        )
+                        Spacer(modifier = Modifier.width(8.dp))
+                        Text(
+                            text = stringResource(Res.string.stats_people_title),
+                            style = MaterialTheme.typography.labelSmall.copy(
+                                letterSpacing = 1.2.sp
+                            ),
+                            fontWeight = FontWeight.Bold,
+                            color = colors.textSecondary
                         )
                     }
-                    Spacer(modifier = Modifier.width(12.dp))
-                    Text(
-                        text = stringResource(Res.string.stats_people_title),
-                        style = MaterialTheme.typography.labelMedium,
-                        fontWeight = FontWeight.Bold,
-                        letterSpacing = 1.2.sp,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant
-                    )
-                }
 
-                // Переключатель Режиссеры / Актеры
-                Row(
-                    modifier = Modifier
-                        .clip(RoundedCornerShape(12.dp))
-                        .background(MaterialTheme.colorScheme.surface)
-                        .padding(4.dp)
-                ) {
-                    TabPill(
-                        label = stringResource(Res.string.stats_people_directors),
-                        isSelected = selectedTab == 0,
-                        onClick = { selectedTab = 0 }
-                    )
-                    TabPill(
-                        label = stringResource(Res.string.stats_people_actors),
-                        isSelected = selectedTab == 1,
-                        onClick = { selectedTab = 1 }
-                    )
-                }
-            }
-
-            Spacer(modifier = Modifier.height(20.dp))
-
-            if (list.isEmpty()) {
-                Text(
-                    text = if (selectedTab == 0) stringResource(Res.string.stats_people_empty_directors)
-                    else stringResource(Res.string.stats_people_empty_actors),
-                    style = MaterialTheme.typography.bodyMedium,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.6f)
-                )
-            } else {
-                Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
-                    list.forEachIndexed { index, person ->
-                        PersonRow(
-                            index = index + 1,
-                            person = person,
-                            onClick = { onPersonClicked(person.personId, person.name) }
-                        )
+                    // Табы показываем только если экран узкий и не помещаются 2 колонки
+                    if (!isDualColumn) {
+                        Surface(
+                            shape = shapes.control,
+                            color = colors.bgElevated
+                        ) {
+                            Row(modifier = Modifier.padding(3.dp)) {
+                                TabPill(
+                                    text = stringResource(Res.string.stats_people_directors),
+                                    isSelected = selectedTab == 0,
+                                    onClick = { selectedTab = 0 }
+                                )
+                                TabPill(
+                                    text = stringResource(Res.string.stats_people_actors),
+                                    isSelected = selectedTab == 1,
+                                    onClick = { selectedTab = 1 }
+                                )
+                            }
+                        }
                     }
+                }
+
+                Spacer(modifier = Modifier.height(20.dp))
+
+                if (isDualColumn) {
+                    // Широкий экран: Режиссеры слева, Актеры справа
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.spacedBy(24.dp)
+                    ) {
+                        Column(modifier = Modifier.weight(1f)) {
+                            SectionHeader(stringResource(Res.string.stats_people_directors))
+                            Spacer(modifier = Modifier.height(12.dp))
+                            PeopleList(
+                                people = topPeople.directors,
+                                onPersonClicked = onPersonClicked,
+                                isDirector = true
+                            )
+                        }
+
+                        Column(modifier = Modifier.weight(1f)) {
+                            SectionHeader(stringResource(Res.string.stats_people_actors))
+                            Spacer(modifier = Modifier.height(12.dp))
+                            PeopleList(
+                                people = topPeople.actors,
+                                onPersonClicked = onPersonClicked,
+                                isDirector = false
+                            )
+                        }
+                    }
+                } else {
+                    // Узкий экран: список по выбранному табу
+                    val people = if (selectedTab == 0) topPeople.directors else topPeople.actors
+                    PeopleList(
+                        people = people,
+                        onPersonClicked = onPersonClicked,
+                        isDirector = selectedTab == 0
+                    )
                 }
             }
         }
@@ -138,121 +157,171 @@ fun TopPeopleCard(
 }
 
 @Composable
+private fun SectionHeader(title: String) {
+    Text(
+        text = title,
+        style = MaterialTheme.typography.labelSmall.copy(
+            letterSpacing = 0.8.sp
+        ),
+        fontWeight = FontWeight.Bold,
+        color = AvalonTheme.colors.textSecondary
+    )
+}
+
+@Composable
 private fun TabPill(
-    label: String,
+    text: String,
     isSelected: Boolean,
     onClick: () -> Unit
 ) {
+    val colors = AvalonTheme.colors
+    val shapes = AvalonTheme.shapes
+
     Box(
         modifier = Modifier
-            .clip(RoundedCornerShape(8.dp))
-            .background(
-                if (isSelected) MaterialTheme.colorScheme.primaryContainer
-                else Color.Transparent
-            )
+            .clip(shapes.control)
+            .background(if (isSelected) colors.bgSurface else Color.Transparent)
             .clickable(onClick = onClick)
-            .padding(horizontal = 12.dp, vertical = 6.dp),
-        contentAlignment = Alignment.Center
+            .padding(horizontal = 10.dp, vertical = 5.dp)
     ) {
         Text(
-            text = label,
+            text = text,
             style = MaterialTheme.typography.labelSmall,
             fontWeight = if (isSelected) FontWeight.Bold else FontWeight.Medium,
-            color = if (isSelected) MaterialTheme.colorScheme.onPrimaryContainer
-            else MaterialTheme.colorScheme.onSurfaceVariant
+            color = if (isSelected) colors.textPrimary else colors.textSecondary
         )
     }
 }
 
 @Composable
+private fun PeopleList(
+    people: List<PersonStatDto>,
+    onPersonClicked: (personId: String, name: String) -> Unit,
+    isDirector: Boolean
+) {
+    val colors = AvalonTheme.colors
+
+    if (people.isEmpty()) {
+        val emptyRes = if (isDirector) Res.string.stats_people_empty_directors else Res.string.stats_people_empty_actors
+        Text(
+            text = stringResource(emptyRes),
+            style = MaterialTheme.typography.bodySmall,
+            color = colors.textSecondary,
+            modifier = Modifier.padding(vertical = 12.dp)
+        )
+    } else {
+        Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
+            people.take(5).forEachIndexed { index, person ->
+                PersonRow(
+                    rank = index + 1,
+                    person = person,
+                    isDirector = isDirector,
+                    onClick = { onPersonClicked(person.personId, person.name) }
+                )
+            }
+        }
+    }
+}
+
+@Composable
 private fun PersonRow(
-    index: Int,
+    rank: Int,
     person: PersonStatDto,
+    isDirector: Boolean,
     onClick: () -> Unit
 ) {
+    val colors = AvalonTheme.colors
+    val shapes = AvalonTheme.shapes
+
     Surface(
         onClick = onClick,
-        shape = RoundedCornerShape(16.dp),
-        color = MaterialTheme.colorScheme.surface.copy(alpha = 0.6f)
+        shape = shapes.control,
+        color = colors.bgElevated
     ) {
         Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(12.dp),
+                .padding(horizontal = 12.dp, vertical = 8.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
+            // Ранг по Тафти
             Text(
-                text = "#$index",
-                style = MaterialTheme.typography.labelMedium,
+                text = "$rank",
+                style = MaterialTheme.typography.labelMedium.copy(
+                    fontFeatureSettings = "tnum"
+                ),
                 fontWeight = FontWeight.Bold,
-                color = if (index == 1) Color(0xFFF59E0B) else MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.6f),
-                modifier = Modifier.width(28.dp)
+                color = if (rank == 1) colors.textPrimary else colors.textSecondary,
+                modifier = Modifier.width(18.dp)
             )
 
-            Box(
-                modifier = Modifier
-                    .size(44.dp)
-                    .clip(CircleShape)
-                    .background(MaterialTheme.colorScheme.surfaceVariant)
-            ) {
-                if (person.photoUrl != null) {
-                    ShimmerImage(
-                        model = person.photoUrl,
-                        contentDescription = person.name,
-                        contentScale = ContentScale.Crop,
-                        modifier = Modifier.size(44.dp)
+            // Аватар персоны 1:1 — строго CircleShape по DESIGN.md
+            val photoUrl = person.photoUrl?.let { path ->
+                if (path.startsWith("http")) path else "https://image.tmdb.org/t/p/w185$path"
+            }
+            if (photoUrl != null) {
+                ShimmerImage(
+                    model = photoUrl,
+                    contentDescription = person.name,
+                    contentScale = ContentScale.Crop,
+                    modifier = Modifier
+                        .size(36.dp)
+                        .clip(CircleShape)
+                )
+            } else {
+                Box(
+                    modifier = Modifier
+                        .size(36.dp)
+                        .clip(CircleShape)
+                        .background(colors.chartTrack),
+                    contentAlignment = Alignment.Center
+                ) {
+                    Text(
+                        text = person.name.firstOrNull()?.uppercase() ?: "?",
+                        style = MaterialTheme.typography.labelMedium,
+                        fontWeight = FontWeight.Bold,
+                        color = colors.textSecondary
                     )
-                } else {
-                    Box(
-                        modifier = Modifier.size(44.dp),
-                        contentAlignment = Alignment.Center
-                    ) {
-                        Text(
-                            text = person.name.take(1),
-                            style = MaterialTheme.typography.titleMedium,
-                            fontWeight = FontWeight.Bold,
-                            color = MaterialTheme.colorScheme.onSurfaceVariant
-                        )
-                    }
                 }
             }
 
-            Spacer(modifier = Modifier.width(14.dp))
+            Spacer(modifier = Modifier.width(12.dp))
 
+            // Имя персоны и количество тайтлов
             Column(modifier = Modifier.weight(1f)) {
                 Text(
                     text = person.name,
                     style = MaterialTheme.typography.bodyMedium,
-                    fontWeight = FontWeight.Bold,
-                    color = MaterialTheme.colorScheme.onSurface
+                    fontWeight = FontWeight.SemiBold,
+                    color = colors.textPrimary
                 )
                 Text(
                     text = stringResource(Res.string.stats_people_watched_count_fmt, person.watchedCount),
-                    style = MaterialTheme.typography.bodySmall,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.7f)
+                    style = MaterialTheme.typography.labelSmall.copy(
+                        fontFeatureSettings = "tnum"
+                    ),
+                    color = colors.textSecondary
                 )
             }
 
-            if (person.averageRating != null) {
-                Row(
-                    verticalAlignment = Alignment.CenterVertically,
-                    modifier = Modifier
-                        .clip(RoundedCornerShape(8.dp))
-                        .background(Color(0xFFF59E0B).copy(alpha = 0.12f))
-                        .padding(horizontal = 8.dp, vertical = 4.dp)
-                ) {
+            // Средний балл (золото accentGold)
+            val avg = person.averageRating
+            if (avg != null) {
+                Row(verticalAlignment = Alignment.CenterVertically) {
                     Icon(
                         imageVector = Lucide.Star,
                         contentDescription = null,
-                        tint = Color(0xFFF59E0B),
+                        tint = colors.accentGold,
                         modifier = Modifier.size(12.dp)
                     )
                     Spacer(modifier = Modifier.width(4.dp))
                     Text(
-                        text = "${person.averageRating}",
-                        style = MaterialTheme.typography.labelSmall,
+                        text = ((avg * 10).toInt() / 10.0).toString(),
+                        style = MaterialTheme.typography.labelSmall.copy(
+                            fontFeatureSettings = "tnum"
+                        ),
                         fontWeight = FontWeight.Bold,
-                        color = Color(0xFFF59E0B)
+                        color = colors.accentGold
                     )
                 }
             }

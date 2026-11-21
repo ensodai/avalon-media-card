@@ -17,4 +17,10 @@ object UserMovieTable : BaseUuidTable("user_movies") {
     val lastSourceProviderId = varchar("last_source_provider_id", 100).nullable()
     val lastSourceId = varchar("last_source_id", 255).nullable()
     val lastSourcePayload = text("last_source_payload").nullable()
+
+    init {
+        index(false, userId, status)
+        index(false, userId, mediaType)
+        index(false, userId, lastWatchedAt)
+    }
 }

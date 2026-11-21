@@ -14,4 +14,9 @@ object UserEpisodeTable : BaseUuidTable("user_episodes") {
     val lastSourceProviderId = varchar("last_source_provider_id", 100).nullable()
     val lastSourceId = varchar("last_source_id", 255).nullable()
     val lastSourcePayload = text("last_source_payload").nullable()
+
+    init {
+        index(false, userId, isWatched)
+        index(false, userId, lastWatchedAt)
+    }
 }

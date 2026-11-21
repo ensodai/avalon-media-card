@@ -15,7 +15,6 @@ import kotlinx.browser.document
 import kotlinx.browser.window
 import org.w3c.dom.HTMLCanvasElement
 import kotlinx.coroutines.Job
-import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
@@ -28,6 +27,7 @@ import org.ensodai.avalonmediacard.presentation.screens.player.model.PlaybackSta
 import org.ensodai.avalonmediacard.presentation.screens.player.viewState.PlayerViewState
 import org.w3c.dom.HTMLElement
 import org.w3c.dom.HTMLVideoElement
+import kotlin.math.abs
 import kotlin.time.Duration.Companion.milliseconds
 
 class WasmPlatform : Platform {
@@ -494,15 +494,15 @@ actual fun VideoPlayer(
         activeEngine?.selectSubtitleTrack(trackId)
     }
 
-    var activeSubtitleChunks by remember { mutableStateOf<List<SubtitleChunk>>(emptyList()) }
-    var currentLoadedSubUrl by remember { mutableStateOf<String?>(null) }
+    val baseMovieKey = remember(url) { url?.substringBefore("?") ?: "" }
+    val subtitleSessionCache = remember(baseMovieKey) { SubtitleSessionCache() }
+    var currentActiveTrackCache by remember { mutableStateOf<TrackCache?>(null) }
     
     LaunchedEffect(controller.selectedSubtitleTrack, state.selectedSubtitleTrack, url) {
         val track = controller.selectedSubtitleTrack ?: state.selectedSubtitleTrack
         val subUrl = track?.url
         if (track == null || subUrl.isNullOrBlank()) {
-            currentLoadedSubUrl = null
-            activeSubtitleChunks = emptyList()
+            currentActiveTrackCache = null
             controller.state.currentSubtitleText = ""
             return@LaunchedEffect
         }
@@ -510,44 +510,73 @@ actual fun VideoPlayer(
         if (controller.selectedSubtitleTrack?.id != track.id) {
             controller.selectSubtitleTrack(track)
         }
-        
+
+        val trackKey = track.id.takeIf { it.isNotBlank() } ?: subUrl
         val resolvedSubUrl = StreamUrlResolver.resolveAbsoluteUrl(subUrl, url ?: "")
-        if (resolvedSubUrl.contains(".m3u8") || resolvedSubUrl.contains("/subs/")) {
-            if (resolvedSubUrl != currentLoadedSubUrl || activeSubtitleChunks.isEmpty()) {
-                currentLoadedSubUrl = resolvedSubUrl
-                activeSubtitleChunks = emptyList()
-                controller.state.currentSubtitleText = ""
-                activeSubtitleChunks = VttSubtitleFetcher.fetchSubtitleChunks(resolvedSubUrl)
+        val isSegmented = resolvedSubUrl.contains(".m3u8") || resolvedSubUrl.contains("/subs/")
+
+        var cached = subtitleSessionCache.getTrack(trackKey)
+        if (cached == null || cached.resolvedUrl != resolvedSubUrl) {
+            cached = TrackCache(
+                trackId = trackKey,
+                resolvedUrl = resolvedSubUrl,
+                isSegmented = isSegmented
+            )
+            subtitleSessionCache.putTrack(trackKey, cached)
+        }
+
+        if (!cached.isInitialized) {
+            if (isSegmented) {
+                val chunks = VttSubtitleFetcher.fetchSubtitleChunks(resolvedSubUrl)
+                if (chunks.isNotEmpty()) {
+                    cached.chunks = chunks
+                    cached.isInitialized = true
+                }
+            } else {
+                val rawCues = VttSubtitleFetcher.fetchAndParseVtt(resolvedSubUrl)
+                if (rawCues != null) {
+                    cached.isInitialized = true
+                    cached.chunks = listOf(
+                        SubtitleChunk(
+                            index = 0,
+                            url = resolvedSubUrl,
+                            start = 0.0,
+                            end = Double.MAX_VALUE
+                        )
+                    )
+                    cached.loadedCues[0] = rawCues
+                }
             }
+        }
+
+        if (cached.isInitialized) {
+            currentActiveTrackCache = cached
         } else {
-            currentLoadedSubUrl = null
-            activeSubtitleChunks = emptyList()
+            currentActiveTrackCache = null
         }
     }
 
-    LaunchedEffect(activeSubtitleChunks) {
-        if (activeSubtitleChunks.isEmpty()) return@LaunchedEffect
-        
-        while (true) {
-            val currentTime = if (videoElement.readyState > 0 && !videoElement.currentTime.isNaN()) {
-                videoElement.currentTime
-            } else {
-                lastKnownTime
-            }
-            val nowMs = window.performance.now()
-            
-            val candidateChunks = activeSubtitleChunks.filter { chunk ->
-                when (val st = chunk.state) {
-                    is ChunkState.Idle -> chunk.start <= currentTime + 60.0 && chunk.end >= currentTime - 10.0
-                    is ChunkState.Error -> {
-                        st.retries < 5 && (nowMs - st.lastAttemptMs > 1500) && chunk.start <= currentTime + 60.0 && chunk.end >= currentTime - 10.0
-                    }
-                    else -> false
+    LaunchedEffect(currentActiveTrackCache) {
+        val trackCache = currentActiveTrackCache ?: return@LaunchedEffect
+        if (!trackCache.isSegmented || trackCache.chunks.isEmpty()) return@LaunchedEffect
+
+        try {
+            while (isActive) {
+                val currentTime = if (videoElement.readyState > 0 && !videoElement.currentTime.isNaN()) {
+                    videoElement.currentTime
+                } else {
+                    lastKnownTime
                 }
-            }
-            
-            if (candidateChunks.isNotEmpty()) {
-                val prioritizedChunks = candidateChunks.sortedBy { chunk ->
+
+                val lookaheadWindow = trackCache.chunks.filter { chunk ->
+                    chunk.start <= currentTime + 30.0 && chunk.end >= currentTime - 10.0
+                }
+
+                val neededChunks = lookaheadWindow.filter { chunk ->
+                    !trackCache.loadedCues.containsKey(chunk.index) &&
+                    !trackCache.inFlight.contains(chunk.index) &&
+                    (trackCache.failedAttempts[chunk.index] ?: 0) < 4
+                }.sortedBy { chunk ->
                     if (chunk.start <= currentTime && chunk.end >= currentTime) {
                         0.0
                     } else if (chunk.start > currentTime) {
@@ -556,34 +585,37 @@ actual fun VideoPlayer(
                         1000.0 + (currentTime - chunk.end)
                     }
                 }
-                
-                // Concurrently download up to 4 high-priority chunks
-                val batch = prioritizedChunks.take(4)
-                coroutineScope {
-                    for (chunk in batch) {
+
+                val availableSlots = (2 - trackCache.inFlight.size).coerceAtLeast(0)
+                if (availableSlots > 0 && neededChunks.isNotEmpty()) {
+                    for (chunk in neededChunks.take(availableSlots)) {
+                        trackCache.inFlight.add(chunk.index)
                         launch {
-                            val retries = (chunk.state as? ChunkState.Error)?.retries ?: 0
-                            chunk.state = ChunkState.Loading
-                            
-                            val rawCues = VttSubtitleFetcher.fetchAndParseVtt(chunk.url)
-                            if (rawCues != null) {
-                                val shiftedCues = rawCues.map { cue -> 
-                                    cue.copy(
-                                        start = cue.start + chunk.start, 
-                                        end = cue.end + chunk.start
-                                    ) 
+                            try {
+                                val rawCues = VttSubtitleFetcher.fetchAndParseVtt(chunk.url)
+                                if (rawCues != null) {
+                                    val shiftedCues = rawCues.map { cue ->
+                                        cue.copy(
+                                            start = cue.start + chunk.start,
+                                            end = cue.end + chunk.start
+                                        )
+                                    }
+                                    trackCache.loadedCues[chunk.index] = shiftedCues
+                                } else {
+                                    val retries = trackCache.failedAttempts[chunk.index] ?: 0
+                                    trackCache.failedAttempts[chunk.index] = retries + 1
                                 }
-                                chunk.state = ChunkState.Loaded(shiftedCues)
-                            } else {
-                                chunk.state = ChunkState.Error(retries + 1, window.performance.now())
+                            } finally {
+                                trackCache.inFlight.remove(chunk.index)
                             }
                         }
                     }
                 }
-                delay(50.milliseconds)
-            } else {
-                delay(300.milliseconds)
+
+                delay(100.milliseconds)
             }
+        } finally {
+            trackCache.inFlight.clear()
         }
     }
 
@@ -696,7 +728,7 @@ actual fun VideoPlayer(
         }
     }
 
-    LaunchedEffect(controller, activeSubtitleChunks) {
+    LaunchedEffect(controller, currentActiveTrackCache) {
         while (true) {
             controller.evaluateBufferState()
             val state = controller.state
@@ -713,20 +745,32 @@ actual fun VideoPlayer(
             state.volume = videoElement.volume
 
             val curTime = videoElement.currentTime
-            val recentChunks = activeSubtitleChunks.filter { chunk ->
-                chunk.start <= curTime + 2.0 && chunk.end >= curTime - 15.0
-            }
-            val currentCues = recentChunks.flatMap { chunk ->
-                (chunk.state as? ChunkState.Loaded)?.cues ?: emptyList()
-            }.filter { cue ->
-                cue.start <= curTime && cue.end >= curTime
-            }
-            val newText = currentCues.map { it.text }.distinct().joinToString("\n")
-            if (state.currentSubtitleText != newText) {
-                state.currentSubtitleText = newText
+            val activeTrack = currentActiveTrackCache
+            if (activeTrack != null && activeTrack.chunks.isNotEmpty()) {
+                val candidateChunks = activeTrack.chunks.filter { chunk ->
+                    chunk.start <= curTime + 4.0 && chunk.end >= curTime - 4.0
+                }
+                val currentCues = candidateChunks.flatMap { chunk ->
+                    activeTrack.loadedCues[chunk.index] ?: emptyList()
+                }.filter { cue ->
+                    cue.start <= curTime && curTime <= cue.end
+                }
+                val newText = currentCues
+                    .map { it.text.trim() }
+                    .filter { it.isNotBlank() }
+                    .distinct()
+                    .joinToString("\n")
+
+                if (state.currentSubtitleText != newText) {
+                    state.currentSubtitleText = newText
+                }
+            } else {
+                if (!state.currentSubtitleText.isNullOrEmpty()) {
+                    state.currentSubtitleText = ""
+                }
             }
 
-            delay(150.milliseconds)
+            delay(100.milliseconds)
         }
     }
 

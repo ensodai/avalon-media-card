@@ -63,8 +63,23 @@ class SduiRpcServiceImpl(
                 }
             } else flowOf(emptyList())
 
+            val statsFlow: Flow<List<SidebarItem>> = if (userId != null) {
+                flowOf(
+                    listOf(
+                        SidebarItem(
+                            itemId = "stats",
+                            title = null,
+                            iconName = "chart",
+                            screen = Screen.Stats,
+                            group = 0,
+                            order = 110
+                        )
+                    )
+                )
+            } else flowOf(emptyList())
+
             pluginManager.pluginUpdates.flatMapLatest {
-                val flows = pluginManager.getSidebarFlows(userId) + watchRoomsFlow
+                val flows = pluginManager.getSidebarFlows(userId) + watchRoomsFlow + statsFlow
                 if (flows.isEmpty()) {
                     flowOf(emptyList())
                 } else {

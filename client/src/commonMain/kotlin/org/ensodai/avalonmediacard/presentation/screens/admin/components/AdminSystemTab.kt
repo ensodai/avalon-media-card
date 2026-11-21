@@ -25,6 +25,7 @@ import androidx.compose.ui.unit.sp
 import avalonmediacard.client.generated.resources.*
 import com.composables.icons.lucide.*
 import org.jetbrains.compose.resources.stringResource
+import org.ensodai.avalonmediacard.core.AppVersion
 import org.ensodai.avalonmediacard.presentation.screens.admin.action.AdminActions
 import org.ensodai.avalonmediacard.presentation.screens.admin.viewState.AdminViewState
 import org.ensodai.avalonmediacard.presentation.screens.commonComponents.AvalonButton
@@ -186,6 +187,20 @@ fun AdminSystemTab(
                     Text(text = "Core Version", fontSize = 14.sp, color = MaterialTheme.colorScheme.onSurfaceVariant)
                     Text(
                         text = info?.coreVersion ?: "Avalon Media Card Core",
+                        fontSize = 13.sp,
+                        fontWeight = FontWeight.SemiBold,
+                        color = MaterialTheme.colorScheme.primary
+                    )
+                }
+
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Text(text = "Client Version", fontSize = 14.sp, color = MaterialTheme.colorScheme.onSurfaceVariant)
+                    Text(
+                        text = AppVersion.displayVersion,
                         fontSize = 13.sp,
                         fontWeight = FontWeight.SemiBold,
                         color = MaterialTheme.colorScheme.primary

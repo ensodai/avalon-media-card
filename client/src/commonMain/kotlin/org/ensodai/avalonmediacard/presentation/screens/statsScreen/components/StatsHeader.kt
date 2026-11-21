@@ -17,6 +17,7 @@ import androidx.compose.ui.unit.dp
 import avalonmediacard.client.generated.resources.*
 import com.composables.icons.lucide.Lucide
 import com.composables.icons.lucide.RefreshCw
+import org.ensodai.avalonmediacard.presentation.theme.AvalonTheme
 import org.jetbrains.compose.resources.stringResource
 
 @Composable
@@ -25,6 +26,8 @@ fun StatsHeader(
     onRefresh: () -> Unit,
     modifier: Modifier = Modifier
 ) {
+    val colors = AvalonTheme.colors
+
     Row(
         modifier = modifier.fillMaxWidth(),
         horizontalArrangement = Arrangement.SpaceBetween,
@@ -35,12 +38,12 @@ fun StatsHeader(
                 text = stringResource(Res.string.stats_screen_title),
                 style = MaterialTheme.typography.headlineMedium,
                 fontWeight = FontWeight.Bold,
-                color = MaterialTheme.colorScheme.onSurface
+                color = colors.textPrimary
             )
             Text(
                 text = stringResource(Res.string.stats_screen_subtitle),
                 style = MaterialTheme.typography.bodyMedium,
-                color = MaterialTheme.colorScheme.onSurfaceVariant
+                color = colors.textSecondary
             )
         }
 
@@ -51,9 +54,8 @@ fun StatsHeader(
             Icon(
                 imageVector = Lucide.RefreshCw,
                 contentDescription = stringResource(Res.string.stats_refresh),
-                tint = if (isLoading) MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.4f)
-                else MaterialTheme.colorScheme.primary,
-                modifier = Modifier.size(22.dp)
+                tint = if (isLoading) colors.textSecondary.copy(alpha = 0.4f) else colors.textPrimary,
+                modifier = Modifier.size(20.dp)
             )
         }
     }

@@ -21,6 +21,7 @@
     <string name="nav_trends">В тренде</string>
     <string name="nav_search">Поиск</string>
     <string name="nav_my_collection">Избранное</string>
+    <string name="nav_stats">Статистика</string>
     <string name="nav_profile">Профиль</string>
     <string name="nav_settings">Настройки</string>
     <string name="nav_external_integrations">Внешние интеграции</string>
@@ -569,8 +570,8 @@
 
     <!-- Stats: Hero Time -->
     <string name="stats_hero_time_title">ЭКРАННОЕ ВРЕМЯ</string>
-    <string name="stats_hero_time_movies_fmt">Фильмы: %1$d ч (%2$d%%)</string>
-    <string name="stats_hero_time_shows_fmt">Сериалы: %1$d ч (%2$d%%)</string>
+    <string name="stats_hero_time_movies_fmt">Фильмы: %1$d ч (%2$d%)</string>
+    <string name="stats_hero_time_shows_fmt">Сериалы: %1$d ч (%2$d%)</string>
     <string name="stats_hero_time_days_hours_fmt">%1$d д %2$d ч</string>
     <string name="stats_hero_time_hours_mins_fmt">%1$d ч %2$d м</string>
     <string name="stats_hero_time_mins_fmt">%1$d мин</string>
@@ -620,10 +621,17 @@
     <string name="stats_library_episodes">Серий</string>
     <string name="stats_library_shows">Сериалов</string>
     <string name="stats_library_backlog_status">СТАТУС СЕРИАЛОВ</string>
+    <string name="stats_library_movies_status">СТАТУС ФИЛЬМОВ</string>
+    <string name="stats_library_tab_shows">Сериалы</string>
+    <string name="stats_library_tab_movies">Фильмы</string>
     <string name="stats_library_status_watching">Смотрю</string>
     <string name="stats_library_status_completed">Завершено</string>
     <string name="stats_library_status_planned">В планах</string>
     <string name="stats_library_status_dropped">Брошено</string>
+    <string name="stats_library_list_title_fmt">%1$s • %2$s</string>
+    <string name="stats_genre_list_title_fmt">Жанр • %1$s</string>
+    <string name="stats_rating_list_title_fmt">Оценка • %1$d</string>
+    <string name="stats_decade_list_title_fmt">Эпоха • %1$s</string>
 
     <!-- Stats: Ratings -->
     <string name="stats_ratings_title">РАСПРЕДЕЛЕНИЕ ОЦЕНОК</string>
@@ -650,4 +658,22 @@
     <!-- Stats: Decades -->
     <string name="stats_decades_title">МАШИНА ВРЕМЕНИ (ЭПОХИ)</string>
     <string name="stats_decades_empty">Пока нет данных по годам выпуска</string>
+
+    <!-- Stats: Activity Heatmap -->
+    <string name="stats_heatmap_title">ТЕПЛОВАЯ КАРТА АКТИВНОСТИ</string>
+    <string name="stats_heatmap_subtitle">365 дней ритма кинопросмотра</string>
+    <string name="stats_heatmap_mode_volume">Объём</string>
+    <string name="stats_heatmap_mode_ratings">Оценка дня</string>
+    <string name="stats_heatmap_active_days">Активных дней</string>
+    <string name="stats_heatmap_current_streak">Текущая серия</string>
+    <string name="stats_heatmap_longest_streak">Рекордная серия</string>
+    <string name="stats_heatmap_peak_day">Пиковый вечер</string>
+    <string name="stats_heatmap_legend_less">Меньше</string>
+    <string name="stats_heatmap_legend_more">Больше</string>
+    <string name="stats_heatmap_days_suffix">дн.</string>
+    <string name="stats_heatmap_hours_suffix">ч</string>
+    <string name="stats_heatmap_min_suffix">мин</string>
+    <string name="stats_heatmap_no_activity">Нет просмотров</string>
+    <string name="stats_heatmap_watches_fmt">%1$d тайтлов</string>
+    <string name="stats_heatmap_rating_fmt">★ %1$.1f</string>
 </resources>

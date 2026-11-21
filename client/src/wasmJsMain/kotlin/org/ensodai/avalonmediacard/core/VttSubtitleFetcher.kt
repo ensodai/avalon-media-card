@@ -2,6 +2,8 @@ package org.ensodai.avalonmediacard.core
 
 import kotlinx.browser.window
 import kotlinx.coroutines.await
+import kotlinx.coroutines.withTimeoutOrNull
+import kotlin.time.Duration.Companion.milliseconds
 import org.ensodai.avalonmediacard.core.player.SubtitleSanitizer
 
 data class SubtitleCue(
@@ -10,19 +12,38 @@ data class SubtitleCue(
     val text: String
 )
 
-sealed interface ChunkState {
-    object Idle : ChunkState
-    object Loading : ChunkState
-    data class Loaded(val cues: List<SubtitleCue>) : ChunkState
-    data class Error(val retries: Int, val lastAttemptMs: Double) : ChunkState
-}
-
 data class SubtitleChunk(
+    val index: Int,
     val url: String,
     val start: Double,
-    val end: Double,
-    var state: ChunkState = ChunkState.Idle
+    val end: Double
 )
+
+class TrackCache(
+    val trackId: String,
+    val resolvedUrl: String,
+    val isSegmented: Boolean,
+    var chunks: List<SubtitleChunk> = emptyList(),
+    var isInitialized: Boolean = false
+) {
+    val loadedCues = mutableMapOf<Int, List<SubtitleCue>>()
+    val inFlight = mutableSetOf<Int>()
+    val failedAttempts = mutableMapOf<Int, Int>()
+}
+
+class SubtitleSessionCache {
+    private val tracks = mutableMapOf<String, TrackCache>()
+
+    fun getTrack(trackId: String): TrackCache? = tracks[trackId]
+
+    fun putTrack(trackId: String, cache: TrackCache) {
+        tracks[trackId] = cache
+    }
+
+    fun clear() {
+        tracks.clear()
+    }
+}
 
 object VttSubtitleFetcher {
 
@@ -64,30 +85,33 @@ object VttSubtitleFetcher {
     @OptIn(ExperimentalWasmJsInterop::class)
     suspend fun fetchSubtitleChunks(m3u8Url: String): List<SubtitleChunk> {
         return try {
-            val response = window.fetch(m3u8Url).await()
-            if (!response.ok) return emptyList()
-            val text = response.text().await().toString()
-            
-            val baseUrl = m3u8Url.substringBeforeLast("/") + "/"
-            val queryStr = if (m3u8Url.contains("?")) "?" + m3u8Url.substringAfter("?") else ""
-            
-            val chunks = mutableListOf<SubtitleChunk>()
-            var timeAccumulator = 0.0
-            
-            val lines = text.lines().map { it.trim() }
-            for (i in lines.indices) {
-                val line = lines[i]
-                if (line.startsWith("#EXTINF:")) {
-                    val duration = line.substringAfter(":").substringBefore(",").toDoubleOrNull() ?: 0.0
-                    val nextLine = lines.getOrNull(i + 1) ?: ""
-                    if (!nextLine.startsWith("#") && nextLine.isNotEmpty()) {
-                        val chunkUrl = resolveChunkUrl(baseUrl, m3u8Url, nextLine, queryStr)
-                        chunks.add(SubtitleChunk(chunkUrl, timeAccumulator, timeAccumulator + duration))
-                        timeAccumulator += duration
+            withTimeoutOrNull(7000.milliseconds) {
+                val response = window.fetch(m3u8Url).await()
+                if (!response.ok) return@withTimeoutOrNull emptyList()
+                val text = response.text().await().toString()
+                
+                val baseUrl = m3u8Url.substringBeforeLast("/") + "/"
+                val queryStr = if (m3u8Url.contains("?")) "?" + m3u8Url.substringAfter("?") else ""
+                
+                val chunks = mutableListOf<SubtitleChunk>()
+                var timeAccumulator = 0.0
+                
+                val lines = text.lines().map { it.trim() }
+                for (i in lines.indices) {
+                    val line = lines[i]
+                    if (line.startsWith("#EXTINF:")) {
+                        val duration = line.substringAfter(":").substringBefore(",").toDoubleOrNull() ?: 0.0
+                        val nextLine = lines.getOrNull(i + 1) ?: ""
+                        if (!nextLine.startsWith("#") && nextLine.isNotEmpty()) {
+                            val chunkUrl = resolveChunkUrl(baseUrl, m3u8Url, nextLine, queryStr)
+                            val chunkIndex = chunks.size
+                            chunks.add(SubtitleChunk(chunkIndex, chunkUrl, timeAccumulator, timeAccumulator + duration))
+                            timeAccumulator += duration
+                        }
                     }
                 }
-            }
-            chunks
+                chunks
+            } ?: emptyList()
         } catch (e: Exception) {
             println("Failed to fetch M3U8 subtitle playlist: ${e.message}")
             emptyList()
@@ -97,10 +121,12 @@ object VttSubtitleFetcher {
     @OptIn(ExperimentalWasmJsInterop::class)
     suspend fun fetchAndParseVtt(url: String): List<SubtitleCue>? {
         return try {
-            val response = window.fetch(url).await()
-            if (!response.ok) return null
-            val text = response.text().await().toString()
-            parseVttContent(text)
+            withTimeoutOrNull(6500.milliseconds) {
+                val response = window.fetch(url).await()
+                if (!response.ok) return@withTimeoutOrNull null
+                val text = response.text().await().toString()
+                parseVttContent(text)
+            }
         } catch (e: Exception) {
             println("Failed to fetch VTT: ${e.message}")
             null

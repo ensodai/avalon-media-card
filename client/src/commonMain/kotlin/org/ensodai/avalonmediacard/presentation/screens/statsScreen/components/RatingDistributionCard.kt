@@ -1,5 +1,6 @@
 package org.ensodai.avalonmediacard.presentation.screens.statsScreen.components
 
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -12,8 +13,6 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
@@ -22,7 +21,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -31,6 +29,7 @@ import com.composables.icons.lucide.Lucide
 import com.composables.icons.lucide.Star
 import org.ensodai.avalonmediacard.contract.model.CriticProfileType
 import org.ensodai.avalonmediacard.contract.model.RatingDistributionDto
+import org.ensodai.avalonmediacard.presentation.theme.AvalonTheme
 import org.jetbrains.compose.resources.stringResource
 
 @Composable
@@ -49,94 +48,81 @@ fun RatingDistributionCard(
         CriticProfileType.STRICT -> stringResource(Res.string.stats_critic_strict)
     }
 
+    val colors = AvalonTheme.colors
+    val shapes = AvalonTheme.shapes
+
     Surface(
         modifier = modifier.defaultMinSize(minHeight = 260.dp),
-        shape = RoundedCornerShape(24.dp),
-        color = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.5f),
-        tonalElevation = 2.dp
+        shape = shapes.container,
+        color = colors.bgSurface,
+        border = BorderStroke(1.dp, colors.borderSubtle)
     ) {
         Column(
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(24.dp)
         ) {
-            // Заголовок и средний балл
+            // Заголовок категории и средний балл
             Row(
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.SpaceBetween,
                 modifier = Modifier.fillMaxWidth()
             ) {
                 Row(verticalAlignment = Alignment.CenterVertically) {
-                    Box(
-                        modifier = Modifier
-                            .size(40.dp)
-                            .clip(CircleShape)
-                            .background(Color(0xFFF59E0B).copy(alpha = 0.15f)),
-                        contentAlignment = Alignment.Center
-                    ) {
-                        Icon(
-                            imageVector = Lucide.Star,
-                            contentDescription = null,
-                            tint = Color(0xFFF59E0B),
-                            modifier = Modifier.size(20.dp)
-                        )
-                    }
-                    Spacer(modifier = Modifier.width(12.dp))
+                    Icon(
+                        imageVector = Lucide.Star,
+                        contentDescription = null,
+                        tint = colors.accentGold,
+                        modifier = Modifier.size(16.dp)
+                    )
+                    Spacer(modifier = Modifier.width(8.dp))
                     Text(
                         text = stringResource(Res.string.stats_ratings_title),
-                        style = MaterialTheme.typography.labelMedium,
+                        style = MaterialTheme.typography.labelSmall.copy(
+                            letterSpacing = 1.2.sp
+                        ),
                         fontWeight = FontWeight.Bold,
-                        letterSpacing = 1.2.sp,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                        color = colors.textSecondary
                     )
                 }
 
                 if (avg != null) {
-                    Row(
-                        verticalAlignment = Alignment.CenterVertically,
-                        modifier = Modifier
-                            .clip(RoundedCornerShape(12.dp))
-                            .background(Color(0xFFF59E0B).copy(alpha = 0.15f))
-                            .padding(horizontal = 10.dp, vertical = 6.dp)
+                    // Бейдж среднего балла: фон bgElevated, радиус control (10dp), без внутренней рамки
+                    Surface(
+                        shape = shapes.control,
+                        color = colors.bgElevated
                     ) {
-                        Icon(
-                            imageVector = Lucide.Star,
-                            contentDescription = null,
-                            tint = Color(0xFFF59E0B),
-                            modifier = Modifier.size(14.dp)
-                        )
-                        Spacer(modifier = Modifier.width(4.dp))
-                        Text(
-                            text = "$avg",
-                            style = MaterialTheme.typography.titleMedium,
-                            fontWeight = FontWeight.Black,
-                            color = Color(0xFFF59E0B)
-                        )
-                        Spacer(modifier = Modifier.width(2.dp))
-                        Text(
-                            text = "/ 10",
-                            style = MaterialTheme.typography.labelSmall,
-                            color = Color(0xFFF59E0B).copy(alpha = 0.8f)
-                        )
+                        Row(
+                            verticalAlignment = Alignment.CenterVertically,
+                            modifier = Modifier.padding(horizontal = 10.dp, vertical = 5.dp)
+                        ) {
+                            Icon(
+                                imageVector = Lucide.Star,
+                                contentDescription = null,
+                                tint = colors.accentGold,
+                                modifier = Modifier.size(12.dp)
+                            )
+                            Spacer(modifier = Modifier.width(5.dp))
+                            Text(
+                                text = ((avg * 10).toInt() / 10.0).toString(),
+                                style = MaterialTheme.typography.labelSmall.copy(
+                                    fontFeatureSettings = "tnum"
+                                ),
+                                fontWeight = FontWeight.Bold,
+                                color = colors.accentGold
+                            )
+                        }
                     }
                 }
             }
 
-            Spacer(modifier = Modifier.height(8.dp))
+            Spacer(modifier = Modifier.height(20.dp))
 
-            Text(
-                text = verdict,
-                style = MaterialTheme.typography.bodySmall,
-                color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.8f)
-            )
-
-            Spacer(modifier = Modifier.height(24.dp))
-
-            // Гистограмма оценок 1..10
+            // Гистограмма 1..10 по Тафти: серые столбцы + один золотой пик (accentGold)
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .height(110.dp),
+                    .height(136.dp),
                 horizontalArrangement = Arrangement.SpaceBetween,
                 verticalAlignment = Alignment.Bottom
             ) {
@@ -149,49 +135,47 @@ fun RatingDistributionCard(
                         horizontalAlignment = Alignment.CenterHorizontally,
                         modifier = Modifier.weight(1f)
                     ) {
-                        if (count > 0) {
-                            Text(
-                                text = count.toString(),
-                                style = MaterialTheme.typography.labelSmall,
+                        Text(
+                            text = if (count > 0) count.toString() else "",
+                            style = MaterialTheme.typography.labelSmall.copy(
                                 fontSize = 10.sp,
-                                fontWeight = if (isPeak) FontWeight.Bold else FontWeight.Normal,
-                                color = if (isPeak) Color(0xFFF59E0B) else MaterialTheme.colorScheme.onSurfaceVariant
-                            )
-                        }
+                                fontFeatureSettings = "tnum"
+                            ),
+                            fontWeight = if (isPeak) FontWeight.Bold else FontWeight.Normal,
+                            color = if (isPeak) colors.accentGold else colors.textSecondary
+                        )
 
                         Spacer(modifier = Modifier.height(4.dp))
 
                         Box(
                             modifier = Modifier
-                                .fillMaxWidth(0.55f)
+                                .fillMaxWidth(0.6f)
                                 .height((80 * fraction).dp)
-                                .clip(RoundedCornerShape(topStart = 4.dp, topEnd = 4.dp))
-                                .background(
-                                    if (isPeak) Color(0xFFF59E0B)
-                                    else MaterialTheme.colorScheme.primary.copy(alpha = 0.6f)
-                                )
+                                .clip(shapes.micro)
+                                .background(if (isPeak) colors.accentGold else colors.chartBarDefault)
                         )
 
                         Spacer(modifier = Modifier.height(6.dp))
 
                         Text(
                             text = rating.toString(),
-                            style = MaterialTheme.typography.labelSmall,
-                            fontSize = 11.sp,
+                            style = MaterialTheme.typography.labelSmall.copy(
+                                fontFeatureSettings = "tnum"
+                            ),
                             fontWeight = if (isPeak) FontWeight.Bold else FontWeight.Medium,
-                            color = MaterialTheme.colorScheme.onSurface
+                            color = if (isPeak) colors.textPrimary else colors.textSecondary
                         )
                     }
                 }
             }
 
-            Spacer(modifier = Modifier.height(8.dp))
+            Spacer(modifier = Modifier.height(14.dp))
 
+            // Вердикт критика
             Text(
-                text = stringResource(Res.string.stats_ratings_total_fmt, ratingDistribution.totalRatedCount),
+                text = verdict,
                 style = MaterialTheme.typography.bodySmall,
-                color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.6f),
-                modifier = Modifier.align(Alignment.CenterHorizontally)
+                color = colors.textSecondary
             )
         }
     }

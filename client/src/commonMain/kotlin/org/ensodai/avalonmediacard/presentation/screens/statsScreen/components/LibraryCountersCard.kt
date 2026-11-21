@@ -1,163 +1,415 @@
 package org.ensodai.avalonmediacard.presentation.screens.statsScreen.components
 
+import androidx.compose.animation.animateColorAsState
+import androidx.compose.animation.core.animateDpAsState
+import androidx.compose.animation.core.animateFloatAsState
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.defaultMinSize
+import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberUpdatedState
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.input.pointer.PointerEventType
+import androidx.compose.ui.input.pointer.PointerIcon
+import androidx.compose.ui.input.pointer.pointerHoverIcon
+import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import avalonmediacard.client.generated.resources.*
-import com.composables.icons.lucide.CircleCheck
-import com.composables.icons.lucide.CirclePlay
-import com.composables.icons.lucide.CircleX
-import com.composables.icons.lucide.Clock
 import com.composables.icons.lucide.Film
 import com.composables.icons.lucide.Folder
 import com.composables.icons.lucide.Lucide
 import com.composables.icons.lucide.Tv
+import kotlin.math.roundToInt
 import org.ensodai.avalonmediacard.contract.model.LibraryStatsDto
+import org.ensodai.avalonmediacard.contract.model.MediaStatus
+import org.ensodai.avalonmediacard.contract.model.MediaType
+import org.ensodai.avalonmediacard.contract.model.UserMediaFilter
+import org.ensodai.avalonmediacard.contract.ui.navigation.Screen
+import org.ensodai.avalonmediacard.presentation.navigation.LocalNavigation
+import org.ensodai.avalonmediacard.presentation.theme.AvalonTheme
 import org.jetbrains.compose.resources.stringResource
+
+private enum class LibraryStatsMode {
+    SHOWS,
+    MOVIES
+}
+
+private enum class ShowStatusCategory {
+    WATCHING,
+    COMPLETED,
+    ON_HOLD,
+    DNF
+}
 
 @Composable
 fun LibraryCountersCard(
     libraryStats: LibraryStatsDto,
     modifier: Modifier = Modifier
 ) {
+    val colors = AvalonTheme.colors
+    val shapes = AvalonTheme.shapes
+    val navigation = LocalNavigation.current
+
+    val showsTabName = stringResource(Res.string.stats_library_tab_shows)
+    val moviesTabName = stringResource(Res.string.stats_library_tab_movies)
+
+    var selectedMode by remember { mutableStateOf(LibraryStatsMode.SHOWS) }
+    var hoveredCategory by remember { mutableStateOf<ShowStatusCategory?>(null) }
+
+    val currentTypeName = if (selectedMode == LibraryStatsMode.SHOWS) showsTabName else moviesTabName
+    val currentMediaType = if (selectedMode == LibraryStatsMode.SHOWS) MediaType.TV else MediaType.MOVIE
+
+    val watchingLabel = stringResource(Res.string.stats_library_status_watching)
+    val completedLabel = stringResource(Res.string.stats_library_status_completed)
+    val plannedLabel = stringResource(Res.string.stats_library_status_planned)
+    val droppedLabel = stringResource(Res.string.stats_library_status_dropped)
+
+    val watchingListTitle = stringResource(Res.string.stats_library_list_title_fmt, currentTypeName, watchingLabel)
+    val completedListTitle = stringResource(Res.string.stats_library_list_title_fmt, currentTypeName, completedLabel)
+    val plannedListTitle = stringResource(Res.string.stats_library_list_title_fmt, currentTypeName, plannedLabel)
+    val droppedListTitle = stringResource(Res.string.stats_library_list_title_fmt, currentTypeName, droppedLabel)
+
+    val watchingCount = if (selectedMode == LibraryStatsMode.SHOWS) {
+        libraryStats.watchingShowsCount
+    } else {
+        libraryStats.watchingMoviesCount
+    }
+
+    val completedCount = if (selectedMode == LibraryStatsMode.SHOWS) {
+        libraryStats.completedShowsCount
+    } else {
+        libraryStats.completedMoviesCount
+    }
+
+    val onHoldCount = if (selectedMode == LibraryStatsMode.SHOWS) {
+        libraryStats.onHoldShowsCount
+    } else {
+        libraryStats.onHoldMoviesCount
+    }
+
+    val dnfCount = if (selectedMode == LibraryStatsMode.SHOWS) {
+        libraryStats.dnfShowsCount
+    } else {
+        libraryStats.dnfMoviesCount
+    }
+
+    val totalCategorized = watchingCount + completedCount + onHoldCount + dnfCount
+
+    fun formatPercent(count: Int): String? {
+        if (totalCategorized <= 0 || count <= 0) return null
+        val pct = maxOf(1, (count * 100f / totalCategorized).roundToInt())
+        return "$pct%"
+    }
+
     Surface(
         modifier = modifier.defaultMinSize(minHeight = 160.dp),
-        shape = RoundedCornerShape(24.dp),
-        color = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.5f),
-        tonalElevation = 2.dp
+        shape = shapes.container,
+        color = colors.bgSurface,
+        border = BorderStroke(1.dp, colors.borderSubtle)
     ) {
         Column(
             modifier = Modifier
-                .fillMaxWidth()
+                .fillMaxSize()
                 .padding(24.dp)
         ) {
-            // Заголовок
+            // Заголовок категории
             Row(verticalAlignment = Alignment.CenterVertically) {
-                Box(
-                    modifier = Modifier
-                        .size(40.dp)
-                        .clip(CircleShape)
-                        .background(MaterialTheme.colorScheme.secondary.copy(alpha = 0.15f)),
-                    contentAlignment = Alignment.Center
-                ) {
-                    Icon(
-                        imageVector = Lucide.Folder,
-                        contentDescription = null,
-                        tint = MaterialTheme.colorScheme.secondary,
-                        modifier = Modifier.size(20.dp)
-                    )
-                }
-                Spacer(modifier = Modifier.width(12.dp))
+                Icon(
+                    imageVector = Lucide.Folder,
+                    contentDescription = null,
+                    tint = colors.textSecondary,
+                    modifier = Modifier.size(16.dp)
+                )
+                Spacer(modifier = Modifier.width(8.dp))
                 Text(
                     text = stringResource(Res.string.stats_library_title),
-                    style = MaterialTheme.typography.labelMedium,
+                    style = MaterialTheme.typography.labelSmall.copy(
+                        letterSpacing = 1.2.sp
+                    ),
                     fontWeight = FontWeight.Bold,
-                    letterSpacing = 1.2.sp,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                    color = colors.textSecondary
                 )
             }
 
-            Spacer(modifier = Modifier.height(20.dp))
+            Spacer(modifier = Modifier.height(18.dp))
 
-            // Основные KPI: Фильмы, Серии, Сериалы
+            // Основные KPI: Фильмы, Серии, Сериалы (Фильмы и Сериалы работают как переключатели)
             Row(
                 modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.spacedBy(12.dp)
+                horizontalArrangement = Arrangement.spacedBy(10.dp)
             ) {
                 KpiPill(
                     icon = Lucide.Film,
                     count = libraryStats.totalMoviesCount,
                     label = stringResource(Res.string.stats_library_movies),
-                    accentColor = Color(0xFF6366F1),
+                    isSelected = selectedMode == LibraryStatsMode.MOVIES,
+                    onClick = {
+                        selectedMode = LibraryStatsMode.MOVIES
+                        hoveredCategory = null
+                        navigation.navigateTo(
+                            Screen.UserMediaList(
+                                filter = UserMediaFilter.ByType(MediaType.MOVIE),
+                                title = moviesTabName
+                            )
+                        )
+                    },
                     modifier = Modifier.weight(1f)
                 )
                 KpiPill(
                     icon = Lucide.Tv,
                     count = libraryStats.totalEpisodesCount,
                     label = stringResource(Res.string.stats_library_episodes),
-                    accentColor = Color(0xFFEC4899),
+                    isSelected = false,
+                    onClick = null,
                     modifier = Modifier.weight(1f)
                 )
                 KpiPill(
                     icon = Lucide.Folder,
                     count = libraryStats.totalShowsCount,
                     label = stringResource(Res.string.stats_library_shows),
-                    accentColor = Color(0xFF10B981),
+                    isSelected = selectedMode == LibraryStatsMode.SHOWS,
+                    onClick = {
+                        selectedMode = LibraryStatsMode.SHOWS
+                        hoveredCategory = null
+                        navigation.navigateTo(
+                            Screen.UserMediaList(
+                                filter = UserMediaFilter.ByType(MediaType.TV),
+                                title = showsTabName
+                            )
+                        )
+                    },
                     modifier = Modifier.weight(1f)
                 )
             }
 
+            // Равномерный эластичный отступ, сбалансированный с соседней карточкой ДНК жанров
             Spacer(modifier = Modifier.height(20.dp))
+            Spacer(modifier = Modifier.weight(1f))
 
-            // Статусы сериалов (Бэклог и DNF)
-            Text(
-                text = stringResource(Res.string.stats_library_backlog_status),
-                style = MaterialTheme.typography.labelSmall,
-                fontWeight = FontWeight.SemiBold,
-                color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.7f),
-                letterSpacing = 0.8.sp
+            // Заголовок секции статусов с микро-переключателями
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Text(
+                    text = if (selectedMode == LibraryStatsMode.SHOWS) {
+                        stringResource(Res.string.stats_library_backlog_status)
+                    } else {
+                        stringResource(Res.string.stats_library_movies_status)
+                    },
+                    style = MaterialTheme.typography.labelSmall.copy(
+                        letterSpacing = 0.8.sp
+                    ),
+                    fontWeight = FontWeight.SemiBold,
+                    color = colors.textSecondary
+                )
+
+                // Компактные переключатели прямо в заголовке
+                Row(
+                    horizontalArrangement = Arrangement.spacedBy(4.dp),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    ModeChip(
+                        text = stringResource(Res.string.stats_library_tab_movies),
+                        isSelected = selectedMode == LibraryStatsMode.MOVIES,
+                        onClick = {
+                            selectedMode = LibraryStatsMode.MOVIES
+                            hoveredCategory = null
+                        }
+                    )
+                    ModeChip(
+                        text = stringResource(Res.string.stats_library_tab_shows),
+                        isSelected = selectedMode == LibraryStatsMode.SHOWS,
+                        onClick = {
+                            selectedMode = LibraryStatsMode.SHOWS
+                            hoveredCategory = null
+                        }
+                    )
+                }
+            }
+
+            Spacer(modifier = Modifier.height(8.dp))
+
+            // Мини-трек распределения бэклога
+            BacklogBar(
+                watchingCount = watchingCount,
+                completedCount = completedCount,
+                onHoldCount = onHoldCount,
+                dnfCount = dnfCount,
+                totalCategorized = totalCategorized,
+                hoveredCategory = hoveredCategory,
+                onHoverChange = { hoveredCategory = it }
             )
 
             Spacer(modifier = Modifier.height(10.dp))
 
-            Row(
+            // Сетка статусов (2x2) с выравниванием SpaceBetween
+            Column(
                 modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.spacedBy(8.dp)
+                verticalArrangement = Arrangement.spacedBy(8.dp)
             ) {
-                StatusTag(
-                    icon = Lucide.CirclePlay,
-                    count = libraryStats.watchingShowsCount,
-                    label = stringResource(Res.string.stats_library_status_watching),
-                    color = Color(0xFF3B82F6),
-                    modifier = Modifier.weight(1f)
-                )
-                StatusTag(
-                    icon = Lucide.CircleCheck,
-                    count = libraryStats.completedShowsCount,
-                    label = stringResource(Res.string.stats_library_status_completed),
-                    color = Color(0xFF10B981),
-                    modifier = Modifier.weight(1f)
-                )
-                StatusTag(
-                    icon = Lucide.Clock,
-                    count = libraryStats.onHoldShowsCount,
-                    label = stringResource(Res.string.stats_library_status_planned),
-                    color = Color(0xFFF59E0B),
-                    modifier = Modifier.weight(1f)
-                )
-                StatusTag(
-                    icon = Lucide.CircleX,
-                    count = libraryStats.dnfShowsCount,
-                    label = stringResource(Res.string.stats_library_status_dropped),
-                    color = Color(0xFFEF4444),
-                    modifier = Modifier.weight(1f)
-                )
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.spacedBy(8.dp)
+                ) {
+                    StatusTag(
+                        category = ShowStatusCategory.WATCHING,
+                        dotColor = colors.statusLive,
+                        count = watchingCount,
+                        label = watchingLabel,
+                        percent = formatPercent(watchingCount),
+                        hoveredCategory = hoveredCategory,
+                        onHoverChange = { hoveredCategory = it },
+                        onClick = {
+                            navigation.navigateTo(
+                                Screen.UserMediaList(
+                                    filter = UserMediaFilter.ByStatus(currentMediaType, MediaStatus.WATCHING),
+                                    title = watchingListTitle
+                                )
+                            )
+                        },
+                        modifier = Modifier.weight(1f)
+                    )
+                    StatusTag(
+                        category = ShowStatusCategory.COMPLETED,
+                        dotColor = colors.textPrimary.copy(alpha = 0.85f),
+                        count = completedCount,
+                        label = completedLabel,
+                        percent = formatPercent(completedCount),
+                        hoveredCategory = hoveredCategory,
+                        onHoverChange = { hoveredCategory = it },
+                        onClick = {
+                            navigation.navigateTo(
+                                Screen.UserMediaList(
+                                    filter = UserMediaFilter.ByStatus(currentMediaType, MediaStatus.COMPLETED),
+                                    title = completedListTitle
+                                )
+                            )
+                        },
+                        modifier = Modifier.weight(1f)
+                    )
+                }
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.spacedBy(8.dp)
+                ) {
+                    StatusTag(
+                        category = ShowStatusCategory.ON_HOLD,
+                        dotColor = colors.statusWarn,
+                        count = onHoldCount,
+                        label = plannedLabel,
+                        percent = formatPercent(onHoldCount),
+                        hoveredCategory = hoveredCategory,
+                        onHoverChange = { hoveredCategory = it },
+                        onClick = {
+                            navigation.navigateTo(
+                                Screen.UserMediaList(
+                                    filter = UserMediaFilter.ByStatus(currentMediaType, MediaStatus.PLANNED),
+                                    title = plannedListTitle
+                                )
+                            )
+                        },
+                        modifier = Modifier.weight(1f)
+                    )
+                    StatusTag(
+                        category = ShowStatusCategory.DNF,
+                        dotColor = colors.statusDanger,
+                        count = dnfCount,
+                        label = droppedLabel,
+                        percent = formatPercent(dnfCount),
+                        hoveredCategory = hoveredCategory,
+                        onHoverChange = { hoveredCategory = it },
+                        onClick = {
+                            navigation.navigateTo(
+                                Screen.UserMediaList(
+                                    filter = UserMediaFilter.ByStatus(currentMediaType, MediaStatus.DROPPED),
+                                    title = droppedListTitle
+                                )
+                            )
+                        },
+                        modifier = Modifier.weight(1f)
+                    )
+                }
             }
         }
+    }
+}
+
+@Composable
+private fun ModeChip(
+    text: String,
+    isSelected: Boolean,
+    onClick: () -> Unit
+) {
+    val colors = AvalonTheme.colors
+    val shapes = AvalonTheme.shapes
+    var isHovered by remember { mutableStateOf(false) }
+
+    val bgColor by animateColorAsState(
+        if (isSelected) colors.bgElevated else if (isHovered) colors.borderSubtle.copy(alpha = 0.5f) else Color.Transparent
+    )
+    val textColor by animateColorAsState(
+        if (isSelected) colors.textPrimary else colors.textSecondary
+    )
+    val borderColor by animateColorAsState(
+        if (isSelected) colors.borderStrong else Color.Transparent
+    )
+
+    Surface(
+        onClick = onClick,
+        shape = shapes.micro,
+        color = bgColor,
+        border = BorderStroke(1.dp, borderColor),
+        modifier = Modifier
+            .pointerHoverIcon(PointerIcon.Hand)
+            .pointerInput(Unit) {
+                awaitPointerEventScope {
+                    while (true) {
+                        val event = awaitPointerEvent()
+                        when (event.type) {
+                            PointerEventType.Enter, PointerEventType.Move -> isHovered = true
+                            PointerEventType.Exit -> isHovered = false
+                        }
+                    }
+                }
+            }
+    ) {
+        Text(
+            text = text,
+            style = MaterialTheme.typography.labelSmall.copy(fontSize = 10.sp),
+            fontWeight = if (isSelected) FontWeight.Bold else FontWeight.Medium,
+            color = textColor,
+            modifier = Modifier.padding(horizontal = 8.dp, vertical = 3.dp)
+        )
     }
 }
 
@@ -166,77 +418,320 @@ private fun KpiPill(
     icon: ImageVector,
     count: Int,
     label: String,
-    accentColor: Color,
+    isSelected: Boolean = false,
+    onClick: (() -> Unit)? = null,
     modifier: Modifier = Modifier
 ) {
+    val colors = AvalonTheme.colors
+    val shapes = AvalonTheme.shapes
+
+    var isHovered by remember { mutableStateOf(false) }
+
+    val animatedBg by animateColorAsState(
+        if (isSelected) {
+            colors.borderSubtle.copy(alpha = 0.7f)
+        } else if (isHovered) {
+            colors.borderSubtle.copy(alpha = 0.4f)
+        } else {
+            colors.bgElevated
+        }
+    )
+    val animatedBorderColor by animateColorAsState(
+        if (isSelected) {
+            colors.borderStrong
+        } else if (isHovered) {
+            colors.borderStrong.copy(alpha = 0.5f)
+        } else {
+            Color.Transparent
+        }
+    )
+    val animatedIconColor by animateColorAsState(
+        if (isSelected || isHovered) colors.textPrimary else colors.textSecondary
+    )
+
     Surface(
-        modifier = modifier,
-        shape = RoundedCornerShape(16.dp),
-        color = MaterialTheme.colorScheme.surface.copy(alpha = 0.6f)
+        onClick = onClick ?: {},
+        enabled = onClick != null,
+        modifier = modifier
+            .pointerHoverIcon(if (onClick != null) PointerIcon.Hand else PointerIcon.Default)
+            .pointerInput(Unit) {
+                awaitPointerEventScope {
+                    while (true) {
+                        val event = awaitPointerEvent()
+                        when (event.type) {
+                            PointerEventType.Enter, PointerEventType.Move -> isHovered = true
+                            PointerEventType.Exit -> isHovered = false
+                        }
+                    }
+                }
+            },
+        shape = shapes.control,
+        color = animatedBg,
+        border = BorderStroke(1.dp, animatedBorderColor)
     ) {
         Column(
-            modifier = Modifier.padding(16.dp),
+            modifier = Modifier.padding(horizontal = 14.dp, vertical = 12.dp),
             horizontalAlignment = Alignment.Start
         ) {
             Icon(
                 imageVector = icon,
                 contentDescription = null,
-                tint = accentColor,
-                modifier = Modifier.size(20.dp)
+                tint = animatedIconColor,
+                modifier = Modifier.size(16.dp)
             )
-            Spacer(modifier = Modifier.height(12.dp))
+            Spacer(modifier = Modifier.height(8.dp))
             Text(
                 text = count.toString(),
-                style = MaterialTheme.typography.headlineMedium,
+                style = MaterialTheme.typography.titleLarge.copy(
+                    fontFeatureSettings = "tnum"
+                ),
                 fontWeight = FontWeight.Black,
-                color = MaterialTheme.colorScheme.onSurface
+                color = colors.textPrimary
             )
             Text(
                 text = label,
-                style = MaterialTheme.typography.bodySmall,
-                color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.7f)
+                style = MaterialTheme.typography.labelSmall,
+                color = if (isSelected) colors.textPrimary.copy(alpha = 0.9f) else colors.textSecondary
             )
         }
     }
 }
 
 @Composable
-private fun StatusTag(
-    icon: ImageVector,
-    count: Int,
-    label: String,
-    color: Color,
+private fun BacklogBar(
+    watchingCount: Int,
+    completedCount: Int,
+    onHoldCount: Int,
+    dnfCount: Int,
+    totalCategorized: Int,
+    hoveredCategory: ShowStatusCategory?,
+    onHoverChange: (ShowStatusCategory?) -> Unit,
     modifier: Modifier = Modifier
 ) {
+    val colors = AvalonTheme.colors
+    val shapes = AvalonTheme.shapes
+
+    Box(
+        modifier = modifier
+            .fillMaxWidth()
+            .height(20.dp),
+        contentAlignment = Alignment.Center
+    ) {
+        // Фоновый серый трек
+        Box(
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(4.dp)
+                .clip(shapes.micro)
+                .background(colors.chartTrack)
+        )
+
+        if (totalCategorized > 0) {
+            val watchingRatio = watchingCount.toFloat() / totalCategorized
+            val completedRatio = completedCount.toFloat() / totalCategorized
+            val onHoldRatio = onHoldCount.toFloat() / totalCategorized
+            val dnfRatio = dnfCount.toFloat() / totalCategorized
+
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(20.dp)
+                    .clip(shapes.micro),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                if (watchingCount > 0) {
+                    BacklogSegment(
+                        category = ShowStatusCategory.WATCHING,
+                        color = colors.statusLive,
+                        hoveredCategory = hoveredCategory,
+                        onHoverChange = onHoverChange,
+                        modifier = Modifier.weight(watchingRatio)
+                    )
+                }
+                if (completedCount > 0) {
+                    BacklogSegment(
+                        category = ShowStatusCategory.COMPLETED,
+                        color = colors.textPrimary.copy(alpha = 0.85f),
+                        hoveredCategory = hoveredCategory,
+                        onHoverChange = onHoverChange,
+                        modifier = Modifier.weight(completedRatio)
+                    )
+                }
+                if (onHoldCount > 0) {
+                    BacklogSegment(
+                        category = ShowStatusCategory.ON_HOLD,
+                        color = colors.statusWarn,
+                        hoveredCategory = hoveredCategory,
+                        onHoverChange = onHoverChange,
+                        modifier = Modifier.weight(onHoldRatio)
+                    )
+                }
+                if (dnfCount > 0) {
+                    BacklogSegment(
+                        category = ShowStatusCategory.DNF,
+                        color = colors.statusDanger,
+                        hoveredCategory = hoveredCategory,
+                        onHoverChange = onHoverChange,
+                        modifier = Modifier.weight(dnfRatio)
+                    )
+                }
+            }
+        }
+    }
+}
+
+@Composable
+private fun BacklogSegment(
+    category: ShowStatusCategory,
+    color: Color,
+    hoveredCategory: ShowStatusCategory?,
+    onHoverChange: (ShowStatusCategory?) -> Unit,
+    modifier: Modifier = Modifier
+) {
+    val shapes = AvalonTheme.shapes
+    val currentHovered by rememberUpdatedState(hoveredCategory)
+    val isHovered = hoveredCategory == category
+    val isAnyHovered = hoveredCategory != null
+
+    val animatedHeight by animateDpAsState(
+        targetValue = if (isHovered) 6.5.dp else 4.dp
+    )
+    val animatedAlpha by animateFloatAsState(
+        targetValue = if (isHovered) 1.0f else if (isAnyHovered) 0.35f else 1.0f
+    )
+
+    Box(
+        modifier = modifier
+            .fillMaxHeight()
+            .pointerHoverIcon(PointerIcon.Default)
+            .pointerInput(category) {
+                awaitPointerEventScope {
+                    while (true) {
+                        val event = awaitPointerEvent()
+                        when (event.type) {
+                            PointerEventType.Enter, PointerEventType.Move -> onHoverChange(category)
+                            PointerEventType.Exit -> {
+                                if (currentHovered == category) onHoverChange(null)
+                            }
+                        }
+                    }
+                }
+            }
+            .padding(horizontal = 0.5.dp),
+        contentAlignment = Alignment.Center
+    ) {
+        Box(
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(animatedHeight)
+                .clip(shapes.micro)
+                .background(color.copy(alpha = animatedAlpha))
+        )
+    }
+}
+
+@Composable
+private fun StatusTag(
+    category: ShowStatusCategory,
+    dotColor: Color,
+    count: Int,
+    label: String,
+    percent: String?,
+    hoveredCategory: ShowStatusCategory?,
+    onHoverChange: (ShowStatusCategory?) -> Unit,
+    onClick: () -> Unit,
+    modifier: Modifier = Modifier
+) {
+    val colors = AvalonTheme.colors
+    val shapes = AvalonTheme.shapes
+
+    val currentHovered by rememberUpdatedState(hoveredCategory)
+    val isHovered = hoveredCategory == category
+    val isAnyHovered = hoveredCategory != null
+
+    val animatedBg by animateColorAsState(
+        if (isHovered) colors.borderSubtle.copy(alpha = 0.5f) else colors.bgElevated
+    )
+    val animatedBorderColor by animateColorAsState(
+        if (isHovered) colors.borderStrong else Color.Transparent
+    )
+    val animatedDotSize by animateDpAsState(
+        if (isHovered) 8.dp else 6.dp
+    )
+    val animatedLabelColor by animateColorAsState(
+        if (isHovered) colors.textPrimary else if (isAnyHovered) colors.textSecondary.copy(alpha = 0.5f) else colors.textSecondary
+    )
+    val animatedCountColor by animateColorAsState(
+        if (isHovered) colors.textPrimary else if (isAnyHovered) colors.textPrimary.copy(alpha = 0.5f) else colors.textPrimary
+    )
+    val animatedDotAlpha by animateFloatAsState(
+        if (isHovered) 1.0f else if (isAnyHovered) 0.4f else 1.0f
+    )
+
     Surface(
-        modifier = modifier,
-        shape = RoundedCornerShape(12.dp),
-        color = color.copy(alpha = 0.12f)
+        onClick = onClick,
+        modifier = modifier
+            .pointerHoverIcon(PointerIcon.Hand)
+            .pointerInput(category) {
+                awaitPointerEventScope {
+                    while (true) {
+                        val event = awaitPointerEvent()
+                        when (event.type) {
+                            PointerEventType.Enter, PointerEventType.Move -> onHoverChange(category)
+                            PointerEventType.Exit -> {
+                                if (currentHovered == category) onHoverChange(null)
+                            }
+                        }
+                    }
+                }
+            },
+        shape = shapes.control,
+        color = animatedBg,
+        border = BorderStroke(1.dp, animatedBorderColor)
     ) {
         Row(
-            modifier = Modifier.padding(horizontal = 10.dp, vertical = 8.dp),
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.Center
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 12.dp, vertical = 9.dp),
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.CenterVertically
         ) {
-            Icon(
-                imageVector = icon,
-                contentDescription = null,
-                tint = color,
-                modifier = Modifier.size(14.dp)
-            )
-            Spacer(modifier = Modifier.width(6.dp))
-            Text(
-                text = count.toString(),
-                style = MaterialTheme.typography.labelMedium,
-                fontWeight = FontWeight.Bold,
-                color = color
-            )
-            Spacer(modifier = Modifier.width(4.dp))
-            Text(
-                text = label,
-                style = MaterialTheme.typography.labelSmall,
-                color = MaterialTheme.colorScheme.onSurfaceVariant
-            )
+            // Левая часть: точка + название статуса
+            Row(verticalAlignment = Alignment.CenterVertically) {
+                Box(
+                    modifier = Modifier
+                        .size(animatedDotSize)
+                        .clip(CircleShape)
+                        .background(dotColor.copy(alpha = animatedDotAlpha))
+                )
+                Spacer(modifier = Modifier.width(8.dp))
+                Text(
+                    text = label,
+                    style = MaterialTheme.typography.labelMedium,
+                    fontWeight = if (isHovered) FontWeight.SemiBold else FontWeight.Medium,
+                    color = animatedLabelColor
+                )
+            }
+
+            // Правая часть: количество + процент
+            Row(verticalAlignment = Alignment.CenterVertically) {
+                Text(
+                    text = count.toString(),
+                    style = MaterialTheme.typography.labelMedium.copy(
+                        fontFeatureSettings = "tnum"
+                    ),
+                    fontWeight = FontWeight.Bold,
+                    color = animatedCountColor
+                )
+                if (percent != null) {
+                    Spacer(modifier = Modifier.width(6.dp))
+                    Text(
+                        text = percent,
+                        style = MaterialTheme.typography.bodySmall.copy(fontSize = 11.sp),
+                        color = colors.textSecondary.copy(alpha = if (isHovered) 0.85f else 0.5f)
+                    )
+                }
+            }
         }
     }
 }

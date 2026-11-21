@@ -1,5 +1,6 @@
 package org.ensodai.avalonmediacard.service
 
+import org.ensodai.avalonmediacard.contract.model.ActivityHeatmapDto
 import org.ensodai.avalonmediacard.contract.model.DecadeStatDto
 import org.ensodai.avalonmediacard.contract.model.GenreStatDto
 import org.ensodai.avalonmediacard.contract.model.TimeMilestoneDto
@@ -9,6 +10,8 @@ import org.ensodai.avalonmediacard.contract.model.UserStatsDto
 import org.ensodai.avalonmediacard.repository.UserSettingsRepository
 import org.ensodai.avalonmediacard.repository.UserStatsRepository
 import org.koin.core.annotation.Single
+import org.slf4j.LoggerFactory
+import kotlin.system.measureTimeMillis
 import kotlin.uuid.Uuid
 
 @Single
@@ -17,59 +20,94 @@ class UserStatsService(
     private val userSettingsRepository: UserSettingsRepository,
     private val archetypeClassifier: CinematicArchetypeClassifier
 ) {
+    private val logger = LoggerFactory.getLogger(UserStatsService::class.java)
 
     suspend fun getUserStats(userId: Uuid): UserStatsDto {
+        val startTotal = System.currentTimeMillis()
         val settings = userSettingsRepository.getUserSettings(userId)
         val locale = settings.uiLocale.takeIf { it.isNotBlank() } ?: "ru"
 
         // 1. Время (Time Overview)
-        val (moviesMinutes, showsMinutes) = userStatsRepository.getTimeStats(userId)
-        val totalMinutes = moviesMinutes + showsMinutes
-        val milestone = calculateTimeMilestone(totalMinutes)
-        val timeOverview = TimeStatsDto(
-            totalMinutes = totalMinutes,
-            moviesMinutes = moviesMinutes,
-            showsMinutes = showsMinutes,
-            milestone = milestone
-        )
+        lateinit var timeOverview: TimeStatsDto
+        val tTime = measureTimeMillis {
+            val (moviesMinutes, showsMinutes) = userStatsRepository.getTimeStats(userId)
+            val totalMinutes = moviesMinutes + showsMinutes
+            val milestone = calculateTimeMilestone(totalMinutes)
+            timeOverview = TimeStatsDto(
+                totalMinutes = totalMinutes,
+                moviesMinutes = moviesMinutes,
+                showsMinutes = showsMinutes,
+                milestone = milestone
+            )
+        }
 
         // 2. Библиотека (Library Overview)
-        val libraryOverview = userStatsRepository.getLibraryStats(userId)
+        lateinit var libraryOverview: org.ensodai.avalonmediacard.contract.model.LibraryStatsDto
+        val tLib = measureTimeMillis {
+            libraryOverview = userStatsRepository.getLibraryStats(userId)
+        }
 
         // 3. Список просмотренных медиа
-        val watchedMediaIds = userStatsRepository.getWatchedMediaIds(userId)
+        lateinit var watchedMediaIds: Set<Uuid>
+        val tWatched = measureTimeMillis {
+            watchedMediaIds = userStatsRepository.getWatchedMediaIds(userId)
+        }
 
         // 4. Оценки (Rating Distribution)
-        val ratingDistribution = userStatsRepository.getRatingDistribution(userId)
+        lateinit var ratingDistribution: org.ensodai.avalonmediacard.contract.model.RatingDistributionDto
+        val tRatings = measureTimeMillis {
+            ratingDistribution = userStatsRepository.getRatingDistribution(userId)
+        }
 
         // 5. Жанры (Genre Breakdown)
-        val rawGenres = userStatsRepository.getMediaGenres(watchedMediaIds, locale)
-        val genreCounts = rawGenres.groupingBy { it }.eachCount()
-        val totalGenreHits = genreCounts.values.sum().coerceAtLeast(1)
+        lateinit var genreBreakdown: List<GenreStatDto>
+        val tGenres = measureTimeMillis {
+            val rawGenres = userStatsRepository.getMediaGenres(watchedMediaIds, locale)
+            val genreCounts = rawGenres.groupingBy { it }.eachCount()
+            val totalGenreHits = genreCounts.values.sum().coerceAtLeast(1)
 
-        val genreBreakdown = genreCounts.entries
-            .sortedByDescending { it.value }
-            .take(10)
-            .map { (pair, count) ->
-                val (genreId, genreName) = pair
-                GenreStatDto(
-                    genreId = genreId,
-                    genreName = genreName,
-                    watchedCount = count,
-                    percentage = (count.toFloat() / totalGenreHits) * 100f
-                )
-            }
+            genreBreakdown = genreCounts.entries
+                .sortedByDescending { it.value }
+                .take(10)
+                .map { (pair, count) ->
+                    val (genreId, genreName) = pair
+                    GenreStatDto(
+                        genreId = genreId,
+                        genreName = genreName,
+                        watchedCount = count,
+                        percentage = (count.toFloat() / totalGenreHits) * 100f
+                    )
+                }
+        }
 
         // 6. Десятилетия (Decades Breakdown)
-        val releaseYears = userStatsRepository.getMediaReleaseYears(watchedMediaIds)
-        val decadesBreakdown = calculateDecades(releaseYears)
+        lateinit var decadesBreakdown: List<DecadeStatDto>
+        val tYears = measureTimeMillis {
+            val releaseYears = userStatsRepository.getMediaReleaseYears(watchedMediaIds)
+            decadesBreakdown = calculateDecades(releaseYears)
+        }
 
         // 7. Архетип личности (Cinematic Archetype)
-        val archetype = archetypeClassifier.classify(genreBreakdown, decadesBreakdown)
+        var archetype: org.ensodai.avalonmediacard.contract.model.ArchetypeDto? = null
+        val tArchetype = measureTimeMillis {
+            archetype = archetypeClassifier.classify(genreBreakdown, decadesBreakdown)
+        }
 
         // 8. Топ персон (Top People: Режиссеры и актеры)
-        val ratingsMap = userStatsRepository.getUserRatingsMap(userId)
-        val topPeople = userStatsRepository.getTopPeople(watchedMediaIds, locale, ratingsMap)
+        lateinit var topPeople: org.ensodai.avalonmediacard.contract.model.TopPeopleStatsDto
+        val tPeople = measureTimeMillis {
+            val ratingsMap = userStatsRepository.getUserRatingsMap(userId)
+            topPeople = userStatsRepository.getTopPeople(watchedMediaIds, locale, ratingsMap)
+        }
+
+        // 9. Тепловая карта активности (Activity Heatmap)
+        lateinit var activityHeatmap: ActivityHeatmapDto
+        val tHeatmap = measureTimeMillis {
+            activityHeatmap = userStatsRepository.getActivityHeatmap(userId)
+        }
+
+        val totalMs = System.currentTimeMillis() - startTotal
+        logger.info("[UserStatsService] Stats for user $userId calculated in ${totalMs}ms (time: ${tTime}ms, lib: ${tLib}ms, watched: ${tWatched}ms, ratings: ${tRatings}ms, genres: ${tGenres}ms, years: ${tYears}ms, archetype: ${tArchetype}ms, people: ${tPeople}ms, heatmap: ${tHeatmap}ms)")
 
         return UserStatsDto(
             timeOverview = timeOverview,
@@ -78,7 +116,8 @@ class UserStatsService(
             ratingDistribution = ratingDistribution,
             topPeople = topPeople,
             archetype = archetype,
-            decadesBreakdown = decadesBreakdown
+            decadesBreakdown = decadesBreakdown,
+            activityHeatmap = activityHeatmap
         )
     }
 

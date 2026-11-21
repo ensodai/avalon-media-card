@@ -1,6 +1,8 @@
 package org.ensodai.avalonmediacard.repository
 
+import org.ensodai.avalonmediacard.contract.model.ActivityHeatmapDto
 import org.ensodai.avalonmediacard.contract.model.CriticProfileType
+import org.ensodai.avalonmediacard.contract.model.HeatmapDayDto
 import org.ensodai.avalonmediacard.contract.model.LibraryStatsDto
 import org.ensodai.avalonmediacard.contract.model.MediaImageType
 import org.ensodai.avalonmediacard.contract.model.MediaStatus
@@ -30,7 +32,10 @@ import org.jetbrains.exposed.v1.core.or
 import org.jetbrains.exposed.v1.jdbc.select
 import org.jetbrains.exposed.v1.jdbc.selectAll
 import org.koin.core.annotation.Single
+import kotlin.math.roundToInt
 import kotlin.math.roundToLong
+import kotlin.time.Clock
+import kotlin.time.Instant
 import kotlin.uuid.Uuid
 
 @Single
@@ -122,6 +127,16 @@ class UserStatsRepository {
 
         val totalShowsCount = (tvMediaIdsFromMovies + tvMediaIdsFromEpisodes).size
 
+        val movieRows = UserMovieTable
+            .select(UserMovieTable.status, UserMovieTable.progressSeconds)
+            .where { (UserMovieTable.userId eq userId) and (UserMovieTable.mediaType eq MediaType.MOVIE) }
+            .toList()
+
+        val watchingMovies = movieRows.count { it[UserMovieTable.status] == MediaStatus.WATCHING || (it[UserMovieTable.status] == MediaStatus.NONE && it[UserMovieTable.progressSeconds] >= 60L) }
+        val completedMovies = movieRows.count { it[UserMovieTable.status] == MediaStatus.COMPLETED }
+        val onHoldMovies = movieRows.count { it[UserMovieTable.status] == MediaStatus.PLANNED }
+        val dnfMovies = movieRows.count { it[UserMovieTable.status] == MediaStatus.DROPPED }
+
         LibraryStatsDto(
             totalMoviesCount = totalMoviesCount,
             totalEpisodesCount = totalEpisodesCount,
@@ -129,7 +144,11 @@ class UserStatsRepository {
             watchingShowsCount = watchingShows,
             completedShowsCount = completedShows,
             onHoldShowsCount = onHoldShows,
-            dnfShowsCount = dnfShows
+            dnfShowsCount = dnfShows,
+            watchingMoviesCount = watchingMovies,
+            completedMoviesCount = completedMovies,
+            onHoldMoviesCount = onHoldMovies,
+            dnfMoviesCount = dnfMovies
         )
     }
 
@@ -288,64 +307,64 @@ class UserStatsRepository {
     ): TopPeopleStatsDto = dbQuery {
         if (mediaIds.isEmpty()) return@dbQuery TopPeopleStatsDto(emptyList(), emptyList())
 
-        // 1. Извлекаем титры с ID людей и ролями
-        data class RawCredit(
-            val creditId: Uuid,
-            val mediaId: Uuid,
+        data class PersonMediaRef(
             val personUuid: Uuid,
             val tmdbPersonId: String,
-            val role: String
+            val mediaId: Uuid,
+            val creditId: Uuid
         )
 
-        val rawCredits = mutableListOf<RawCredit>()
+        // 1. Извлекаем режиссеров напрямую (фильтрация по роли Director в БД)
+        val directorRefs = mutableListOf<PersonMediaRef>()
         for (chunk in mediaIds.chunked(SQL_CHUNK_SIZE)) {
-            val chunkCredits = (MediaCreditTable innerJoin MediaPersonTable)
+            val chunkDirectors = (MediaCreditTable innerJoin MediaPersonTable)
                 .select(
-                    MediaCreditTable.id,
-                    MediaCreditTable.mediaId,
-                    MediaCreditTable.role,
                     MediaPersonTable.id,
-                    MediaPersonTable.personId
+                    MediaPersonTable.personId,
+                    MediaCreditTable.mediaId,
+                    MediaCreditTable.id
                 )
-                .where { MediaCreditTable.mediaId inList chunk }
+                .where { (MediaCreditTable.mediaId inList chunk) and (MediaCreditTable.role eq "Director") }
                 .map { row ->
-                    RawCredit(
-                        creditId = row[MediaCreditTable.id].value,
-                        mediaId = row[MediaCreditTable.mediaId].value,
+                    PersonMediaRef(
                         personUuid = row[MediaPersonTable.id].value,
                         tmdbPersonId = row[MediaPersonTable.personId],
-                        role = row[MediaCreditTable.role]
+                        mediaId = row[MediaCreditTable.mediaId].value,
+                        creditId = row[MediaCreditTable.id].value
                     )
                 }
-            rawCredits.addAll(chunkCredits)
+            directorRefs.addAll(chunkDirectors)
         }
 
-        if (rawCredits.isEmpty()) return@dbQuery TopPeopleStatsDto(emptyList(), emptyList())
-
-        // 2. Исключаем документальные камео (Self) для актеров
-        val actorCreditIds = rawCredits.filter { it.role.equals("Actor", ignoreCase = true) }.map { it.creditId }
-        val selfCreditIds = mutableSetOf<Uuid>()
-        for (chunk in actorCreditIds.chunked(SQL_CHUNK_SIZE)) {
-            MediaCreditTranslationTable
-                .select(MediaCreditTranslationTable.creditId, MediaCreditTranslationTable.characterName)
-                .where { (MediaCreditTranslationTable.creditId inList chunk) and MediaCreditTranslationTable.characterName.isNotNull() }
-                .forEach { row ->
-                    val charName = row[MediaCreditTranslationTable.characterName]?.trim()?.lowercase()
-                    if (charName != null && SELF_ROLE_NAMES.any { charName.contains(it) }) {
-                        selfCreditIds.add(row[MediaCreditTranslationTable.creditId].value)
-                    }
+        // 2. Извлекаем актеров напрямую (фильтрация по роли Actor в БД)
+        val actorRefs = mutableListOf<PersonMediaRef>()
+        for (chunk in mediaIds.chunked(SQL_CHUNK_SIZE)) {
+            val chunkActors = (MediaCreditTable innerJoin MediaPersonTable)
+                .select(
+                    MediaPersonTable.id,
+                    MediaPersonTable.personId,
+                    MediaCreditTable.mediaId,
+                    MediaCreditTable.id
+                )
+                .where { (MediaCreditTable.mediaId inList chunk) and (MediaCreditTable.role eq "Actor") }
+                .map { row ->
+                    PersonMediaRef(
+                        personUuid = row[MediaPersonTable.id].value,
+                        tmdbPersonId = row[MediaPersonTable.personId],
+                        mediaId = row[MediaCreditTable.mediaId].value,
+                        creditId = row[MediaCreditTable.id].value
+                    )
                 }
+            actorRefs.addAll(chunkActors)
         }
 
-        val filteredCredits = rawCredits.filterNot { it.creditId in selfCreditIds }
         val minCountThreshold = if (mediaIds.size > 10) 2 else 1
 
         // 3. Вычисляем кандидатов в топ режиссеров (топ-5)
-        val candidateDirectors = filteredCredits
-            .filter { it.role.equals("Director", ignoreCase = true) }
+        val candidateDirectors = directorRefs
             .groupBy { it.personUuid to it.tmdbPersonId }
-            .mapNotNull { (key, credits) ->
-                val distinctMedia = credits.map { it.mediaId }.distinct()
+            .mapNotNull { (key, refs) ->
+                val distinctMedia = refs.map { it.mediaId }.distinct()
                 if (distinctMedia.size < minCountThreshold) return@mapNotNull null
                 val ratings = distinctMedia.mapNotNull { movieRatingMap[it] }
                 val avg = if (ratings.isNotEmpty()) {
@@ -359,12 +378,38 @@ class UserStatsRepository {
             )
             .take(5)
 
-        // 4. Вычисляем кандидатов в топ актеров (топ-10)
-        val candidateActors = filteredCredits
-            .filter { it.role.equals("Actor", ignoreCase = true) }
+        // 4. Предварительный отбор топ-кандидатов актеров (берем до 25 кандидатов для проверки камео)
+        val candidateActorsGrouped = actorRefs
             .groupBy { it.personUuid to it.tmdbPersonId }
-            .mapNotNull { (key, credits) ->
-                val distinctMedia = credits.map { it.mediaId }.distinct()
+            .filter { (_, refs) -> refs.map { it.mediaId }.distinct().size >= minCountThreshold }
+            .entries
+            .sortedByDescending { it.value.map { r -> r.mediaId }.distinct().size }
+            .take(25)
+
+        // Исключаем камео (Self) ТОЛЬКО для отобранных кандидатов-актеров
+        val candidateCreditIds = candidateActorsGrouped.flatMap { it.value.map { r -> r.creditId } }
+        val selfCreditIds = mutableSetOf<Uuid>()
+        if (candidateCreditIds.isNotEmpty()) {
+            for (chunk in candidateCreditIds.chunked(SQL_CHUNK_SIZE)) {
+                MediaCreditTranslationTable
+                    .select(MediaCreditTranslationTable.creditId, MediaCreditTranslationTable.characterName)
+                    .where {
+                        (MediaCreditTranslationTable.creditId inList chunk) and
+                        MediaCreditTranslationTable.characterName.isNotNull()
+                    }
+                    .forEach { row ->
+                        val charName = row[MediaCreditTranslationTable.characterName]?.trim()?.lowercase()
+                        if (charName != null && SELF_ROLE_NAMES.any { charName.contains(it) }) {
+                            selfCreditIds.add(row[MediaCreditTranslationTable.creditId].value)
+                        }
+                    }
+            }
+        }
+
+        val candidateActors = candidateActorsGrouped
+            .mapNotNull { (key, refs) ->
+                val validRefs = refs.filterNot { it.creditId in selfCreditIds }
+                val distinctMedia = validRefs.map { it.mediaId }.distinct()
                 if (distinctMedia.size < minCountThreshold) return@mapNotNull null
                 val ratings = distinctMedia.mapNotNull { movieRatingMap[it] }
                 val avg = if (ratings.isNotEmpty()) {
@@ -442,5 +487,176 @@ class UserStatsRepository {
         }
 
         TopPeopleStatsDto(directors = directors, actors = actors)
+    }
+
+    /**
+     * Возвращает тепловую карту активности за последние 52 недели (365+ дней).
+     */
+    suspend fun getActivityHeatmap(userId: Uuid): ActivityHeatmapDto = dbQuery {
+        val now = Clock.System.now()
+        val today = java.time.Instant.ofEpochMilli(now.toEpochMilliseconds())
+            .atZone(java.time.ZoneOffset.UTC)
+            .toLocalDate()
+
+        val daysSinceMonday = today.dayOfWeek.value - 1 // 0 = Mon .. 6 = Sun
+        // Отматываем ровно 52 полные недели назад от текущего понедельника, чтобы сетка начиналась с Пн
+        val startDate = today.minusDays(52L * 7 + daysSinceMonday)
+        val startInstant = Instant.fromEpochMilliseconds(
+            startDate.atStartOfDay(java.time.ZoneOffset.UTC).toInstant().toEpochMilli()
+        )
+
+        class DayAccumulator(
+            var totalSeconds: Long = 0L,
+            var count: Int = 0,
+            val ratings: MutableList<Int> = mutableListOf()
+        )
+
+        val dayMap = mutableMapOf<String, DayAccumulator>()
+
+        // 1. Фильмы
+        UserMovieTable
+            .select(
+                UserMovieTable.lastWatchedAt,
+                UserMovieTable.status,
+                UserMovieTable.progressSeconds,
+                UserMovieTable.durationSeconds,
+                UserMovieTable.userRating
+            )
+            .where {
+                (UserMovieTable.userId eq userId) and
+                (UserMovieTable.mediaType eq MediaType.MOVIE) and
+                (UserMovieTable.lastWatchedAt greaterEq startInstant) and
+                ((UserMovieTable.status eq MediaStatus.COMPLETED) or (UserMovieTable.progressSeconds greaterEq 60L))
+            }
+            .forEach { row ->
+                val instant = row[UserMovieTable.lastWatchedAt]
+                val dateStr = java.time.Instant.ofEpochMilli(instant.toEpochMilliseconds())
+                    .atZone(java.time.ZoneOffset.UTC)
+                    .toLocalDate()
+                    .toString()
+
+                val durationSec = if (row[UserMovieTable.status] == MediaStatus.COMPLETED) {
+                    maxOf(row[UserMovieTable.durationSeconds], row[UserMovieTable.progressSeconds])
+                } else {
+                    row[UserMovieTable.progressSeconds]
+                }
+
+                val acc = dayMap.getOrPut(dateStr) { DayAccumulator() }
+                acc.totalSeconds += durationSec
+                acc.count += 1
+                row[UserMovieTable.userRating]?.let { acc.ratings.add(it) }
+            }
+
+        // 2. Сериалы (эпизоды)
+        UserEpisodeTable
+            .select(
+                UserEpisodeTable.lastWatchedAt,
+                UserEpisodeTable.isWatched,
+                UserEpisodeTable.progressSeconds,
+                UserEpisodeTable.durationSeconds,
+                UserEpisodeTable.userRating
+            )
+            .where {
+                (UserEpisodeTable.userId eq userId) and
+                (UserEpisodeTable.lastWatchedAt greaterEq startInstant) and
+                ((UserEpisodeTable.isWatched eq true) or (UserEpisodeTable.progressSeconds greaterEq 60L))
+            }
+            .forEach { row ->
+                val instant = row[UserEpisodeTable.lastWatchedAt]
+                val dateStr = java.time.Instant.ofEpochMilli(instant.toEpochMilliseconds())
+                    .atZone(java.time.ZoneOffset.UTC)
+                    .toLocalDate()
+                    .toString()
+
+                val durationSec = if (row[UserEpisodeTable.isWatched]) {
+                    maxOf(row[UserEpisodeTable.durationSeconds], row[UserEpisodeTable.progressSeconds])
+                } else {
+                    row[UserEpisodeTable.progressSeconds]
+                }
+
+                val acc = dayMap.getOrPut(dateStr) { DayAccumulator() }
+                acc.totalSeconds += durationSec
+                acc.count += 1
+                row[UserEpisodeTable.userRating]?.let { acc.ratings.add(it) }
+            }
+
+        // 3. Формируем непрерывный календарь от startDate до today
+        val days = mutableListOf<HeatmapDayDto>()
+        var curDate = startDate
+        while (!curDate.isAfter(today)) {
+            val dateStr = curDate.toString()
+            val acc = dayMap[dateStr]
+            val minutes = (acc?.totalSeconds ?: 0L) / 60
+            val count = acc?.count ?: 0
+            val avgRating = if (acc != null && acc.ratings.isNotEmpty()) {
+                (acc.ratings.average() * 10).roundToInt() / 10.0
+            } else null
+
+            days.add(
+                HeatmapDayDto(
+                    date = dateStr,
+                    minutes = minutes,
+                    count = count,
+                    avgRating = avgRating
+                )
+            )
+            curDate = curDate.plusDays(1)
+        }
+
+        val totalActiveDays = days.count { it.minutes > 0 }
+
+        // Поиск пикового дня
+        val peakDay = days.maxByOrNull { it.minutes }
+        val peakDayDate = if (peakDay != null && peakDay.minutes > 0) peakDay.date else null
+        val peakDayMinutes = peakDay?.minutes ?: 0L
+
+        // Расчет стриков
+        var longestStreak = 0
+        var currentRunningStreak = 0
+        for (day in days) {
+            if (day.minutes > 0) {
+                currentRunningStreak++
+                if (currentRunningStreak > longestStreak) {
+                    longestStreak = currentRunningStreak
+                }
+            } else {
+                currentRunningStreak = 0
+            }
+        }
+
+        // Текущий стрик от сегодняшнего или вчерашнего дня
+        val todayStr = today.toString()
+        val yesterdayStr = today.minusDays(1).toString()
+        val todayIndex = days.indexOfLast { it.date == todayStr }
+        var currentStreak = 0
+
+        if (todayIndex >= 0) {
+            val startIdx = if (days[todayIndex].minutes > 0) {
+                todayIndex
+            } else if (todayIndex > 0 && days[todayIndex - 1].date == yesterdayStr && days[todayIndex - 1].minutes > 0) {
+                todayIndex - 1
+            } else {
+                -1
+            }
+
+            if (startIdx >= 0) {
+                for (i in startIdx downTo 0) {
+                    if (days[i].minutes > 0) {
+                        currentStreak++
+                    } else {
+                        break
+                    }
+                }
+            }
+        }
+
+        ActivityHeatmapDto(
+            days = days,
+            totalActiveDays = totalActiveDays,
+            currentStreakDays = currentStreak,
+            longestStreakDays = longestStreak,
+            peakDayDate = peakDayDate,
+            peakDayMinutes = peakDayMinutes
+        )
     }
 }

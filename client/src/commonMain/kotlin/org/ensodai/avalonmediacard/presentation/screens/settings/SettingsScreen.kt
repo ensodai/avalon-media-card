@@ -24,6 +24,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import avalonmediacard.client.generated.resources.*
 import com.composables.icons.lucide.*
+import org.ensodai.avalonmediacard.core.AppVersion
 import org.ensodai.avalonmediacard.contract.model.TitleDisplayMode
 import org.ensodai.avalonmediacard.data.AppLocales
 import org.ensodai.avalonmediacard.data.LanguageDescriptor
@@ -482,6 +483,15 @@ fun SettingsScreen(
                         Text(text = state.successMessage!!, color = Color(0xFF10B981), fontSize = 13.sp)
                     }
                 }
+
+                Spacer(modifier = Modifier.height(8.dp))
+                Text(
+                    text = "Avalon Media Card v${AppVersion.displayVersion}",
+                    fontSize = 12.sp,
+                    fontWeight = FontWeight.Normal,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.5f),
+                    modifier = Modifier.align(Alignment.CenterHorizontally)
+                )
             }
         }
     }

@@ -52,6 +52,7 @@ import org.ensodai.avalonmediacard.presentation.screens.statsScreen.StatsScreen
 import org.ensodai.avalonmediacard.presentation.screens.trendsScreen.TrendsScreen
 import avalonmediacard.client.generated.resources.*
 import org.ensodai.avalonmediacard.presentation.screens.tvShowsScreen.TvShowsScreen
+import org.ensodai.avalonmediacard.presentation.screens.userMediaListScreen.UserMediaListScreen
 import org.ensodai.avalonmediacard.presentation.screens.watchRooms.WatchRoomsScreen
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.koinInject
@@ -353,6 +354,12 @@ fun MainAppContent(
 
                                                     is Screen.Dynamic -> {
                                                         DynamicScreen(
+                                                            screen = screen
+                                                        )
+                                                    }
+
+                                                    is Screen.UserMediaList -> {
+                                                        UserMediaListScreen(
                                                             screen = screen
                                                         )
                                                     }

@@ -12,6 +12,7 @@ import org.ensodai.avalonmediacard.contract.model.MediaKey
 import org.ensodai.avalonmediacard.contract.model.MediaProvider
 import org.ensodai.avalonmediacard.contract.model.MediaType
 import org.ensodai.avalonmediacard.contract.model.SidebarItem
+import org.ensodai.avalonmediacard.contract.model.UserMediaFilter
 import org.ensodai.avalonmediacard.contract.model.resolveTargetLanguage
 import org.ensodai.avalonmediacard.contract.model.withUserSettings
 import org.ensodai.avalonmediacard.contract.plugins.AvalonPlugin
@@ -182,6 +183,82 @@ class MediaListPlugin : AvalonPlugin {
                         state = SlotState.Content(
                             SlotData.Grid(
                                 id = "custom_list_$listIdStr",
+                                items = gridItems
+                            )
+                        )
+                    )
+                }
+                .onStart {
+                    emit(
+                        SlotUpdate(
+                            slotId = SlotId.MediaGrid,
+                            nodeId = id,
+                            state = SlotState.Loading()
+                        )
+                    )
+                }
+            org.ensodai.avalonmediacard.contract.plugins.ScreenSlots(
+                layout = listOf(org.ensodai.avalonmediacard.contract.slot.LayoutNode(id, SlotId.MediaGrid)),
+                flow = flow.map { ScreenStreamEvent.Update(it) }
+            )
+        }
+
+        context.slots.declare<Screen.UserMediaList>(listOf(SlotId.MediaGrid)) {
+            listOf(org.ensodai.avalonmediacard.contract.slot.LayoutNode(id, SlotId.MediaGrid))
+        }
+        context.slots.onScreen<Screen.UserMediaList> { screen, userId ->
+            if (userId == null) return@onScreen org.ensodai.avalonmediacard.contract.plugins.ScreenSlots(
+                emptyList(),
+                kotlinx.coroutines.flow.emptyFlow()
+            )
+
+            val flow = context.userMovies.observeUserMovies(userId)
+                .map { items ->
+                    when (val filter = screen.filter) {
+                        is UserMediaFilter.ByType -> items.filter { it.mediaType == filter.mediaType }
+                        is UserMediaFilter.ByStatus -> items.filter { it.mediaType == filter.mediaType && it.status == filter.status }
+                        is UserMediaFilter.ByRating -> items.filter { it.userRating == filter.rating }
+                        is UserMediaFilter.ByGenre -> items
+                        is UserMediaFilter.ByDecade -> items
+                    }
+                }
+                .distinctUntilChanged { old, new -> old.map { it.mediaId } == new.map { it.mediaId } }
+                .map { filteredItems ->
+                    val userSettings = runCatching { context.userGlobalSettings.getUserSettings(userId) }.getOrNull()
+                    val targetLang = userSettings.resolveTargetLanguage()
+                    val keys = filteredItems.map { item ->
+                        val entityType = if (item.mediaType == MediaType.MOVIE) {
+                            EntityType.MOVIE
+                        } else {
+                            EntityType.TV
+                        }
+                        MediaKey(
+                            provider = MediaProvider.Tmdb,
+                            type = entityType,
+                            id = item.mediaId
+                        )
+                    }
+                    val detailsMap = context.catalog.getMediaDetailsBatch(
+                        keys = keys,
+                        requireSeasons = false,
+                        requireVideos = false,
+                        language = targetLang
+                    )
+                    val gridItems = keys.mapNotNull { key ->
+                        val details = detailsMap[key] ?: return@mapNotNull null
+                        val customized = details.withUserSettings(userSettings)
+                        MovieCarouselItem(
+                            key = key,
+                            title = customized.title,
+                            posterUrl = customized.posterUrl
+                        )
+                    }
+                    SlotUpdate(
+                        slotId = SlotId.MediaGrid,
+                        nodeId = id,
+                        state = SlotState.Content(
+                            SlotData.Grid(
+                                id = "user_media_list",
                                 items = gridItems
                             )
                         )

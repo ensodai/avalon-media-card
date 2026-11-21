@@ -13,6 +13,36 @@ plugins {
 group = "org.ensodai.avalonmediacard"
 version = providers.gradleProperty("app.versionName").getOrElse("1.0.0")
 
+val generateClientVersion = tasks.register("generateClientVersion") {
+    val outputDir = layout.buildDirectory.dir("generated/source/clientVersion/commonMain/kotlin")
+    val appVersionName = providers.gradleProperty("app.versionName").getOrElse("1.0.0")
+    val appVersionCode = providers.gradleProperty("app.versionCode").getOrElse("1")
+
+    inputs.property("versionName", appVersionName)
+    inputs.property("versionCode", appVersionCode)
+    outputs.dir(outputDir)
+
+    doLast {
+        val file = outputDir.get().file("org/ensodai/avalonmediacard/core/AppVersion.kt").asFile
+        file.parentFile.mkdirs()
+        file.writeText(
+            """
+            package org.ensodai.avalonmediacard.core
+
+            object AppVersion {
+                const val VERSION_NAME: String = "$appVersionName"
+                const val VERSION_CODE: Int = $appVersionCode
+
+                val displayVersion: String
+                    get() = getPlatformAppVersion()
+            }
+
+            expect fun getPlatformAppVersion(): String
+            """.trimIndent()
+        )
+    }
+}
+
 kotlin {
     android {
         namespace = "org.ensodai.avalonmediacard.client"
@@ -36,8 +66,10 @@ kotlin {
         all {
             languageSettings.optIn("kotlin.uuid.ExperimentalUuidApi")
         }
-        commonMain.dependencies {
-            api(libs.avalon.core.contract)
+        val commonMain by getting {
+            kotlin.srcDir(generateClientVersion.map { it.outputs.files.singleFile })
+            dependencies {
+                api(libs.avalon.core.contract)
             implementation(libs.androidx.datastore.preferences.core)
             implementation(libs.androidx.datastore.core.okio)
             implementation(libs.okio)
@@ -70,6 +102,7 @@ kotlin {
             implementation(libs.filekit.core)
             implementation(libs.filekit.dialogs.compose)
         }
+    }
         commonTest.dependencies {
             implementation(libs.kotlin.test)
             implementation(libs.kotlinx.coroutines.test)

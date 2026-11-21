@@ -35,6 +35,7 @@ class AppActionHandler(
                     Screen.EpisodesNotifications -> navigation.navigateToEpisodesNotifications()
                     Screen.Stats -> navigation.navigateToStats()
                     Screen.WatchRooms -> navigation.navigateTo(Screen.WatchRooms)
+                    is Screen.UserMediaList -> navigation.navigateTo(screen)
                 }
             }
 

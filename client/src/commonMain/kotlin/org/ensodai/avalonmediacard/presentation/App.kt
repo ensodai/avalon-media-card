@@ -49,6 +49,7 @@ import org.ensodai.avalonmediacard.presentation.screens.commonComponents.Provide
 import org.ensodai.avalonmediacard.presentation.screens.login.LoginScreen
 import org.ensodai.avalonmediacard.presentation.telemetry.LocalTelemetryTracker
 import org.ensodai.avalonmediacard.presentation.telemetry.TelemetryTracker
+import org.ensodai.avalonmediacard.presentation.theme.AvalonColors
 import org.jetbrains.compose.resources.getString
 import org.koin.compose.koinInject
 
@@ -86,21 +87,21 @@ fun App() {
     }
 
     val customColorScheme = darkColorScheme(
-        background = Color(0xFF000000),         // Абсолютный черный (OLED) - `--bg-base`
-        surface = Color(0xFF0A0A0A),            // Подложки 1 уровня - `--bg-surface-1`
-        surfaceVariant = Color(0xFF141414),     // Сайдбар, Карточки фильмов - `--bg-surface-2`
-        primary = Color.White,                  // Акцентный цвет (Белый)
-        onPrimary = Color(0xFF000000),          // Текст на белых кнопках (Черный)
-        primaryContainer = Color(0xFF1F1F1F),   // Hover-состояния карточек, активный пункт меню - `--bg-surface-3`
-        onPrimaryContainer = Color.White,       // Текст активного пункта меню (Белый)
-        secondary = Color.White,
-        secondaryContainer = Color(0xFF141414), // Фон карточек виджетов - `--bg-surface-2`
-        onSecondaryContainer = Color(0xFFA1A1AA), // `--text-secondary`
-        onBackground = Color(0xFFFFFFFF),       // Основной яркий белый text - `--text-primary`
-        onSurface = Color(0xFFFFFFFF),
-        onSurfaceVariant = Color(0xFFA1A1AA),   // Нейтральный серый: описания, роли, год, жанр - `--text-secondary`
-        outline = Color(0xFF27272A),            // Разделители блоков, рамки - `--border-subtle`
-        outlineVariant = Color(0xFF3F3F46)      // Состояние фокуса / границы кнопок - `--border-focus`
+        background = AvalonColors.bgCanvas,            // #0B0B0D
+        surface = AvalonColors.bgSurface,              // #131316
+        surfaceVariant = AvalonColors.bgElevated,      // #1B1B1F
+        primary = AvalonColors.accentPrimary,          // #F2F2F4
+        onPrimary = AvalonColors.bgCanvas,             // #0B0B0D
+        primaryContainer = AvalonColors.bgElevated,    // #1B1B1F
+        onPrimaryContainer = AvalonColors.textPrimary, // #F2F2F4
+        secondary = AvalonColors.textPrimary,
+        secondaryContainer = AvalonColors.bgSurface,
+        onSecondaryContainer = AvalonColors.textSecondary,
+        onBackground = AvalonColors.textPrimary,
+        onSurface = AvalonColors.textPrimary,
+        onSurfaceVariant = AvalonColors.textSecondary,
+        outline = AvalonColors.borderSubtle,           // #232328
+        outlineVariant = AvalonColors.borderStrong     // #34343C
     )
 
     key(currentLanguage) {

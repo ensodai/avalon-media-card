@@ -11,6 +11,10 @@ object MediaImageTable : BaseUuidTable("media_images") {
     val imageType = enumerationByName("image_type", 20, MediaImageType::class)
     val language = varchar("language", 10).nullable()
     val url = text("url")
+
+    init {
+        index(false, personId, imageType)
+    }
 }
 
 object MediaTranslationTable : BaseUuidTable("media_translations") {

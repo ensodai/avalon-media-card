@@ -1,6 +1,7 @@
 package org.ensodai.avalonmediacard.rpc
 
 import org.ensodai.avalonmediacard.contract.auth.AuthState
+import org.ensodai.avalonmediacard.contract.model.ActivityHeatmapDto
 import org.ensodai.avalonmediacard.contract.model.CriticProfileType
 import org.ensodai.avalonmediacard.contract.model.LibraryStatsDto
 import org.ensodai.avalonmediacard.contract.model.RatingDistributionDto
@@ -45,7 +46,11 @@ class StatsRpcServiceImpl(
                 watchingShowsCount = 0,
                 completedShowsCount = 0,
                 onHoldShowsCount = 0,
-                dnfShowsCount = 0
+                dnfShowsCount = 0,
+                watchingMoviesCount = 0,
+                completedMoviesCount = 0,
+                onHoldMoviesCount = 0,
+                dnfMoviesCount = 0
             ),
             genreBreakdown = emptyList(),
             ratingDistribution = RatingDistributionDto(
@@ -59,7 +64,15 @@ class StatsRpcServiceImpl(
                 actors = emptyList()
             ),
             archetype = null,
-            decadesBreakdown = emptyList()
+            decadesBreakdown = emptyList(),
+            activityHeatmap = ActivityHeatmapDto(
+                days = emptyList(),
+                totalActiveDays = 0,
+                currentStreakDays = 0,
+                longestStreakDays = 0,
+                peakDayDate = null,
+                peakDayMinutes = 0L
+            )
         )
     }
 }

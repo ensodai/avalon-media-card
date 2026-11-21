@@ -445,6 +445,7 @@ fun getLocalizedSidebarTitle(item: SidebarItem): String {
         "collection" -> stringResource(Res.string.nav_my_collection)
         "episodes_notifications" -> stringResource(Res.string.episodes_notifications_title)
         "watch_rooms" -> stringResource(Res.string.nav_watch_rooms)
+        "stats" -> stringResource(Res.string.nav_stats)
         else -> item.title ?: ""
     }
 }

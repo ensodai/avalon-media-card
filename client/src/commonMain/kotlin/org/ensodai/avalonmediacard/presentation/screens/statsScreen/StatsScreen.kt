@@ -20,6 +20,7 @@ import avalonmediacard.client.generated.resources.*
 import org.ensodai.avalonmediacard.contract.model.EntityType
 import org.ensodai.avalonmediacard.contract.model.MediaKey
 import org.ensodai.avalonmediacard.contract.model.MediaProvider
+import org.ensodai.avalonmediacard.contract.ui.navigation.Screen
 import org.ensodai.avalonmediacard.presentation.navigation.LocalNavigation
 import org.ensodai.avalonmediacard.presentation.screens.statsScreen.components.StatsBentoGrid
 import org.ensodai.avalonmediacard.presentation.screens.statsScreen.components.StatsErrorState
@@ -79,6 +80,8 @@ fun StatsScreen(
                     StatsBentoGrid(
                         stats = state.stats!!,
                         onShareArchetype = actions.onShareArchetype,
+                        onMoviesClicked = { navigation.navigateTo(Screen.Movies) },
+                        onShowsClicked = { navigation.navigateTo(Screen.TvShows) },
                         onPersonClicked = { personId, name ->
                             actions.onPersonClicked(personId, name)
                             navigation.navigateToPerson(

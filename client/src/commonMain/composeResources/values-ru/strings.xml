@@ -677,7 +677,7 @@
     <string name="stats_heatmap_active_days">Активных дней</string>
     <string name="stats_heatmap_current_streak">Текущая серия</string>
     <string name="stats_heatmap_longest_streak">Рекордная серия</string>
-    <string name="stats_heatmap_peak_day">Пиковый вечер</string>
+    <string name="stats_heatmap_peak_day">Пиковый день</string>
     <string name="stats_heatmap_legend_less">Меньше</string>
     <string name="stats_heatmap_legend_more">Больше</string>
     <string name="stats_heatmap_days_suffix">дн.</string>
@@ -686,4 +686,29 @@
     <string name="stats_heatmap_no_activity">Нет просмотров</string>
     <string name="stats_heatmap_watches_fmt">%1$d тайтлов</string>
     <string name="stats_heatmap_rating_fmt">★ %1$.1f</string>
+    <string name="stats_heatmap_hint">Нажмите на активный день для хроники</string>
+
+    <!-- Stats: Weekdays & Months -->
+    <string name="stats_weekday_mon">Пн</string>
+    <string name="stats_weekday_wed">Ср</string>
+    <string name="stats_weekday_fri">Пт</string>
+    <string name="stats_month_1">Янв</string>
+    <string name="stats_month_2">Фев</string>
+    <string name="stats_month_3">Мар</string>
+    <string name="stats_month_4">Апр</string>
+    <string name="stats_month_5">Май</string>
+    <string name="stats_month_6">Июн</string>
+    <string name="stats_month_7">Июл</string>
+    <string name="stats_month_8">Авг</string>
+    <string name="stats_month_9">Сен</string>
+    <string name="stats_month_10">Окт</string>
+    <string name="stats_month_11">Ноя</string>
+    <string name="stats_month_12">Дек</string>
+
+    <!-- Stats: Day Activity Drawer -->
+    <string name="stats_day_activity_title">Хроника дня</string>
+    <string name="stats_day_activity_empty">В этот день не зафиксировано просмотров</string>
+    <string name="stats_day_activity_completed">Посмотрено целиком</string>
+    <string name="stats_day_activity_progress_fmt">Прогресс: %1$d из %2$d мин</string>
+    <string name="stats_day_activity_ep_fmt">Сезон %1$d, Серия %2$d</string>
 </resources>

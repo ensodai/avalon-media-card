@@ -3,6 +3,7 @@ package org.ensodai.avalonmediacard.rpc
 import org.ensodai.avalonmediacard.contract.auth.AuthState
 import org.ensodai.avalonmediacard.contract.model.ActivityHeatmapDto
 import org.ensodai.avalonmediacard.contract.model.CriticProfileType
+import org.ensodai.avalonmediacard.contract.model.DayActivityDto
 import org.ensodai.avalonmediacard.contract.model.LibraryStatsDto
 import org.ensodai.avalonmediacard.contract.model.RatingDistributionDto
 import org.ensodai.avalonmediacard.contract.model.TimeMilestoneDto
@@ -26,6 +27,12 @@ class StatsRpcServiceImpl(
         val state = session.state.value
         val userId = (state as? AuthState.Authorized)?.userId ?: return emptyUserStats()
         return userStatsService.getUserStats(userId)
+    }
+
+    override suspend fun getDayActivity(date: String): DayActivityDto {
+        val state = session.state.value
+        val userId = (state as? AuthState.Authorized)?.userId ?: return DayActivityDto(date, 0L, emptyList(), null)
+        return userStatsService.getDayActivity(userId, date)
     }
 
     private fun emptyUserStats(): UserStatsDto {

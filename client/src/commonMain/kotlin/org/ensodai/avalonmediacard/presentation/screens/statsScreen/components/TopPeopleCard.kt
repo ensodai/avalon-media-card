@@ -1,5 +1,6 @@
 package org.ensodai.avalonmediacard.presentation.screens.statsScreen.components
 
+import androidx.compose.animation.animateColorAsState
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -29,6 +30,10 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.input.pointer.PointerEventType
+import androidx.compose.ui.input.pointer.PointerIcon
+import androidx.compose.ui.input.pointer.pointerHoverIcon
+import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -36,9 +41,11 @@ import androidx.compose.ui.unit.sp
 import avalonmediacard.client.generated.resources.*
 import com.composables.icons.lucide.Lucide
 import com.composables.icons.lucide.Star
+import com.composables.icons.lucide.User
 import com.composables.icons.lucide.Users
 import org.ensodai.avalonmediacard.contract.model.PersonStatDto
 import org.ensodai.avalonmediacard.contract.model.TopPeopleStatsDto
+import org.ensodai.avalonmediacard.contract.utils.toProxyImageUrl
 import org.ensodai.avalonmediacard.presentation.components.ShimmerImage
 import org.ensodai.avalonmediacard.presentation.theme.AvalonTheme
 import org.jetbrains.compose.resources.stringResource
@@ -232,11 +239,33 @@ private fun PersonRow(
 ) {
     val colors = AvalonTheme.colors
     val shapes = AvalonTheme.shapes
+    var isHovered by remember { mutableStateOf(false) }
+
+    val animatedBg by animateColorAsState(
+        if (isHovered) colors.borderSubtle.copy(alpha = 0.5f) else colors.bgElevated
+    )
+    val animatedBorder by animateColorAsState(
+        if (isHovered) colors.borderStrong else Color.Transparent
+    )
 
     Surface(
         onClick = onClick,
         shape = shapes.control,
-        color = colors.bgElevated
+        color = animatedBg,
+        border = BorderStroke(1.dp, animatedBorder),
+        modifier = Modifier
+            .pointerHoverIcon(PointerIcon.Hand)
+            .pointerInput(Unit) {
+                awaitPointerEventScope {
+                    while (true) {
+                        val event = awaitPointerEvent()
+                        when (event.type) {
+                            PointerEventType.Enter, PointerEventType.Move -> isHovered = true
+                            PointerEventType.Exit -> isHovered = false
+                        }
+                    }
+                }
+            }
     ) {
         Row(
             modifier = Modifier
@@ -255,18 +284,16 @@ private fun PersonRow(
                 modifier = Modifier.width(18.dp)
             )
 
-            // Аватар персоны 1:1 — строго CircleShape по DESIGN.md
-            val photoUrl = person.photoUrl?.let { path ->
-                if (path.startsWith("http")) path else "https://image.tmdb.org/t/p/w185$path"
-            }
-            if (photoUrl != null) {
+            // Аватар персоны 1:1 — строго CircleShape по DESIGN.md через безопасный прокси
+            val photoUrl = person.photoUrl?.toProxyImageUrl("w185") ?: person.photoUrl
+            if (!photoUrl.isNullOrBlank()) {
                 ShimmerImage(
                     model = photoUrl,
                     contentDescription = person.name,
                     contentScale = ContentScale.Crop,
-                    modifier = Modifier
-                        .size(36.dp)
-                        .clip(CircleShape)
+                    shape = CircleShape,
+                    errorIcon = Lucide.User,
+                    modifier = Modifier.size(36.dp)
                 )
             } else {
                 Box(
@@ -287,7 +314,7 @@ private fun PersonRow(
 
             Spacer(modifier = Modifier.width(12.dp))
 
-            // Имя персоны и количество тайтлов
+            // Имя персоны и количество тайтлов с грамотной русской грамматикой
             Column(modifier = Modifier.weight(1f)) {
                 Text(
                     text = person.name,
@@ -296,7 +323,7 @@ private fun PersonRow(
                     color = colors.textPrimary
                 )
                 Text(
-                    text = stringResource(Res.string.stats_people_watched_count_fmt, person.watchedCount),
+                    text = formatWatchedWorks(person.watchedCount),
                     style = MaterialTheme.typography.labelSmall.copy(
                         fontFeatureSettings = "tnum"
                     ),
@@ -327,4 +354,16 @@ private fun PersonRow(
             }
         }
     }
+}
+
+private fun formatWatchedWorks(count: Int): String {
+    val rem10 = count % 10
+    val rem100 = count % 100
+    val word = when {
+        rem100 in 11..19 -> "работ"
+        rem10 == 1 -> "работа"
+        rem10 in 2..4 -> "работы"
+        else -> "работ"
+    }
+    return "$count $word просмотрено"
 }

@@ -10,9 +10,11 @@ import org.ensodai.avalonmediacard.contract.model.MediaType
 import org.ensodai.avalonmediacard.contract.model.PersonStatDto
 import org.ensodai.avalonmediacard.contract.model.RatingDistributionDto
 import org.ensodai.avalonmediacard.contract.model.TopPeopleStatsDto
+import org.ensodai.avalonmediacard.contract.utils.toProxyImageUrl
 import org.ensodai.avalonmediacard.database.MediaCreditTable
 import org.ensodai.avalonmediacard.database.MediaCreditTranslationTable
 import org.ensodai.avalonmediacard.database.MediaEpisodeTable
+import org.ensodai.avalonmediacard.database.MediaEpisodeTranslationTable
 import org.ensodai.avalonmediacard.database.MediaGenreDictionaryTable
 import org.ensodai.avalonmediacard.database.MediaGenreTable
 import org.ensodai.avalonmediacard.database.MediaImageTable
@@ -28,6 +30,7 @@ import org.jetbrains.exposed.v1.core.eq
 import org.jetbrains.exposed.v1.core.greaterEq
 import org.jetbrains.exposed.v1.core.inList
 import org.jetbrains.exposed.v1.core.isNotNull
+import org.jetbrains.exposed.v1.core.less
 import org.jetbrains.exposed.v1.core.or
 import org.jetbrains.exposed.v1.jdbc.select
 import org.jetbrains.exposed.v1.jdbc.selectAll
@@ -469,7 +472,7 @@ class UserStatsRepository {
             PersonStatDto(
                 personId = tmdbPersonId,
                 name = name,
-                photoUrl = photosMap[personUuid],
+                photoUrl = photosMap[personUuid]?.toProxyImageUrl("w185"),
                 watchedCount = stats.first,
                 averageRating = stats.second
             )
@@ -480,7 +483,7 @@ class UserStatsRepository {
             PersonStatDto(
                 personId = tmdbPersonId,
                 name = name,
-                photoUrl = photosMap[personUuid],
+                photoUrl = photosMap[personUuid]?.toProxyImageUrl("w185"),
                 watchedCount = stats.first,
                 averageRating = stats.second
             )
@@ -659,4 +662,122 @@ class UserStatsRepository {
             peakDayMinutes = peakDayMinutes
         )
     }
+
+    suspend fun getDayActivityRaw(userId: Uuid, date: String, locale: String): List<DayActivityRawItem> = dbQuery {
+        val localDate = runCatching { java.time.LocalDate.parse(date) }.getOrNull() ?: return@dbQuery emptyList()
+        val startInstant = Instant.fromEpochMilliseconds(
+            localDate.atStartOfDay(java.time.ZoneOffset.UTC).toInstant().toEpochMilli()
+        )
+        val endInstant = Instant.fromEpochMilliseconds(
+            localDate.plusDays(1).atStartOfDay(java.time.ZoneOffset.UTC).toInstant().toEpochMilli()
+        )
+
+        val movies = (UserMovieTable innerJoin MediaTable)
+            .select(
+                MediaTable.catalogId,
+                MediaTable.externalId,
+                MediaTable.mediaType,
+                UserMovieTable.status,
+                UserMovieTable.progressSeconds,
+                UserMovieTable.durationSeconds,
+                UserMovieTable.userRating,
+                UserMovieTable.lastWatchedAt
+            )
+            .where {
+                (UserMovieTable.userId eq userId) and
+                (UserMovieTable.mediaType eq MediaType.MOVIE) and
+                (UserMovieTable.lastWatchedAt greaterEq startInstant) and
+                (UserMovieTable.lastWatchedAt less endInstant) and
+                ((UserMovieTable.status eq MediaStatus.COMPLETED) or (UserMovieTable.progressSeconds greaterEq 60L))
+            }
+            .map { row ->
+                val isCompleted = row[UserMovieTable.status] == MediaStatus.COMPLETED
+                val duration = row[UserMovieTable.durationSeconds]
+                val progress = row[UserMovieTable.progressSeconds]
+                val watchedSec = if (isCompleted) maxOf(duration, progress) else progress
+                DayActivityRawItem(
+                    catalogId = row[MediaTable.catalogId],
+                    externalId = row[MediaTable.externalId],
+                    mediaType = row[MediaTable.mediaType],
+                    isEpisode = false,
+                    seasonNumber = null,
+                    episodeNumber = null,
+                    episodeName = null,
+                    watchedSeconds = watchedSec,
+                    durationSeconds = duration,
+                    isCompleted = isCompleted,
+                    userRating = row[UserMovieTable.userRating],
+                    lastWatchedAt = row[UserMovieTable.lastWatchedAt]
+                )
+            }
+
+        val episodes = (UserEpisodeTable innerJoin MediaEpisodeTable innerJoin MediaSeasonTable innerJoin MediaTable)
+            .select(
+                MediaTable.catalogId,
+                MediaTable.externalId,
+                MediaTable.mediaType,
+                MediaSeasonTable.seasonNumber,
+                MediaEpisodeTable.id,
+                MediaEpisodeTable.episodeNumber,
+                UserEpisodeTable.isWatched,
+                UserEpisodeTable.progressSeconds,
+                UserEpisodeTable.durationSeconds,
+                UserEpisodeTable.userRating,
+                UserEpisodeTable.lastWatchedAt
+            )
+            .where {
+                (UserEpisodeTable.userId eq userId) and
+                (UserEpisodeTable.lastWatchedAt greaterEq startInstant) and
+                (UserEpisodeTable.lastWatchedAt less endInstant) and
+                ((UserEpisodeTable.isWatched eq true) or (UserEpisodeTable.progressSeconds greaterEq 60L))
+            }
+            .map { row ->
+                val isWatched = row[UserEpisodeTable.isWatched]
+                val duration = row[UserEpisodeTable.durationSeconds]
+                val progress = row[UserEpisodeTable.progressSeconds]
+                val watchedSec = if (isWatched) maxOf(duration, progress) else progress
+                val epId = row[MediaEpisodeTable.id]
+
+                val epName = MediaEpisodeTranslationTable
+                    .select(MediaEpisodeTranslationTable.name)
+                    .where {
+                        (MediaEpisodeTranslationTable.episodeId eq epId) and
+                        (MediaEpisodeTranslationTable.language eq locale)
+                    }
+                    .mapNotNull { it[MediaEpisodeTranslationTable.name] }
+                    .singleOrNull()
+
+                DayActivityRawItem(
+                    catalogId = row[MediaTable.catalogId],
+                    externalId = row[MediaTable.externalId],
+                    mediaType = row[MediaTable.mediaType],
+                    isEpisode = true,
+                    seasonNumber = row[MediaSeasonTable.seasonNumber],
+                    episodeNumber = row[MediaEpisodeTable.episodeNumber],
+                    episodeName = epName,
+                    watchedSeconds = watchedSec,
+                    durationSeconds = duration,
+                    isCompleted = isWatched,
+                    userRating = row[UserEpisodeTable.userRating],
+                    lastWatchedAt = row[UserEpisodeTable.lastWatchedAt]
+                )
+            }
+
+        (movies + episodes).sortedByDescending { it.lastWatchedAt }
+    }
 }
+
+data class DayActivityRawItem(
+    val catalogId: String?,
+    val externalId: String,
+    val mediaType: String,
+    val isEpisode: Boolean,
+    val seasonNumber: Int? = null,
+    val episodeNumber: Int? = null,
+    val episodeName: String? = null,
+    val watchedSeconds: Long,
+    val durationSeconds: Long,
+    val isCompleted: Boolean,
+    val userRating: Int? = null,
+    val lastWatchedAt: Instant
+)

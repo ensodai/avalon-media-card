@@ -233,27 +233,29 @@ fun LibraryCountersCard(
                     color = colors.textSecondary
                 )
 
-                // Компактные переключатели прямо в заголовке
-                Row(
-                    horizontalArrangement = Arrangement.spacedBy(4.dp),
-                    verticalAlignment = Alignment.CenterVertically
+                // Сегментированный переключатель (Segmented Control) в едином дизайн-коде
+                Surface(
+                    shape = shapes.control,
+                    color = colors.bgElevated
                 ) {
-                    ModeChip(
-                        text = stringResource(Res.string.stats_library_tab_movies),
-                        isSelected = selectedMode == LibraryStatsMode.MOVIES,
-                        onClick = {
-                            selectedMode = LibraryStatsMode.MOVIES
-                            hoveredCategory = null
-                        }
-                    )
-                    ModeChip(
-                        text = stringResource(Res.string.stats_library_tab_shows),
-                        isSelected = selectedMode == LibraryStatsMode.SHOWS,
-                        onClick = {
-                            selectedMode = LibraryStatsMode.SHOWS
-                            hoveredCategory = null
-                        }
-                    )
+                    Row(modifier = Modifier.padding(2.dp)) {
+                        LibrarySegmentTab(
+                            text = stringResource(Res.string.stats_library_tab_movies),
+                            isSelected = selectedMode == LibraryStatsMode.MOVIES,
+                            onClick = {
+                                selectedMode = LibraryStatsMode.MOVIES
+                                hoveredCategory = null
+                            }
+                        )
+                        LibrarySegmentTab(
+                            text = stringResource(Res.string.stats_library_tab_shows),
+                            isSelected = selectedMode == LibraryStatsMode.SHOWS,
+                            onClick = {
+                                selectedMode = LibraryStatsMode.SHOWS
+                                hoveredCategory = null
+                            }
+                        )
+                    }
                 }
             }
 
@@ -365,7 +367,7 @@ fun LibraryCountersCard(
 }
 
 @Composable
-private fun ModeChip(
+private fun LibrarySegmentTab(
     text: String,
     isSelected: Boolean,
     onClick: () -> Unit
@@ -374,22 +376,23 @@ private fun ModeChip(
     val shapes = AvalonTheme.shapes
     var isHovered by remember { mutableStateOf(false) }
 
-    val bgColor by animateColorAsState(
-        if (isSelected) colors.bgElevated else if (isHovered) colors.borderSubtle.copy(alpha = 0.5f) else Color.Transparent
+    val animatedBg by animateColorAsState(
+        if (isSelected) {
+            colors.bgSurface
+        } else if (isHovered) {
+            colors.borderSubtle.copy(alpha = 0.4f)
+        } else {
+            Color.Transparent
+        }
     )
-    val textColor by animateColorAsState(
-        if (isSelected) colors.textPrimary else colors.textSecondary
-    )
-    val borderColor by animateColorAsState(
-        if (isSelected) colors.borderStrong else Color.Transparent
+    val animatedTextColor by animateColorAsState(
+        if (isSelected || isHovered) colors.textPrimary else colors.textSecondary
     )
 
-    Surface(
-        onClick = onClick,
-        shape = shapes.micro,
-        color = bgColor,
-        border = BorderStroke(1.dp, borderColor),
+    Box(
         modifier = Modifier
+            .clip(shapes.control)
+            .background(animatedBg)
             .pointerHoverIcon(PointerIcon.Hand)
             .pointerInput(Unit) {
                 awaitPointerEventScope {
@@ -402,13 +405,14 @@ private fun ModeChip(
                     }
                 }
             }
+            .clickable(onClick = onClick)
+            .padding(horizontal = 10.dp, vertical = 4.dp)
     ) {
         Text(
             text = text,
-            style = MaterialTheme.typography.labelSmall.copy(fontSize = 10.sp),
+            style = MaterialTheme.typography.labelSmall.copy(fontSize = 11.sp),
             fontWeight = if (isSelected) FontWeight.Bold else FontWeight.Medium,
-            color = textColor,
-            modifier = Modifier.padding(horizontal = 8.dp, vertical = 3.dp)
+            color = animatedTextColor
         )
     }
 }

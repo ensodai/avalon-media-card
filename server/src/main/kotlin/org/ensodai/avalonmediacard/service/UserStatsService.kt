@@ -1,8 +1,15 @@
 package org.ensodai.avalonmediacard.service
 
 import org.ensodai.avalonmediacard.contract.model.ActivityHeatmapDto
+import org.ensodai.avalonmediacard.contract.model.DayActivityDto
+import org.ensodai.avalonmediacard.contract.model.DayActivityItemDto
 import org.ensodai.avalonmediacard.contract.model.DecadeStatDto
+import org.ensodai.avalonmediacard.contract.model.EntityType
 import org.ensodai.avalonmediacard.contract.model.GenreStatDto
+import org.ensodai.avalonmediacard.contract.model.MediaCatalog
+import org.ensodai.avalonmediacard.contract.model.MediaKey
+import org.ensodai.avalonmediacard.contract.model.MediaMetadata
+import org.ensodai.avalonmediacard.contract.model.MediaProvider
 import org.ensodai.avalonmediacard.contract.model.TimeMilestoneDto
 import org.ensodai.avalonmediacard.contract.model.TimeMilestoneType
 import org.ensodai.avalonmediacard.contract.model.TimeStatsDto
@@ -11,6 +18,7 @@ import org.ensodai.avalonmediacard.repository.UserSettingsRepository
 import org.ensodai.avalonmediacard.repository.UserStatsRepository
 import org.koin.core.annotation.Single
 import org.slf4j.LoggerFactory
+import kotlin.math.roundToInt
 import kotlin.system.measureTimeMillis
 import kotlin.uuid.Uuid
 
@@ -18,7 +26,8 @@ import kotlin.uuid.Uuid
 class UserStatsService(
     private val userStatsRepository: UserStatsRepository,
     private val userSettingsRepository: UserSettingsRepository,
-    private val archetypeClassifier: CinematicArchetypeClassifier
+    private val archetypeClassifier: CinematicArchetypeClassifier,
+    private val mediaCatalog: MediaCatalog
 ) {
     private val logger = LoggerFactory.getLogger(UserStatsService::class.java)
 
@@ -152,5 +161,85 @@ class UserStatsService(
         return decadeRanges.map { (startYear, predicate) ->
             DecadeStatDto(startYear = startYear, watchedCount = years.count(predicate))
         }
+    }
+
+    suspend fun getDayActivity(userId: Uuid, date: String): DayActivityDto {
+        val settings = userSettingsRepository.getUserSettings(userId)
+        val locale = settings.uiLocale.takeIf { it.isNotBlank() } ?: "ru"
+        val rawItems = userStatsRepository.getDayActivityRaw(userId, date, locale)
+
+        if (rawItems.isEmpty()) {
+            return DayActivityDto(
+                date = date,
+                totalMinutes = 0L,
+                items = emptyList(),
+                averageRating = null
+            )
+        }
+
+        val keys = rawItems.map { item ->
+            val provider = when (item.catalogId?.lowercase()) {
+                "tmdb" -> MediaProvider.Tmdb
+                "trakt" -> MediaProvider.Trakt
+                "youtube" -> MediaProvider.Youtube
+                null, "" -> MediaProvider.Tmdb
+                else -> MediaProvider.Custom(item.catalogId)
+            }
+            val entityType = if (item.mediaType.equals("movie", ignoreCase = true)) EntityType.MOVIE else EntityType.TV
+            MediaKey(provider, entityType, item.externalId)
+        }.distinct()
+
+        val detailsMap: Map<MediaKey, MediaMetadata> = runCatching {
+            mediaCatalog.getMediaDetailsBatch(
+                keys = keys,
+                requireSeasons = false,
+                requireVideos = false,
+                language = locale
+            )
+        }.getOrDefault(emptyMap())
+
+        val ratings = mutableListOf<Int>()
+        var totalSec = 0L
+
+        val activityItems = rawItems.map { raw ->
+            val provider = when (raw.catalogId?.lowercase()) {
+                "tmdb" -> MediaProvider.Tmdb
+                "trakt" -> MediaProvider.Trakt
+                "youtube" -> MediaProvider.Youtube
+                null, "" -> MediaProvider.Tmdb
+                else -> MediaProvider.Custom(raw.catalogId)
+            }
+            val entityType = if (raw.mediaType.equals("movie", ignoreCase = true)) EntityType.MOVIE else EntityType.TV
+            val key = MediaKey(provider, entityType, raw.externalId)
+            val details = detailsMap[key]
+
+            totalSec += raw.watchedSeconds
+            raw.userRating?.let { ratings.add(it) }
+
+            DayActivityItemDto(
+                mediaKey = key,
+                title = details?.title ?: raw.externalId,
+                posterUrl = details?.posterUrl,
+                isEpisode = raw.isEpisode,
+                seasonNumber = raw.seasonNumber,
+                episodeNumber = raw.episodeNumber,
+                episodeTitle = raw.episodeName,
+                watchedMinutes = (raw.watchedSeconds / 60).toInt().coerceAtLeast(1),
+                durationMinutes = (raw.durationSeconds / 60).toInt(),
+                isCompleted = raw.isCompleted,
+                userRating = raw.userRating
+            )
+        }
+
+        val avgRating = if (ratings.isNotEmpty()) {
+            (ratings.average() * 10).roundToInt() / 10.0
+        } else null
+
+        return DayActivityDto(
+            date = date,
+            totalMinutes = totalSec / 60,
+            items = activityItems,
+            averageRating = avgRating
+        )
     }
 }

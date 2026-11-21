@@ -1,5 +1,6 @@
 package org.ensodai.avalonmediacard.data.repository
 
+import org.ensodai.avalonmediacard.contract.model.DayActivityDto
 import org.ensodai.avalonmediacard.contract.model.UserStatsDto
 import org.ensodai.avalonmediacard.contract.rpc.StatsRpcService
 import org.ensodai.avalonmediacard.domain.repository.StatsRepository
@@ -11,5 +12,9 @@ class StatsRepositoryImpl(
 ) : StatsRepository {
     override suspend fun getUserStats(): UserStatsDto {
         return statsRpcService.getUserStats()
+    }
+
+    override suspend fun getDayActivity(date: String): DayActivityDto {
+        return statsRpcService.getDayActivity(date)
     }
 }

@@ -1,6 +1,7 @@
 package org.ensodai.avalonmediacard.data.rpc
 
 import kotlinx.rpc.withService
+import org.ensodai.avalonmediacard.contract.model.DayActivityDto
 import org.ensodai.avalonmediacard.contract.model.UserStatsDto
 import org.ensodai.avalonmediacard.contract.rpc.StatsRpcService
 
@@ -14,4 +15,7 @@ class ReconnectingStatsRpcService(
 
     override suspend fun getUserStats(): UserStatsDto =
         executor.execute("getUserStats", getService = { getService() }) { getUserStats() }
+
+    override suspend fun getDayActivity(date: String): DayActivityDto =
+        executor.execute("getDayActivity", getService = { getService() }) { getDayActivity(date) }
 }

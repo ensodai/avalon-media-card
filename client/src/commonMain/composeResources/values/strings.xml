@@ -677,7 +677,7 @@
     <string name="stats_heatmap_active_days">Active days</string>
     <string name="stats_heatmap_current_streak">Current streak</string>
     <string name="stats_heatmap_longest_streak">Best streak</string>
-    <string name="stats_heatmap_peak_day">Peak evening</string>
+    <string name="stats_heatmap_peak_day">Peak day</string>
     <string name="stats_heatmap_legend_less">Less</string>
     <string name="stats_heatmap_legend_more">More</string>
     <string name="stats_heatmap_days_suffix">d</string>
@@ -686,4 +686,29 @@
     <string name="stats_heatmap_no_activity">No watches</string>
     <string name="stats_heatmap_watches_fmt">%1$d titles</string>
     <string name="stats_heatmap_rating_fmt">★ %1$.1f</string>
+    <string name="stats_heatmap_hint">Click any active day for activity log</string>
+
+    <!-- Stats: Weekdays & Months -->
+    <string name="stats_weekday_mon">Mon</string>
+    <string name="stats_weekday_wed">Wed</string>
+    <string name="stats_weekday_fri">Fri</string>
+    <string name="stats_month_1">Jan</string>
+    <string name="stats_month_2">Feb</string>
+    <string name="stats_month_3">Mar</string>
+    <string name="stats_month_4">Apr</string>
+    <string name="stats_month_5">May</string>
+    <string name="stats_month_6">Jun</string>
+    <string name="stats_month_7">Jul</string>
+    <string name="stats_month_8">Aug</string>
+    <string name="stats_month_9">Sep</string>
+    <string name="stats_month_10">Oct</string>
+    <string name="stats_month_11">Nov</string>
+    <string name="stats_month_12">Dec</string>
+
+    <!-- Stats: Day Activity Drawer -->
+    <string name="stats_day_activity_title">Day Activity</string>
+    <string name="stats_day_activity_empty">No watched media recorded for this day</string>
+    <string name="stats_day_activity_completed">Watched completely</string>
+    <string name="stats_day_activity_progress_fmt">Progress: %1$d of %2$d min</string>
+    <string name="stats_day_activity_ep_fmt">Season %1$d, Episode %2$d</string>
 </resources>

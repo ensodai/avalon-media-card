@@ -212,32 +212,11 @@ class MediaListPlugin : AvalonPlugin {
                 kotlinx.coroutines.flow.emptyFlow()
             )
 
-            val flow = context.userMovies.observeUserMovies(userId)
-                .map { items ->
-                    when (val filter = screen.filter) {
-                        is UserMediaFilter.ByType -> items.filter { it.mediaType == filter.mediaType }
-                        is UserMediaFilter.ByStatus -> items.filter { it.mediaType == filter.mediaType && it.status == filter.status }
-                        is UserMediaFilter.ByRating -> items.filter { it.userRating == filter.rating }
-                        is UserMediaFilter.ByGenre -> items
-                        is UserMediaFilter.ByDecade -> items
-                    }
-                }
-                .distinctUntilChanged { old, new -> old.map { it.mediaId } == new.map { it.mediaId } }
-                .map { filteredItems ->
+            val flow = context.userMovies.observeUserMediaKeys(userId, screen.filter)
+                .distinctUntilChanged()
+                .map { keys ->
                     val userSettings = runCatching { context.userGlobalSettings.getUserSettings(userId) }.getOrNull()
                     val targetLang = userSettings.resolveTargetLanguage()
-                    val keys = filteredItems.map { item ->
-                        val entityType = if (item.mediaType == MediaType.MOVIE) {
-                            EntityType.MOVIE
-                        } else {
-                            EntityType.TV
-                        }
-                        MediaKey(
-                            provider = MediaProvider.Tmdb,
-                            type = entityType,
-                            id = item.mediaId
-                        )
-                    }
                     val detailsMap = context.catalog.getMediaDetailsBatch(
                         keys = keys,
                         requireSeasons = false,

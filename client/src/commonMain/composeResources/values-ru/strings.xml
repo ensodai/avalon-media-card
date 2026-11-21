@@ -636,6 +636,7 @@
     <!-- Stats: Ratings -->
     <string name="stats_ratings_title">РАСПРЕДЕЛЕНИЕ ОЦЕНОК</string>
     <string name="stats_ratings_total_fmt">Всего оценено: %1$d тайтлов</string>
+    <string name="stats_ratings_list_title_fmt">Оценка: ★ %1$d</string>
     <string name="stats_critic_no_ratings">Нет оценок</string>
     <string name="stats_critic_enthusiast">Киноэнтузиаст — ищет и ценит только лучшие шедевры</string>
     <string name="stats_critic_generous">Щедрый зритель — искренне наслаждается просмотром</string>
@@ -645,7 +646,8 @@
     <!-- Stats: Genres -->
     <string name="stats_genres_title">ДНК ЖАНРОВ</string>
     <string name="stats_genres_empty">Пока недостаточно данных по жанрам</string>
-    <string name="stats_genres_count_fmt">%1$d тайтлов</string>
+    <string name="stats_genres_count_fmt">%1$d</string>
+    <string name="stats_genres_total_fmt">Всего: %1$d</string>
 
     <!-- Stats: Top People -->
     <string name="stats_people_title">ЛИДЕРБОРД ПЕРСОН</string>
@@ -658,6 +660,14 @@
     <!-- Stats: Decades -->
     <string name="stats_decades_title">МАШИНА ВРЕМЕНИ (ЭПОХИ)</string>
     <string name="stats_decades_empty">Пока нет данных по годам выпуска</string>
+    <string name="stats_decades_list_title_fmt">Эпоха: %1$s</string>
+    <string name="stats_decade_before_70">&lt;70</string>
+    <string name="stats_decade_70s">70-е</string>
+    <string name="stats_decade_80s">80-е</string>
+    <string name="stats_decade_90s">90-е</string>
+    <string name="stats_decade_00s">00-е</string>
+    <string name="stats_decade_10s">10-е</string>
+    <string name="stats_decade_20s">20-е</string>
 
     <!-- Stats: Activity Heatmap -->
     <string name="stats_heatmap_title">ТЕПЛОВАЯ КАРТА АКТИВНОСТИ</string>

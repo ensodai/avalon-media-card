@@ -1,11 +1,17 @@
 package org.ensodai.avalonmediacard.repository
 
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.asSharedFlow
+import kotlinx.coroutines.flow.flow
 import org.ensodai.avalonmediacard.auth.WatchedProgress
+import org.ensodai.avalonmediacard.contract.model.EntityType
+import org.ensodai.avalonmediacard.contract.model.MediaKey
+import org.ensodai.avalonmediacard.contract.model.MediaProvider
 import org.ensodai.avalonmediacard.contract.model.MediaStatus
 import org.ensodai.avalonmediacard.contract.model.MediaType
 import org.ensodai.avalonmediacard.contract.model.UserEpisodeItem
+import org.ensodai.avalonmediacard.contract.model.UserMediaFilter
 import org.ensodai.avalonmediacard.contract.model.UserMovieItem
 import org.ensodai.avalonmediacard.contract.plugins.UserMovieProvider
 import org.ensodai.avalonmediacard.contract.sync.SyncServiceStatus
@@ -63,6 +69,210 @@ class UserMovieRepository : UserMovieProvider {
                 emit(getUserMovies(userId))
             }
         }
+
+    override fun observeUserMediaKeys(userId: Uuid, filter: UserMediaFilter): Flow<List<MediaKey>> =
+        flow {
+            emit(getUserMediaKeys(userId, filter))
+            updates.collect {
+                emit(getUserMediaKeys(userId, filter))
+            }
+        }
+
+    private fun resolveMediaProvider(catalogId: String?): MediaProvider = when (catalogId?.lowercase()) {
+        "tmdb" -> MediaProvider.Tmdb
+        "trakt" -> MediaProvider.Trakt
+        "youtube" -> MediaProvider.Youtube
+        null, "" -> MediaProvider.Tmdb
+        else -> MediaProvider.Custom(catalogId)
+    }
+
+    private fun resolveEntityType(mediaType: String?): EntityType =
+        if (mediaType.equals("movie", ignoreCase = true)) EntityType.MOVIE else EntityType.TV
+
+    override suspend fun getUserMediaKeys(userId: Uuid, filter: UserMediaFilter): List<MediaKey> = dbQuery {
+        when (filter) {
+            is UserMediaFilter.ByType -> {
+                (UserMovieTable innerJoin MediaTable)
+                    .select(MediaTable.externalId, MediaTable.mediaType, MediaTable.catalogId, UserMovieTable.lastWatchedAt)
+                    .where { (UserMovieTable.userId eq userId) and (UserMovieTable.mediaType eq filter.mediaType) }
+                    .orderBy(UserMovieTable.lastWatchedAt to SortOrder.DESC)
+                    .map { row ->
+                        MediaKey(
+                            provider = resolveMediaProvider(row[MediaTable.catalogId]),
+                            type = resolveEntityType(row[MediaTable.mediaType]),
+                            id = row[MediaTable.externalId]
+                        )
+                    }
+            }
+
+            is UserMediaFilter.ByStatus -> {
+                (UserMovieTable innerJoin MediaTable)
+                    .select(MediaTable.externalId, MediaTable.mediaType, MediaTable.catalogId, UserMovieTable.lastWatchedAt)
+                    .where {
+                        (UserMovieTable.userId eq userId) and
+                        (UserMovieTable.mediaType eq filter.mediaType) and
+                        (UserMovieTable.status eq filter.status)
+                    }
+                    .orderBy(UserMovieTable.lastWatchedAt to SortOrder.DESC)
+                    .map { row ->
+                        MediaKey(
+                            provider = resolveMediaProvider(row[MediaTable.catalogId]),
+                            type = resolveEntityType(row[MediaTable.mediaType]),
+                            id = row[MediaTable.externalId]
+                        )
+                    }
+            }
+
+            is UserMediaFilter.ByRating -> {
+                val ratedMoviesAndShows = (UserMovieTable innerJoin MediaTable)
+                    .select(MediaTable.externalId, MediaTable.mediaType, MediaTable.catalogId, UserMovieTable.lastWatchedAt)
+                    .where { (UserMovieTable.userId eq userId) and (UserMovieTable.userRating eq filter.rating) }
+                    .map { row ->
+                        Triple(
+                            MediaKey(
+                                provider = resolveMediaProvider(row[MediaTable.catalogId]),
+                                type = resolveEntityType(row[MediaTable.mediaType]),
+                                id = row[MediaTable.externalId]
+                            ),
+                            row[UserMovieTable.lastWatchedAt],
+                            row[MediaTable.externalId]
+                        )
+                    }
+
+                val ratedEpisodesShows = (UserEpisodeTable innerJoin MediaEpisodeTable innerJoin MediaSeasonTable innerJoin MediaTable)
+                    .select(MediaTable.externalId, MediaTable.mediaType, MediaTable.catalogId, UserEpisodeTable.lastWatchedAt)
+                    .where { (UserEpisodeTable.userId eq userId) and (UserEpisodeTable.userRating eq filter.rating) }
+                    .map { row ->
+                        Triple(
+                            MediaKey(
+                                provider = resolveMediaProvider(row[MediaTable.catalogId]),
+                                type = EntityType.TV,
+                                id = row[MediaTable.externalId]
+                            ),
+                            row[UserEpisodeTable.lastWatchedAt],
+                            row[MediaTable.externalId]
+                        )
+                    }
+
+                (ratedMoviesAndShows + ratedEpisodesShows)
+                    .distinctBy { it.third }
+                    .sortedByDescending { it.second }
+                    .map { it.first }
+            }
+
+            is UserMediaFilter.ByGenre -> {
+                val watchedMovies = (UserMovieTable innerJoin MediaTable innerJoin MediaGenreTable)
+                    .select(MediaTable.externalId, MediaTable.mediaType, MediaTable.catalogId, UserMovieTable.lastWatchedAt)
+                    .where {
+                        (UserMovieTable.userId eq userId) and
+                        (MediaGenreTable.genreId eq filter.genreId) and
+                        ((UserMovieTable.status eq MediaStatus.COMPLETED) or (UserMovieTable.progressSeconds greaterEq 60L))
+                    }
+                    .map { row ->
+                        Triple(
+                            MediaKey(
+                                provider = resolveMediaProvider(row[MediaTable.catalogId]),
+                                type = resolveEntityType(row[MediaTable.mediaType]),
+                                id = row[MediaTable.externalId]
+                            ),
+                            row[UserMovieTable.lastWatchedAt],
+                            row[MediaTable.externalId]
+                        )
+                    }
+
+                val watchedShows = (UserEpisodeTable innerJoin MediaEpisodeTable innerJoin MediaSeasonTable innerJoin MediaTable innerJoin MediaGenreTable)
+                    .select(MediaTable.externalId, MediaTable.mediaType, MediaTable.catalogId, UserEpisodeTable.lastWatchedAt)
+                    .where {
+                        (UserEpisodeTable.userId eq userId) and
+                        (UserEpisodeTable.isWatched eq true) and
+                        (MediaGenreTable.genreId eq filter.genreId)
+                    }
+                    .map { row ->
+                        Triple(
+                            MediaKey(
+                                provider = resolveMediaProvider(row[MediaTable.catalogId]),
+                                type = EntityType.TV,
+                                id = row[MediaTable.externalId]
+                            ),
+                            row[UserEpisodeTable.lastWatchedAt],
+                            row[MediaTable.externalId]
+                        )
+                    }
+
+                (watchedMovies + watchedShows)
+                    .distinctBy { it.third }
+                    .sortedByDescending { it.second }
+                    .map { it.first }
+            }
+
+            is UserMediaFilter.ByDecade -> {
+                val year = filter.decadeKey.toIntOrNull()
+                val decadeCondition: Op<Boolean> = when {
+                    year != null -> when {
+                        year == 0 || year < 1970 -> MediaTable.releaseYear.isNotNull() and (MediaTable.releaseYear less 1970)
+                        year >= 2020 -> MediaTable.releaseYear.isNotNull() and (MediaTable.releaseYear greaterEq 2020)
+                        else -> {
+                            val decadeStart = (year / 10) * 10
+                            MediaTable.releaseYear.isNotNull() and (MediaTable.releaseYear greaterEq decadeStart) and (MediaTable.releaseYear lessEq (decadeStart + 9))
+                        }
+                    }
+                    else -> when (filter.decadeKey) {
+                        "<70" -> MediaTable.releaseYear.isNotNull() and (MediaTable.releaseYear less 1970)
+                        "70-е", "70s" -> MediaTable.releaseYear.isNotNull() and (MediaTable.releaseYear greaterEq 1970) and (MediaTable.releaseYear lessEq 1979)
+                        "80-е", "80s" -> MediaTable.releaseYear.isNotNull() and (MediaTable.releaseYear greaterEq 1980) and (MediaTable.releaseYear lessEq 1989)
+                        "90-е", "90s" -> MediaTable.releaseYear.isNotNull() and (MediaTable.releaseYear greaterEq 1990) and (MediaTable.releaseYear lessEq 1999)
+                        "00-е", "00s" -> MediaTable.releaseYear.isNotNull() and (MediaTable.releaseYear greaterEq 2000) and (MediaTable.releaseYear lessEq 2009)
+                        "10-е", "10s" -> MediaTable.releaseYear.isNotNull() and (MediaTable.releaseYear greaterEq 2010) and (MediaTable.releaseYear lessEq 2019)
+                        "20-е", "20s" -> MediaTable.releaseYear.isNotNull() and (MediaTable.releaseYear greaterEq 2020)
+                        else -> Op.TRUE
+                    }
+                }
+
+                val watchedMovies = (UserMovieTable innerJoin MediaTable)
+                    .select(MediaTable.externalId, MediaTable.mediaType, MediaTable.catalogId, UserMovieTable.lastWatchedAt)
+                    .where {
+                        (UserMovieTable.userId eq userId) and
+                        decadeCondition and
+                        ((UserMovieTable.status eq MediaStatus.COMPLETED) or (UserMovieTable.progressSeconds greaterEq 60L))
+                    }
+                    .map { row ->
+                        Triple(
+                            MediaKey(
+                                provider = resolveMediaProvider(row[MediaTable.catalogId]),
+                                type = resolveEntityType(row[MediaTable.mediaType]),
+                                id = row[MediaTable.externalId]
+                            ),
+                            row[UserMovieTable.lastWatchedAt],
+                            row[MediaTable.externalId]
+                        )
+                    }
+
+                val watchedShows = (UserEpisodeTable innerJoin MediaEpisodeTable innerJoin MediaSeasonTable innerJoin MediaTable)
+                    .select(MediaTable.externalId, MediaTable.mediaType, MediaTable.catalogId, UserEpisodeTable.lastWatchedAt)
+                    .where {
+                        (UserEpisodeTable.userId eq userId) and
+                        (UserEpisodeTable.isWatched eq true) and
+                        decadeCondition
+                    }
+                    .map { row ->
+                        Triple(
+                            MediaKey(
+                                provider = resolveMediaProvider(row[MediaTable.catalogId]),
+                                type = EntityType.TV,
+                                id = row[MediaTable.externalId]
+                            ),
+                            row[UserEpisodeTable.lastWatchedAt],
+                            row[MediaTable.externalId]
+                        )
+                    }
+
+                (watchedMovies + watchedShows)
+                    .distinctBy { it.third }
+                    .sortedByDescending { it.second }
+                    .map { it.first }
+            }
+        }
+    }
 
     override suspend fun updateUserMovie(item: UserMovieItem): Boolean = dbQuery {
             try {

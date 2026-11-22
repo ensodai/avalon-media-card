@@ -1,10 +1,10 @@
 package org.ensodai.avalonmediacard.presentation.screens.login
 
 import org.ensodai.avalonmediacard.designsystem.theme.AvalonTheme
-import org.ensodai.avalonmediacard.designsystem.components.AvalonCard as Card
+import org.ensodai.avalonmediacard.designsystem.components.AvalonCard
 import org.ensodai.avalonmediacard.designsystem.components.CardDefaults
-import org.ensodai.avalonmediacard.designsystem.components.AvalonText as Text
-import org.ensodai.avalonmediacard.designsystem.components.AvalonIcon as Icon
+import org.ensodai.avalonmediacard.designsystem.components.AvalonText
+import org.ensodai.avalonmediacard.designsystem.components.AvalonIcon
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
@@ -92,7 +92,7 @@ fun LoginScreen(
                 .padding(16.dp),
             contentAlignment = Alignment.Center
         ) {
-            Card(
+            AvalonCard(
                 modifier = Modifier
                     .widthIn(max = 420.dp)
                     .fillMaxWidth(),
@@ -104,7 +104,7 @@ fun LoginScreen(
                         .padding(32.dp),
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
-                    Text(
+                    AvalonText(
                         text = if (isRegisterMode) stringResource(Res.string.login_title_sign_up) else stringResource(Res.string.login_title_sign_in),
                         fontSize = 28.sp,
                         fontWeight = FontWeight.Bold,
@@ -121,7 +121,7 @@ fun LoginScreen(
                         },
                         placeholder = stringResource(Res.string.login_field_username),
                         leadingIcon = {
-                            Icon(
+                            AvalonIcon(
                                 imageVector = Lucide.User,
                                 contentDescription = null,
                                 tint = AvalonTheme.colors.onSurfaceVariant,
@@ -143,7 +143,7 @@ fun LoginScreen(
                         visualTransformation = PasswordVisualTransformation(),
                         keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
                         leadingIcon = {
-                            Icon(
+                            AvalonIcon(
                                 imageVector = Lucide.Lock,
                                 contentDescription = null,
                                 tint = AvalonTheme.colors.onSurfaceVariant,
@@ -163,7 +163,7 @@ fun LoginScreen(
                         },
                         placeholder = stringResource(Res.string.login_field_server_url),
                         leadingIcon = {
-                            Icon(
+                            AvalonIcon(
                                 imageVector = Lucide.Globe,
                                 contentDescription = null,
                                 tint = AvalonTheme.colors.onSurfaceVariant,
@@ -175,7 +175,7 @@ fun LoginScreen(
 
                     if (error != null) {
                         Spacer(modifier = Modifier.height(16.dp))
-                        Text(
+                        AvalonText(
                             text = error!!,
                             color = AvalonTheme.colors.error,
                             fontSize = 14.sp

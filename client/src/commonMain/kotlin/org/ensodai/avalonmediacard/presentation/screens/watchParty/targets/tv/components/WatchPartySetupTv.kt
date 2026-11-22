@@ -13,9 +13,9 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.verticalScroll
-import org.ensodai.avalonmediacard.designsystem.components.AvalonCircularProgressIndicator as CircularProgressIndicator
-import org.ensodai.avalonmediacard.designsystem.components.AvalonIcon as Icon
-import org.ensodai.avalonmediacard.designsystem.components.AvalonText as Text
+import org.ensodai.avalonmediacard.designsystem.components.AvalonCircularProgressIndicator
+import org.ensodai.avalonmediacard.designsystem.components.AvalonIcon
+import org.ensodai.avalonmediacard.designsystem.components.AvalonText
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -104,7 +104,7 @@ fun WatchPartySetupTv(
                 .background(Color.White.copy(alpha = 0.08f)),
             contentAlignment = Alignment.Center
         ) {
-            Icon(
+            AvalonIcon(
                 imageVector = Lucide.ArrowLeft,
                 contentDescription = stringResource(Res.string.common_close),
                 tint = Color.White.copy(alpha = 0.85f),
@@ -132,14 +132,14 @@ fun WatchPartySetupTv(
             ) {
                 // Шапка формы
                 Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
-                    Text(
+                    AvalonText(
                         text = stringResource(Res.string.watch_party_step_setup),
                         fontSize = 22.sp,
                         fontWeight = FontWeight.ExtraBold,
                         color = Color.White
                     )
                     if (state.mediaTitle.isNotBlank()) {
-                        Text(
+                        AvalonText(
                             text = state.mediaTitle,
                             fontSize = 14.sp,
                             fontWeight = FontWeight.Normal,
@@ -152,7 +152,7 @@ fun WatchPartySetupTv(
 
                 // 1. Поле названия комнаты
                 Column(verticalArrangement = Arrangement.spacedBy(6.dp)) {
-                    Text(
+                    AvalonText(
                         text = stringResource(Res.string.watch_party_room_title_label),
                         fontSize = 13.sp,
                         fontWeight = FontWeight.Medium,
@@ -201,7 +201,7 @@ fun WatchPartySetupTv(
                             decorationBox = { innerTextField ->
                                 Box(contentAlignment = Alignment.CenterStart) {
                                     if (state.roomTitleInput.isEmpty()) {
-                                        Text(
+                                        AvalonText(
                                             text = defaultTitle,
                                             color = Color.White.copy(alpha = 0.4f),
                                             fontSize = 14.sp
@@ -221,7 +221,7 @@ fun WatchPartySetupTv(
                                     .clickable { actions.onRoomTitleChanged("") },
                                 contentAlignment = Alignment.Center
                             ) {
-                                Icon(
+                                AvalonIcon(
                                     imageVector = Lucide.X,
                                     contentDescription = "Clear",
                                     tint = Color.White,
@@ -234,7 +234,7 @@ fun WatchPartySetupTv(
 
                 // 2. Режим управления (Только хост / Демократичный)
                 Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
-                    Text(
+                    AvalonText(
                         text = stringResource(Res.string.watch_party_control_mode_label),
                         fontSize = 13.sp,
                         fontWeight = FontWeight.Medium,
@@ -266,7 +266,7 @@ fun WatchPartySetupTv(
                                 .padding(horizontal = 14.dp),
                             contentAlignment = Alignment.Center
                         ) {
-                            Text(
+                            AvalonText(
                                 text = "👑 " + stringResource(Res.string.watch_party_control_mode_host),
                                 fontSize = 13.sp,
                                 fontWeight = if (isHostOnly) FontWeight.Bold else FontWeight.Medium,
@@ -295,7 +295,7 @@ fun WatchPartySetupTv(
                                 .padding(horizontal = 14.dp),
                             contentAlignment = Alignment.Center
                         ) {
-                            Text(
+                            AvalonText(
                                 text = "🗳️ " + stringResource(Res.string.watch_party_control_mode_democratic),
                                 fontSize = 13.sp,
                                 fontWeight = if (isDemocratic) FontWeight.Bold else FontWeight.Medium,
@@ -315,7 +315,7 @@ fun WatchPartySetupTv(
                         .padding(16.dp),
                     verticalArrangement = Arrangement.spacedBy(12.dp)
                 ) {
-                    Text(
+                    AvalonText(
                         text = stringResource(Res.string.watch_party_source_label),
                         fontSize = 13.sp,
                         fontWeight = FontWeight.SemiBold,
@@ -342,14 +342,14 @@ fun WatchPartySetupTv(
                             verticalAlignment = Alignment.CenterVertically,
                             horizontalArrangement = Arrangement.Center
                         ) {
-                            Icon(
+                            AvalonIcon(
                                 imageVector = Lucide.HardDrive,
                                 contentDescription = null,
                                 tint = WatchPartyPurple,
                                 modifier = Modifier.size(18.dp)
                             )
                             Spacer(modifier = Modifier.width(10.dp))
-                            Text(
+                            AvalonText(
                                 text = stringResource(Res.string.watch_party_source_select_hint),
                                 fontSize = 14.sp,
                                 fontWeight = FontWeight.SemiBold,
@@ -365,7 +365,7 @@ fun WatchPartySetupTv(
                                 horizontalArrangement = Arrangement.SpaceBetween
                             ) {
                                 Column(modifier = Modifier.weight(1f)) {
-                                    Text(
+                                    AvalonText(
                                         text = state.selectedSourceName ?: stringResource(Res.string.watch_party_source_selected),
                                         fontSize = 14.sp,
                                         fontWeight = FontWeight.SemiBold,
@@ -374,7 +374,7 @@ fun WatchPartySetupTv(
                                         overflow = TextOverflow.Ellipsis
                                     )
                                     state.selectedSourceType?.let { sType ->
-                                        Text(
+                                        AvalonText(
                                             text = formatSourceProviderTitle(sType) ?: sType.uppercase(),
                                             fontSize = 12.sp,
                                             fontWeight = FontWeight.Bold,
@@ -407,14 +407,14 @@ fun WatchPartySetupTv(
                                         verticalAlignment = Alignment.CenterVertically,
                                         horizontalArrangement = Arrangement.Center
                                     ) {
-                                        Icon(
+                                        AvalonIcon(
                                             imageVector = Lucide.Check,
                                             contentDescription = null,
                                             tint = Color(0xFF4CAF50),
                                             modifier = Modifier.size(16.dp)
                                         )
                                         Spacer(modifier = Modifier.width(6.dp))
-                                        Text(
+                                        AvalonText(
                                             text = stringResource(Res.string.watch_party_source_verified),
                                             fontSize = 13.sp,
                                             fontWeight = FontWeight.SemiBold,
@@ -439,14 +439,14 @@ fun WatchPartySetupTv(
                                         verticalAlignment = Alignment.CenterVertically,
                                         horizontalArrangement = Arrangement.Center
                                     ) {
-                                        Icon(
+                                        AvalonIcon(
                                             imageVector = Lucide.Play,
                                             contentDescription = null,
                                             tint = Color(0xFFFFB74D),
                                             modifier = Modifier.size(15.dp)
                                         )
                                         Spacer(modifier = Modifier.width(6.dp))
-                                        Text(
+                                        AvalonText(
                                             text = stringResource(Res.string.watch_party_source_test),
                                             fontSize = 13.sp,
                                             fontWeight = FontWeight.Medium,
@@ -473,14 +473,14 @@ fun WatchPartySetupTv(
                                     verticalAlignment = Alignment.CenterVertically,
                                     horizontalArrangement = Arrangement.Center
                                 ) {
-                                    Icon(
+                                    AvalonIcon(
                                         imageVector = Lucide.RefreshCw,
                                         contentDescription = null,
                                         tint = Color.White.copy(alpha = 0.85f),
                                         modifier = Modifier.size(15.dp)
                                     )
                                     Spacer(modifier = Modifier.width(6.dp))
-                                    Text(
+                                    AvalonText(
                                         text = stringResource(Res.string.watch_party_source_change),
                                         fontSize = 13.sp,
                                         fontWeight = FontWeight.Medium,
@@ -494,7 +494,7 @@ fun WatchPartySetupTv(
 
                 // Ошибка создания
                 if (state.createError != null) {
-                    Text(
+                    AvalonText(
                         text = state.createError,
                         fontSize = 13.sp,
                         fontWeight = FontWeight.Medium,
@@ -523,13 +523,13 @@ fun WatchPartySetupTv(
                     horizontalArrangement = Arrangement.Center
                 ) {
                     if (state.isCreatingRoom) {
-                        CircularProgressIndicator(
+                        AvalonCircularProgressIndicator(
                             modifier = Modifier.size(22.dp),
                             color = Color.White,
                             strokeWidth = 2.5.dp
                         )
                     } else {
-                        Text(
+                        AvalonText(
                             text = stringResource(Res.string.watch_party_btn_submit_create),
                             fontSize = 16.sp,
                             fontWeight = FontWeight.Bold,

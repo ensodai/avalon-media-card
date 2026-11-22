@@ -31,9 +31,9 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
-import org.ensodai.avalonmediacard.designsystem.components.AvalonDivider as HorizontalDivider
-import org.ensodai.avalonmediacard.designsystem.components.AvalonIcon as Icon
-import org.ensodai.avalonmediacard.designsystem.components.AvalonText as Text
+import org.ensodai.avalonmediacard.designsystem.components.AvalonDivider
+import org.ensodai.avalonmediacard.designsystem.components.AvalonIcon
+import org.ensodai.avalonmediacard.designsystem.components.AvalonText
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
@@ -148,7 +148,7 @@ fun WatchPartyChatPanel(
                             .background(Color(0xFF64B5F6).copy(alpha = 0.18f)),
                         contentAlignment = Alignment.Center
                     ) {
-                        Icon(
+                        AvalonIcon(
                             imageVector = Lucide.MessageSquare,
                             contentDescription = null,
                             tint = Color(0xFF64B5F6),
@@ -157,7 +157,7 @@ fun WatchPartyChatPanel(
                     }
 
                     if (isExpanded) {
-                        Text(
+                        AvalonText(
                             text = stringResource(Res.string.watch_party_chat_title),
                             fontSize = 13.sp,
                             fontWeight = FontWeight.SemiBold,
@@ -173,7 +173,7 @@ fun WatchPartyChatPanel(
                                 .background(Color(0xFFE53935).copy(alpha = 0.30f))
                                 .padding(horizontal = 6.dp, vertical = 1.dp)
                         ) {
-                            Text(
+                            AvalonText(
                                 text = "+${chatState.unreadCount}",
                                 fontSize = 11.sp,
                                 fontWeight = FontWeight.Bold,
@@ -187,7 +187,7 @@ fun WatchPartyChatPanel(
                                 .background(Color.White.copy(alpha = 0.12f))
                                 .padding(horizontal = 6.dp, vertical = 1.dp)
                         ) {
-                            Text(
+                            AvalonText(
                                 text = chatState.messages.size.toString(),
                                 fontSize = 11.sp,
                                 fontWeight = FontWeight.Bold,
@@ -199,7 +199,7 @@ fun WatchPartyChatPanel(
 
                 // В развернутом виде показываем шеврон сворачивания
                 if (isExpanded) {
-                    Icon(
+                    AvalonIcon(
                         imageVector = Lucide.ChevronUp,
                         contentDescription = stringResource(Res.string.common_collapse),
                         tint = Color.White.copy(alpha = 0.6f),
@@ -214,7 +214,7 @@ fun WatchPartyChatPanel(
                 exit = fadeOut() + shrinkVertically()
             ) {
                 Column(modifier = Modifier.width(320.dp)) {
-                    HorizontalDivider(
+                    AvalonDivider(
                         color = Color.White.copy(alpha = 0.08f),
                         thickness = 1.dp
                     )
@@ -225,7 +225,7 @@ fun WatchPartyChatPanel(
                                 .fillMaxWidth()
                                 .padding(horizontal = 14.dp, vertical = 4.dp)
                         ) {
-                            Text(
+                            AvalonText(
                                 text = episodeTitle,
                                 color = Color.White.copy(alpha = 0.40f),
                                 fontSize = 11.sp,
@@ -254,13 +254,13 @@ fun WatchPartyChatPanel(
                                     verticalArrangement = Arrangement.spacedBy(6.dp),
                                     modifier = Modifier.padding(12.dp)
                                 ) {
-                                    Icon(
+                                    AvalonIcon(
                                         imageVector = Lucide.MessageSquare,
                                         contentDescription = null,
                                         tint = Color.White.copy(alpha = 0.20f),
                                         modifier = Modifier.size(28.dp)
                                     )
-                                    Text(
+                                    AvalonText(
                                         text = stringResource(Res.string.watch_party_chat_empty),
                                         color = Color.White.copy(alpha = 0.40f),
                                         fontSize = 12.sp,
@@ -287,7 +287,7 @@ fun WatchPartyChatPanel(
                         }
                     }
 
-                    HorizontalDivider(color = Color.White.copy(alpha = 0.08f), thickness = 1.dp)
+                    AvalonDivider(color = Color.White.copy(alpha = 0.08f), thickness = 1.dp)
 
                     // Поле ввода сообщения
                     Box(

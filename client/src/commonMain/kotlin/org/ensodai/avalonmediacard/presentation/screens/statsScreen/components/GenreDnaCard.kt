@@ -17,9 +17,9 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import org.ensodai.avalonmediacard.designsystem.components.AvalonBentoCard
-import org.ensodai.avalonmediacard.designsystem.components.AvalonIcon as Icon
-import org.ensodai.avalonmediacard.designsystem.components.AvalonSurface as Surface
-import org.ensodai.avalonmediacard.designsystem.components.AvalonText as Text
+import org.ensodai.avalonmediacard.designsystem.components.AvalonIcon
+import org.ensodai.avalonmediacard.designsystem.components.AvalonSurface
+import org.ensodai.avalonmediacard.designsystem.components.AvalonText
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -91,14 +91,14 @@ fun GenreDnaCard(
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Row(verticalAlignment = Alignment.CenterVertically) {
-                    Icon(
+                    AvalonIcon(
                         imageVector = Lucide.Flame,
                         contentDescription = null,
                         tint = colors.textSecondary,
                         modifier = Modifier.size(16.dp)
                     )
                     Spacer(modifier = Modifier.width(8.dp))
-                    Text(
+                    AvalonText(
                         text = genresTitle,
                         style = AvalonTheme.typography.sectionTitle,
                         color = colors.textPrimary
@@ -106,7 +106,7 @@ fun GenreDnaCard(
                 }
 
                 if (totalHits > 0) {
-                    Text(
+                    AvalonText(
                         text = stringResource(Res.string.stats_genres_total_fmt, totalHits),
                         style = AvalonTheme.typography.labelSmall.copy(
                             fontFeatureSettings = "tnum"
@@ -121,7 +121,7 @@ fun GenreDnaCard(
 
             if (genres.isEmpty()) {
                 Box(modifier = Modifier.padding(horizontal = 24.dp)) {
-                    Text(
+                    AvalonText(
                         text = stringResource(Res.string.stats_genres_empty),
                         style = AvalonTheme.typography.bodyMedium,
                         color = colors.textSecondary
@@ -229,7 +229,7 @@ private fun GenreRow(
         if (isHovered) 6.dp else 5.dp
     )
 
-    Surface(
+    AvalonSurface(
         onClick = onClick,
         shape = shapes.control,
         color = animatedBg,
@@ -260,7 +260,7 @@ private fun GenreRow(
                 horizontalArrangement = Arrangement.SpaceBetween,
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                Text(
+                AvalonText(
                     text = name,
                     style = AvalonTheme.typography.bodyMedium,
                     fontWeight = if (isHovered || isLeader) FontWeight.SemiBold else FontWeight.Medium,
@@ -268,7 +268,7 @@ private fun GenreRow(
                 )
 
                 Row(verticalAlignment = Alignment.CenterVertically) {
-                    Text(
+                    AvalonText(
                         text = stringResource(Res.string.stats_genres_count_fmt, count),
                         style = AvalonTheme.typography.labelSmall.copy(
                             fontFeatureSettings = "tnum"
@@ -276,7 +276,7 @@ private fun GenreRow(
                         color = animatedCountColor
                     )
                     Spacer(modifier = Modifier.width(8.dp))
-                    Text(
+                    AvalonText(
                         text = "${percentage.roundToInt()}%",
                         style = AvalonTheme.typography.labelMedium.copy(
                             fontFeatureSettings = "tnum"

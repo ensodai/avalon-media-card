@@ -13,8 +13,8 @@ import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.runtime.*
-import org.ensodai.avalonmediacard.designsystem.components.AvalonIcon as Icon
-import org.ensodai.avalonmediacard.designsystem.components.AvalonText as Text
+import org.ensodai.avalonmediacard.designsystem.components.AvalonIcon
+import org.ensodai.avalonmediacard.designsystem.components.AvalonText
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -92,7 +92,7 @@ fun BackdropsCarouselWidget(
     val isCarouselHovered by carouselInteractionSource.collectIsHoveredAsState()
 
     Column(modifier = modifier.fillMaxWidth()) {
-        Text(
+        AvalonText(
             text = data.title,
             color = AvalonTheme.colors.textPrimary,
             style = AvalonTheme.typography.sectionTitle,
@@ -245,13 +245,13 @@ private fun BackdropCard(
                     .padding(14.dp)
                     .fillMaxWidth()
             ) {
-                Icon(
+                AvalonIcon(
                     imageVector = Lucide.Play,
                     contentDescription = null,
                     tint = colors.accentPrimary,
                     modifier = Modifier.size(14.dp)
                 )
-                Text(
+                AvalonText(
                     text = item.title,
                     color = colors.textPrimary,
                     style = AvalonTheme.typography.cardTitle,

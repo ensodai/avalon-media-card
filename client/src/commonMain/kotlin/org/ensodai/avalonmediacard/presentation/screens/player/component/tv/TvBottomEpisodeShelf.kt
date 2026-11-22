@@ -11,8 +11,8 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
-import org.ensodai.avalonmediacard.designsystem.components.AvalonIcon as Icon
-import org.ensodai.avalonmediacard.designsystem.components.AvalonText as Text
+import org.ensodai.avalonmediacard.designsystem.components.AvalonIcon
+import org.ensodai.avalonmediacard.designsystem.components.AvalonText
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -180,7 +180,7 @@ fun TvBottomEpisodeShelf(
                                     .padding(horizontal = 16.dp, vertical = 6.dp),
                                 contentAlignment = Alignment.Center
                             ) {
-                                Text(
+                                AvalonText(
                                     text = stringResource(Res.string.player_season_fmt, seasonNum),
                                     color = if (isSelected) AvalonTheme.colors.primary else Color.White.copy(alpha = 0.7f),
                                     fontSize = 12.5.sp,
@@ -251,7 +251,7 @@ private fun SeasonDividerCard(seasonNumber: Int) {
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Center
         ) {
-            Text(
+            AvalonText(
                 text = stringResource(Res.string.player_season_uppercase),
                 color = Color.White.copy(alpha = 0.5f),
                 fontSize = 11.sp,
@@ -259,7 +259,7 @@ private fun SeasonDividerCard(seasonNumber: Int) {
                 letterSpacing = 1.2.sp
             )
             Spacer(modifier = Modifier.height(4.dp))
-            Text(
+            AvalonText(
                 text = "$seasonNumber",
                 color = AvalonTheme.colors.primary,
                 fontSize = 26.sp,
@@ -313,7 +313,7 @@ private fun TvEpisodeCard(
                     contentScale = ContentScale.Crop
                 )
             } else {
-                Icon(
+                AvalonIcon(
                     imageVector = Lucide.Play,
                     contentDescription = null,
                     tint = Color.White.copy(alpha = 0.25f),
@@ -335,7 +335,7 @@ private fun TvEpisodeCard(
                             .background(AvalonTheme.colors.primary, CircleShape),
                         contentAlignment = Alignment.Center
                     ) {
-                        Icon(
+                        AvalonIcon(
                             imageVector = Lucide.Play,
                             contentDescription = stringResource(Res.string.player_playing_now),
                             tint = Color.Black,
@@ -356,7 +356,7 @@ private fun TvEpisodeCard(
                         .background(Color(0xFF4CAF50)),
                     contentAlignment = Alignment.Center
                 ) {
-                    Icon(
+                    AvalonIcon(
                         imageVector = Lucide.Check,
                         contentDescription = stringResource(Res.string.player_watched),
                         tint = Color.White,
@@ -399,7 +399,7 @@ private fun TvEpisodeCard(
             val epTitle = episode.episodeName ?: episode.title
             val primaryText = if (epNumStr.isNotEmpty()) "$epNumStr: $epTitle" else epTitle
 
-            Text(
+            AvalonText(
                 text = primaryText,
                 color = if (isPlaying) AvalonTheme.colors.primary else Color.White.copy(alpha = 0.95f),
                 fontSize = 12.5.sp,
@@ -427,7 +427,7 @@ private fun TvEpisodeCard(
                     } else {
                         stringResource(Res.string.player_duration_mins_single_fmt, mins)
                     }
-                    Text(
+                    AvalonText(
                         text = text,
                         color = Color.White.copy(alpha = 0.5f),
                         fontSize = 11.sp
@@ -436,14 +436,14 @@ private fun TvEpisodeCard(
 
                 if (episode.userRating != null) {
                     Spacer(modifier = Modifier.width(6.dp))
-                    Icon(
+                    AvalonIcon(
                         imageVector = Lucide.Star,
                         contentDescription = stringResource(Res.string.player_rating_btn),
                         tint = Color(0xFFFFC107),
                         modifier = Modifier.size(11.dp)
                     )
                     Spacer(modifier = Modifier.width(2.dp))
-                    Text(
+                    AvalonText(
                         text = episode.userRating.toString(),
                         color = Color(0xFFFFC107),
                         fontSize = 11.sp,

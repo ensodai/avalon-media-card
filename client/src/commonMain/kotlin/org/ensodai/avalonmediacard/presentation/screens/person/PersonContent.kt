@@ -13,8 +13,8 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
-import org.ensodai.avalonmediacard.designsystem.components.AvalonSurface as Surface
-import org.ensodai.avalonmediacard.designsystem.components.AvalonText as Text
+import org.ensodai.avalonmediacard.designsystem.components.AvalonSurface
+import org.ensodai.avalonmediacard.designsystem.components.AvalonText
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -174,7 +174,7 @@ private fun PersonHeaderDesktop(
                             .shimmerPlaceholder(true, RoundedCornerShape(8.dp))
                     )
                 } else {
-                    Text(
+                    AvalonText(
                         text = title.ifBlank { stringResource(Res.string.person_unknown) },
                         fontSize = 38.sp,
                         fontWeight = FontWeight.ExtraBold,
@@ -195,7 +195,7 @@ private fun PersonHeaderDesktop(
                         .shimmerPlaceholder(true, RoundedCornerShape(6.dp))
                 )
             } else if (!department.isNullOrBlank()) {
-                Surface(
+                AvalonSurface(
                     color = AvalonTheme.colors.surfaceVariant,
                     shape = RoundedCornerShape(6.dp),
                     border = androidx.compose.foundation.BorderStroke(
@@ -203,7 +203,7 @@ private fun PersonHeaderDesktop(
                         AvalonTheme.colors.outline.copy(alpha = 0.6f)
                     )
                 ) {
-                    Text(
+                    AvalonText(
                         text = department,
                         color = Color.White.copy(alpha = 0.9f),
                         fontSize = 13.sp,
@@ -222,7 +222,7 @@ private fun PersonHeaderDesktop(
                         .shimmerPlaceholder(true, RoundedCornerShape(4.dp))
                 )
             } else if (!tagline.isNullOrBlank()) {
-                Text(
+                AvalonText(
                     text = tagline,
                     fontSize = 15.sp,
                     color = AvalonTheme.colors.onSurfaceVariant,
@@ -283,7 +283,7 @@ private fun PersonHeaderMobile(
                     .shimmerPlaceholder(true, RoundedCornerShape(6.dp))
             )
         } else {
-            Text(
+            AvalonText(
                 text = title.ifBlank { stringResource(Res.string.person_unknown) },
                 fontSize = 24.sp,
                 fontWeight = FontWeight.Bold,
@@ -295,7 +295,7 @@ private fun PersonHeaderMobile(
 
         // Амплуа
         if (!isLoading && !department.isNullOrBlank()) {
-            Surface(
+            AvalonSurface(
                 color = AvalonTheme.colors.surfaceVariant,
                 shape = RoundedCornerShape(6.dp),
                 border = androidx.compose.foundation.BorderStroke(
@@ -303,7 +303,7 @@ private fun PersonHeaderMobile(
                     AvalonTheme.colors.outline.copy(alpha = 0.6f)
                 )
             ) {
-                Text(
+                AvalonText(
                     text = department,
                     color = Color.White.copy(alpha = 0.9f),
                     fontSize = 12.sp,
@@ -315,7 +315,7 @@ private fun PersonHeaderMobile(
 
         // Метаданные (Дата/место)
         if (!isLoading && !tagline.isNullOrBlank()) {
-            Text(
+            AvalonText(
                 text = tagline,
                 fontSize = 13.sp,
                 color = AvalonTheme.colors.onSurfaceVariant,
@@ -366,7 +366,7 @@ private fun PersonBioSection(
                     .height(18.dp)
                     .background(Color.White, RoundedCornerShape(2.dp))
             )
-            Text(
+            AvalonText(
                 text = stringResource(Res.string.person_biography),
                 fontSize = 18.sp,
                 fontWeight = FontWeight.Bold,
@@ -416,7 +416,7 @@ private fun PersonBioSection(
                     )
                 }
             } else {
-                Text(
+                AvalonText(
                     text = cleanedText,
                     color = textColor,
                     fontSize = 15.sp,
@@ -432,7 +432,7 @@ private fun PersonBioSection(
 
                 if (hasVisualOverflow || isExpanded) {
                     Spacer(modifier = Modifier.height(6.dp))
-                    Text(
+                    AvalonText(
                         text = if (isExpanded) {
                             stringResource(Res.string.details_desc_collapse)
                         } else {

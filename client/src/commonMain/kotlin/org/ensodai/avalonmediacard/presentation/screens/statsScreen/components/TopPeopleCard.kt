@@ -17,9 +17,9 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
-import org.ensodai.avalonmediacard.designsystem.components.AvalonIcon as Icon
-import org.ensodai.avalonmediacard.designsystem.components.AvalonSurface as Surface
-import org.ensodai.avalonmediacard.designsystem.components.AvalonText as Text
+import org.ensodai.avalonmediacard.designsystem.components.AvalonIcon
+import org.ensodai.avalonmediacard.designsystem.components.AvalonSurface
+import org.ensodai.avalonmediacard.designsystem.components.AvalonText
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -60,7 +60,7 @@ fun TopPeopleCard(
     val colors = AvalonTheme.colors
     val shapes = AvalonTheme.shapes
 
-    Surface(
+    AvalonSurface(
         modifier = modifier.defaultMinSize(minHeight = 260.dp),
         shape = shapes.container,
         color = colors.bgSurface,
@@ -81,14 +81,14 @@ fun TopPeopleCard(
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     Row(verticalAlignment = Alignment.CenterVertically) {
-                        Icon(
+                        AvalonIcon(
                             imageVector = Lucide.Users,
                             contentDescription = null,
                             tint = colors.textSecondary,
                             modifier = Modifier.size(16.dp)
                         )
                         Spacer(modifier = Modifier.width(8.dp))
-                        Text(
+                        AvalonText(
                             text = stringResource(Res.string.stats_people_title),
                             style = AvalonTheme.typography.sectionTitle,
                             color = colors.textPrimary
@@ -97,7 +97,7 @@ fun TopPeopleCard(
 
                     // Табы показываем только если экран узкий и не помещаются 2 колонки
                     if (!isDualColumn) {
-                        Surface(
+                        AvalonSurface(
                             shape = shapes.control,
                             color = colors.bgElevated
                         ) {
@@ -161,7 +161,7 @@ fun TopPeopleCard(
 
 @Composable
 private fun SectionHeader(title: String) {
-    Text(
+    AvalonText(
         text = title,
         style = AvalonTheme.typography.uiLabel,
         color = AvalonTheme.colors.textSecondary
@@ -184,7 +184,7 @@ private fun TabPill(
             .clickable(onClick = onClick)
             .padding(horizontal = 10.dp, vertical = 5.dp)
     ) {
-        Text(
+        AvalonText(
             text = text,
             style = AvalonTheme.typography.labelSmall,
             fontWeight = if (isSelected) FontWeight.Bold else FontWeight.Medium,
@@ -203,7 +203,7 @@ private fun PeopleList(
 
     if (people.isEmpty()) {
         val emptyRes = if (isDirector) Res.string.stats_people_empty_directors else Res.string.stats_people_empty_actors
-        Text(
+        AvalonText(
             text = stringResource(emptyRes),
             style = AvalonTheme.typography.bodySmall,
             color = colors.textSecondary,
@@ -241,7 +241,7 @@ private fun PersonRow(
         if (isHovered) colors.borderStrong else Color.Transparent
     )
 
-    Surface(
+    AvalonSurface(
         onClick = onClick,
         shape = shapes.control,
         color = animatedBg,
@@ -267,7 +267,7 @@ private fun PersonRow(
             verticalAlignment = Alignment.CenterVertically
         ) {
             // Ранг по Тафти
-            Text(
+            AvalonText(
                 text = "$rank",
                 style = AvalonTheme.typography.labelMedium.copy(
                     fontFeatureSettings = "tnum"
@@ -296,7 +296,7 @@ private fun PersonRow(
                         .background(colors.chartTrack),
                     contentAlignment = Alignment.Center
                 ) {
-                    Text(
+                    AvalonText(
                         text = person.name.firstOrNull()?.uppercase() ?: "?",
                         style = AvalonTheme.typography.labelMedium,
                         fontWeight = FontWeight.Bold,
@@ -309,13 +309,13 @@ private fun PersonRow(
 
             // Имя персоны и количество тайтлов с грамотной русской грамматикой
             Column(modifier = Modifier.weight(1f)) {
-                Text(
+                AvalonText(
                     text = person.name,
                     style = AvalonTheme.typography.bodyMedium,
                     fontWeight = FontWeight.SemiBold,
                     color = colors.textPrimary
                 )
-                Text(
+                AvalonText(
                     text = formatWatchedWorks(person.watchedCount),
                     style = AvalonTheme.typography.labelSmall.copy(
                         fontFeatureSettings = "tnum"
@@ -328,14 +328,14 @@ private fun PersonRow(
             val avg = person.averageRating
             if (avg != null) {
                 Row(verticalAlignment = Alignment.CenterVertically) {
-                    Icon(
+                    AvalonIcon(
                         imageVector = Lucide.Star,
                         contentDescription = null,
                         tint = colors.accentGold,
                         modifier = Modifier.size(12.dp)
                     )
                     Spacer(modifier = Modifier.width(4.dp))
-                    Text(
+                    AvalonText(
                         text = ((avg * 10).toInt() / 10.0).toString(),
                         style = AvalonTheme.typography.labelSmall.copy(
                             fontFeatureSettings = "tnum"

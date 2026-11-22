@@ -4,8 +4,8 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
-import org.ensodai.avalonmediacard.designsystem.components.AvalonIcon as Icon
-import org.ensodai.avalonmediacard.designsystem.components.AvalonText as Text
+import org.ensodai.avalonmediacard.designsystem.components.AvalonIcon
+import org.ensodai.avalonmediacard.designsystem.components.AvalonText
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -45,7 +45,7 @@ fun WatchPartyMediaHeaderCard(
                 .background(Color(0xFF6C63FF).copy(alpha = 0.2f)),
             contentAlignment = Alignment.Center
         ) {
-            Icon(
+            AvalonIcon(
                 imageVector = if (seasonNum != null) Lucide.Tv else Lucide.Film,
                 contentDescription = null,
                 tint = Color(0xFF8C82FF),
@@ -54,14 +54,14 @@ fun WatchPartyMediaHeaderCard(
         }
 
         Column(modifier = Modifier.weight(1f)) {
-            Text(
+            AvalonText(
                 text = stringResource(Res.string.watch_party_media_card_label).uppercase(),
                 fontSize = 10.sp,
                 fontWeight = FontWeight.Bold,
                 color = Color.White.copy(alpha = 0.45f),
                 letterSpacing = 1.sp
             )
-            Text(
+            AvalonText(
                 text = roomTitle,
                 fontSize = 15.sp,
                 fontWeight = FontWeight.Bold,
@@ -72,14 +72,14 @@ fun WatchPartyMediaHeaderCard(
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 if (seasonNum != null && episodeNum != null) {
-                    Text(
+                    AvalonText(
                         text = stringResource(Res.string.watch_party_media_info_season_ep, seasonNum, episodeNum),
                         fontSize = 12.sp,
                         color = Color.White.copy(alpha = 0.65f)
                     )
-                    Text(text = "•", fontSize = 12.sp, color = Color.White.copy(alpha = 0.3f))
+                    AvalonText(text = "•", fontSize = 12.sp, color = Color.White.copy(alpha = 0.3f))
                 }
-                Text(
+                AvalonText(
                     text = sourceLabel,
                     fontSize = 12.sp,
                     color = Color(0xFF6C63FF),

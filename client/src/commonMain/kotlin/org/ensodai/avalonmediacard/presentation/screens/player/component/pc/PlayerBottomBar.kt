@@ -8,8 +8,8 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
-import org.ensodai.avalonmediacard.designsystem.components.AvalonIcon as Icon
-import org.ensodai.avalonmediacard.designsystem.components.AvalonText as Text
+import org.ensodai.avalonmediacard.designsystem.components.AvalonIcon
+import org.ensodai.avalonmediacard.designsystem.components.AvalonText
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -96,7 +96,7 @@ fun PlayerBottomBar(
                 onSeek = { actions.onSeek(it) }
             )
         } else {
-            Text(
+            AvalonText(
                 modifier = Modifier
                     .padding(horizontal = 24.dp)
                     .padding(top = 16.dp, bottom = 8.dp),
@@ -139,7 +139,7 @@ fun PlayerBottomBar(
                             .clip(CircleShape),
                         contentAlignment = Alignment.Center
                     ) {
-                        Icon(
+                        AvalonIcon(
                             imageVector = Lucide.SkipBack,
                             contentDescription = stringResource(Res.string.player_controls_prev_episode),
                             tint = if (isPrevEnabled) colors.textPrimary else colors.textMuted,
@@ -161,7 +161,7 @@ fun PlayerBottomBar(
                         .clip(CircleShape),
                     contentAlignment = Alignment.Center
                 ) {
-                    Icon(
+                    AvalonIcon(
                         imageVector = if (isPlaying) Lucide.Pause else Lucide.Play,
                         contentDescription = "Play/Pause",
                         tint = colors.textPrimary,
@@ -186,7 +186,7 @@ fun PlayerBottomBar(
                             .clip(CircleShape),
                         contentAlignment = Alignment.Center
                     ) {
-                        Icon(
+                        AvalonIcon(
                             imageVector = Lucide.SkipForward,
                             contentDescription = stringResource(Res.string.player_controls_next_episode),
                             tint = if (isNextEnabled) colors.textPrimary else colors.textMuted,
@@ -197,13 +197,13 @@ fun PlayerBottomBar(
 
                 // Timers
                 Row(verticalAlignment = Alignment.CenterVertically) {
-                    Text(
+                    AvalonText(
                         text = formatTime(currentTime),
                         color = colors.textPrimary,
                         style = AvalonTheme.typography.monoTech
                     )
                     if (duration > 0.0 && (duration > currentTime || !ctrlState.isBuffering)) {
-                        Text(
+                        AvalonText(
                             text = " / ${formatTime(duration)}",
                             color = colors.textSecondary,
                             style = AvalonTheme.typography.monoTech
@@ -262,7 +262,7 @@ fun PlayerBottomBar(
                             .clip(CircleShape),
                         contentAlignment = Alignment.Center
                     ) {
-                        Icon(
+                        AvalonIcon(
                             imageVector = Lucide.Languages,
                             contentDescription = stringResource(Res.string.player_audio_tracks),
                             tint = if (controller.selectedAudioTrack != null) colors.statusLive else colors.textPrimary,
@@ -328,7 +328,7 @@ fun PlayerBottomBar(
                             .clip(CircleShape),
                         contentAlignment = Alignment.Center
                     ) {
-                        Icon(
+                        AvalonIcon(
                             imageVector = Lucide.Captions,
                             contentDescription = stringResource(Res.string.player_subtitles),
                             tint = if (controller.selectedSubtitleTrack != null || state.selectedSubtitleTrack != null) colors.statusLive else colors.textPrimary,
@@ -398,7 +398,7 @@ fun PlayerBottomBar(
                                 .clip(CircleShape),
                             contentAlignment = Alignment.Center
                         ) {
-                            Text(
+                            AvalonText(
                                 text = activeQuality,
                                 color = colors.statusLive,
                                 style = AvalonTheme.typography.labelSmall
@@ -453,7 +453,7 @@ fun PlayerBottomBar(
                                 .clip(CircleShape),
                             contentAlignment = Alignment.Center
                         ) {
-                            Icon(
+                            AvalonIcon(
                                 imageVector = Lucide.Settings,
                                 contentDescription = stringResource(Res.string.player_settings_title),
                                 tint = colors.textPrimary,
@@ -506,7 +506,7 @@ fun PlayerBottomBar(
                         .clip(CircleShape),
                     contentAlignment = Alignment.Center
                 ) {
-                    Icon(
+                    AvalonIcon(
                         imageVector = if (isFullscreen) Lucide.Minimize else Lucide.Maximize,
                         contentDescription = stringResource(Res.string.player_fullscreen),
                         tint = colors.textPrimary,

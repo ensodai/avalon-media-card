@@ -3,8 +3,8 @@ package org.ensodai.avalonmediacard.presentation.screens.detailsScreen.component
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
-import org.ensodai.avalonmediacard.designsystem.components.AvalonIcon as Icon
-import org.ensodai.avalonmediacard.designsystem.components.AvalonText as Text
+import org.ensodai.avalonmediacard.designsystem.components.AvalonIcon
+import org.ensodai.avalonmediacard.designsystem.components.AvalonText
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -46,19 +46,19 @@ fun RatingPill(
             horizontalArrangement = Arrangement.spacedBy(4.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
-            Icon(
+            AvalonIcon(
                 imageVector = Lucide.Star,
                 contentDescription = null,
                 tint = if (isLoading) Color.Transparent else tint,
                 modifier = Modifier.size(13.dp)
             )
-            Text(
+            AvalonText(
                 text = source,
                 color = if (isLoading) Color.Transparent else colors.textSecondary,
                 fontSize = 11.sp,
                 fontWeight = FontWeight.Medium
             )
-            Text(
+            AvalonText(
                 text = value,
                 color = if (isLoading) Color.Transparent else colors.textPrimary,
                 fontSize = 11.sp,

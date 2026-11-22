@@ -37,9 +37,9 @@ import org.ensodai.avalonmediacard.designsystem.components.AvalonButton
 import org.ensodai.avalonmediacard.designsystem.components.AvalonButtonSize
 import org.ensodai.avalonmediacard.designsystem.components.AvalonButtonVariant
 import org.ensodai.avalonmediacard.designsystem.components.AvalonDialog
-import org.ensodai.avalonmediacard.designsystem.components.AvalonIcon as Icon
+import org.ensodai.avalonmediacard.designsystem.components.AvalonIcon
 import org.ensodai.avalonmediacard.designsystem.components.AvalonIconButton
-import org.ensodai.avalonmediacard.designsystem.components.AvalonText as Text
+import org.ensodai.avalonmediacard.designsystem.components.AvalonText
 import org.ensodai.avalonmediacard.designsystem.theme.AvalonTheme
 import org.ensodai.avalonmediacard.presentation.components.ShimmerImage
 import org.jetbrains.compose.resources.stringResource
@@ -91,7 +91,7 @@ fun EpisodeDetailsDialog(
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 if (headerText != null) {
-                    Text(
+                    AvalonText(
                         text = headerText,
                         style = AvalonTheme.typography.uiLabel,
                         fontWeight = FontWeight.Bold,
@@ -106,7 +106,7 @@ fun EpisodeDetailsDialog(
                     contentDescription = stringResource(Res.string.episodes_dialog_close),
                     modifier = Modifier.size(34.dp)
                 ) {
-                    Icon(
+                    AvalonIcon(
                         imageVector = Lucide.X,
                         contentDescription = null,
                         tint = colors.textSecondary,
@@ -134,7 +134,7 @@ fun EpisodeDetailsDialog(
             }
 
             // Title
-            Text(
+            AvalonText(
                 text = title,
                 style = AvalonTheme.typography.sectionTitle,
                 color = colors.textPrimary
@@ -146,7 +146,7 @@ fun EpisodeDetailsDialog(
                 horizontalArrangement = Arrangement.spacedBy(12.dp)
             ) {
                 if (!airDate.isNullOrEmpty()) {
-                    Text(
+                    AvalonText(
                         text = airDate,
                         style = AvalonTheme.typography.metadata,
                         color = colors.textSecondary
@@ -155,13 +155,13 @@ fun EpisodeDetailsDialog(
 
                 if (durationMinutes != null && durationMinutes > 0) {
                     if (!airDate.isNullOrEmpty()) {
-                        Text(
+                        AvalonText(
                             text = "•",
                             style = AvalonTheme.typography.metadata,
                             color = colors.textMuted
                         )
                     }
-                    Text(
+                    AvalonText(
                         text = stringResource(Res.string.player_duration_mins_single_fmt, durationMinutes),
                         style = AvalonTheme.typography.metadata,
                         color = colors.textSecondary
@@ -170,7 +170,7 @@ fun EpisodeDetailsDialog(
 
                 if (voteAverage != null && voteAverage > 0.0) {
                     val formattedRating = ((voteAverage * 10).toInt() / 10.0).toString()
-                    Text(
+                    AvalonText(
                         text = "•",
                         style = AvalonTheme.typography.metadata,
                         color = colors.textMuted
@@ -179,13 +179,13 @@ fun EpisodeDetailsDialog(
                         verticalAlignment = Alignment.CenterVertically,
                         horizontalArrangement = Arrangement.spacedBy(4.dp)
                     ) {
-                        Icon(
+                        AvalonIcon(
                             imageVector = Lucide.Star,
                             contentDescription = null,
                             tint = colors.accentGold,
                             modifier = Modifier.size(14.dp)
                         )
-                        Text(
+                        AvalonText(
                             text = formattedRating,
                             style = AvalonTheme.typography.metadata,
                             fontWeight = FontWeight.Bold,
@@ -198,7 +198,7 @@ fun EpisodeDetailsDialog(
             // Full Synopsis
             val cleanOverview = overview?.trim()
             if (!cleanOverview.isNullOrEmpty()) {
-                Text(
+                AvalonText(
                     text = cleanOverview,
                     style = AvalonTheme.typography.bodySynopsis,
                     color = colors.textBody
@@ -219,7 +219,7 @@ fun EpisodeDetailsDialog(
                             variant = AvalonButtonVariant.Primary,
                             size = AvalonButtonSize.Standard,
                             leadingIcon = {
-                                Icon(
+                                AvalonIcon(
                                     imageVector = Lucide.Play,
                                     contentDescription = null,
                                     tint = colors.onAccentPrimary,
@@ -243,7 +243,7 @@ fun EpisodeDetailsDialog(
                             variant = AvalonButtonVariant.Secondary,
                             size = AvalonButtonSize.Standard,
                             leadingIcon = {
-                                Icon(
+                                AvalonIcon(
                                     imageVector = if (isWatched) Lucide.CheckCheck else Lucide.Eye,
                                     contentDescription = null,
                                     tint = if (isWatched) colors.statusLive else colors.textPrimary,

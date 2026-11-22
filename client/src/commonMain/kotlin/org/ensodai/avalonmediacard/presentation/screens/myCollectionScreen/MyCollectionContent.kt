@@ -7,7 +7,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import avalonmediacard.client.generated.resources.*
 import org.ensodai.avalonmediacard.contract.slot.Action
-import org.ensodai.avalonmediacard.designsystem.components.AvalonText as Text
+import org.ensodai.avalonmediacard.designsystem.components.AvalonText
 import org.ensodai.avalonmediacard.designsystem.theme.AvalonTheme
 import org.ensodai.avalonmediacard.presentation.components.mediaGridSlot.MediaGridSlot
 import org.ensodai.avalonmediacard.presentation.screens.myCollectionScreen.viewState.MyCollectionViewState
@@ -30,7 +30,7 @@ fun MyCollectionContent(
                 .padding(horizontal = 16.dp)
                 .padding(top = 16.dp)
         ) {
-            Text(
+            AvalonText(
                 text = stringResource(Res.string.my_collection_favorites),
                 style = AvalonTheme.typography.titleLarge,
                 color = AvalonTheme.colors.textPrimary,

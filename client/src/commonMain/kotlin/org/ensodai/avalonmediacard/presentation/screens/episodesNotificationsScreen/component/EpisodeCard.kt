@@ -29,8 +29,8 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
-import org.ensodai.avalonmediacard.designsystem.components.AvalonIcon as Icon
-import org.ensodai.avalonmediacard.designsystem.components.AvalonText as Text
+import org.ensodai.avalonmediacard.designsystem.components.AvalonIcon
+import org.ensodai.avalonmediacard.designsystem.components.AvalonText
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -189,7 +189,7 @@ fun EpisodeCard(
                             .graphicsLayer { alpha = imageAlpha }
                     )
                 } else {
-                    Icon(
+                    AvalonIcon(
                         imageVector = Lucide.Film,
                         contentDescription = null,
                         tint = Color.White.copy(alpha = 0.2f),
@@ -266,7 +266,7 @@ fun EpisodeCard(
                                 .background(playBg, CircleShape),
                             contentAlignment = Alignment.Center
                         ) {
-                            Icon(
+                            AvalonIcon(
                                 imageVector = Lucide.Play,
                                 contentDescription = stringResource(Res.string.episodes_notifications_watch_episode),
                                 tint = playIconTint,
@@ -352,7 +352,7 @@ fun EpisodeCard(
                                 .background(currentWatchBg, CircleShape),
                             contentAlignment = Alignment.Center
                         ) {
-                            Icon(
+                            AvalonIcon(
                                 imageVector = if (isWatched) Lucide.CheckCheck else Lucide.Eye,
                                 contentDescription = if (isWatched) {
                                     stringResource(Res.string.episodes_notifications_mark_watched)
@@ -396,7 +396,7 @@ fun EpisodeCard(
                                 verticalAlignment = Alignment.CenterVertically,
                                 horizontalArrangement = Arrangement.Center
                             ) {
-                                Icon(
+                                AvalonIcon(
                                     imageVector = Lucide.Star,
                                     contentDescription = if (hasRating) "$userRating" else null,
                                     tint = ratingColor,
@@ -404,7 +404,7 @@ fun EpisodeCard(
                                 )
                                 if (hasRating) {
                                     Spacer(modifier = Modifier.width(3.dp))
-                                    Text(
+                                    AvalonText(
                                         text = "$userRating",
                                         fontSize = 11.sp,
                                         fontWeight = FontWeight.Bold,
@@ -456,7 +456,7 @@ fun EpisodeCard(
                 horizontalArrangement = Arrangement.spacedBy(6.dp)
             ) {
                 if (item.isWatched) {
-                    Icon(
+                    AvalonIcon(
                         imageVector = Lucide.CheckCheck,
                         contentDescription = stringResource(Res.string.episodes_notifications_mark_watched),
                         tint = Color(0xFF4CAF50),
@@ -464,7 +464,7 @@ fun EpisodeCard(
                     )
                 }
 
-                Text(
+                AvalonText(
                     text = if (epCode.isNotEmpty()) "$epCode • $epTitle" else epTitle,
                     style = AvalonTheme.typography.titleSmall.copy(
                         fontWeight = FontWeight.SemiBold,
@@ -486,7 +486,7 @@ fun EpisodeCard(
                     horizontalArrangement = Arrangement.spacedBy(6.dp)
                 ) {
                     if (formattedDate != null) {
-                        Text(
+                        AvalonText(
                             text = formattedDate,
                             fontSize = 11.sp,
                             color = AvalonTheme.colors.onSurfaceVariant.copy(alpha = 0.7f)
@@ -495,7 +495,7 @@ fun EpisodeCard(
 
                     if (hasVote) {
                         if (formattedDate != null) {
-                            Text(
+                            AvalonText(
                                 text = "•",
                                 fontSize = 11.sp,
                                 color = AvalonTheme.colors.onSurfaceVariant.copy(alpha = 0.4f)
@@ -505,14 +505,14 @@ fun EpisodeCard(
                             verticalAlignment = Alignment.CenterVertically,
                             horizontalArrangement = Arrangement.spacedBy(2.dp)
                         ) {
-                            Icon(
+                            AvalonIcon(
                                 imageVector = Lucide.Star,
                                 contentDescription = null,
                                 tint = Color(0xFFFFC107),
                                 modifier = Modifier.size(11.dp)
                             )
                             val formattedVote = ((voteAverage * 10).toInt() / 10.0).toString()
-                            Text(
+                            AvalonText(
                                 text = formattedVote,
                                 fontSize = 11.sp,
                                 fontWeight = FontWeight.Medium,
@@ -538,7 +538,7 @@ fun EpisodeCard(
                         ),
                     verticalAlignment = Alignment.Bottom
                 ) {
-                    Text(
+                    AvalonText(
                         text = overview,
                         style = AvalonTheme.typography.bodySmall.copy(
                             color = AvalonTheme.colors.onSurfaceVariant.copy(alpha = if (isHovered) 0.9f else 0.75f),

@@ -13,9 +13,9 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
-import org.ensodai.avalonmediacard.designsystem.components.AvalonButton as Button
-import org.ensodai.avalonmediacard.designsystem.components.AvalonIcon as Icon
-import org.ensodai.avalonmediacard.designsystem.components.AvalonText as Text
+import org.ensodai.avalonmediacard.designsystem.components.AvalonButton
+import org.ensodai.avalonmediacard.designsystem.components.AvalonIcon
+import org.ensodai.avalonmediacard.designsystem.components.AvalonText
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -57,7 +57,7 @@ fun EpisodesNotificationsEmptyState(
                     .background(AvalonTheme.colors.primaryContainer.copy(alpha = 0.6f)),
                 contentAlignment = Alignment.Center
             ) {
-                Icon(
+                AvalonIcon(
                     imageVector = Lucide.CheckCheck,
                     contentDescription = null,
                     tint = AvalonTheme.colors.primary,
@@ -67,7 +67,7 @@ fun EpisodesNotificationsEmptyState(
 
             Spacer(modifier = Modifier.height(20.dp))
 
-            Text(
+            AvalonText(
                 text = stringResource(Res.string.episodes_notifications_empty_title),
                 style = AvalonTheme.typography.titleLarge.copy(
                     fontWeight = FontWeight.Bold,
@@ -78,7 +78,7 @@ fun EpisodesNotificationsEmptyState(
 
             Spacer(modifier = Modifier.height(8.dp))
 
-            Text(
+            AvalonText(
                 text = stringResource(Res.string.episodes_notifications_empty_desc),
                 style = AvalonTheme.typography.bodyMedium.copy(
                     color = AvalonTheme.colors.onSurfaceVariant
@@ -89,18 +89,18 @@ fun EpisodesNotificationsEmptyState(
 
             Spacer(modifier = Modifier.height(24.dp))
 
-            Button(
+            AvalonButton(
                 onClick = { onAction(ActionNavigate(Screen.TvShows)) },
                 shape = RoundedCornerShape(12.dp),
                 modifier = Modifier.height(44.dp)
             ) {
-                Icon(
+                AvalonIcon(
                     imageVector = Lucide.Tv,
                     contentDescription = null,
                     modifier = Modifier.size(18.dp)
                 )
                 Spacer(modifier = Modifier.size(8.dp))
-                Text(
+                AvalonText(
                     text = stringResource(Res.string.episodes_notifications_go_to_tv_shows),
                     fontSize = 14.sp,
                     fontWeight = FontWeight.SemiBold

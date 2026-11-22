@@ -6,7 +6,7 @@ import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.gestures.awaitFirstDown
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
-import org.ensodai.avalonmediacard.designsystem.components.AvalonIcon as Icon
+import org.ensodai.avalonmediacard.designsystem.components.AvalonIcon
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
@@ -83,7 +83,7 @@ fun VolumeControl(
                 .clip(CircleShape),
             contentAlignment = Alignment.Center
         ) {
-            Icon(
+            AvalonIcon(
                 imageVector = when {
                     isMuted || currentVolume == 0.0 -> Lucide.VolumeX
                     currentVolume < 0.5 -> Lucide.Volume1

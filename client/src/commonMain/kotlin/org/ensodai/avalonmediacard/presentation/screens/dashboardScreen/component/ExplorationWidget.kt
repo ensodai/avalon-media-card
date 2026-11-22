@@ -9,7 +9,7 @@ import androidx.compose.foundation.lazy.grid.LazyHorizontalGrid
 import androidx.compose.foundation.lazy.grid.itemsIndexed
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.runtime.*
-import org.ensodai.avalonmediacard.designsystem.components.AvalonText as Text
+import org.ensodai.avalonmediacard.designsystem.components.AvalonText
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
@@ -74,7 +74,7 @@ fun ExplorationWidget(
     val data = state.data ?: return
 
     Column(modifier = modifier.fillMaxWidth()) {
-        Text(
+        AvalonText(
             text = data.title,
             color = AvalonTheme.colors.textPrimary,
             style = AvalonTheme.typography.sectionTitle,
@@ -178,7 +178,7 @@ private fun ExplorationCard(
                 )
         )
 
-        Text(
+        AvalonText(
             text = item.title,
             color = if (isActive) AvalonTheme.colors.textPrimary else AvalonTheme.colors.textPrimary.copy(alpha = 0.9f),
             style = AvalonTheme.typography.cardTitle,

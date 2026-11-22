@@ -22,8 +22,8 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
-import org.ensodai.avalonmediacard.designsystem.components.AvalonIcon as Icon
-import org.ensodai.avalonmediacard.designsystem.components.AvalonText as Text
+import org.ensodai.avalonmediacard.designsystem.components.AvalonIcon
+import org.ensodai.avalonmediacard.designsystem.components.AvalonText
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -168,7 +168,7 @@ fun TvNotificationEpisodeCard(
                         .graphicsLayer { alpha = imageAlpha }
                 )
             } else {
-                Icon(
+                AvalonIcon(
                     imageVector = Lucide.Film,
                     contentDescription = null,
                     tint = Color.White.copy(alpha = 0.2f),
@@ -195,7 +195,7 @@ fun TvNotificationEpisodeCard(
                             .background(Color.White, CircleShape),
                         contentAlignment = Alignment.Center
                     ) {
-                        Icon(
+                        AvalonIcon(
                             imageVector = Lucide.Play,
                             contentDescription = stringResource(Res.string.episodes_notifications_watch_episode),
                             tint = Color.Black,
@@ -212,7 +212,7 @@ fun TvNotificationEpisodeCard(
                                 .background(Color.Black.copy(alpha = 0.75f))
                                 .padding(horizontal = 6.dp, vertical = 2.dp)
                         ) {
-                            Text(
+                            AvalonText(
                                 text = stringResource(Res.string.episodes_notifications_hold_for_options),
                                 fontSize = 9.sp,
                                 fontWeight = FontWeight.Medium,
@@ -233,7 +233,7 @@ fun TvNotificationEpisodeCard(
                         .background(AvalonTheme.colors.primary)
                         .padding(horizontal = 5.dp, vertical = 2.dp)
                 ) {
-                    Text(
+                    AvalonText(
                         text = stringResource(Res.string.episodes_notifications_badge_new),
                         color = AvalonTheme.colors.onPrimary,
                         fontSize = 9.sp,
@@ -252,7 +252,7 @@ fun TvNotificationEpisodeCard(
                         .background(Color.Black.copy(alpha = 0.75f))
                         .padding(horizontal = 5.dp, vertical = 2.dp)
                 ) {
-                    Text(
+                    AvalonText(
                         text = formattedDate,
                         color = Color.White,
                         fontSize = 9.sp,
@@ -271,7 +271,7 @@ fun TvNotificationEpisodeCard(
                         .background(Color.Black.copy(alpha = 0.85f))
                         .padding(horizontal = 5.dp, vertical = 2.dp)
                 ) {
-                    Text(
+                    AvalonText(
                         text = stringResource(Res.string.player_duration_mins_single_fmt, duration),
                         fontSize = 9.sp,
                         fontWeight = FontWeight.Medium,
@@ -291,7 +291,7 @@ fun TvNotificationEpisodeCard(
                         .background(Color(0xFF4CAF50).copy(alpha = 0.95f)),
                     contentAlignment = Alignment.Center
                 ) {
-                    Icon(
+                    AvalonIcon(
                         imageVector = Lucide.Check,
                         contentDescription = null,
                         tint = Color.White,
@@ -315,7 +315,7 @@ fun TvNotificationEpisodeCard(
             val title = item.episodeTitle ?: item.showTitle
 
             if (episodePrefix.isNotBlank()) {
-                Text(
+                AvalonText(
                     text = episodePrefix,
                     fontSize = 11.sp,
                     fontWeight = FontWeight.Bold,
@@ -326,7 +326,7 @@ fun TvNotificationEpisodeCard(
                 Spacer(modifier = Modifier.height(2.dp))
             }
 
-            Text(
+            AvalonText(
                 text = title,
                 fontSize = 13.sp,
                 fontWeight = FontWeight.SemiBold,

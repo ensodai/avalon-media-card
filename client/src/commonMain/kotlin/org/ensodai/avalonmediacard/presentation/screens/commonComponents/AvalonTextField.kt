@@ -13,8 +13,8 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
-import org.ensodai.avalonmediacard.designsystem.components.AvalonIcon as Icon
-import org.ensodai.avalonmediacard.designsystem.components.AvalonText as Text
+import org.ensodai.avalonmediacard.designsystem.components.AvalonIcon
+import org.ensodai.avalonmediacard.designsystem.components.AvalonText
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -144,7 +144,7 @@ fun AvalonTextField(
             decorationBox = { innerTextField ->
                 Box(contentAlignment = Alignment.CenterStart) {
                     if (value.isEmpty()) {
-                        Text(
+                        AvalonText(
                             text = placeholder,
                             color = colors.textSecondary,
                             fontSize = fontSize,
@@ -177,7 +177,7 @@ fun AvalonTextField(
                     .background(colors.bgSurface),
                 contentAlignment = Alignment.Center
             ) {
-                Icon(
+                AvalonIcon(
                     Lucide.X,
                     contentDescription = "Clear",
                     tint = colors.textSecondary,

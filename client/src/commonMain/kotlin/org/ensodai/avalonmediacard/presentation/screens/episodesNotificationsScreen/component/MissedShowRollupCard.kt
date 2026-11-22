@@ -22,12 +22,12 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
-import org.ensodai.avalonmediacard.designsystem.components.AvalonButton as Button
-import org.ensodai.avalonmediacard.designsystem.components.AvalonCard as Card
+import org.ensodai.avalonmediacard.designsystem.components.AvalonButton
+import org.ensodai.avalonmediacard.designsystem.components.AvalonCard
 import org.ensodai.avalonmediacard.designsystem.components.CardDefaults
-import org.ensodai.avalonmediacard.designsystem.components.AvalonIcon as Icon
-import org.ensodai.avalonmediacard.designsystem.components.AvalonIconButton as IconButton
-import org.ensodai.avalonmediacard.designsystem.components.AvalonText as Text
+import org.ensodai.avalonmediacard.designsystem.components.AvalonIcon
+import org.ensodai.avalonmediacard.designsystem.components.AvalonIconButton
+import org.ensodai.avalonmediacard.designsystem.components.AvalonText
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
@@ -69,7 +69,7 @@ fun MissedShowRollupCard(
         label = "RollupCardScale"
     )
 
-    Card(
+    AvalonCard(
         shape = RoundedCornerShape(14.dp),
         colors = CardDefaults.cardColors(
             containerColor = if (isHighlighted) {
@@ -118,14 +118,14 @@ fun MissedShowRollupCard(
                 Row(
                     verticalAlignment = Alignment.CenterVertically
                 ) {
-                    Icon(
+                    AvalonIcon(
                         imageVector = Lucide.Folder,
                         contentDescription = null,
                         tint = AvalonTheme.colors.primary,
                         modifier = Modifier.size(16.dp)
                     )
                     Spacer(modifier = Modifier.width(6.dp))
-                    Text(
+                    AvalonText(
                         text = rollup.showTitle,
                         style = AvalonTheme.typography.titleMedium.copy(
                             fontWeight = FontWeight.Bold,
@@ -138,7 +138,7 @@ fun MissedShowRollupCard(
 
                 Spacer(modifier = Modifier.height(4.dp))
 
-                Text(
+                AvalonText(
                     text = stringResource(
                         Res.string.episodes_notifications_rollup_info,
                         rollup.missedEpisodesCount,
@@ -163,18 +163,18 @@ fun MissedShowRollupCard(
                 horizontalArrangement = Arrangement.spacedBy(8.dp)
             ) {
                 if (continueAction != null) {
-                    Button(
+                    AvalonButton(
                         onClick = { onAction(continueAction) },
                         shape = RoundedCornerShape(8.dp),
                         modifier = Modifier.height(36.dp)
                     ) {
-                        Icon(
+                        AvalonIcon(
                             imageVector = Lucide.Play,
                             contentDescription = null,
                             modifier = Modifier.size(14.dp)
                         )
                         Spacer(modifier = Modifier.width(6.dp))
-                        Text(
+                        AvalonText(
                             text = stringResource(
                                 Res.string.episodes_notifications_rollup_start,
                                 rollup.startSeason,
@@ -187,11 +187,11 @@ fun MissedShowRollupCard(
                 }
 
                 if (openDetailsAction != null) {
-                    IconButton(
+                    AvalonIconButton(
                         onClick = { onAction(openDetailsAction) },
                         modifier = Modifier.size(36.dp)
                     ) {
-                        Icon(
+                        AvalonIcon(
                             imageVector = Lucide.Info,
                             contentDescription = stringResource(Res.string.episodes_notifications_about_show),
                             tint = AvalonTheme.colors.onSurfaceVariant,

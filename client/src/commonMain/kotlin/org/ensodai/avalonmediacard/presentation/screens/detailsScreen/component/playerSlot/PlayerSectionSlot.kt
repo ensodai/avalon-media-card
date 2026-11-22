@@ -3,7 +3,7 @@ package org.ensodai.avalonmediacard.presentation.screens.detailsScreen.component
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
-import org.ensodai.avalonmediacard.designsystem.components.AvalonText as Text
+import org.ensodai.avalonmediacard.designsystem.components.AvalonText
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.ui.Alignment
@@ -101,7 +101,7 @@ fun PlayerSectionSlot(
             error != null -> {
                 val content: @Composable () -> Unit = {
                     Box(modifier = modifier.fillMaxSize().background(Color.Black), contentAlignment = Alignment.Center) {
-                        Text(error.message, color = Color.Red, fontSize = 18.sp)
+                        AvalonText(error.message, color = Color.Red, fontSize = 18.sp)
                     }
                 }
                 content

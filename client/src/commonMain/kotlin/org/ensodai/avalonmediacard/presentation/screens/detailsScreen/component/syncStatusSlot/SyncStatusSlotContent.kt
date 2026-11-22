@@ -4,7 +4,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
-import org.ensodai.avalonmediacard.designsystem.components.AvalonText as Text
+import org.ensodai.avalonmediacard.designsystem.components.AvalonText
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -28,7 +28,7 @@ fun SyncStatusSlotContent(
                 .shimmerPlaceholder(isLoading, CircleShape)
         )
         Spacer(modifier = Modifier.width(6.dp))
-        Text(
+        AvalonText(
             text = data.statusText,
             color = if (isLoading) Color.Transparent else Color.White.copy(alpha = 0.5f),
             fontSize = 12.sp,

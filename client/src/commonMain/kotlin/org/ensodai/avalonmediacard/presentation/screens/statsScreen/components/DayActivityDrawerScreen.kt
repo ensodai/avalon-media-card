@@ -15,10 +15,10 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import org.ensodai.avalonmediacard.designsystem.components.AvalonCircularProgressIndicator as CircularProgressIndicator
-import org.ensodai.avalonmediacard.designsystem.components.AvalonIcon as Icon
-import org.ensodai.avalonmediacard.designsystem.components.AvalonSurface as Surface
-import org.ensodai.avalonmediacard.designsystem.components.AvalonText as Text
+import org.ensodai.avalonmediacard.designsystem.components.AvalonCircularProgressIndicator
+import org.ensodai.avalonmediacard.designsystem.components.AvalonIcon
+import org.ensodai.avalonmediacard.designsystem.components.AvalonSurface
+import org.ensodai.avalonmediacard.designsystem.components.AvalonText
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.LaunchedEffect
@@ -104,7 +104,7 @@ class DayActivityDrawerScreen(
                             .padding(top = 80.dp),
                         contentAlignment = Alignment.Center
                     ) {
-                        CircularProgressIndicator(
+                        AvalonCircularProgressIndicator(
                             color = colors.accentGold,
                             modifier = Modifier.size(36.dp)
                         )
@@ -118,7 +118,7 @@ class DayActivityDrawerScreen(
                             .padding(24.dp),
                         contentAlignment = Alignment.Center
                     ) {
-                        Text(
+                        AvalonText(
                             text = error ?: stringResource(Res.string.stats_loading_error),
                             style = AvalonTheme.typography.bodyMedium,
                             color = colors.textSecondary
@@ -135,7 +135,7 @@ class DayActivityDrawerScreen(
                                 .padding(24.dp),
                             contentAlignment = Alignment.Center
                         ) {
-                            Text(
+                            AvalonText(
                                 text = stringResource(Res.string.stats_day_activity_empty),
                                 style = AvalonTheme.typography.bodyMedium,
                                 color = colors.textSecondary
@@ -186,7 +186,7 @@ private fun DaySummaryCard(
         "$minutes мин"
     }
 
-    Surface(
+    AvalonSurface(
         shape = shapes.control,
         color = colors.bgElevated,
         border = BorderStroke(1.dp, colors.borderSubtle),
@@ -200,13 +200,13 @@ private fun DaySummaryCard(
             verticalAlignment = Alignment.CenterVertically
         ) {
             Column {
-                Text(
+                AvalonText(
                     text = timeFormatted,
                     style = AvalonTheme.typography.titleMedium.copy(fontFeatureSettings = "tnum"),
                     fontWeight = FontWeight.Bold,
                     color = colors.textPrimary
                 )
-                Text(
+                AvalonText(
                     text = "${activity.items.size} ${pluralizeTitles(activity.items.size)}",
                     style = AvalonTheme.typography.bodySmall,
                     color = colors.textSecondary
@@ -214,7 +214,7 @@ private fun DaySummaryCard(
             }
 
             if (activity.averageRating != null) {
-                Surface(
+                AvalonSurface(
                     shape = shapes.control,
                     color = colors.bgSurface
                 ) {
@@ -223,13 +223,13 @@ private fun DaySummaryCard(
                         verticalAlignment = Alignment.CenterVertically,
                         horizontalArrangement = Arrangement.spacedBy(4.dp)
                     ) {
-                        Icon(
+                        AvalonIcon(
                             imageVector = Lucide.Star,
                             contentDescription = null,
                             tint = colors.accentGold,
                             modifier = Modifier.size(12.dp)
                         )
-                        Text(
+                        AvalonText(
                             text = activity.averageRating.toString(),
                             style = AvalonTheme.typography.labelSmall.copy(fontFeatureSettings = "tnum"),
                             fontWeight = FontWeight.Bold,
@@ -251,7 +251,7 @@ private fun DayActivityItemCard(
     val colors = AvalonTheme.colors
     val shapes = AvalonTheme.shapes
 
-    Surface(
+    AvalonSurface(
         onClick = onClick,
         shape = shapes.control,
         color = colors.bgElevated,
@@ -287,7 +287,7 @@ private fun DayActivityItemCard(
                 modifier = Modifier.weight(1f),
                 verticalArrangement = Arrangement.spacedBy(4.dp)
             ) {
-                Text(
+                AvalonText(
                     text = item.title,
                     style = AvalonTheme.typography.bodyMedium,
                     fontWeight = FontWeight.SemiBold,
@@ -303,7 +303,7 @@ private fun DayActivityItemCard(
                             append(" «${item.episodeTitle}»")
                         }
                     }
-                    Text(
+                    AvalonText(
                         text = epText,
                         style = AvalonTheme.typography.labelSmall,
                         color = colors.textSecondary,
@@ -318,19 +318,19 @@ private fun DayActivityItemCard(
                     horizontalArrangement = Arrangement.spacedBy(6.dp)
                 ) {
                     if (item.isCompleted) {
-                        Icon(
+                        AvalonIcon(
                             imageVector = Lucide.Check,
                             contentDescription = null,
                             tint = colors.textPrimary,
                             modifier = Modifier.size(12.dp)
                         )
-                        Text(
+                        AvalonText(
                             text = stringResource(Res.string.stats_day_activity_completed),
                             style = AvalonTheme.typography.labelSmall,
                             color = colors.textSecondary
                         )
                     } else {
-                        Icon(
+                        AvalonIcon(
                             imageVector = Lucide.Clock,
                             contentDescription = null,
                             tint = colors.textSecondary,
@@ -345,7 +345,7 @@ private fun DayActivityItemCard(
                         } else {
                             "${item.watchedMinutes} мин"
                         }
-                        Text(
+                        AvalonText(
                             text = watchedStr,
                             style = AvalonTheme.typography.labelSmall.copy(fontFeatureSettings = "tnum"),
                             color = colors.textSecondary
@@ -358,13 +358,13 @@ private fun DayActivityItemCard(
                             verticalAlignment = Alignment.CenterVertically,
                             horizontalArrangement = Arrangement.spacedBy(2.dp)
                         ) {
-                            Icon(
+                            AvalonIcon(
                                 imageVector = Lucide.Star,
                                 contentDescription = null,
                                 tint = colors.accentGold,
                                 modifier = Modifier.size(11.dp)
                             )
-                            Text(
+                            AvalonText(
                                 text = item.userRating.toString(),
                                 style = AvalonTheme.typography.labelSmall.copy(fontFeatureSettings = "tnum"),
                                 fontWeight = FontWeight.Bold,

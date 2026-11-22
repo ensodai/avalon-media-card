@@ -4,7 +4,7 @@ import org.ensodai.avalonmediacard.designsystem.theme.AvalonTheme
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
-import org.ensodai.avalonmediacard.designsystem.components.AvalonText as Text
+import org.ensodai.avalonmediacard.designsystem.components.AvalonText
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -33,7 +33,7 @@ fun CustomListContent(
                 .padding(horizontal = 16.dp)
                 .padding(top = 16.dp)
         ) {
-            Text(
+            AvalonText(
                 text = title,
                 fontSize = 24.sp,
                 fontWeight = FontWeight.Bold,

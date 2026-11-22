@@ -15,8 +15,8 @@ import avalonmediacard.client.generated.resources.*
 import com.composables.icons.lucide.Check
 import com.composables.icons.lucide.Copy
 import com.composables.icons.lucide.Lucide
-import org.ensodai.avalonmediacard.designsystem.components.AvalonIcon as Icon
-import org.ensodai.avalonmediacard.designsystem.components.AvalonText as Text
+import org.ensodai.avalonmediacard.designsystem.components.AvalonIcon
+import org.ensodai.avalonmediacard.designsystem.components.AvalonText
 import org.ensodai.avalonmediacard.designsystem.theme.AvalonTheme
 import org.ensodai.avalonmediacard.presentation.screens.commonComponents.tvAndWebHoverEffect
 import org.jetbrains.compose.resources.stringResource
@@ -45,13 +45,13 @@ fun WatchPartyPinCard(
         horizontalArrangement = Arrangement.SpaceBetween
     ) {
         Column {
-            Text(
+            AvalonText(
                 text = stringResource(Res.string.watch_party_pin_label).uppercase(),
                 style = typography.microCaption,
                 color = colors.textSecondary,
                 letterSpacing = 1.sp
             )
-            Text(
+            AvalonText(
                 text = "${pin.take(3)} ${pin.takeLast(3)}",
                 style = typography.monoTech,
                 fontSize = 26.sp,
@@ -78,13 +78,13 @@ fun WatchPartyPinCard(
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.spacedBy(6.dp)
         ) {
-            Icon(
+            AvalonIcon(
                 imageVector = if (copied) Lucide.Check else Lucide.Copy,
                 contentDescription = null,
                 tint = if (copied) colors.statusLive else colors.textPrimary,
                 modifier = Modifier.size(14.dp)
             )
-            Text(
+            AvalonText(
                 text = if (copied) stringResource(Res.string.watch_party_pin_copied) else stringResource(Res.string.watch_party_pin_copy),
                 style = typography.uiLabel,
                 color = colors.textPrimary

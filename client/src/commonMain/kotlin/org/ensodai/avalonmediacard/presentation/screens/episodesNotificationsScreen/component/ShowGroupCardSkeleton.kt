@@ -18,7 +18,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.shape.RoundedCornerShape
-import org.ensodai.avalonmediacard.designsystem.components.AvalonCard as Card
+import org.ensodai.avalonmediacard.designsystem.components.AvalonCard
 import org.ensodai.avalonmediacard.designsystem.components.CardDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -36,7 +36,7 @@ fun ShowGroupCardSkeleton(
     val isTv = LocalDeviceTarget.current.isTv
     val cardWidth = if (isTv) 320.dp else 290.dp
 
-    Card(
+    AvalonCard(
         shape = RoundedCornerShape(16.dp),
         colors = CardDefaults.cardColors(
             containerColor = AvalonTheme.colors.surfaceVariant.copy(alpha = 0.2f)

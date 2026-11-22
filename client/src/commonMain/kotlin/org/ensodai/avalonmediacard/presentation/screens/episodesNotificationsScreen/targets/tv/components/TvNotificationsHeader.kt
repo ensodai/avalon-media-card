@@ -15,8 +15,8 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
-import org.ensodai.avalonmediacard.designsystem.components.AvalonIcon as Icon
-import org.ensodai.avalonmediacard.designsystem.components.AvalonText as Text
+import org.ensodai.avalonmediacard.designsystem.components.AvalonIcon
+import org.ensodai.avalonmediacard.designsystem.components.AvalonText
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -80,7 +80,7 @@ fun TvNotificationsHeader(
                     .background(AvalonTheme.colors.primaryContainer),
                 contentAlignment = Alignment.Center
             ) {
-                Icon(
+                AvalonIcon(
                     imageVector = Lucide.Bell,
                     contentDescription = null,
                     tint = AvalonTheme.colors.onPrimaryContainer,
@@ -88,7 +88,7 @@ fun TvNotificationsHeader(
                 )
             }
 
-            Text(
+            AvalonText(
                 text = stringResource(Res.string.episodes_notifications_title),
                 fontSize = 20.sp,
                 fontWeight = FontWeight.Bold,
@@ -137,14 +137,14 @@ fun TvNotificationsHeader(
                     .background(AvalonTheme.colors.primary.copy(alpha = 0.12f))
                     .padding(horizontal = 14.dp, vertical = 7.dp)
             ) {
-                Icon(
+                AvalonIcon(
                     imageVector = Lucide.CheckCheck,
                     contentDescription = null,
                     tint = AvalonTheme.colors.primary,
                     modifier = Modifier.size(16.dp)
                 )
                 Spacer(modifier = Modifier.width(6.dp))
-                Text(
+                AvalonText(
                     text = stringResource(Res.string.episodes_notifications_mark_all_read),
                     color = AvalonTheme.colors.primary,
                     fontSize = 12.sp,
@@ -198,7 +198,7 @@ private fun TvFilterTab(
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.Center
     ) {
-        Text(
+        AvalonText(
             text = label,
             fontSize = 13.sp,
             fontWeight = if (isSelected) FontWeight.Bold else FontWeight.Medium,
@@ -213,7 +213,7 @@ private fun TvFilterTab(
                     .padding(horizontal = 7.dp, vertical = 1.5.dp),
                 contentAlignment = Alignment.Center
             ) {
-                Text(
+                AvalonText(
                     text = count.toString(),
                     fontSize = 11.sp,
                     fontWeight = FontWeight.Bold,

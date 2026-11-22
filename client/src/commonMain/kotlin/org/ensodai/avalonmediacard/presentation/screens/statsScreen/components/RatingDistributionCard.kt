@@ -16,9 +16,9 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import org.ensodai.avalonmediacard.designsystem.components.AvalonBentoCard
-import org.ensodai.avalonmediacard.designsystem.components.AvalonIcon as Icon
-import org.ensodai.avalonmediacard.designsystem.components.AvalonSurface as Surface
-import org.ensodai.avalonmediacard.designsystem.components.AvalonText as Text
+import org.ensodai.avalonmediacard.designsystem.components.AvalonIcon
+import org.ensodai.avalonmediacard.designsystem.components.AvalonSurface
+import org.ensodai.avalonmediacard.designsystem.components.AvalonText
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -71,7 +71,7 @@ fun RatingDistributionCard(
     AvalonBentoCard(
         title = stringResource(Res.string.stats_ratings_title),
         icon = {
-            Icon(
+            AvalonIcon(
                 imageVector = Lucide.Star,
                 contentDescription = null,
                 tint = colors.accentGold,
@@ -81,14 +81,14 @@ fun RatingDistributionCard(
         trailingHeader = if (avg != null) {
             {
                 Row(verticalAlignment = Alignment.CenterVertically) {
-                    Icon(
+                    AvalonIcon(
                         imageVector = Lucide.Star,
                         contentDescription = null,
                         tint = colors.accentGold,
                         modifier = Modifier.size(14.dp)
                     )
                     Spacer(modifier = Modifier.width(4.dp))
-                    Text(
+                    AvalonText(
                         text = ((avg * 10).toInt() / 10.0).toString(),
                         style = AvalonTheme.typography.uiLabel.copy(
                             fontFeatureSettings = "tnum"
@@ -157,7 +157,7 @@ fun RatingDistributionCard(
 
                     val screenTitle = stringResource(Res.string.stats_ratings_list_title_fmt, rating)
 
-                    Surface(
+                    AvalonSurface(
                         onClick = {
                             if (hasItems) {
                                 navigation.navigateTo(
@@ -195,7 +195,7 @@ fun RatingDistributionCard(
                                 .fillMaxWidth()
                                 .padding(vertical = 4.dp)
                         ) {
-                            Text(
+                            AvalonText(
                                 text = if (count > 0) count.toString() else "",
                                 style = AvalonTheme.typography.labelSmall.copy(
                                     fontSize = 10.sp,
@@ -217,7 +217,7 @@ fun RatingDistributionCard(
 
                             Spacer(modifier = Modifier.height(6.dp))
 
-                            Text(
+                            AvalonText(
                                 text = rating.toString(),
                                 style = AvalonTheme.typography.labelSmall.copy(
                                     fontFeatureSettings = "tnum"
@@ -233,7 +233,7 @@ fun RatingDistributionCard(
             Spacer(modifier = Modifier.height(14.dp))
 
             // Вердикт критика
-            Text(
+            AvalonText(
                 text = verdict,
                 style = AvalonTheme.typography.bodySmall,
                 color = colors.textSecondary

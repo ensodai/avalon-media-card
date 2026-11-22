@@ -13,7 +13,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import org.ensodai.avalonmediacard.designsystem.components.AvalonText as Text
+import org.ensodai.avalonmediacard.designsystem.components.AvalonText
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
@@ -126,7 +126,7 @@ fun EpisodesNotificationsLayoutWeb(
                             // Секции хронологического таймлайна
                             filteredSections.forEach { section ->
                                 item(key = "header_${section.sectionId}") {
-                                    Text(
+                                    AvalonText(
                                         text = section.title.uppercase(),
                                         style = AvalonTheme.typography.labelLarge.copy(
                                             fontWeight = FontWeight.Bold,
@@ -170,7 +170,7 @@ fun EpisodesNotificationsLayoutWeb(
                             // Секция пачек пропущенных серий (Smart Rollup)
                             if (slotData.rollups.isNotEmpty() && state.selectedFilter == EpisodeFilter.ALL) {
                                 item(key = "header_missed_rollups") {
-                                    Text(
+                                    AvalonText(
                                         text = stringResource(Res.string.episodes_notifications_missed_title).uppercase(),
                                         style = AvalonTheme.typography.labelLarge.copy(
                                             fontWeight = FontWeight.Bold,

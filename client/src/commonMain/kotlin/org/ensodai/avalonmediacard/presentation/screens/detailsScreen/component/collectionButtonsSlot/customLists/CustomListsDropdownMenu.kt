@@ -22,8 +22,8 @@ import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
-import org.ensodai.avalonmediacard.designsystem.components.AvalonIcon as Icon
-import org.ensodai.avalonmediacard.designsystem.components.AvalonText as Text
+import org.ensodai.avalonmediacard.designsystem.components.AvalonIcon
+import org.ensodai.avalonmediacard.designsystem.components.AvalonText
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -141,14 +141,14 @@ fun CustomListsDropdownMenu(
                     verticalAlignment = Alignment.CenterVertically,
                     horizontalArrangement = Arrangement.SpaceBetween
                 ) {
-                    Text(
+                    AvalonText(
                         text = list.name.ifBlank { "Список без названия" },
                         color = if (list.isAdded) Color.White else Color.White.copy(alpha = 0.8f),
                         fontSize = 14.sp,
                         fontWeight = if (list.isAdded) FontWeight.Bold else FontWeight.Normal
                     )
                     if (list.isAdded) {
-                        Icon(
+                        AvalonIcon(
                             imageVector = Lucide.Check,
                             contentDescription = "Added",
                             tint = AvalonTheme.colors.primary,
@@ -213,7 +213,7 @@ fun CustomListsDropdownMenu(
                             .padding(horizontal = 12.dp, vertical = 10.dp),
                         decorationBox = { innerTextField ->
                             if (listName.isEmpty()) {
-                                Text(
+                                AvalonText(
                                     stringResource(Res.string.details_custom_list_name_placeholder),
                                     color = Color.White.copy(alpha = 0.5f),
                                     fontSize = 14.sp
@@ -224,7 +224,7 @@ fun CustomListsDropdownMenu(
                     )
                     Spacer(modifier = Modifier.width(8.dp))
 
-                    Icon(
+                    AvalonIcon(
                         imageVector = Lucide.Check,
                         contentDescription = stringResource(Res.string.common_save),
                         tint = if (listName.trim().isNotBlank()) AvalonTheme.colors.primary else Color.White.copy(alpha = 0.3f),
@@ -235,7 +235,7 @@ fun CustomListsDropdownMenu(
                     )
                     Spacer(modifier = Modifier.width(8.dp))
 
-                    Icon(
+                    AvalonIcon(
                         imageVector = Lucide.X,
                         contentDescription = stringResource(Res.string.common_cancel),
                         tint = Color.White.copy(alpha = 0.5f),
@@ -257,14 +257,14 @@ fun CustomListsDropdownMenu(
                         .padding(horizontal = 16.dp, vertical = 12.dp),
                     verticalAlignment = Alignment.CenterVertically
                 ) {
-                    Icon(
+                    AvalonIcon(
                         imageVector = Lucide.Plus,
                         contentDescription = stringResource(Res.string.details_custom_list_create),
                         tint = Color.White.copy(alpha = 0.7f),
                         modifier = Modifier.size(16.dp)
                     )
                     Spacer(modifier = Modifier.width(12.dp))
-                    Text(
+                    AvalonText(
                         text = stringResource(Res.string.details_custom_list_create),
                         color = Color.White.copy(alpha = 0.7f),
                         fontSize = 14.sp

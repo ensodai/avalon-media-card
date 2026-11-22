@@ -7,8 +7,8 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
-import org.ensodai.avalonmediacard.designsystem.components.AvalonIcon as Icon
-import org.ensodai.avalonmediacard.designsystem.components.AvalonText as Text
+import org.ensodai.avalonmediacard.designsystem.components.AvalonIcon
+import org.ensodai.avalonmediacard.designsystem.components.AvalonText
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -58,14 +58,14 @@ fun AdminScreen(
                     .fillMaxWidth()
                     .padding(horizontal = 24.dp, vertical = 20.dp)
             ) {
-                Text(
+                AvalonText(
                     text = stringResource(Res.string.admin_title),
                     fontSize = 28.sp,
                     fontWeight = FontWeight.Bold,
                     color = AvalonTheme.colors.onBackground
                 )
                 Spacer(modifier = Modifier.height(4.dp))
-                Text(
+                AvalonText(
                     text = stringResource(Res.string.admin_subtitle),
                     fontSize = 14.sp,
                     color = AvalonTheme.colors.onSurfaceVariant
@@ -111,13 +111,13 @@ fun AdminScreen(
                             verticalAlignment = Alignment.CenterVertically,
                             horizontalArrangement = Arrangement.spacedBy(8.dp)
                         ) {
-                            Icon(
+                            AvalonIcon(
                                 imageVector = tabIcon,
                                 contentDescription = null,
                                 tint = contentColor,
                                 modifier = Modifier.size(18.dp)
                             )
-                            Text(
+                            AvalonText(
                                 text = stringResource(tab.titleRes),
                                 fontSize = 14.sp,
                                 fontWeight = if (isSelected) FontWeight.Bold else FontWeight.Medium,

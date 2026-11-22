@@ -8,9 +8,9 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicTextField
-import org.ensodai.avalonmediacard.designsystem.components.AvalonCircularProgressIndicator as CircularProgressIndicator
-import org.ensodai.avalonmediacard.designsystem.components.AvalonIcon as Icon
-import org.ensodai.avalonmediacard.designsystem.components.AvalonText as Text
+import org.ensodai.avalonmediacard.designsystem.components.AvalonCircularProgressIndicator
+import org.ensodai.avalonmediacard.designsystem.components.AvalonIcon
+import org.ensodai.avalonmediacard.designsystem.components.AvalonText
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -65,20 +65,20 @@ fun WatchPartyEntryStep(
                     verticalAlignment = Alignment.CenterVertically,
                     horizontalArrangement = Arrangement.spacedBy(12.dp)
                 ) {
-                    Icon(
+                    AvalonIcon(
                         imageVector = Lucide.Plus,
                         contentDescription = null,
                         tint = Color.White,
                         modifier = Modifier.size(20.dp)
                     )
-                    Text(
+                    AvalonText(
                         text = stringResource(Res.string.watch_party_btn_create_room),
                         fontSize = 15.sp,
                         fontWeight = FontWeight.SemiBold,
                         color = Color.White
                     )
                 }
-                Icon(
+                AvalonIcon(
                     imageVector = Lucide.ArrowRight,
                     contentDescription = null,
                     tint = Color.White.copy(alpha = 0.6f),
@@ -97,7 +97,7 @@ fun WatchPartyEntryStep(
                 .padding(18.dp),
             verticalArrangement = Arrangement.spacedBy(12.dp)
         ) {
-            Text(
+            AvalonText(
                 text = stringResource(Res.string.watch_party_enter_pin_hint),
                 fontSize = 13.sp,
                 fontWeight = FontWeight.Medium,
@@ -128,7 +128,7 @@ fun WatchPartyEntryStep(
                         .padding(horizontal = 16.dp, vertical = 10.dp),
                     decorationBox = { innerTextField ->
                         if (state.pinInput.isEmpty()) {
-                            Text(
+                            AvalonText(
                                 text = "------",
                                 color = Color.White.copy(alpha = 0.3f),
                                 fontSize = 20.sp,
@@ -156,13 +156,13 @@ fun WatchPartyEntryStep(
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     if (state.isJoining) {
-                        CircularProgressIndicator(
+                        AvalonCircularProgressIndicator(
                             modifier = Modifier.size(16.dp),
                             color = Color.Black,
                             strokeWidth = 2.dp
                         )
                     } else {
-                        Text(
+                        AvalonText(
                             text = stringResource(Res.string.watch_party_btn_join),
                             fontSize = 14.sp,
                             fontWeight = FontWeight.Bold,
@@ -173,7 +173,7 @@ fun WatchPartyEntryStep(
             }
 
             if (state.joinError != null) {
-                Text(
+                AvalonText(
                     text = state.joinError,
                     fontSize = 12.sp,
                     color = Color(0xFFFF5252)
@@ -187,7 +187,7 @@ fun WatchPartyEntryStep(
                 modifier = Modifier.fillMaxWidth(),
                 verticalArrangement = Arrangement.spacedBy(10.dp)
             ) {
-                Text(
+                AvalonText(
                     text = stringResource(Res.string.watch_party_active_rooms_title),
                     fontSize = 13.sp,
                     fontWeight = FontWeight.Medium,
@@ -224,7 +224,7 @@ fun WatchPartyEntryStep(
                                     verticalAlignment = Alignment.CenterVertically,
                                     horizontalArrangement = Arrangement.spacedBy(6.dp)
                                 ) {
-                                    Text(
+                                    AvalonText(
                                         text = room.title,
                                         fontSize = 14.sp,
                                         fontWeight = FontWeight.SemiBold,
@@ -238,7 +238,7 @@ fun WatchPartyEntryStep(
                                                 .border(1.dp, Color(0xFF4CAF50).copy(alpha = 0.4f), RoundedCornerShape(4.dp))
                                                 .padding(horizontal = 6.dp, vertical = 2.dp)
                                         ) {
-                                            Text(
+                                            AvalonText(
                                                 text = stringResource(Res.string.watch_party_live_badge),
                                                 fontSize = 10.sp,
                                                 fontWeight = FontWeight.Bold,
@@ -256,13 +256,13 @@ fun WatchPartyEntryStep(
                                     stringResource(Res.string.watch_party_participants_label, room.participantsCount)
                                 }
 
-                                Text(
+                                AvalonText(
                                     text = participantsLabel,
                                     fontSize = 12.sp,
                                     color = if (room.isPlaying) Color(0xFF81C784) else Color.White.copy(alpha = 0.6f)
                                 )
                             }
-                            Text(
+                            AvalonText(
                                 text = if (room.isPlaying) stringResource(Res.string.watch_party_btn_join_playback)
                                 else stringResource(Res.string.watch_party_btn_join),
                                 fontSize = 13.sp,

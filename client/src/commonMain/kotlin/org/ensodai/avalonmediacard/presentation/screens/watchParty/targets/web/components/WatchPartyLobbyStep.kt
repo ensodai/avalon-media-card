@@ -3,7 +3,7 @@ package org.ensodai.avalonmediacard.presentation.screens.watchParty.targets.web.
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
-import org.ensodai.avalonmediacard.designsystem.components.AvalonText as Text
+import org.ensodai.avalonmediacard.designsystem.components.AvalonText
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -79,7 +79,7 @@ fun WatchPartyLobbyStep(
                                     .background(Color(0xFFFFB74D).copy(alpha = 0.12f))
                                     .padding(horizontal = 12.dp, vertical = 8.dp)
                             ) {
-                                Text(
+                                AvalonText(
                                     text = state.systemNotice,
                                     fontSize = 12.sp,
                                     color = Color(0xFFFFB74D),
@@ -123,7 +123,7 @@ fun WatchPartyLobbyStep(
                     )
 
                     if (state.systemNotice != null) {
-                        Text(
+                        AvalonText(
                             text = state.systemNotice,
                             fontSize = 12.sp,
                             color = Color(0xFFFFB74D),

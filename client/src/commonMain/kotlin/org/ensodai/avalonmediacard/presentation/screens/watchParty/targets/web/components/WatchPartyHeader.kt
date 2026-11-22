@@ -24,8 +24,8 @@ import com.composables.icons.lucide.Copy
 import com.composables.icons.lucide.Lucide
 import com.composables.icons.lucide.Users
 import com.composables.icons.lucide.X
-import org.ensodai.avalonmediacard.designsystem.components.AvalonIcon as Icon
-import org.ensodai.avalonmediacard.designsystem.components.AvalonText as Text
+import org.ensodai.avalonmediacard.designsystem.components.AvalonIcon
+import org.ensodai.avalonmediacard.designsystem.components.AvalonText
 import org.ensodai.avalonmediacard.designsystem.theme.AvalonTheme
 import org.ensodai.avalonmediacard.presentation.screens.commonComponents.tvAndWebHoverEffect
 import org.ensodai.avalonmediacard.presentation.screens.watchParty.viewState.WatchPartyStep
@@ -53,7 +53,7 @@ fun WatchPartyHeader(
         horizontalArrangement = Arrangement.SpaceBetween
     ) {
         if (step == WatchPartyStep.LOBBY) {
-            Text(
+            AvalonText(
                 text = roomTitle.ifBlank { mediaTitle },
                 style = typography.titleLarge,
                 color = colors.textPrimary,
@@ -80,7 +80,7 @@ fun WatchPartyHeader(
                             .background(colors.bgElevated, backShape),
                         contentAlignment = Alignment.Center
                     ) {
-                        Icon(
+                        AvalonIcon(
                             imageVector = Lucide.ArrowLeft,
                             contentDescription = stringResource(Res.string.common_previous),
                             tint = colors.textPrimary,
@@ -95,7 +95,7 @@ fun WatchPartyHeader(
                             .background(colors.bgElevated),
                         contentAlignment = Alignment.Center
                     ) {
-                        Icon(
+                        AvalonIcon(
                             imageVector = Lucide.Users,
                             contentDescription = null,
                             tint = colors.accentPrimary,
@@ -105,7 +105,7 @@ fun WatchPartyHeader(
                 }
 
                 Column {
-                    Text(
+                    AvalonText(
                         text = when (step) {
                             WatchPartyStep.ENTRY -> stringResource(Res.string.watch_party_title)
                             WatchPartyStep.SETUP -> stringResource(Res.string.watch_party_step_setup)
@@ -115,7 +115,7 @@ fun WatchPartyHeader(
                         color = colors.textPrimary
                     )
                     if (mediaTitle.isNotBlank()) {
-                        Text(
+                        AvalonText(
                             text = mediaTitle,
                             style = typography.metadata,
                             color = colors.textSecondary,
@@ -156,19 +156,19 @@ fun WatchPartyHeader(
                     verticalAlignment = Alignment.CenterVertically,
                     horizontalArrangement = Arrangement.spacedBy(6.dp)
                 ) {
-                    Text(
+                    AvalonText(
                         text = "PIN:",
                         style = typography.microCaption,
                         color = colors.textSecondary
                     )
-                    Text(
+                    AvalonText(
                         text = formattedPin,
                         style = typography.monoTech,
                         fontSize = 13.sp,
                         letterSpacing = 1.sp,
                         color = colors.accentPrimary
                     )
-                    Icon(
+                    AvalonIcon(
                         imageVector = if (copied) Lucide.Check else Lucide.Copy,
                         contentDescription = null,
                         tint = if (copied) colors.statusLive else colors.textSecondary,
@@ -190,7 +190,7 @@ fun WatchPartyHeader(
                     .background(colors.bgElevated, closeShape),
                 contentAlignment = Alignment.Center
             ) {
-                Icon(
+                AvalonIcon(
                     imageVector = Lucide.X,
                     contentDescription = stringResource(Res.string.common_close),
                     tint = colors.textSecondary,

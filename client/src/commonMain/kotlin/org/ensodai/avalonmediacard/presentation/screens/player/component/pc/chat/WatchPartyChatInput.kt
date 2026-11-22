@@ -17,8 +17,8 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
-import org.ensodai.avalonmediacard.designsystem.components.AvalonIcon as Icon
-import org.ensodai.avalonmediacard.designsystem.components.AvalonText as Text
+import org.ensodai.avalonmediacard.designsystem.components.AvalonIcon
+import org.ensodai.avalonmediacard.designsystem.components.AvalonText
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -71,7 +71,7 @@ fun WatchPartyChatInput(
             contentAlignment = Alignment.CenterStart
         ) {
             if (text.isEmpty()) {
-                Text(
+                AvalonText(
                     text = stringResource(Res.string.watch_party_chat_input_placeholder),
                     color = Color.White.copy(alpha = 0.40f),
                     fontSize = 13.sp
@@ -138,7 +138,7 @@ fun WatchPartyChatInput(
                 ),
             contentAlignment = Alignment.Center
         ) {
-            Icon(
+            AvalonIcon(
                 imageVector = Lucide.Send,
                 contentDescription = stringResource(Res.string.watch_party_chat_send),
                 tint = if (canSend) Color.Black else Color.White.copy(alpha = 0.35f),

@@ -25,11 +25,11 @@ import avalonmediacard.client.generated.resources.*
 import com.composables.icons.lucide.Globe
 import com.composables.icons.lucide.Lucide
 import com.composables.icons.lucide.X
-import org.ensodai.avalonmediacard.designsystem.components.AvalonCircularProgressIndicator as CircularProgressIndicator
+import org.ensodai.avalonmediacard.designsystem.components.AvalonCircularProgressIndicator
 import org.ensodai.avalonmediacard.designsystem.components.AvalonDialog
-import org.ensodai.avalonmediacard.designsystem.components.AvalonIcon as Icon
+import org.ensodai.avalonmediacard.designsystem.components.AvalonIcon
 import org.ensodai.avalonmediacard.designsystem.components.AvalonIconButton
-import org.ensodai.avalonmediacard.designsystem.components.AvalonText as Text
+import org.ensodai.avalonmediacard.designsystem.components.AvalonText
 import org.ensodai.avalonmediacard.designsystem.theme.AvalonTheme
 import org.ensodai.avalonmediacard.presentation.screens.admin.action.AdminActions
 import org.ensodai.avalonmediacard.presentation.screens.admin.components.proxy.PluginProxyConfigPanel
@@ -68,7 +68,7 @@ fun PluginProxyDialog(
                             .background(colors.accentPrimary.copy(alpha = 0.12f)),
                         contentAlignment = Alignment.Center
                     ) {
-                        Icon(
+                        AvalonIcon(
                             imageVector = Lucide.Globe,
                             contentDescription = null,
                             tint = colors.accentPrimary,
@@ -76,13 +76,13 @@ fun PluginProxyDialog(
                         )
                     }
                     Column {
-                        Text(
+                        AvalonText(
                             text = stringResource(Res.string.admin_plugin_proxy_dialog_title),
                             style = AvalonTheme.typography.sectionTitle,
                             color = colors.textPrimary
                         )
                         Spacer(modifier = Modifier.height(2.dp))
-                        Text(
+                        AvalonText(
                             text = stringResource(Res.string.admin_plugin_proxy_dialog_subtitle),
                             style = AvalonTheme.typography.metadata,
                             color = colors.textSecondary
@@ -95,7 +95,7 @@ fun PluginProxyDialog(
                     contentDescription = stringResource(Res.string.admin_plugin_proxy_close),
                     modifier = Modifier.size(36.dp)
                 ) {
-                    Icon(
+                    AvalonIcon(
                         imageVector = Lucide.X,
                         contentDescription = null,
                         tint = colors.textSecondary,
@@ -112,7 +112,7 @@ fun PluginProxyDialog(
                         .weight(1f),
                     contentAlignment = Alignment.Center
                 ) {
-                    CircularProgressIndicator(
+                    AvalonCircularProgressIndicator(
                         color = colors.accentPrimary,
                         modifier = Modifier.size(36.dp)
                     )
@@ -124,7 +124,7 @@ fun PluginProxyDialog(
                         .weight(1f),
                     contentAlignment = Alignment.Center
                 ) {
-                    Text(
+                    AvalonText(
                         text = stringResource(Res.string.admin_plugin_proxy_no_plugins),
                         style = AvalonTheme.typography.cardTitle,
                         color = colors.textSecondary

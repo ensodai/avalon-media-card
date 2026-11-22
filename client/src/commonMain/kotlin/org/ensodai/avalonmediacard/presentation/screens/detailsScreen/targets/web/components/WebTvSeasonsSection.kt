@@ -19,8 +19,8 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
-import org.ensodai.avalonmediacard.designsystem.components.AvalonIcon as Icon
-import org.ensodai.avalonmediacard.designsystem.components.AvalonText as Text
+import org.ensodai.avalonmediacard.designsystem.components.AvalonIcon
+import org.ensodai.avalonmediacard.designsystem.components.AvalonText
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -168,7 +168,7 @@ fun WebTvSeasonsSection(
                     verticalAlignment = Alignment.CenterVertically,
                     horizontalArrangement = Arrangement.spacedBy(12.dp)
                 ) {
-                    Text(
+                    AvalonText(
                         text = stringResource(Res.string.details_seasons_header),
                         style = AvalonTheme.typography.sectionTitle,
                         color = AvalonTheme.colors.textPrimary
@@ -187,7 +187,7 @@ fun WebTvSeasonsSection(
                             val seasonCountText = stringResource(seasonRes, seasonsCount)
                             val episodesText = if (totalEpisodes > 0) " • " + stringResource(episodeRes, totalEpisodes) else ""
                             val specialsText = if (hasSpecials && regularSeasons.isNotEmpty()) " • " + stringResource(Res.string.details_seasons_specials) else ""
-                            Text(
+                            AvalonText(
                                 text = "$seasonCountText$episodesText$specialsText",
                                 style = AvalonTheme.typography.metadata,
                                 color = AvalonTheme.colors.textSecondary
@@ -205,7 +205,7 @@ fun WebTvSeasonsSection(
                         verticalAlignment = Alignment.CenterVertically,
                         horizontalArrangement = Arrangement.spacedBy(12.dp)
                     ) {
-                        Text(
+                        AvalonText(
                             text = stringResource(Res.string.details_seasons_page_range_fmt, startIndex, endIndex, episodes.size),
                             style = AvalonTheme.typography.labelSmall,
                             color = AvalonTheme.colors.textSecondary
@@ -233,7 +233,7 @@ fun WebTvSeasonsSection(
                                 ),
                             contentAlignment = Alignment.Center
                         ) {
-                            Icon(
+                            AvalonIcon(
                                 imageVector = Lucide.ChevronLeft,
                                 contentDescription = "Назад",
                                 tint = if (canGoPrev) AvalonTheme.colors.textPrimary else AvalonTheme.colors.textSecondary.copy(alpha = 0.35f),
@@ -263,7 +263,7 @@ fun WebTvSeasonsSection(
                                 ),
                             contentAlignment = Alignment.Center
                         ) {
-                            Icon(
+                            AvalonIcon(
                                 imageVector = Lucide.ChevronRight,
                                 contentDescription = "Вперед",
                                 tint = if (canGoNext) AvalonTheme.colors.textPrimary else AvalonTheme.colors.textSecondary.copy(alpha = 0.35f),
@@ -414,7 +414,7 @@ fun WebTvSeasonsSection(
                                     .height(320.dp),
                                 contentAlignment = Alignment.Center
                             ) {
-                                Text(
+                                AvalonText(
                                     text = stringResource(Res.string.details_seasons_not_available),
                                     color = Color.White.copy(alpha = 0.5f),
                                     fontSize = 14.sp
@@ -570,7 +570,7 @@ private fun WebEpisodeGridCard(
                         .graphicsLayer { alpha = imageAlpha }
                 )
             } else {
-                Icon(
+                AvalonIcon(
                     imageVector = Lucide.Film,
                     contentDescription = null,
                     tint = Color.White.copy(alpha = 0.2f),
@@ -618,7 +618,7 @@ private fun WebEpisodeGridCard(
                             .background(playBg, CircleShape),
                         contentAlignment = Alignment.Center
                     ) {
-                        Icon(
+                        AvalonIcon(
                             imageVector = Lucide.Play,
                             contentDescription = "Смотреть серию",
                             tint = playIconTint,
@@ -639,7 +639,7 @@ private fun WebEpisodeGridCard(
                         .background(colors.bgCanvas.copy(alpha = 0.85f))
                         .padding(horizontal = 6.dp, vertical = 2.dp)
                 ) {
-                    Text(
+                    AvalonText(
                         text = stringResource(Res.string.player_duration_mins_single_fmt, runtime),
                         style = AvalonTheme.typography.monoTech,
                         color = colors.textPrimary
@@ -725,7 +725,7 @@ private fun WebEpisodeGridCard(
                             .background(currentWatchBg, CircleShape),
                         contentAlignment = Alignment.Center
                     ) {
-                        Icon(
+                        AvalonIcon(
                             imageVector = if (isWatched) Lucide.CheckCheck else Lucide.Eye,
                             contentDescription = if (isWatched) "Просмотрено" else "Отметить",
                             tint = watchColor,
@@ -765,7 +765,7 @@ private fun WebEpisodeGridCard(
                             verticalAlignment = Alignment.CenterVertically,
                             horizontalArrangement = Arrangement.Center
                         ) {
-                            Icon(
+                            AvalonIcon(
                                 imageVector = Lucide.Star,
                                 contentDescription = if (hasRating) "$userRating" else null,
                                 tint = ratingColor,
@@ -773,7 +773,7 @@ private fun WebEpisodeGridCard(
                             )
                             if (hasRating) {
                                 Spacer(modifier = Modifier.width(4.dp))
-                                Text(
+                                AvalonText(
                                     text = "$userRating",
                                     fontSize = 12.sp,
                                     fontWeight = FontWeight.Bold,
@@ -826,7 +826,7 @@ private fun WebEpisodeGridCard(
                 horizontalArrangement = Arrangement.spacedBy(6.dp)
             ) {
                 if (episode.isWatched) {
-                    Icon(
+                    AvalonIcon(
                         imageVector = Lucide.CheckCheck,
                         contentDescription = "Просмотрено",
                         tint = colors.statusLive,
@@ -834,7 +834,7 @@ private fun WebEpisodeGridCard(
                     )
                 }
 
-                Text(
+                AvalonText(
                     text = "${episode.episodeNumber}. ${episode.name}",
                     style = AvalonTheme.typography.cardTitle,
                     color = colors.textPrimary,
@@ -853,7 +853,7 @@ private fun WebEpisodeGridCard(
             ) {
                 val airDate = episode.airDate
                 if (!airDate.isNullOrEmpty()) {
-                    Text(
+                    AvalonText(
                         text = airDate,
                         style = AvalonTheme.typography.metadata,
                         color = colors.textSecondary
@@ -863,7 +863,7 @@ private fun WebEpisodeGridCard(
                 val rating = episode.voteAverage
                 if (rating != null && rating > 0.0) {
                     val formattedRating = ((rating * 10).toInt() / 10.0).toString()
-                    Text(
+                    AvalonText(
                         text = "•",
                         color = colors.textSecondary.copy(alpha = 0.5f),
                         fontSize = 12.sp
@@ -872,13 +872,13 @@ private fun WebEpisodeGridCard(
                         verticalAlignment = Alignment.CenterVertically,
                         horizontalArrangement = Arrangement.spacedBy(2.dp)
                     ) {
-                        Icon(
+                        AvalonIcon(
                             imageVector = Lucide.Star,
                             contentDescription = null,
                             tint = colors.accentGold,
                             modifier = Modifier.size(12.dp)
                         )
-                        Text(
+                        AvalonText(
                             text = formattedRating,
                             style = AvalonTheme.typography.metadata,
                             color = colors.accentGold
@@ -902,7 +902,7 @@ private fun WebEpisodeGridCard(
                         ),
                     verticalAlignment = Alignment.Bottom
                 ) {
-                    Text(
+                    AvalonText(
                         text = overview,
                         style = AvalonTheme.typography.metadata,
                         color = if (isHovered) colors.textPrimary.copy(alpha = 0.9f) else colors.textSecondary,
@@ -996,14 +996,14 @@ private fun WebSeasonSidebarItem(
             modifier = Modifier.weight(1f, fill = false)
         ) {
             if (season.isFullyWatched) {
-                Icon(
+                AvalonIcon(
                     imageVector = Lucide.CheckCheck,
                     contentDescription = stringResource(Res.string.details_seasons_completed),
                     tint = colors.statusLive,
                     modifier = Modifier.size(15.dp)
                 )
             } else if (season.isWatching) {
-                Icon(
+                AvalonIcon(
                     imageVector = Lucide.Eye,
                     contentDescription = stringResource(Res.string.details_seasons_watching),
                     tint = colors.accentPrimary,
@@ -1011,7 +1011,7 @@ private fun WebSeasonSidebarItem(
                 )
             }
 
-            Text(
+            AvalonText(
                 text = getSeasonDisplayName(season),
                 color = textColor,
                 fontSize = 13.sp,
@@ -1022,7 +1022,7 @@ private fun WebSeasonSidebarItem(
         }
 
         if (season.episodeCount > 0) {
-            Text(
+            AvalonText(
                 text = "${season.episodeCount}",
                 color = textColor.copy(alpha = 0.5f),
                 fontSize = 11.sp,
@@ -1081,14 +1081,14 @@ private fun WebMarkSeasonButton(
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.Center
     ) {
-        Icon(
+        AvalonIcon(
             imageVector = if (isWatched) Lucide.CheckCheck else Lucide.Check,
             contentDescription = null,
             tint = buttonContentColor,
             modifier = Modifier.size(15.dp)
         )
         Spacer(modifier = Modifier.width(6.dp))
-        Text(
+        AvalonText(
             text = if (isWatched) stringResource(Res.string.details_seasons_unmark_btn) else stringResource(Res.string.details_seasons_mark_btn),
             color = buttonContentColor,
             style = AvalonTheme.typography.labelSmall

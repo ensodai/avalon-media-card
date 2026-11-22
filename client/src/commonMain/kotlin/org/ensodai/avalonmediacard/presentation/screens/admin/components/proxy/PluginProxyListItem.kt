@@ -8,7 +8,7 @@ import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
-import org.ensodai.avalonmediacard.designsystem.components.AvalonText as Text
+import org.ensodai.avalonmediacard.designsystem.components.AvalonText
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
@@ -58,7 +58,7 @@ fun PluginProxyListItem(
             horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically
         ) {
-            Text(
+            AvalonText(
                 text = plugin.pluginName,
                 fontSize = 14.sp,
                 fontWeight = FontWeight.Bold,
@@ -82,7 +82,7 @@ fun PluginProxyListItem(
                             .clip(CircleShape)
                             .background(Color(0xFF10B981))
                     )
-                    Text(
+                    AvalonText(
                         text = plugin.type.name,
                         fontSize = 10.sp,
                         fontWeight = FontWeight.Bold,
@@ -104,14 +104,14 @@ fun PluginProxyListItem(
             horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically
         ) {
-            Text(
+            AvalonText(
                 text = "ID: ${plugin.pluginId} • v${plugin.pluginVersion}",
                 fontSize = 11.sp,
                 color = AvalonTheme.colors.onSurfaceVariant.copy(alpha = 0.8f)
             )
 
             if (plugin.isEnabled && plugin.host.isNotBlank()) {
-                Text(
+                AvalonText(
                     text = "${plugin.host}:${plugin.port}",
                     fontSize = 11.sp,
                     color = Color(0xFF10B981).copy(alpha = 0.85f),

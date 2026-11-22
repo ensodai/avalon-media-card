@@ -13,8 +13,8 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
-import org.ensodai.avalonmediacard.designsystem.components.AvalonIcon as Icon
-import org.ensodai.avalonmediacard.designsystem.components.AvalonText as Text
+import org.ensodai.avalonmediacard.designsystem.components.AvalonIcon
+import org.ensodai.avalonmediacard.designsystem.components.AvalonText
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -53,7 +53,7 @@ fun TvSeasonsSlotContent(
     ) {
         // === ЗАГОЛОВОК И КНОПКА "ОТМЕТИТЬ СЕЗОН" ===
 
-        Text(
+        AvalonText(
             modifier = Modifier
                 .shimmerPlaceholder(isLoading, RoundedCornerShape(4.dp))
                 .fillMaxWidth()
@@ -91,14 +91,14 @@ fun TvSeasonsSlotContent(
                     modifier = Modifier.padding(horizontal = 32.dp),
                     leadingIcon = { season ->
                         if (season.isFullyWatched) {
-                            Icon(
+                            AvalonIcon(
                                 imageVector = Lucide.CheckCheck,
                                 contentDescription = stringResource(Res.string.details_seasons_completed),
                                 tint = AvalonTheme.colors.statusLive,
                                 modifier = Modifier.size(15.dp)
                             )
                         } else if (season.isWatching) {
-                            Icon(
+                            AvalonIcon(
                                 imageVector = Lucide.Eye,
                                 contentDescription = stringResource(Res.string.details_seasons_watching),
                                 tint = AvalonTheme.colors.accentPrimary,
@@ -107,7 +107,7 @@ fun TvSeasonsSlotContent(
                         }
                     },
                     itemLabel = { season ->
-                        Text(
+                        AvalonText(
                             text = season.name,
                             style = AvalonTheme.typography.uiLabel,
                             fontWeight = if (season == selectedSeason) FontWeight.SemiBold else FontWeight.Medium
@@ -115,7 +115,7 @@ fun TvSeasonsSlotContent(
                     },
                     trailingBadge = { season ->
                         if (season.episodeCount > 0 && season != selectedSeason) {
-                            Text(
+                            AvalonText(
                                 text = "${season.episodeCount}",
                                 style = AvalonTheme.typography.monoTech,
                                 color = AvalonTheme.colors.textSecondary.copy(alpha = 0.6f)
@@ -207,14 +207,14 @@ fun TvSeasonsSlotContent(
                             contentAlignment = Alignment.Center
                         ) {
                             Row(verticalAlignment = Alignment.CenterVertically) {
-                                Text(
+                                AvalonText(
                                     text = stringResource(Res.string.details_seasons_show_all_fmt, episodes.size),
                                     color = Color.White,
                                     fontSize = 14.sp,
                                     fontWeight = FontWeight.Medium
                                 )
                                 Spacer(modifier = Modifier.width(8.dp))
-                                Icon(
+                                AvalonIcon(
                                     imageVector = Lucide.ChevronDown,
                                     contentDescription = null,
                                     tint = Color.White.copy(alpha = 0.5f),
@@ -225,7 +225,7 @@ fun TvSeasonsSlotContent(
                     }
 
                 } else {
-                    Text(
+                    AvalonText(
                         stringResource(Res.string.details_seasons_not_available),
                         color = Color.White.copy(alpha = 0.5f),
                         fontSize = 14.sp,
@@ -283,7 +283,7 @@ fun EpisodeListItem(
                     ,
                 contentAlignment = Alignment.Center
             ) {
-                Icon(checkIcon, contentDescription = null, tint = checkIconColor, modifier = Modifier.size(20.dp))
+                AvalonIcon(checkIcon, contentDescription = null, tint = checkIconColor, modifier = Modifier.size(20.dp))
             }
 
             Spacer(modifier = Modifier.height(12.dp))
@@ -302,10 +302,10 @@ fun EpisodeListItem(
                         
                         .padding(4.dp)
                 ) {
-                    Icon(Lucide.Star, contentDescription = null, tint = starColor, modifier = Modifier.size(20.dp))
+                    AvalonIcon(Lucide.Star, contentDescription = null, tint = starColor, modifier = Modifier.size(20.dp))
                     if (userRating != null) {
                         Spacer(modifier = Modifier.height(2.dp))
-                        Text(
+                        AvalonText(
                             text = userRating.toString(),
                             color = Color(0xFFFFC107),
                             fontSize = 12.sp,
@@ -371,7 +371,7 @@ fun EpisodeListItem(
                         modifier = Modifier.fillMaxSize()
                     )
                 } else {
-                    Icon(
+                    AvalonIcon(
                         imageVector = Lucide.Image,
                         contentDescription = null,
                         tint = Color.White.copy(alpha = 0.2f),
@@ -383,7 +383,7 @@ fun EpisodeListItem(
                         modifier = Modifier.fillMaxSize().background(Color.Black.copy(alpha = 0.5f)),
                         contentAlignment = Alignment.Center
                     ) {
-                        Icon(
+                        AvalonIcon(
                             imageVector = Lucide.Play,
                             contentDescription = "Play",
                             tint = Color.White,
@@ -405,7 +405,7 @@ fun EpisodeListItem(
                 )
 
                 // 1. ТОЛЬКО НАЗВАНИЕ
-                Text(
+                AvalonText(
                     text = "${episode.episodeNumber}. ${episode.name}",
                     fontSize = 16.sp,
                     fontWeight = FontWeight.Bold,
@@ -421,7 +421,7 @@ fun EpisodeListItem(
                 Row(verticalAlignment = Alignment.CenterVertically) {
                     // Дата
                     if (!episode.airDate.isNullOrEmpty()) {
-                        Text(
+                        AvalonText(
                             text = episode.airDate.toString(),
                             fontSize = 12.sp,
                             color = AvalonTheme.colors.primary
@@ -431,14 +431,14 @@ fun EpisodeListItem(
                     // Время
                     if (episode.runtime != null && episode.runtime?.let { it > 0 } == true) {
                         if (!episode.airDate.isNullOrEmpty()) {
-                            Text(
+                            AvalonText(
                                 text = " • ",
                                 color = Color.White.copy(alpha = 0.3f),
                                 fontSize = 12.sp,
                                 modifier = Modifier.padding(horizontal = 4.dp)
                             )
                         }
-                        Text(text = stringResource(Res.string.player_duration_mins_single_fmt, episode.runtime ?: 0), fontSize = 12.sp, color = Color.White.copy(alpha = 0.5f))
+                        AvalonText(text = stringResource(Res.string.player_duration_mins_single_fmt, episode.runtime ?: 0), fontSize = 12.sp, color = Color.White.copy(alpha = 0.5f))
                     }
 
                     // Рейтинг (ПЕРЕНЕСЕН СЮДА)
@@ -448,7 +448,7 @@ fun EpisodeListItem(
 
                         // Добавляем разделитель " • ", если перед рейтингом есть дата или время
                         if (!episode.airDate.isNullOrEmpty() || (episode.runtime != null && episode.runtime?.let { it > 0 } == true)) {
-                            Text(
+                            AvalonText(
                                 text = " • ",
                                 color = Color.White.copy(alpha = 0.3f),
                                 fontSize = 12.sp,
@@ -456,14 +456,14 @@ fun EpisodeListItem(
                             )
                         }
 
-                        Icon(
+                        AvalonIcon(
                             Lucide.Star,
                             contentDescription = null,
                             tint = Color(0xFFFFC107),
                             modifier = Modifier.size(12.dp)
                         )
                         Spacer(modifier = Modifier.width(4.dp))
-                        Text(
+                        AvalonText(
                             text = formattedRating,
                             color = Color.White.copy(alpha = 0.7f),
                             fontSize = 12.sp,
@@ -476,7 +476,7 @@ fun EpisodeListItem(
 
                 // 3. ОПИСАНИЕ
                 val overviewText = episode.overview.takeIf { !it.isNullOrEmpty() } ?: stringResource(Res.string.details_seasons_no_desc)
-                Text(
+                AvalonText(
                     text = overviewText,
                     fontSize = 13.sp,
                     lineHeight = 18.sp,
@@ -531,14 +531,14 @@ private fun MarkSeasonAsWatchedButton(isLoading: Boolean, component: SlotData.Tv
                     .padding(horizontal = 12.dp, vertical = 6.dp),
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                Icon(
+                AvalonIcon(
                     imageVector = Lucide.CheckCheck,
                     contentDescription = stringResource(Res.string.details_seasons_mark_season),
                     tint = buttonIconColor,
                     modifier = Modifier.size(16.dp)
                 )
                 Spacer(modifier = Modifier.width(8.dp))
-                Text(
+                AvalonText(
                     text = if (isSeasonWatched) stringResource(Res.string.player_watched) else stringResource(Res.string.details_seasons_mark_season),
                     color = buttonTextColor,
                     fontSize = 13.sp,

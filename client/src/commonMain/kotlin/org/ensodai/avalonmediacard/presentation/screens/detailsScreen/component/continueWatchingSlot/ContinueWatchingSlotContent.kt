@@ -3,7 +3,7 @@ package org.ensodai.avalonmediacard.presentation.screens.detailsScreen.component
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
-import org.ensodai.avalonmediacard.designsystem.components.AvalonText as Text
+import org.ensodai.avalonmediacard.designsystem.components.AvalonText
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -25,7 +25,7 @@ fun ContinueWatchingSlotContent(
     modifier: Modifier = Modifier
 ) {
     Column(modifier = modifier.padding(horizontal = 40.dp)) {
-        Text(
+        AvalonText(
             text = stringResource(Res.string.details_continue_watching),
             color = if (isLoading) Color.Transparent else Color.White,
             fontSize = 18.sp,
@@ -38,14 +38,14 @@ fun ContinueWatchingSlotContent(
             modifier = Modifier
                 .clickable(enabled = !isLoading) { data.playAction?.let { onAction(it) } }
         ) {
-            Text(
+            AvalonText(
                 text = data.title,
                 color = if (isLoading) Color.Transparent else Color.White,
                 modifier = Modifier.shimmerPlaceholder(isLoading, RoundedCornerShape(4.dp))
             )
             val prog = data.progressPercent
             if (prog != null || isLoading) {
-                Text(
+                AvalonText(
                     text = " - ${(prog ?: 0.5f * 100).toInt()}%",
                     color = if (isLoading) Color.Transparent else Color.Gray,
                     modifier = Modifier.shimmerPlaceholder(isLoading, RoundedCornerShape(4.dp))

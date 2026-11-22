@@ -9,8 +9,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.unit.dp
-import org.ensodai.avalonmediacard.designsystem.components.AvalonIcon as Icon
-import org.ensodai.avalonmediacard.designsystem.components.AvalonText as Text
+import org.ensodai.avalonmediacard.designsystem.components.AvalonIcon
+import org.ensodai.avalonmediacard.designsystem.components.AvalonText
 import org.ensodai.avalonmediacard.designsystem.theme.AvalonTheme
 import org.ensodai.avalonmediacard.presentation.screens.commonComponents.AvalonButton
 import org.ensodai.avalonmediacard.presentation.screens.commonComponents.tvAndWebHoverEffect
@@ -45,7 +45,7 @@ fun WatchRoomsActionCard(
                     .background(colors.accentPrimary.copy(alpha = 0.15f)),
                 contentAlignment = Alignment.Center
             ) {
-                Icon(
+                AvalonIcon(
                     imageVector = icon,
                     contentDescription = null,
                     tint = colors.accentPrimary,
@@ -54,12 +54,12 @@ fun WatchRoomsActionCard(
             }
 
             Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
-                Text(
+                AvalonText(
                     text = title,
                     style = typography.titleMedium,
                     color = colors.textPrimary
                 )
-                Text(
+                AvalonText(
                     text = subtitle,
                     style = typography.metadata,
                     color = colors.textSecondary

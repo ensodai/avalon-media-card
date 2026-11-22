@@ -5,9 +5,9 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.size
-import org.ensodai.avalonmediacard.designsystem.components.AvalonIcon as Icon
-import org.ensodai.avalonmediacard.designsystem.components.AvalonIconButton as IconButton
-import org.ensodai.avalonmediacard.designsystem.components.AvalonText as Text
+import org.ensodai.avalonmediacard.designsystem.components.AvalonIcon
+import org.ensodai.avalonmediacard.designsystem.components.AvalonIconButton
+import org.ensodai.avalonmediacard.designsystem.components.AvalonText
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -33,23 +33,23 @@ fun StatsHeader(
         verticalAlignment = Alignment.CenterVertically
     ) {
         Column {
-            Text(
+            AvalonText(
                 text = stringResource(Res.string.stats_screen_title),
                 style = AvalonTheme.typography.pageTitle,
                 color = colors.textPrimary
             )
-            Text(
+            AvalonText(
                 text = stringResource(Res.string.stats_screen_subtitle),
                 style = AvalonTheme.typography.bodyMedium,
                 color = colors.textSecondary
             )
         }
 
-        IconButton(
+        AvalonIconButton(
             onClick = onRefresh,
             enabled = !isLoading
         ) {
-            Icon(
+            AvalonIcon(
                 imageVector = Lucide.RefreshCw,
                 contentDescription = stringResource(Res.string.stats_refresh),
                 tint = if (isLoading) colors.textSecondary.copy(alpha = 0.4f) else colors.textPrimary,

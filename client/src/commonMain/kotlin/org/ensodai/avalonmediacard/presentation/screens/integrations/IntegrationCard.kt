@@ -1,12 +1,12 @@
 package org.ensodai.avalonmediacard.presentation.screens.integrations
 
 import org.ensodai.avalonmediacard.designsystem.theme.AvalonTheme
-import org.ensodai.avalonmediacard.designsystem.components.AvalonButton as Button
-import org.ensodai.avalonmediacard.designsystem.components.AvalonText as Text
+import org.ensodai.avalonmediacard.designsystem.components.AvalonButton
+import org.ensodai.avalonmediacard.designsystem.components.AvalonText
 import org.ensodai.avalonmediacard.designsystem.components.AvalonCircularProgressIndicator
 import org.ensodai.avalonmediacard.designsystem.components.ButtonDefaults
 import org.ensodai.avalonmediacard.designsystem.components.AvalonButtonColors
-import org.ensodai.avalonmediacard.designsystem.components.AvalonSwitch as Switch
+import org.ensodai.avalonmediacard.designsystem.components.AvalonSwitch
 
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.animateContentSize
@@ -114,7 +114,7 @@ private fun IntegrationCardInternal(
             verticalAlignment = Alignment.CenterVertically
         ) {
             Column(modifier = Modifier.weight(1f)) {
-                Text(
+                AvalonText(
                     text = component.title,
                     fontSize = 20.sp,
                     fontWeight = FontWeight.Bold,
@@ -122,7 +122,7 @@ private fun IntegrationCardInternal(
                 )
                 component.description?.let { desc ->
                     Spacer(modifier = Modifier.height(4.dp))
-                    Text(
+                    AvalonText(
                         text = desc,
                         fontSize = 14.sp,
                         color = descTextColor
@@ -178,7 +178,7 @@ private fun IntegrationCardInternal(
                     val executingAction = org.ensodai.avalonmediacard.presentation.core.LocalExecutingAction.current
                     val isExecuting = executingAction != null && executingAction::class == action::class
 
-                    Button(
+                    AvalonButton(
                         onClick = {
                             var enrichedAction = action
                             component.fields.filterIsInstance<SettingField.TextField>().forEach { field ->
@@ -209,7 +209,7 @@ private fun IntegrationCardInternal(
                                 strokeWidth = 2.dp
                             )
                         } else {
-                            Text(
+                            AvalonText(
                                 text = component.saveActionLabel ?: stringResource(Res.string.common_save),
                                 fontSize = 14.sp,
                                 fontWeight = FontWeight.SemiBold
@@ -265,14 +265,14 @@ private fun StatusBadge(status: ValidationStatus) {
         }
     }
 
-    Button(
+    AvalonButton(
         onClick = {},
         colors = badgeColors,
         contentPadding = PaddingValues(horizontal = 12.dp, vertical = 4.dp),
         modifier = Modifier.height(28.dp),
         enabled = false
     ) {
-        Text(text = statusText, fontSize = 12.sp, fontWeight = FontWeight.Bold)
+        AvalonText(text = statusText, fontSize = 12.sp, fontWeight = FontWeight.Bold)
     }
 }
 
@@ -288,13 +288,13 @@ private fun ToggleFieldRow(
         horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.CenterVertically
     ) {
-        Text(
+        AvalonText(
             text = field.label,
             color = Color.White,
             fontSize = 14.sp,
             modifier = Modifier.weight(1f).padding(end = 16.dp)
         )
-        Switch(
+        AvalonSwitch(
             checked = value,
             onCheckedChange = { newValue ->
                 onValueChange(newValue)
@@ -316,7 +316,7 @@ private fun TextFieldRow(
     textStates: Map<String, String> = emptyMap()
 ) {
     Column(modifier = Modifier.fillMaxWidth()) {
-        Text(
+        AvalonText(
             text = field.label,
             color = Color.White,
             fontSize = 14.sp,
@@ -350,7 +350,7 @@ private fun TextFieldRow(
                         contentAlignment = Alignment.CenterStart
                     ) {
                         if (value.isEmpty() && !field.placeholder.isNullOrEmpty()) {
-                            Text(
+                            AvalonText(
                                 text = field.placeholder.toString(),
                                 color = Color.White.copy(alpha = 0.5f),
                                 fontSize = 14.sp
@@ -369,7 +369,7 @@ private fun TextFieldRow(
                 val executingAction = org.ensodai.avalonmediacard.presentation.core.LocalExecutingAction.current
                 val isExecuting = executingAction != null && executingAction::class == action::class
 
-                Button(
+                AvalonButton(
                     onClick = {
                         var enrichedAction = action
                         allFields.forEach { f ->
@@ -388,7 +388,7 @@ private fun TextFieldRow(
                             strokeWidth = 2.dp
                         )
                     } else {
-                        Text(
+                        AvalonText(
                             text = stringResource(Res.string.integrations_check),
                             fontSize = 12.sp
                         )
@@ -403,7 +403,7 @@ private fun TextFieldRow(
                 ValidationStatus.Error -> androidx.compose.ui.graphics.Color(0xFFFF5252)
                 ValidationStatus.None, ValidationStatus.Pending -> androidx.compose.ui.graphics.Color.Gray.copy(alpha = 0.5f)
             }
-            Text(
+            AvalonText(
                 text = field.validationMessage.toString(),
                 color = color,
                 fontSize = 12.sp,
@@ -419,14 +419,14 @@ private fun InfoFieldRow(
     onAction: (Action) -> Unit
 ) {
     Column(modifier = Modifier.fillMaxWidth()) {
-        Text(
+        AvalonText(
             text = field.label,
             color = Color.White.copy(alpha = 0.7f),
             fontSize = 13.sp,
             fontWeight = FontWeight.SemiBold
         )
         Spacer(modifier = Modifier.height(4.dp))
-        Text(
+        AvalonText(
             text = field.description,
             color = Color.White.copy(alpha = 0.6f),
             fontSize = 13.sp,
@@ -434,7 +434,7 @@ private fun InfoFieldRow(
         )
         field.action?.let { action ->
             Spacer(modifier = Modifier.height(6.dp))
-            Text(
+            AvalonText(
                 text = field.actionLabel ?: stringResource(Res.string.integrations_details),
                 color = AvalonTheme.colors.primary,
                 fontSize = 13.sp,

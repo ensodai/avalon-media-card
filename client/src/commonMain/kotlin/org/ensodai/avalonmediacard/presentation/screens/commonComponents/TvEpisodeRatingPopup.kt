@@ -30,8 +30,8 @@ import avalonmediacard.client.generated.resources.*
 import com.composables.icons.lucide.Lucide
 import com.composables.icons.lucide.Star
 import org.ensodai.avalonmediacard.designsystem.components.AvalonDialog
-import org.ensodai.avalonmediacard.designsystem.components.AvalonIcon as Icon
-import org.ensodai.avalonmediacard.designsystem.components.AvalonText as Text
+import org.ensodai.avalonmediacard.designsystem.components.AvalonIcon
+import org.ensodai.avalonmediacard.designsystem.components.AvalonText
 import org.ensodai.avalonmediacard.designsystem.theme.AvalonTheme
 import org.jetbrains.compose.resources.stringResource
 
@@ -61,14 +61,14 @@ fun TvEpisodeRatingPopup(
             modifier = Modifier.padding(vertical = 16.dp)
         ) {
             // Заголовок и текущий рейтинг
-            Text(
+            AvalonText(
                 text = stringResource(Res.string.details_rating_my_title),
                 color = colors.textSecondary,
                 style = AvalonTheme.typography.sectionTitle,
                 modifier = Modifier.padding(bottom = 12.dp)
             )
 
-            Text(
+            AvalonText(
                 text = "$focusedRating / $maxRating",
                 style = AvalonTheme.typography.kpiHero,
                 fontSize = 44.sp,
@@ -111,7 +111,7 @@ fun TvEpisodeRatingPopup(
                                 .padding(6.dp),
                             contentAlignment = Alignment.Center
                         ) {
-                            Icon(
+                            AvalonIcon(
                                 imageVector = Lucide.Star,
                                 contentDescription = null,
                                 tint = starColor,
@@ -125,7 +125,7 @@ fun TvEpisodeRatingPopup(
             Spacer(modifier = Modifier.height(36.dp))
 
             // Подсказка для пользователя
-            Text(
+            AvalonText(
                 text = stringResource(Res.string.details_rating_tv_hint),
                 color = colors.textMuted,
                 style = AvalonTheme.typography.microCaption

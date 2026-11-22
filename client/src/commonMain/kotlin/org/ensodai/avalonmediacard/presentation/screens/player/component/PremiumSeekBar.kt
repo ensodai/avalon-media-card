@@ -14,7 +14,7 @@ import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.interaction.collectIsHoveredAsState
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
-import org.ensodai.avalonmediacard.designsystem.components.AvalonText as Text
+import org.ensodai.avalonmediacard.designsystem.components.AvalonText
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.onFocusChanged
@@ -298,7 +298,7 @@ fun PremiumSeekBar(
                     .border(1.dp, colors.borderOverlay, shapes.micro)
                     .padding(horizontal = 8.dp, vertical = 4.dp)
             ) {
-                Text(
+                AvalonText(
                     text = formatTime(tooltipTime),
                     color = colors.textPrimary,
                     style = AvalonTheme.typography.monoTech

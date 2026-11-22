@@ -13,9 +13,9 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
-import org.ensodai.avalonmediacard.designsystem.components.AvalonCircularProgressIndicator as CircularProgressIndicator
-import org.ensodai.avalonmediacard.designsystem.components.AvalonIcon as Icon
-import org.ensodai.avalonmediacard.designsystem.components.AvalonText as Text
+import org.ensodai.avalonmediacard.designsystem.components.AvalonCircularProgressIndicator
+import org.ensodai.avalonmediacard.designsystem.components.AvalonIcon
+import org.ensodai.avalonmediacard.designsystem.components.AvalonText
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -88,7 +88,7 @@ fun ParticipantPlayerItem(
                     ),
                 contentAlignment = Alignment.Center
             ) {
-                Text(
+                AvalonText(
                     text = participant.username.take(1).uppercase(),
                     fontSize = 13.sp,
                     fontWeight = FontWeight.Bold,
@@ -118,7 +118,7 @@ fun ParticipantPlayerItem(
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.spacedBy(5.dp)
             ) {
-                Text(
+                AvalonText(
                     text = participant.username,
                     fontSize = 13.sp,
                     fontWeight = FontWeight.SemiBold,
@@ -129,7 +129,7 @@ fun ParticipantPlayerItem(
                 )
 
                 if (isCurrentUser) {
-                    Text(
+                    AvalonText(
                         text = "(${stringResource(Res.string.watch_party_you)})",
                         fontSize = 10.sp,
                         fontWeight = FontWeight.Bold,
@@ -138,7 +138,7 @@ fun ParticipantPlayerItem(
                 }
 
                 if (isHost) {
-                    Text(
+                    AvalonText(
                         text = "👑",
                         fontSize = 11.sp
                     )
@@ -159,7 +159,7 @@ fun ParticipantPlayerItem(
             // Настроение / Интент (если указан отличный от дефолтного)
             if (participant.intent != WatchParticipantIntent.WATCHING_ATTENTIVELY) {
                 val intentLabel = stringResource(participant.intent.toLabelRes())
-                Text(
+                AvalonText(
                     text = intentLabel,
                     fontSize = 10.sp,
                     color = Color.White.copy(alpha = if (isOnline) 0.5f else 0.25f),
@@ -178,7 +178,7 @@ fun ParticipantPlaybackStatusRow(
     modifier: Modifier = Modifier
 ) {
     if (!isOnline || state == WatchRoomPlaybackState.OFFLINE) {
-        Text(
+        AvalonText(
             text = stringResource(Res.string.watch_party_participant_offline),
             fontSize = 11.sp,
             color = Color.White.copy(alpha = 0.35f),
@@ -194,12 +194,12 @@ fun ParticipantPlaybackStatusRow(
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.spacedBy(5.dp)
             ) {
-                CircularProgressIndicator(
+                AvalonCircularProgressIndicator(
                     modifier = Modifier.size(11.dp),
                     strokeWidth = 1.5.dp,
                     color = Color(0xFFFFB74D)
                 )
-                Text(
+                AvalonText(
                     text = stringResource(Res.string.watch_party_status_buffering),
                     fontSize = 11.sp,
                     fontWeight = FontWeight.Medium,
@@ -214,13 +214,13 @@ fun ParticipantPlaybackStatusRow(
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.spacedBy(4.dp)
             ) {
-                Icon(
+                AvalonIcon(
                     imageVector = Lucide.Play,
                     contentDescription = null,
                     tint = Color(0xFF4CAF50),
                     modifier = Modifier.size(11.dp)
                 )
-                Text(
+                AvalonText(
                     text = stringResource(Res.string.watch_party_status_playing),
                     fontSize = 11.sp,
                     fontWeight = FontWeight.Medium,
@@ -235,13 +235,13 @@ fun ParticipantPlaybackStatusRow(
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.spacedBy(4.dp)
             ) {
-                Icon(
+                AvalonIcon(
                     imageVector = Lucide.Pause,
                     contentDescription = null,
                     tint = Color(0xFF90CAF9),
                     modifier = Modifier.size(11.dp)
                 )
-                Text(
+                AvalonText(
                     text = stringResource(Res.string.watch_party_status_paused),
                     fontSize = 11.sp,
                     fontWeight = FontWeight.Medium,
@@ -256,13 +256,13 @@ fun ParticipantPlaybackStatusRow(
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.spacedBy(4.dp)
             ) {
-                Icon(
+                AvalonIcon(
                     imageVector = Lucide.Check,
                     contentDescription = null,
                     tint = Color(0xFF81C784),
                     modifier = Modifier.size(11.dp)
                 )
-                Text(
+                AvalonText(
                     text = stringResource(Res.string.watch_party_status_ready),
                     fontSize = 11.sp,
                     fontWeight = FontWeight.Medium,
@@ -272,7 +272,7 @@ fun ParticipantPlaybackStatusRow(
         }
 
         WatchRoomPlaybackState.OFFLINE -> {
-            Text(
+            AvalonText(
                 text = stringResource(Res.string.watch_party_participant_offline),
                 fontSize = 11.sp,
                 color = Color.White.copy(alpha = 0.35f),

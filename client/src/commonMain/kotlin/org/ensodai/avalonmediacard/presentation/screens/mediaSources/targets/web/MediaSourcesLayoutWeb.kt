@@ -26,9 +26,9 @@ import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
-import org.ensodai.avalonmediacard.designsystem.components.AvalonCircularProgressIndicator as CircularProgressIndicator
-import org.ensodai.avalonmediacard.designsystem.components.AvalonIcon as Icon
-import org.ensodai.avalonmediacard.designsystem.components.AvalonText as Text
+import org.ensodai.avalonmediacard.designsystem.components.AvalonCircularProgressIndicator
+import org.ensodai.avalonmediacard.designsystem.components.AvalonIcon
+import org.ensodai.avalonmediacard.designsystem.components.AvalonText
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -111,14 +111,14 @@ fun MediaSourcesLayoutWeb(
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Row(verticalAlignment = Alignment.CenterVertically) {
-                    Icon(
+                    AvalonIcon(
                         Lucide.MonitorPlay,
                         contentDescription = null,
                         tint = AvalonTheme.colors.primary,
                         modifier = Modifier.size(24.dp)
                     )
                     Spacer(modifier = Modifier.width(12.dp))
-                    Text(
+                    AvalonText(
                         text = stringResource(Res.string.details_sources_select),
                         color = Color.White,
                         fontSize = 16.sp,
@@ -142,7 +142,7 @@ fun MediaSourcesLayoutWeb(
                             .background(if (state.isAddTorrentMode) AvalonTheme.colors.primary else Color.White.copy(alpha = 0.05f)),
                         contentAlignment = Alignment.Center
                     ) {
-                        Icon(
+                        AvalonIcon(
                             Lucide.FileUp,
                             contentDescription = stringResource(Res.string.details_sources_add_torrent),
                             tint = if (state.isAddTorrentMode) AvalonTheme.colors.onPrimary else Color.White.copy(alpha = 0.8f),
@@ -159,7 +159,7 @@ fun MediaSourcesLayoutWeb(
                             .background(Color.White.copy(alpha = 0.05f)),
                         contentAlignment = Alignment.Center
                     ) {
-                        Icon(
+                        AvalonIcon(
                             Lucide.RotateCw,
                             contentDescription = stringResource(Res.string.details_sources_refresh),
                             tint = Color.White.copy(alpha = 0.8f),
@@ -176,7 +176,7 @@ fun MediaSourcesLayoutWeb(
                             .background(Color.White.copy(alpha = 0.05f)),
                         contentAlignment = Alignment.Center
                     ) {
-                        Icon(
+                        AvalonIcon(
                             Lucide.X,
                             contentDescription = stringResource(Res.string.common_close),
                             tint = Color.White.copy(alpha = 0.8f),
@@ -203,19 +203,19 @@ fun MediaSourcesLayoutWeb(
                             horizontalAlignment = Alignment.CenterHorizontally,
                             verticalArrangement = Arrangement.spacedBy(16.dp)
                         ) {
-                            CircularProgressIndicator(
+                            AvalonCircularProgressIndicator(
                                 modifier = Modifier.size(44.dp),
                                 color = AvalonTheme.colors.primary,
                                 strokeWidth = 3.dp
                             )
-                            Text(
+                            AvalonText(
                                 text = stringResource(Res.string.details_sources_torrent_processing),
                                 color = Color.White,
                                 fontSize = 18.sp,
                                 fontWeight = FontWeight.Bold
                             )
                             state.uploadingFileName?.let { fname ->
-                                Text(
+                                AvalonText(
                                     text = fname,
                                     color = AvalonTheme.colors.primary,
                                     fontSize = 14.sp,
@@ -225,7 +225,7 @@ fun MediaSourcesLayoutWeb(
                                     textAlign = TextAlign.Center
                                 )
                             }
-                            Text(
+                            AvalonText(
                                 text = stringResource(Res.string.details_sources_torrent_analyzing),
                                 color = Color.White.copy(alpha = 0.5f),
                                 fontSize = 13.sp,
@@ -243,26 +243,26 @@ fun MediaSourcesLayoutWeb(
                                     .background(AvalonTheme.colors.primary.copy(alpha = 0.1f), CircleShape),
                                 contentAlignment = Alignment.Center
                             ) {
-                                Icon(
+                                AvalonIcon(
                                     Lucide.FileUp,
                                     contentDescription = null,
                                     tint = AvalonTheme.colors.primary,
                                     modifier = Modifier.size(32.dp)
                                 )
                             }
-                            Text(
+                            AvalonText(
                                 text = stringResource(Res.string.details_sources_upload_torrent_title),
                                 color = Color.White,
                                 fontSize = 18.sp,
                                 fontWeight = FontWeight.Bold
                             )
-                            Text(
+                            AvalonText(
                                 text = stringResource(Res.string.details_sources_upload_torrent_desc),
                                 color = Color.White.copy(alpha = 0.5f),
                                 fontSize = 14.sp
                             )
                             state.uploadErrorMessage?.let { err ->
-                                Text(
+                                AvalonText(
                                     text = err,
                                     color = AvalonTheme.colors.error,
                                     fontSize = 13.sp,
@@ -276,7 +276,7 @@ fun MediaSourcesLayoutWeb(
                                     .background(AvalonTheme.colors.primary)
                                     .padding(horizontal = 24.dp, vertical = 12.dp)
                             ) {
-                                Text(
+                                AvalonText(
                                     text = stringResource(Res.string.details_sources_select_file),
                                     color = AvalonTheme.colors.onPrimary,
                                     fontWeight = FontWeight.Bold,
@@ -385,7 +385,7 @@ fun MediaSourcesLayoutWeb(
                             modifier = Modifier.fillMaxSize(),
                             contentAlignment = Alignment.Center
                         ) {
-                            Text(
+                            AvalonText(
                                 text = stringResource(Res.string.details_sources_not_found),
                                 color = Color.White.copy(alpha = 0.5f),
                                 fontSize = 16.sp

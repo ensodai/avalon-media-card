@@ -8,7 +8,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import org.ensodai.avalonmediacard.designsystem.components.AvalonText as Text
+import org.ensodai.avalonmediacard.designsystem.components.AvalonText
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -42,7 +42,7 @@ fun UserMediaListScreen(
                     .padding(horizontal = 16.dp)
                     .padding(top = 16.dp)
             ) {
-                Text(
+                AvalonText(
                     text = screen.title,
                     fontSize = 24.sp,
                     fontWeight = FontWeight.Bold,

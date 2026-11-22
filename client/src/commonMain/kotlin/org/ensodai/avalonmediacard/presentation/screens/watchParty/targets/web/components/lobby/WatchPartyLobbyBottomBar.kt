@@ -11,9 +11,9 @@ import androidx.compose.ui.unit.sp
 import avalonmediacard.client.generated.resources.*
 import com.composables.icons.lucide.Lucide
 import com.composables.icons.lucide.Play
-import org.ensodai.avalonmediacard.designsystem.components.AvalonCircularProgressIndicator as CircularProgressIndicator
-import org.ensodai.avalonmediacard.designsystem.components.AvalonIcon as Icon
-import org.ensodai.avalonmediacard.designsystem.components.AvalonText as Text
+import org.ensodai.avalonmediacard.designsystem.components.AvalonCircularProgressIndicator
+import org.ensodai.avalonmediacard.designsystem.components.AvalonIcon
+import org.ensodai.avalonmediacard.designsystem.components.AvalonText
 import org.ensodai.avalonmediacard.designsystem.theme.AvalonTheme
 import org.ensodai.avalonmediacard.presentation.screens.commonComponents.tvAndWebHoverEffect
 import org.jetbrains.compose.resources.stringResource
@@ -53,7 +53,7 @@ fun WatchPartyLobbyBottomBar(
                 .padding(horizontal = 18.dp),
             contentAlignment = Alignment.Center
         ) {
-            Text(
+            AvalonText(
                 text = stringResource(Res.string.watch_party_btn_leave),
                 style = typography.uiLabel,
                 color = colors.textSecondary
@@ -78,20 +78,20 @@ fun WatchPartyLobbyBottomBar(
                 horizontalArrangement = Arrangement.Center
             ) {
                 if (isStartingPlayback) {
-                    CircularProgressIndicator(
+                    AvalonCircularProgressIndicator(
                         modifier = Modifier.size(18.dp),
                         color = colors.onAccentPrimary,
                         strokeWidth = 2.dp
                     )
                 } else {
-                    Icon(
+                    AvalonIcon(
                         imageVector = Lucide.Play,
                         contentDescription = null,
                         tint = colors.onAccentPrimary,
                         modifier = Modifier.size(16.dp)
                     )
                     Spacer(modifier = Modifier.width(8.dp))
-                    Text(
+                    AvalonText(
                         text = if (totalCount > 0) {
                             "${stringResource(Res.string.watch_party_btn_start_playback)} ($readyCount/$totalCount)"
                         } else {
@@ -111,7 +111,7 @@ fun WatchPartyLobbyBottomBar(
                     .background(colors.bgElevated),
                 contentAlignment = Alignment.Center
             ) {
-                Text(
+                AvalonText(
                     text = if (totalCount > 0) {
                         "${stringResource(Res.string.watch_party_waiting_host)} ($readyCount/$totalCount)"
                     } else {

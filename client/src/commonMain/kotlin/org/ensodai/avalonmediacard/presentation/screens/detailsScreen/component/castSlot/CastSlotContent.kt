@@ -12,7 +12,7 @@ import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.RoundedCornerShape
-import org.ensodai.avalonmediacard.designsystem.components.AvalonText as Text
+import org.ensodai.avalonmediacard.designsystem.components.AvalonText
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -61,7 +61,7 @@ fun CastSlotContent(
             .padding(vertical = 24.dp)
     ) {
         // Заголовок (Отступы 40.dp, чтобы выровнять с каруселью фильмов и комментариями)
-        Text(
+        AvalonText(
             text = component.title,
             fontSize = 18.sp,
             fontWeight = FontWeight.SemiBold,

@@ -12,9 +12,9 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
-import org.ensodai.avalonmediacard.designsystem.components.AvalonCircularProgressIndicator as CircularProgressIndicator
-import org.ensodai.avalonmediacard.designsystem.components.AvalonIcon as Icon
-import org.ensodai.avalonmediacard.designsystem.components.AvalonText as Text
+import org.ensodai.avalonmediacard.designsystem.components.AvalonCircularProgressIndicator
+import org.ensodai.avalonmediacard.designsystem.components.AvalonIcon
+import org.ensodai.avalonmediacard.designsystem.components.AvalonText
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -67,7 +67,7 @@ fun AdminUsersTab(
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
                 Column {
-                    Text(
+                    AvalonText(
                         text = stringResource(Res.string.admin_users_title),
                         fontSize = 18.sp,
                         fontWeight = FontWeight.Bold,
@@ -75,7 +75,7 @@ fun AdminUsersTab(
                     )
                     Spacer(modifier = Modifier.height(4.dp))
                     val adminCount = state.users.count { it.role == UserRole.ADMIN }
-                    Text(
+                    AvalonText(
                         text = stringResource(Res.string.admin_users_count_summary, state.users.size, adminCount, state.users.size - adminCount),
                         fontSize = 13.sp,
                         color = AvalonTheme.colors.onSurfaceVariant
@@ -114,13 +114,13 @@ fun AdminUsersTab(
                         verticalAlignment = Alignment.CenterVertically,
                         horizontalArrangement = Arrangement.spacedBy(10.dp)
                     ) {
-                        Icon(
+                        AvalonIcon(
                             imageVector = Lucide.UserPlus,
                             contentDescription = null,
                             tint = AvalonTheme.colors.primary,
                             modifier = Modifier.size(24.dp)
                         )
-                        Text(
+                        AvalonText(
                             text = stringResource(Res.string.admin_users_create_title),
                             fontSize = 18.sp,
                             fontWeight = FontWeight.Bold,
@@ -139,7 +139,7 @@ fun AdminUsersTab(
                             onValueChange = actions.onUsernameChanged,
                             placeholder = stringResource(Res.string.admin_users_placeholder_username),
                             leadingIcon = {
-                                Icon(
+                                AvalonIcon(
                                     imageVector = Lucide.User,
                                     contentDescription = null,
                                     tint = AvalonTheme.colors.onSurfaceVariant,
@@ -155,7 +155,7 @@ fun AdminUsersTab(
                             placeholder = stringResource(Res.string.admin_users_placeholder_password),
                             visualTransformation = PasswordVisualTransformation(),
                             leadingIcon = {
-                                Icon(
+                                AvalonIcon(
                                     imageVector = Lucide.Lock,
                                     contentDescription = null,
                                     tint = AvalonTheme.colors.onSurfaceVariant,
@@ -168,7 +168,7 @@ fun AdminUsersTab(
 
                     if (state.error != null) {
                         Spacer(modifier = Modifier.height(12.dp))
-                        Text(
+                        AvalonText(
                             text = state.error,
                             color = AvalonTheme.colors.error,
                             fontSize = 14.sp
@@ -177,7 +177,7 @@ fun AdminUsersTab(
 
                     if (state.successMessage != null) {
                         Spacer(modifier = Modifier.height(12.dp))
-                        Text(
+                        AvalonText(
                             text = state.successMessage,
                             color = AvalonTheme.colors.primary,
                             fontSize = 14.sp
@@ -210,7 +210,7 @@ fun AdminUsersTab(
                         .height(200.dp),
                     contentAlignment = Alignment.Center
                 ) {
-                    CircularProgressIndicator(color = AvalonTheme.colors.primary)
+                    AvalonCircularProgressIndicator(color = AvalonTheme.colors.primary)
                 }
             }
         } else if (state.usersError != null) {
@@ -221,7 +221,7 @@ fun AdminUsersTab(
                         .height(200.dp),
                     contentAlignment = Alignment.Center
                 ) {
-                    Text(
+                    AvalonText(
                         text = state.usersError,
                         color = AvalonTheme.colors.error,
                         fontSize = 15.sp
@@ -236,7 +236,7 @@ fun AdminUsersTab(
                         .height(150.dp),
                     contentAlignment = Alignment.Center
                 ) {
-                    Text(
+                    AvalonText(
                         text = stringResource(Res.string.admin_users_not_found),
                         color = AvalonTheme.colors.onSurfaceVariant,
                         fontSize = 15.sp
@@ -280,7 +280,7 @@ fun AdminUsersTab(
                                 ),
                             contentAlignment = Alignment.Center
                         ) {
-                            Icon(
+                            AvalonIcon(
                                 imageVector = if (isAdmin) Lucide.ShieldCheck else Lucide.User,
                                 contentDescription = null,
                                 tint = if (isAdmin) AvalonTheme.colors.primary else AvalonTheme.colors.onSurfaceVariant,
@@ -293,7 +293,7 @@ fun AdminUsersTab(
                                 verticalAlignment = Alignment.CenterVertically,
                                 horizontalArrangement = Arrangement.spacedBy(8.dp)
                             ) {
-                                Text(
+                                AvalonText(
                                     text = user.username,
                                     fontSize = 17.sp,
                                     fontWeight = FontWeight.Bold,
@@ -312,7 +312,7 @@ fun AdminUsersTab(
                                             )
                                             .padding(horizontal = 8.dp, vertical = 2.dp)
                                     ) {
-                                        Text(
+                                        AvalonText(
                                             text = stringResource(Res.string.admin_users_you_badge),
                                             fontSize = 11.sp,
                                             fontWeight = FontWeight.Bold,
@@ -342,7 +342,7 @@ fun AdminUsersTab(
                                         )
                                         .padding(horizontal = 8.dp, vertical = 2.dp)
                                     ) {
-                                        Text(
+                                        AvalonText(
                                             text = user.role.name,
                                             fontSize = 11.sp,
                                             fontWeight = FontWeight.SemiBold,
@@ -366,7 +366,7 @@ fun AdminUsersTab(
                                         )
                                         .padding(horizontal = 8.dp, vertical = 2.dp)
                                 ) {
-                                    Text(
+                                    AvalonText(
                                         text = user.status.name,
                                         fontSize = 11.sp,
                                         fontWeight = FontWeight.SemiBold,
@@ -459,13 +459,13 @@ private fun AdminActionButton(
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.spacedBy(6.dp)
     ) {
-        Icon(
+        AvalonIcon(
             imageVector = icon,
             contentDescription = null,
             tint = tint,
             modifier = Modifier.size(16.dp)
         )
-        Text(
+        AvalonText(
             text = text,
             fontSize = 13.sp,
             fontWeight = FontWeight.Medium,

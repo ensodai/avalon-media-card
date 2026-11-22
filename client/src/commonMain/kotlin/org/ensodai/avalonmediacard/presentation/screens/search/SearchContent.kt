@@ -10,7 +10,7 @@ import avalonmediacard.client.generated.resources.*
 import com.composables.icons.lucide.Lucide
 import com.composables.icons.lucide.Search
 import org.ensodai.avalonmediacard.contract.slot.Action
-import org.ensodai.avalonmediacard.designsystem.components.AvalonIcon as Icon
+import org.ensodai.avalonmediacard.designsystem.components.AvalonIcon
 import org.ensodai.avalonmediacard.designsystem.theme.AvalonTheme
 import org.ensodai.avalonmediacard.presentation.components.mediaGridSlot.MediaGridSlot
 import org.ensodai.avalonmediacard.presentation.screens.commonComponents.AvalonTextField
@@ -47,7 +47,7 @@ fun SearchContent(
                 initialFocus = true,
                 placeholder = stringResource(Res.string.search_placeholder),
                 leadingIcon = {
-                    Icon(
+                    AvalonIcon(
                         Lucide.Search,
                         contentDescription = stringResource(Res.string.search_btn),
                         tint = AvalonTheme.colors.textSecondary,

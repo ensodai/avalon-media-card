@@ -7,7 +7,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
-import org.ensodai.avalonmediacard.designsystem.components.AvalonText as Text
+import org.ensodai.avalonmediacard.designsystem.components.AvalonText
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -36,7 +36,7 @@ fun DynamicContent(
                 .padding(horizontal = 16.dp)
                 .padding(top = 16.dp)
         ) {
-            Text(
+            AvalonText(
                 text = title,
                 fontSize = 24.sp,
                 fontWeight = FontWeight.Bold,

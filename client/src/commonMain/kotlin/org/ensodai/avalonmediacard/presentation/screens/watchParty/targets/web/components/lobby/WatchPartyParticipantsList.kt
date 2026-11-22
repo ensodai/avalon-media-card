@@ -3,7 +3,7 @@ package org.ensodai.avalonmediacard.presentation.screens.watchParty.targets.web.
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import org.ensodai.avalonmediacard.designsystem.components.AvalonText as Text
+import org.ensodai.avalonmediacard.designsystem.components.AvalonText
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -24,7 +24,7 @@ fun WatchPartyParticipantsList(
         modifier = modifier.fillMaxWidth(),
         verticalArrangement = Arrangement.spacedBy(8.dp)
     ) {
-        Text(
+        AvalonText(
             text = stringResource(Res.string.watch_party_participants_label, participants.size),
             fontSize = 11.sp,
             fontWeight = FontWeight.Bold,

@@ -16,7 +16,7 @@ import avalonmediacard.client.generated.resources.*
 import org.ensodai.avalonmediacard.contract.model.WatchParticipantIntent
 import org.ensodai.avalonmediacard.contract.model.WatchRoomParticipantDto
 import org.ensodai.avalonmediacard.contract.model.WatchRoomParticipantRole
-import org.ensodai.avalonmediacard.designsystem.components.AvalonText as Text
+import org.ensodai.avalonmediacard.designsystem.components.AvalonText
 import org.ensodai.avalonmediacard.designsystem.theme.AvalonTheme
 import org.jetbrains.compose.resources.StringResource
 import org.jetbrains.compose.resources.stringResource
@@ -119,7 +119,7 @@ fun WatchPartyParticipantItem(
                         .background(visualState.avatarBackground),
                     contentAlignment = Alignment.Center
                 ) {
-                    Text(
+                    AvalonText(
                         text = participant.username.take(1).uppercase(),
                         style = typography.uiLabel,
                         fontSize = 12.sp,
@@ -145,13 +145,13 @@ fun WatchPartyParticipantItem(
                     verticalAlignment = Alignment.CenterVertically,
                     horizontalArrangement = Arrangement.spacedBy(6.dp)
                 ) {
-                    Text(
+                    AvalonText(
                         text = participant.username,
                         style = typography.uiLabel,
                         color = colors.textPrimary.copy(alpha = visualState.rowAlpha)
                     )
                     if (isHost) {
-                        Text(
+                        AvalonText(
                             text = "👑 " + stringResource(Res.string.watch_party_host_badge),
                             style = typography.microCaption,
                             fontWeight = FontWeight.Bold,
@@ -159,14 +159,14 @@ fun WatchPartyParticipantItem(
                         )
                     }
                     if (!isOnline) {
-                        Text(
+                        AvalonText(
                             text = "• " + stringResource(Res.string.watch_party_participant_offline),
                             style = typography.microCaption,
                             color = colors.textMuted
                         )
                     }
                 }
-                Text(
+                AvalonText(
                     text = if (isReady) {
                         "${intentToEmoji(participant.intent)} $intentLabel"
                     } else {
@@ -186,7 +186,7 @@ fun WatchPartyParticipantItem(
                 .background(visualState.readyBadgeBackground)
                 .padding(horizontal = 8.dp, vertical = 4.dp)
         ) {
-            Text(
+            AvalonText(
                 text = if (isReady) stringResource(Res.string.watch_party_ready_status_ready) else stringResource(Res.string.watch_party_ready_status_not_ready),
                 style = typography.microCaption,
                 color = visualState.readyBadgeTextColor

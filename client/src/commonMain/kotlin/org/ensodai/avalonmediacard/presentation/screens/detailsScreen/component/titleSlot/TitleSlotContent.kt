@@ -3,7 +3,7 @@ package org.ensodai.avalonmediacard.presentation.screens.detailsScreen.component
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
-import org.ensodai.avalonmediacard.designsystem.components.AvalonText as Text
+import org.ensodai.avalonmediacard.designsystem.components.AvalonText
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -21,7 +21,7 @@ fun TitleSlotContent(
     modifier: Modifier = Modifier
 ) {
     Column(modifier = modifier) {
-        Text(
+        AvalonText(
             text = data.title,
             fontSize = 32.sp,
             fontWeight = FontWeight.ExtraBold,
@@ -34,7 +34,7 @@ fun TitleSlotContent(
             val titleText =
                 if (isLoading && originalTitle.isNullOrEmpty()) "Original Title Placeholder" else (originalTitle
                     ?: "")
-            Text(
+            AvalonText(
                 text = titleText,
                 fontSize = 18.sp,
                 fontWeight = FontWeight.SemiBold,
@@ -51,7 +51,7 @@ fun TitleSlotContent(
                     "«",
                     ""
                 )?.replace("»", "")?.trim() ?: "")
-            Text(
+            AvalonText(
                 text = taglineText,
                 fontSize = 15.sp,
                 fontStyle = FontStyle.Italic,

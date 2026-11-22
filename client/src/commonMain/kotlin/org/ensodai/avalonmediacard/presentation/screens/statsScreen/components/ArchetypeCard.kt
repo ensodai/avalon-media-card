@@ -13,9 +13,9 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import org.ensodai.avalonmediacard.designsystem.components.AvalonBentoCard
-import org.ensodai.avalonmediacard.designsystem.components.AvalonIcon as Icon
-import org.ensodai.avalonmediacard.designsystem.components.AvalonSurface as Surface
-import org.ensodai.avalonmediacard.designsystem.components.AvalonText as Text
+import org.ensodai.avalonmediacard.designsystem.components.AvalonIcon
+import org.ensodai.avalonmediacard.designsystem.components.AvalonSurface
+import org.ensodai.avalonmediacard.designsystem.components.AvalonText
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -70,7 +70,7 @@ fun ArchetypeCard(
     AvalonBentoCard(
         title = stringResource(Res.string.stats_archetype_badge),
         icon = {
-            Icon(
+            AvalonIcon(
                 imageVector = Lucide.Clapperboard,
                 contentDescription = null,
                 tint = colors.textSecondary,
@@ -79,7 +79,7 @@ fun ArchetypeCard(
         },
         trailingHeader = if (archetype != null) {
             {
-                Surface(
+                AvalonSurface(
                     onClick = onShare,
                     shape = shapes.control,
                     color = colors.bgElevated
@@ -88,14 +88,14 @@ fun ArchetypeCard(
                         verticalAlignment = Alignment.CenterVertically,
                         modifier = Modifier.padding(horizontal = 10.dp, vertical = 5.dp)
                     ) {
-                        Icon(
+                        AvalonIcon(
                             imageVector = Lucide.Share2,
                             contentDescription = null,
                             tint = colors.textSecondary,
                             modifier = Modifier.size(12.dp)
                         )
                         Spacer(modifier = Modifier.width(6.dp))
-                        Text(
+                        AvalonText(
                             text = stringResource(Res.string.stats_archetype_share),
                             style = AvalonTheme.typography.labelSmall,
                             fontWeight = FontWeight.SemiBold,
@@ -109,7 +109,7 @@ fun ArchetypeCard(
         contentPadding = 24.dp
     ) {
         // Название архетипа
-        Text(
+        AvalonText(
             text = title,
             style = AvalonTheme.typography.kpiTile,
             color = colors.textPrimary
@@ -117,11 +117,11 @@ fun ArchetypeCard(
 
         // Подзаголовок-наножанр
         Spacer(modifier = Modifier.height(4.dp))
-        Surface(
+        AvalonSurface(
             shape = shapes.control,
             color = colors.bgElevated
         ) {
-            Text(
+            AvalonText(
                 text = subtitle,
                 style = AvalonTheme.typography.metadata,
                 color = colors.textSecondary,
@@ -131,7 +131,7 @@ fun ArchetypeCard(
 
         Spacer(modifier = Modifier.height(12.dp))
 
-        Text(
+        AvalonText(
             text = description,
             style = AvalonTheme.typography.bodySynopsis,
             color = colors.textSecondary

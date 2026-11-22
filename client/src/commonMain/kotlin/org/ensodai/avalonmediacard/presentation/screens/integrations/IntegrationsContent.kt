@@ -8,7 +8,7 @@ import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.GridItemSpan
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
-import org.ensodai.avalonmediacard.designsystem.components.AvalonText as Text
+import org.ensodai.avalonmediacard.designsystem.components.AvalonText
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
@@ -37,14 +37,14 @@ fun IntegrationsContent(
     ) {
         item(span = { GridItemSpan(maxLineSpan) }) {
             Column {
-                Text(
+                AvalonText(
                     text = stringResource(Res.string.integrations_title),
                     fontSize = 28.sp,
                     fontWeight = FontWeight.Bold,
                     color = AvalonTheme.colors.onBackground
                 )
                 Spacer(modifier = Modifier.height(8.dp))
-                Text(
+                AvalonText(
                     text = stringResource(Res.string.integrations_subtitle),
                     fontSize = 14.sp,
                     color = AvalonTheme.colors.onSurfaceVariant

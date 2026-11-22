@@ -7,7 +7,7 @@ import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
-import org.ensodai.avalonmediacard.designsystem.components.AvalonText as Text
+import org.ensodai.avalonmediacard.designsystem.components.AvalonText
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.produceState
@@ -155,7 +155,7 @@ fun WatchRoomSummaryCard(
                                 val timeStr = if (currentPositionSeconds > 0L) {
                                     " • ${formatTimeSeconds(currentPositionSeconds)}"
                                 } else ""
-                                Text(
+                                AvalonText(
                                     text = "${stringResource(Res.string.watch_party_live_badge)}$timeStr",
                                     fontSize = 11.sp,
                                     fontWeight = FontWeight.Bold,
@@ -177,7 +177,7 @@ fun WatchRoomSummaryCard(
                             } else {
                                 stringResource(Res.string.watch_party_status_paused)
                             }
-                            Text(
+                            AvalonText(
                                 text = pauseLabel,
                                 fontSize = 11.sp,
                                 fontWeight = FontWeight.Medium,
@@ -193,7 +193,7 @@ fun WatchRoomSummaryCard(
                                 .border(1.dp, Color(0xFFFF9800).copy(alpha = 0.60f), RoundedCornerShape(6.dp))
                                 .padding(horizontal = 8.dp, vertical = 3.dp)
                         ) {
-                            Text(
+                            AvalonText(
                                 text = stringResource(Res.string.watch_party_status_buffering),
                                 fontSize = 11.sp,
                                 fontWeight = FontWeight.Medium,
@@ -216,7 +216,7 @@ fun WatchRoomSummaryCard(
                             .border(AvalonTheme.elevation.borderWidth, AvalonTheme.colors.accentPrimary.copy(alpha = 0.50f), AvalonTheme.shapes.micro)
                             .padding(horizontal = 7.dp, vertical = 3.dp)
                     ) {
-                        Text(
+                        AvalonText(
                             text = stringResource(Res.string.watch_party_host_badge),
                             style = AvalonTheme.typography.microCaption,
                             fontWeight = FontWeight.Bold,
@@ -229,7 +229,7 @@ fun WatchRoomSummaryCard(
             // Нижний блок: Заголовок + Метаданные + Социальная строка
             Column(verticalArrangement = Arrangement.spacedBy(6.dp)) {
                 // Название комнаты
-                Text(
+                AvalonText(
                     text = room.title,
                     fontSize = 17.sp,
                     fontWeight = FontWeight.Bold,
@@ -257,7 +257,7 @@ fun WatchRoomSummaryCard(
                 }
 
                 if (subtitleText.isNotBlank()) {
-                    Text(
+                    AvalonText(
                         text = subtitleText,
                         fontSize = 13.sp,
                         color = Color.White.copy(alpha = 0.75f),
@@ -293,7 +293,7 @@ fun WatchRoomSummaryCard(
                                         .border(1.5.dp, AvalonTheme.colors.bgCanvas, CircleShape),
                                     contentAlignment = Alignment.Center
                                 ) {
-                                    Text(
+                                    AvalonText(
                                         text = "+$remaining",
                                         fontSize = 9.sp,
                                         fontWeight = FontWeight.Bold,
@@ -318,7 +318,7 @@ fun WatchRoomSummaryCard(
                         }
                     }
 
-                    Text(
+                    AvalonText(
                         text = participantsLabel,
                         fontSize = 12.sp,
                         fontWeight = if (hasOnline) FontWeight.Medium else FontWeight.Normal,
@@ -356,7 +356,7 @@ private fun ParticipantMiniAvatar(
                 .border(1.5.dp, AvalonTheme.colors.bgCanvas, CircleShape),
             contentAlignment = Alignment.Center
         ) {
-            Text(
+            AvalonText(
                 text = participant.username.take(1).uppercase(),
                 fontSize = 10.sp,
                 fontWeight = FontWeight.Bold,

@@ -11,8 +11,8 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.focusGroup
 import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.*
-import org.ensodai.avalonmediacard.designsystem.components.AvalonIcon as Icon
-import org.ensodai.avalonmediacard.designsystem.components.AvalonText as Text
+import org.ensodai.avalonmediacard.designsystem.components.AvalonIcon
+import org.ensodai.avalonmediacard.designsystem.components.AvalonText
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
@@ -248,7 +248,7 @@ fun AvalonTvRightDrawerHost(
                                                 verticalAlignment = Alignment.CenterVertically
                                             ) {
                                                 if (screen.icon != null) {
-                                                    Icon(
+                                                    AvalonIcon(
                                                         imageVector = screen.icon!!,
                                                         contentDescription = null,
                                                         tint = AvalonTheme.colors.accentPrimary,
@@ -258,7 +258,7 @@ fun AvalonTvRightDrawerHost(
                                                 }
 
                                                 Column(modifier = Modifier.weight(1f)) {
-                                                    Text(
+                                                    AvalonText(
                                                         text = screen.title,
                                                         color = AvalonTheme.colors.textPrimary,
                                                         style = AvalonTheme.typography.sectionTitle,
@@ -266,7 +266,7 @@ fun AvalonTvRightDrawerHost(
                                                         overflow = TextOverflow.Ellipsis
                                                     )
                                                     if (screen.subtitle != null) {
-                                                        Text(
+                                                        AvalonText(
                                                             text = screen.subtitle!!,
                                                             color = AvalonTheme.colors.textSecondary,
                                                             style = AvalonTheme.typography.metadata,

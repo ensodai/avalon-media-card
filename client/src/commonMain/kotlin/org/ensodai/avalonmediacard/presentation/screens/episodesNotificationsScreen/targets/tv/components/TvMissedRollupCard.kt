@@ -18,8 +18,8 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
-import org.ensodai.avalonmediacard.designsystem.components.AvalonIcon as Icon
-import org.ensodai.avalonmediacard.designsystem.components.AvalonText as Text
+import org.ensodai.avalonmediacard.designsystem.components.AvalonIcon
+import org.ensodai.avalonmediacard.designsystem.components.AvalonText
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -94,14 +94,14 @@ fun TvMissedRollupCard(
             Row(
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                Icon(
+                AvalonIcon(
                     imageVector = Lucide.Folder,
                     contentDescription = null,
                     tint = AvalonTheme.colors.primary,
                     modifier = Modifier.size(16.dp)
                 )
                 Spacer(modifier = Modifier.width(6.dp))
-                Text(
+                AvalonText(
                     text = rollup.showTitle,
                     fontSize = 16.sp,
                     fontWeight = FontWeight.Bold,
@@ -113,7 +113,7 @@ fun TvMissedRollupCard(
 
             Spacer(modifier = Modifier.height(3.dp))
 
-            Text(
+            AvalonText(
                 text = stringResource(
                     Res.string.episodes_notifications_rollup_info,
                     rollup.missedEpisodesCount,
@@ -154,14 +154,14 @@ fun TvMissedRollupCard(
                     verticalAlignment = Alignment.CenterVertically,
                     horizontalArrangement = Arrangement.Center
                 ) {
-                    Icon(
+                    AvalonIcon(
                         imageVector = Lucide.Play,
                         contentDescription = null,
                         tint = AvalonTheme.colors.onPrimary,
                         modifier = Modifier.size(14.dp)
                     )
                     Spacer(modifier = Modifier.width(6.dp))
-                    Text(
+                    AvalonText(
                         text = stringResource(
                             Res.string.episodes_notifications_rollup_start,
                             rollup.startSeason,
@@ -193,14 +193,14 @@ fun TvMissedRollupCard(
                     verticalAlignment = Alignment.CenterVertically,
                     horizontalArrangement = Arrangement.Center
                 ) {
-                    Text(
+                    AvalonText(
                         text = stringResource(Res.string.episodes_notifications_about_show),
                         color = AvalonTheme.colors.onSurface,
                         fontSize = 12.sp,
                         fontWeight = FontWeight.Medium
                     )
                     Spacer(modifier = Modifier.width(4.dp))
-                    Icon(
+                    AvalonIcon(
                         imageVector = Lucide.ChevronRight,
                         contentDescription = null,
                         tint = AvalonTheme.colors.onSurfaceVariant,

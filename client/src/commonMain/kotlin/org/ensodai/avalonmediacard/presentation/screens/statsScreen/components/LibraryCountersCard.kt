@@ -21,9 +21,9 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
 import org.ensodai.avalonmediacard.designsystem.components.AvalonBentoCard
-import org.ensodai.avalonmediacard.designsystem.components.AvalonIcon as Icon
-import org.ensodai.avalonmediacard.designsystem.components.AvalonSurface as Surface
-import org.ensodai.avalonmediacard.designsystem.components.AvalonText as Text
+import org.ensodai.avalonmediacard.designsystem.components.AvalonIcon
+import org.ensodai.avalonmediacard.designsystem.components.AvalonSurface
+import org.ensodai.avalonmediacard.designsystem.components.AvalonText
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -132,7 +132,7 @@ fun LibraryCountersCard(
     AvalonBentoCard(
         title = stringResource(Res.string.stats_library_title),
         icon = {
-            Icon(
+            AvalonIcon(
                 imageVector = Lucide.Folder,
                 contentDescription = null,
                 tint = colors.textSecondary,
@@ -201,7 +201,7 @@ fun LibraryCountersCard(
                 horizontalArrangement = Arrangement.SpaceBetween,
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                Text(
+                AvalonText(
                     text = if (selectedMode == LibraryStatsMode.SHOWS) {
                         stringResource(Res.string.stats_library_backlog_status)
                     } else {
@@ -212,7 +212,7 @@ fun LibraryCountersCard(
                 )
 
                 // Сегментированный переключатель (Segmented Control) в едином дизайн-коде
-                Surface(
+                AvalonSurface(
                     shape = shapes.control,
                     color = colors.bgElevated
                 ) {
@@ -385,7 +385,7 @@ private fun LibrarySegmentTab(
             .clickable(onClick = onClick)
             .padding(horizontal = 10.dp, vertical = 4.dp)
     ) {
-        Text(
+        AvalonText(
             text = text,
             style = AvalonTheme.typography.labelSmall.copy(fontSize = 11.sp),
             fontWeight = if (isSelected) FontWeight.Bold else FontWeight.Medium,
@@ -421,7 +421,7 @@ private fun KpiPill(
         if (isSelected || isHovered) colors.textPrimary else colors.textSecondary
     )
 
-    Surface(
+    AvalonSurface(
         onClick = onClick ?: {},
         enabled = onClick != null,
         modifier = modifier
@@ -445,20 +445,20 @@ private fun KpiPill(
             modifier = Modifier.padding(horizontal = 14.dp, vertical = 12.dp),
             horizontalAlignment = Alignment.Start
         ) {
-            Icon(
+            AvalonIcon(
                 imageVector = icon,
                 contentDescription = null,
                 tint = animatedIconColor,
                 modifier = Modifier.size(16.dp)
             )
             Spacer(modifier = Modifier.height(6.dp))
-            Text(
+            AvalonText(
                 text = count.toString(),
                 style = AvalonTheme.typography.kpiTile,
                 color = colors.textPrimary
             )
             Spacer(modifier = Modifier.height(2.dp))
-            Text(
+            AvalonText(
                 text = label,
                 style = AvalonTheme.typography.metadata,
                 color = if (isSelected) colors.textPrimary else colors.textSecondary
@@ -635,7 +635,7 @@ private fun StatusTag(
         if (isHovered) 1.0f else if (isAnyHovered) 0.4f else 1.0f
     )
 
-    Surface(
+    AvalonSurface(
         onClick = onClick,
         modifier = modifier
             .pointerHoverIcon(PointerIcon.Hand)
@@ -672,7 +672,7 @@ private fun StatusTag(
                         .background(dotColor.copy(alpha = animatedDotAlpha))
                 )
                 Spacer(modifier = Modifier.width(8.dp))
-                Text(
+                AvalonText(
                     text = label,
                     style = AvalonTheme.typography.uiLabel,
                     fontWeight = if (isHovered) FontWeight.SemiBold else FontWeight.Medium,
@@ -682,7 +682,7 @@ private fun StatusTag(
 
             // Правая часть: количество + процент
             Row(verticalAlignment = Alignment.CenterVertically) {
-                Text(
+                AvalonText(
                     text = count.toString(),
                     style = AvalonTheme.typography.uiLabel.copy(
                         fontFeatureSettings = "tnum"
@@ -692,7 +692,7 @@ private fun StatusTag(
                 )
                 if (percent != null) {
                     Spacer(modifier = Modifier.width(6.dp))
-                    Text(
+                    AvalonText(
                         text = percent,
                         style = AvalonTheme.typography.microCaption,
                         color = colors.textSecondary.copy(alpha = if (isHovered) 0.85f else 0.5f)

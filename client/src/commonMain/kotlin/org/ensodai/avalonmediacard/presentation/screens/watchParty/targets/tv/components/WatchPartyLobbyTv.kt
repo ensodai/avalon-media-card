@@ -19,9 +19,9 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
-import org.ensodai.avalonmediacard.designsystem.components.AvalonCircularProgressIndicator as CircularProgressIndicator
-import org.ensodai.avalonmediacard.designsystem.components.AvalonIcon as Icon
-import org.ensodai.avalonmediacard.designsystem.components.AvalonText as Text
+import org.ensodai.avalonmediacard.designsystem.components.AvalonCircularProgressIndicator
+import org.ensodai.avalonmediacard.designsystem.components.AvalonIcon
+import org.ensodai.avalonmediacard.designsystem.components.AvalonText
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -136,7 +136,7 @@ fun WatchPartyLobbyTv(
                             .background(Color.White.copy(alpha = 0.08f)),
                         contentAlignment = Alignment.Center
                     ) {
-                        Icon(
+                        AvalonIcon(
                             imageVector = Lucide.X,
                             contentDescription = stringResource(Res.string.common_close),
                             tint = Color.White.copy(alpha = 0.85f),
@@ -145,7 +145,7 @@ fun WatchPartyLobbyTv(
                     }
 
                     val roomTitle = state.activeRoom?.title?.takeIf { it.isNotBlank() } ?: mediaTitle
-                    Text(
+                    AvalonText(
                         text = roomTitle,
                         fontSize = 22.sp,
                         fontWeight = FontWeight.Bold,
@@ -168,14 +168,14 @@ fun WatchPartyLobbyTv(
                             verticalAlignment = Alignment.CenterVertically,
                             horizontalArrangement = Arrangement.spacedBy(8.dp)
                         ) {
-                            Text(
+                            AvalonText(
                                 text = stringResource(Res.string.watch_party_pin_label).replace(":", "").uppercase(),
                                 fontSize = 11.sp,
                                 fontWeight = FontWeight.Bold,
                                 color = Color.White.copy(alpha = 0.6f),
                                 letterSpacing = 1.sp
                             )
-                            Text(
+                            AvalonText(
                                 text = "${joinPin.take(3)} ${joinPin.takeLast(3)}",
                                 style = AvalonTheme.typography.monoTech,
                                 fontSize = 18.sp,
@@ -223,7 +223,7 @@ fun WatchPartyLobbyTv(
                                 .border(1.dp, Color(0xFFFFB74D).copy(alpha = 0.35f), RoundedCornerShape(12.dp))
                                 .padding(horizontal = 16.dp, vertical = 10.dp)
                         ) {
-                            Text(
+                            AvalonText(
                                 text = state.systemNotice,
                                 fontSize = 13.sp,
                                 color = Color(0xFFFFB74D),
@@ -240,7 +240,7 @@ fun WatchPartyLobbyTv(
                     verticalArrangement = Arrangement.spacedBy(16.dp)
                 ) {
                     // Список участников
-                    Text(
+                    AvalonText(
                         text = stringResource(Res.string.watch_party_participants_label, state.participants.size),
                         fontSize = 13.sp,
                         fontWeight = FontWeight.Bold,
@@ -291,7 +291,7 @@ fun WatchPartyLobbyTv(
                         .padding(horizontal = 22.dp),
                     contentAlignment = Alignment.Center
                 ) {
-                    Text(
+                    AvalonText(
                         text = stringResource(Res.string.watch_party_btn_leave),
                         fontSize = 14.sp,
                         fontWeight = FontWeight.Medium,
@@ -318,20 +318,20 @@ fun WatchPartyLobbyTv(
                         horizontalArrangement = Arrangement.Center
                     ) {
                         if (state.isStartingPlayback) {
-                            CircularProgressIndicator(
+                            AvalonCircularProgressIndicator(
                                 modifier = Modifier.size(20.dp),
                                 color = Color.Black,
                                 strokeWidth = 2.5.dp
                             )
                         } else {
-                            Icon(
+                            AvalonIcon(
                                 imageVector = Lucide.Play,
                                 contentDescription = null,
                                 tint = Color.Black,
                                 modifier = Modifier.size(18.dp)
                             )
                             Spacer(modifier = Modifier.width(10.dp))
-                            Text(
+                            AvalonText(
                                 text = if (totalParticipants > 0) {
                                     "${stringResource(Res.string.watch_party_btn_start_playback)} ($readyParticipants/$totalParticipants)"
                                 } else {
@@ -368,21 +368,21 @@ fun WatchPartyLobbyTv(
                         horizontalArrangement = Arrangement.Center
                     ) {
                         if (isReady) {
-                            Icon(
+                            AvalonIcon(
                                 imageVector = Lucide.Check,
                                 contentDescription = null,
                                 tint = Color(0xFF4CAF50),
                                 modifier = Modifier.size(20.dp)
                             )
                             Spacer(modifier = Modifier.width(8.dp))
-                            Text(
+                            AvalonText(
                                 text = "${stringResource(Res.string.watch_party_ready_status_ready)} (${stringResource(Res.string.watch_party_waiting_host)})",
                                 fontSize = 15.sp,
                                 fontWeight = FontWeight.Bold,
                                 color = Color(0xFF81C784)
                             )
                         } else {
-                            Text(
+                            AvalonText(
                                 text = stringResource(Res.string.watch_party_ready_check),
                                 fontSize = 15.sp,
                                 fontWeight = FontWeight.SemiBold,

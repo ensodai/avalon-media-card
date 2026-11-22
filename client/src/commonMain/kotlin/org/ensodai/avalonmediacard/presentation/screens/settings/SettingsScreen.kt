@@ -8,8 +8,8 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
-import org.ensodai.avalonmediacard.designsystem.components.AvalonIcon as Icon
-import org.ensodai.avalonmediacard.designsystem.components.AvalonText as Text
+import org.ensodai.avalonmediacard.designsystem.components.AvalonIcon
+import org.ensodai.avalonmediacard.designsystem.components.AvalonText
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -130,14 +130,14 @@ fun SettingsScreen(
                         .fillMaxWidth()
                         .padding(bottom = 8.dp)
                 ) {
-                    Text(
+                    AvalonText(
                         text = stringResource(Res.string.settings_title),
                         fontSize = 28.sp,
                         fontWeight = FontWeight.Bold,
                         color = AvalonTheme.colors.onBackground
                     )
                     Spacer(modifier = Modifier.height(4.dp))
-                    Text(
+                    AvalonText(
                         text = stringResource(Res.string.settings_subtitle),
                         fontSize = 14.sp,
                         color = AvalonTheme.colors.onSurfaceVariant
@@ -158,13 +158,13 @@ fun SettingsScreen(
                         verticalAlignment = Alignment.CenterVertically,
                         horizontalArrangement = Arrangement.spacedBy(12.dp)
                     ) {
-                        Icon(
+                        AvalonIcon(
                             imageVector = Lucide.Settings,
                             contentDescription = null,
                             tint = AvalonTheme.colors.primary,
                             modifier = Modifier.size(24.dp)
                         )
-                        Text(
+                        AvalonText(
                             text = stringResource(Res.string.settings_section_general),
                             fontSize = 18.sp,
                             fontWeight = FontWeight.Bold,
@@ -215,7 +215,7 @@ fun SettingsScreen(
                         modifier = Modifier.fillMaxWidth(),
                         verticalArrangement = Arrangement.spacedBy(10.dp)
                     ) {
-                        Text(
+                        AvalonText(
                             text = uiModeTitle,
                             fontSize = 15.sp,
                             fontWeight = FontWeight.Medium,
@@ -243,13 +243,13 @@ fun SettingsScreen(
                         verticalAlignment = Alignment.CenterVertically,
                         horizontalArrangement = Arrangement.spacedBy(12.dp)
                     ) {
-                        Icon(
+                        AvalonIcon(
                             imageVector = Lucide.Globe,
                             contentDescription = null,
                             tint = AvalonTheme.colors.primary,
                             modifier = Modifier.size(24.dp)
                         )
-                        Text(
+                        AvalonText(
                             text = stringResource(Res.string.settings_section_media),
                             fontSize = 18.sp,
                             fontWeight = FontWeight.Bold,
@@ -403,13 +403,13 @@ fun SettingsScreen(
                             verticalAlignment = Alignment.CenterVertically,
                             horizontalArrangement = Arrangement.spacedBy(12.dp)
                         ) {
-                            Icon(
+                            AvalonIcon(
                                 imageVector = Lucide.Key,
                                 contentDescription = null,
                                 tint = AvalonTheme.colors.primary,
                                 modifier = Modifier.size(24.dp)
                             )
-                            Text(
+                            AvalonText(
                                 text = stringResource(Res.string.settings_tmdb_token_title),
                                 fontSize = 18.sp,
                                 fontWeight = FontWeight.Bold,
@@ -433,7 +433,7 @@ fun SettingsScreen(
                                 )
                                 .padding(horizontal = 8.dp, vertical = 4.dp)
                         ) {
-                            Text(
+                            AvalonText(
                                 text = if (isConfigured) stringResource(Res.string.admin_integrations_configured) else stringResource(Res.string.admin_integrations_not_set),
                                 fontSize = 12.sp,
                                 fontWeight = FontWeight.SemiBold,
@@ -442,7 +442,7 @@ fun SettingsScreen(
                         }
                     }
 
-                    Text(
+                    AvalonText(
                         text = stringResource(Res.string.settings_tmdb_token_description),
                         fontSize = 13.sp,
                         color = AvalonTheme.colors.onSurfaceVariant
@@ -453,7 +453,7 @@ fun SettingsScreen(
                         onValueChange = { actions.onTmdbTokenChanged(it.ifBlank { null }) },
                         placeholder = stringResource(Res.string.settings_tmdb_token_placeholder),
                         leadingIcon = {
-                            Icon(
+                            AvalonIcon(
                                 imageVector = Lucide.Key,
                                 contentDescription = null,
                                 tint = AvalonTheme.colors.onSurfaceVariant,
@@ -478,15 +478,15 @@ fun SettingsScreen(
                     }
 
                     if (state.error != null) {
-                        Text(text = state.error!!, color = AvalonTheme.colors.error, fontSize = 13.sp)
+                        AvalonText(text = state.error!!, color = AvalonTheme.colors.error, fontSize = 13.sp)
                     }
                     if (state.successMessage != null) {
-                        Text(text = state.successMessage!!, color = Color(0xFF10B981), fontSize = 13.sp)
+                        AvalonText(text = state.successMessage!!, color = Color(0xFF10B981), fontSize = 13.sp)
                     }
                 }
 
                 Spacer(modifier = Modifier.height(8.dp))
-                Text(
+                AvalonText(
                     text = "Avalon Media Card v${AppVersion.displayVersion}",
                     fontSize = 12.sp,
                     fontWeight = FontWeight.Normal,
@@ -527,20 +527,20 @@ private fun SettingsRowItem(
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
             Column(modifier = Modifier.weight(1f)) {
-                Text(
+                AvalonText(
                     text = title,
                     fontSize = 15.sp,
                     fontWeight = FontWeight.Medium,
                     color = AvalonTheme.colors.onSurface
                 )
                 Spacer(modifier = Modifier.height(2.dp))
-                Text(
+                AvalonText(
                     text = value,
                     fontSize = 13.sp,
                     color = AvalonTheme.colors.primary
                 )
             }
-            Icon(
+            AvalonIcon(
                 imageVector = icon,
                 contentDescription = null,
                 tint = AvalonTheme.colors.onSurfaceVariant,
@@ -628,14 +628,14 @@ private fun UiModeSegmentedSelector(
                 horizontalArrangement = Arrangement.Center,
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                Icon(
+                AvalonIcon(
                     imageVector = icon,
                     contentDescription = null,
                     tint = if (isSelected) Color.Black else AvalonTheme.colors.onSurfaceVariant,
                     modifier = Modifier.size(18.dp)
                 )
                 Spacer(modifier = Modifier.width(8.dp))
-                Text(
+                AvalonText(
                     text = stringResource(titleRes),
                     fontSize = 14.sp,
                     fontWeight = if (isSelected) FontWeight.Bold else FontWeight.Medium,

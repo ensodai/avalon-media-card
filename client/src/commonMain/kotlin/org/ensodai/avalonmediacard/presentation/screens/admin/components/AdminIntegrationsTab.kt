@@ -8,10 +8,10 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
-import org.ensodai.avalonmediacard.designsystem.components.AvalonCircularProgressIndicator as CircularProgressIndicator
-import org.ensodai.avalonmediacard.designsystem.components.AvalonIcon as Icon
-import org.ensodai.avalonmediacard.designsystem.components.AvalonSwitch as Switch
-import org.ensodai.avalonmediacard.designsystem.components.AvalonText as Text
+import org.ensodai.avalonmediacard.designsystem.components.AvalonCircularProgressIndicator
+import org.ensodai.avalonmediacard.designsystem.components.AvalonIcon
+import org.ensodai.avalonmediacard.designsystem.components.AvalonSwitch
+import org.ensodai.avalonmediacard.designsystem.components.AvalonText
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
@@ -44,7 +44,7 @@ fun AdminIntegrationsTab(
             modifier = Modifier.fillMaxSize(),
             contentAlignment = Alignment.Center
         ) {
-            CircularProgressIndicator(color = AvalonTheme.colors.primary)
+            AvalonCircularProgressIndicator(color = AvalonTheme.colors.primary)
         }
         return
     }
@@ -67,14 +67,14 @@ fun AdminIntegrationsTab(
             verticalAlignment = Alignment.CenterVertically
         ) {
             Column {
-                Text(
+                AvalonText(
                     text = stringResource(Res.string.admin_integrations_shared_providers),
                     fontSize = 18.sp,
                     fontWeight = FontWeight.Bold,
                     color = AvalonTheme.colors.onSurface
                 )
                 Spacer(modifier = Modifier.height(4.dp))
-                Text(
+                AvalonText(
                     text = stringResource(Res.string.admin_integrations_shared_desc),
                     fontSize = 13.sp,
                     color = AvalonTheme.colors.onSurfaceVariant
@@ -101,13 +101,13 @@ fun AdminIntegrationsTab(
                     verticalAlignment = Alignment.CenterVertically,
                     horizontalArrangement = Arrangement.spacedBy(12.dp)
                 ) {
-                    Icon(
+                    AvalonIcon(
                         imageVector = Lucide.Film,
                         contentDescription = null,
                         tint = AvalonTheme.colors.primary,
                         modifier = Modifier.size(24.dp)
                     )
-                    Text(
+                    AvalonText(
                         text = "TMDB (The Movie Database)",
                         fontSize = 18.sp,
                         fontWeight = FontWeight.Bold,
@@ -131,7 +131,7 @@ fun AdminIntegrationsTab(
                         )
                         .padding(horizontal = 8.dp, vertical = 4.dp)
                 ) {
-                    Text(
+                    AvalonText(
                         text = if (isTmdbConfigured) stringResource(Res.string.admin_integrations_configured) else stringResource(Res.string.admin_integrations_not_set),
                         fontSize = 12.sp,
                         fontWeight = FontWeight.SemiBold,
@@ -140,7 +140,7 @@ fun AdminIntegrationsTab(
                 }
             }
 
-            Text(
+            AvalonText(
                 text = stringResource(Res.string.admin_integrations_tmdb_desc),
                 fontSize = 13.sp,
                 color = AvalonTheme.colors.onSurfaceVariant
@@ -151,7 +151,7 @@ fun AdminIntegrationsTab(
                 onValueChange = actions.onTmdbTokenChanged,
                 placeholder = "TMDB Read Access Token (v4)",
                 leadingIcon = {
-                    Icon(
+                    AvalonIcon(
                         imageVector = Lucide.Key,
                         contentDescription = null,
                         tint = AvalonTheme.colors.onSurfaceVariant,
@@ -173,20 +173,20 @@ fun AdminIntegrationsTab(
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
                 Column(modifier = Modifier.weight(1f).padding(end = 16.dp)) {
-                    Text(
+                    AvalonText(
                         text = stringResource(Res.string.admin_integrations_provide_all),
                         fontSize = 14.sp,
                         fontWeight = FontWeight.SemiBold,
                         color = AvalonTheme.colors.onSurface
                     )
                     Spacer(modifier = Modifier.height(2.dp))
-                    Text(
+                    AvalonText(
                         text = stringResource(Res.string.admin_integrations_tmdb_fallback_hint),
                         fontSize = 12.sp,
                         color = AvalonTheme.colors.onSurfaceVariant
                     )
                 }
-                Switch(
+                AvalonSwitch(
                     checked = state.tmdbShareWithUsers,
                     onCheckedChange = actions.onTmdbShareChanged
                 )
@@ -211,13 +211,13 @@ fun AdminIntegrationsTab(
                         verticalAlignment = Alignment.CenterVertically,
                         horizontalArrangement = Arrangement.spacedBy(8.dp)
                     ) {
-                        Icon(
+                        AvalonIcon(
                             imageVector = if (isSuccess) Lucide.Check else Lucide.ShieldAlert,
                             contentDescription = null,
                             tint = if (isSuccess) Color(0xFF10B981) else Color(0xFFEF4444),
                             modifier = Modifier.size(18.dp)
                         )
-                        Text(
+                        AvalonText(
                             text = state.tmdbTestResult,
                             fontSize = 13.sp,
                             color = if (isSuccess) Color(0xFF10B981) else Color(0xFFEF4444)
@@ -266,13 +266,13 @@ fun AdminIntegrationsTab(
                     verticalAlignment = Alignment.CenterVertically,
                     horizontalArrangement = Arrangement.spacedBy(12.dp)
                 ) {
-                    Icon(
+                    AvalonIcon(
                         imageVector = Lucide.Server,
                         contentDescription = null,
                         tint = AvalonTheme.colors.primary,
                         modifier = Modifier.size(24.dp)
                     )
-                    Text(
+                    AvalonText(
                         text = "TorrServer",
                         fontSize = 18.sp,
                         fontWeight = FontWeight.Bold,
@@ -296,7 +296,7 @@ fun AdminIntegrationsTab(
                         )
                         .padding(horizontal = 8.dp, vertical = 4.dp)
                 ) {
-                    Text(
+                    AvalonText(
                         text = if (isTorrServerConfigured) stringResource(Res.string.admin_integrations_configured) else stringResource(Res.string.admin_integrations_not_set),
                         fontSize = 12.sp,
                         fontWeight = FontWeight.SemiBold,
@@ -305,7 +305,7 @@ fun AdminIntegrationsTab(
                 }
             }
 
-            Text(
+            AvalonText(
                 text = stringResource(Res.string.admin_integrations_torrserver_desc),
                 fontSize = 13.sp,
                 color = AvalonTheme.colors.onSurfaceVariant
@@ -316,7 +316,7 @@ fun AdminIntegrationsTab(
                 onValueChange = actions.onTorrServerHostChanged,
                 placeholder = stringResource(Res.string.admin_integrations_torrserver_url_hint),
                 leadingIcon = {
-                    Icon(
+                    AvalonIcon(
                         imageVector = Lucide.Globe,
                         contentDescription = null,
                         tint = AvalonTheme.colors.onSurfaceVariant,
@@ -335,7 +335,7 @@ fun AdminIntegrationsTab(
                     onValueChange = actions.onTorrServerLoginChanged,
                     placeholder = stringResource(Res.string.admin_integrations_login_optional),
                     leadingIcon = {
-                        Icon(
+                        AvalonIcon(
                             imageVector = Lucide.User,
                             contentDescription = null,
                             tint = AvalonTheme.colors.onSurfaceVariant,
@@ -351,7 +351,7 @@ fun AdminIntegrationsTab(
                     placeholder = stringResource(Res.string.admin_integrations_password_optional),
                     visualTransformation = PasswordVisualTransformation(),
                     leadingIcon = {
-                        Icon(
+                        AvalonIcon(
                             imageVector = Lucide.Lock,
                             contentDescription = null,
                             tint = AvalonTheme.colors.onSurfaceVariant,
@@ -374,20 +374,20 @@ fun AdminIntegrationsTab(
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
                 Column(modifier = Modifier.weight(1f).padding(end = 16.dp)) {
-                    Text(
+                    AvalonText(
                         text = stringResource(Res.string.admin_integrations_provide_all),
                         fontSize = 14.sp,
                         fontWeight = FontWeight.SemiBold,
                         color = AvalonTheme.colors.onSurface
                     )
                     Spacer(modifier = Modifier.height(2.dp))
-                    Text(
+                    AvalonText(
                         text = stringResource(Res.string.admin_integrations_torrserver_provide_all),
                         fontSize = 12.sp,
                         color = AvalonTheme.colors.onSurfaceVariant
                     )
                 }
-                Switch(
+                AvalonSwitch(
                     checked = state.torrServerShareWithUsers,
                     onCheckedChange = actions.onTorrServerShareChanged
                 )
@@ -405,20 +405,20 @@ fun AdminIntegrationsTab(
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
                 Column(modifier = Modifier.weight(1f).padding(end = 16.dp)) {
-                    Text(
+                    AvalonText(
                         text = stringResource(Res.string.admin_integrations_torrserver_gst),
                         fontSize = 14.sp,
                         fontWeight = FontWeight.SemiBold,
                         color = AvalonTheme.colors.onSurface
                     )
                     Spacer(modifier = Modifier.height(2.dp))
-                    Text(
+                    AvalonText(
                         text = stringResource(Res.string.admin_integrations_torrserver_gst_desc),
                         fontSize = 12.sp,
                         color = AvalonTheme.colors.onSurfaceVariant
                     )
                 }
-                Switch(
+                AvalonSwitch(
                     checked = state.torrServerUseGst,
                     onCheckedChange = actions.onTorrServerUseGstChanged
                 )
@@ -443,13 +443,13 @@ fun AdminIntegrationsTab(
                         verticalAlignment = Alignment.CenterVertically,
                         horizontalArrangement = Arrangement.spacedBy(8.dp)
                     ) {
-                        Icon(
+                        AvalonIcon(
                             imageVector = if (isSuccess) Lucide.Check else Lucide.ShieldAlert,
                             contentDescription = null,
                             tint = if (isSuccess) Color(0xFF10B981) else Color(0xFFEF4444),
                             modifier = Modifier.size(18.dp)
                         )
-                        Text(
+                        AvalonText(
                             text = state.torrServerTestResult,
                             fontSize = 13.sp,
                             color = if (isSuccess) Color(0xFF10B981) else Color(0xFFEF4444)
@@ -498,13 +498,13 @@ fun AdminIntegrationsTab(
                     verticalAlignment = Alignment.CenterVertically,
                     horizontalArrangement = Arrangement.spacedBy(12.dp)
                 ) {
-                    Icon(
+                    AvalonIcon(
                         imageVector = Lucide.Search,
                         contentDescription = null,
                         tint = AvalonTheme.colors.primary,
                         modifier = Modifier.size(24.dp)
                     )
-                    Text(
+                    AvalonText(
                         text = "Prowlarr",
                         fontSize = 18.sp,
                         fontWeight = FontWeight.Bold,
@@ -528,7 +528,7 @@ fun AdminIntegrationsTab(
                         )
                         .padding(horizontal = 8.dp, vertical = 4.dp)
                 ) {
-                    Text(
+                    AvalonText(
                         text = if (isProwlarrConfigured) stringResource(Res.string.admin_integrations_configured) else stringResource(Res.string.admin_integrations_not_set),
                         fontSize = 12.sp,
                         fontWeight = FontWeight.SemiBold,
@@ -537,7 +537,7 @@ fun AdminIntegrationsTab(
                 }
             }
 
-            Text(
+            AvalonText(
                 text = stringResource(Res.string.admin_integrations_prowlarr_desc),
                 fontSize = 13.sp,
                 color = AvalonTheme.colors.onSurfaceVariant
@@ -548,7 +548,7 @@ fun AdminIntegrationsTab(
                 onValueChange = actions.onProwlarrUrlChanged,
                 placeholder = stringResource(Res.string.admin_integrations_prowlarr_url_hint),
                 leadingIcon = {
-                    Icon(
+                    AvalonIcon(
                         imageVector = Lucide.Globe,
                         contentDescription = null,
                         tint = AvalonTheme.colors.onSurfaceVariant,
@@ -564,7 +564,7 @@ fun AdminIntegrationsTab(
                 placeholder = stringResource(Res.string.admin_integrations_prowlarr_key),
                 visualTransformation = PasswordVisualTransformation(),
                 leadingIcon = {
-                    Icon(
+                    AvalonIcon(
                         imageVector = Lucide.KeyRound,
                         contentDescription = null,
                         tint = AvalonTheme.colors.onSurfaceVariant,
@@ -585,20 +585,20 @@ fun AdminIntegrationsTab(
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
                 Column(modifier = Modifier.weight(1f).padding(end = 16.dp)) {
-                    Text(
+                    AvalonText(
                         text = stringResource(Res.string.admin_integrations_prowlarr_provide_all),
                         fontSize = 14.sp,
                         fontWeight = FontWeight.SemiBold,
                         color = AvalonTheme.colors.onSurface
                     )
                     Spacer(modifier = Modifier.height(2.dp))
-                    Text(
+                    AvalonText(
                         text = stringResource(Res.string.admin_integrations_prowlarr_provide_desc),
                         fontSize = 12.sp,
                         color = AvalonTheme.colors.onSurfaceVariant
                     )
                 }
-                Switch(
+                AvalonSwitch(
                     checked = state.prowlarrShareWithUsers,
                     onCheckedChange = actions.onProwlarrShareChanged
                 )
@@ -623,13 +623,13 @@ fun AdminIntegrationsTab(
                         verticalAlignment = Alignment.CenterVertically,
                         horizontalArrangement = Arrangement.spacedBy(8.dp)
                     ) {
-                        Icon(
+                        AvalonIcon(
                             imageVector = if (isSuccess) Lucide.Check else Lucide.ShieldAlert,
                             contentDescription = null,
                             tint = if (isSuccess) Color(0xFF10B981) else Color(0xFFEF4444),
                             modifier = Modifier.size(18.dp)
                         )
-                        Text(
+                        AvalonText(
                             text = state.prowlarrTestResult,
                             fontSize = 13.sp,
                             color = if (isSuccess) Color(0xFF10B981) else Color(0xFFEF4444)
@@ -678,13 +678,13 @@ fun AdminIntegrationsTab(
                     verticalAlignment = Alignment.CenterVertically,
                     horizontalArrangement = Arrangement.spacedBy(12.dp)
                 ) {
-                    Icon(
+                    AvalonIcon(
                         imageVector = Lucide.Layers,
                         contentDescription = null,
                         tint = AvalonTheme.colors.primary,
                         modifier = Modifier.size(24.dp)
                     )
-                    Text(
+                    AvalonText(
                         text = "Jackett",
                         fontSize = 18.sp,
                         fontWeight = FontWeight.Bold,
@@ -708,7 +708,7 @@ fun AdminIntegrationsTab(
                         )
                         .padding(horizontal = 8.dp, vertical = 4.dp)
                 ) {
-                    Text(
+                    AvalonText(
                         text = if (isJackettConfigured) stringResource(Res.string.admin_integrations_configured) else stringResource(Res.string.admin_integrations_not_set),
                         fontSize = 12.sp,
                         fontWeight = FontWeight.SemiBold,
@@ -717,7 +717,7 @@ fun AdminIntegrationsTab(
                 }
             }
 
-            Text(
+            AvalonText(
                 text = stringResource(Res.string.admin_integrations_jackett_desc),
                 fontSize = 13.sp,
                 color = AvalonTheme.colors.onSurfaceVariant
@@ -728,7 +728,7 @@ fun AdminIntegrationsTab(
                 onValueChange = actions.onJackettUrlChanged,
                 placeholder = stringResource(Res.string.admin_integrations_jackett_url_hint),
                 leadingIcon = {
-                    Icon(
+                    AvalonIcon(
                         imageVector = Lucide.Globe,
                         contentDescription = null,
                         tint = AvalonTheme.colors.onSurfaceVariant,
@@ -744,7 +744,7 @@ fun AdminIntegrationsTab(
                 placeholder = stringResource(Res.string.admin_integrations_jackett_key),
                 visualTransformation = PasswordVisualTransformation(),
                 leadingIcon = {
-                    Icon(
+                    AvalonIcon(
                         imageVector = Lucide.KeyRound,
                         contentDescription = null,
                         tint = AvalonTheme.colors.onSurfaceVariant,
@@ -765,20 +765,20 @@ fun AdminIntegrationsTab(
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
                 Column(modifier = Modifier.weight(1f).padding(end = 16.dp)) {
-                    Text(
+                    AvalonText(
                         text = stringResource(Res.string.admin_integrations_jackett_provide_all),
                         fontSize = 14.sp,
                         fontWeight = FontWeight.SemiBold,
                         color = AvalonTheme.colors.onSurface
                     )
                     Spacer(modifier = Modifier.height(2.dp))
-                    Text(
+                    AvalonText(
                         text = stringResource(Res.string.admin_integrations_jackett_provide_desc),
                         fontSize = 12.sp,
                         color = AvalonTheme.colors.onSurfaceVariant
                     )
                 }
-                Switch(
+                AvalonSwitch(
                     checked = state.jackettShareWithUsers,
                     onCheckedChange = actions.onJackettShareChanged
                 )
@@ -803,13 +803,13 @@ fun AdminIntegrationsTab(
                         verticalAlignment = Alignment.CenterVertically,
                         horizontalArrangement = Arrangement.spacedBy(8.dp)
                     ) {
-                        Icon(
+                        AvalonIcon(
                             imageVector = if (isSuccess) Lucide.Check else Lucide.ShieldAlert,
                             contentDescription = null,
                             tint = if (isSuccess) Color(0xFF10B981) else Color(0xFFEF4444),
                             modifier = Modifier.size(18.dp)
                         )
-                        Text(
+                        AvalonText(
                             text = state.jackettTestResult,
                             fontSize = 13.sp,
                             color = if (isSuccess) Color(0xFF10B981) else Color(0xFFEF4444)

@@ -16,9 +16,9 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import org.ensodai.avalonmediacard.designsystem.components.AvalonBentoCard
-import org.ensodai.avalonmediacard.designsystem.components.AvalonIcon as Icon
-import org.ensodai.avalonmediacard.designsystem.components.AvalonSurface as Surface
-import org.ensodai.avalonmediacard.designsystem.components.AvalonText as Text
+import org.ensodai.avalonmediacard.designsystem.components.AvalonIcon
+import org.ensodai.avalonmediacard.designsystem.components.AvalonSurface
+import org.ensodai.avalonmediacard.designsystem.components.AvalonText
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -61,7 +61,7 @@ fun DecadesCard(
     AvalonBentoCard(
         title = stringResource(Res.string.stats_decades_title),
         icon = {
-            Icon(
+            AvalonIcon(
                 imageVector = Lucide.Calendar,
                 contentDescription = null,
                 tint = colors.textSecondary,
@@ -72,7 +72,7 @@ fun DecadesCard(
         contentPadding = 24.dp
     ) {
         if (decades.isEmpty() || decades.all { it.watchedCount == 0 }) {
-                Text(
+                AvalonText(
                     text = stringResource(Res.string.stats_decades_empty),
                     style = AvalonTheme.typography.bodyMedium,
                     color = colors.textSecondary
@@ -132,7 +132,7 @@ fun DecadesCard(
 
                         val screenTitle = stringResource(Res.string.stats_decades_list_title_fmt, label)
 
-                        Surface(
+                        AvalonSurface(
                             onClick = {
                                 if (hasItems) {
                                     navigation.navigateTo(
@@ -170,7 +170,7 @@ fun DecadesCard(
                                     .fillMaxWidth()
                                     .padding(vertical = 4.dp)
                             ) {
-                                Text(
+                                AvalonText(
                                     text = if (decade.watchedCount > 0) decade.watchedCount.toString() else "",
                                     style = AvalonTheme.typography.labelSmall.copy(
                                         fontSize = 10.sp,
@@ -192,7 +192,7 @@ fun DecadesCard(
 
                                 Spacer(modifier = Modifier.height(8.dp))
 
-                                Text(
+                                AvalonText(
                                     text = label,
                                     style = AvalonTheme.typography.labelSmall.copy(
                                         fontFeatureSettings = "tnum"

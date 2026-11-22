@@ -6,7 +6,7 @@ import androidx.compose.animation.animateColorAsState
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
-import org.ensodai.avalonmediacard.designsystem.components.AvalonText as Text
+import org.ensodai.avalonmediacard.designsystem.components.AvalonText
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -64,7 +64,7 @@ fun MediaDescriptionSlotContent(
                 )
                 .padding(8.dp)
         ) {
-            Text(
+            AvalonText(
                 text = cleanedText,
                 color = if (isLoading) Color.Transparent else textColor,
                 fontSize = 15.sp,
@@ -81,7 +81,7 @@ fun MediaDescriptionSlotContent(
 
             if ((hasVisualOverflow || isExpanded) && !isLoading) {
                 Spacer(modifier = Modifier.height(4.dp))
-                Text(
+                AvalonText(
                     text = if (isExpanded) stringResource(Res.string.details_desc_collapse) else stringResource(Res.string.details_desc_expand),
                     fontSize = 14.sp,
                     fontWeight = FontWeight.Bold,

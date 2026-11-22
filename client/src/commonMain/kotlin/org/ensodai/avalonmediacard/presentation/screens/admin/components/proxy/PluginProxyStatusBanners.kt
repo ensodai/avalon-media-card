@@ -6,8 +6,8 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
-import org.ensodai.avalonmediacard.designsystem.components.AvalonIcon as Icon
-import org.ensodai.avalonmediacard.designsystem.components.AvalonText as Text
+import org.ensodai.avalonmediacard.designsystem.components.AvalonIcon
+import org.ensodai.avalonmediacard.designsystem.components.AvalonText
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -43,13 +43,13 @@ fun PluginProxyStatusBanners(
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.spacedBy(10.dp)
             ) {
-                Icon(
+                AvalonIcon(
                     imageVector = if (isSuccess) Lucide.Check else Lucide.ShieldAlert,
                     contentDescription = null,
                     tint = if (isSuccess) Color(0xFF10B981) else Color(0xFFEF4444),
                     modifier = Modifier.size(18.dp)
                 )
-                Text(
+                AvalonText(
                     text = testResult,
                     fontSize = 12.sp,
                     fontWeight = FontWeight.Medium,
@@ -69,13 +69,13 @@ fun PluginProxyStatusBanners(
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.spacedBy(10.dp)
             ) {
-                Icon(
+                AvalonIcon(
                     imageVector = Lucide.Check,
                     contentDescription = null,
                     tint = AvalonTheme.colors.primary,
                     modifier = Modifier.size(18.dp)
                 )
-                Text(
+                AvalonText(
                     text = saveResult,
                     fontSize = 12.sp,
                     fontWeight = FontWeight.Medium,

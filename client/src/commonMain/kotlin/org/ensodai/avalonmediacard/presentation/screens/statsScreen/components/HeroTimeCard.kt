@@ -24,10 +24,10 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import org.ensodai.avalonmediacard.designsystem.components.AvalonBentoCard
 import org.ensodai.avalonmediacard.designsystem.components.AvalonDialog
-import org.ensodai.avalonmediacard.designsystem.components.AvalonIcon as Icon
-import org.ensodai.avalonmediacard.designsystem.components.AvalonIconButton as IconButton
-import org.ensodai.avalonmediacard.designsystem.components.AvalonSurface as Surface
-import org.ensodai.avalonmediacard.designsystem.components.AvalonText as Text
+import org.ensodai.avalonmediacard.designsystem.components.AvalonIcon
+import org.ensodai.avalonmediacard.designsystem.components.AvalonIconButton
+import org.ensodai.avalonmediacard.designsystem.components.AvalonSurface
+import org.ensodai.avalonmediacard.designsystem.components.AvalonText
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -197,14 +197,14 @@ fun HeroTimeCard(
                 modifier = Modifier.fillMaxWidth()
             ) {
                 Row(verticalAlignment = Alignment.CenterVertically) {
-                    Icon(
+                    AvalonIcon(
                         imageVector = Lucide.Clock,
                         contentDescription = null,
                         tint = colors.textSecondary,
                         modifier = Modifier.size(16.dp)
                     )
                     Spacer(modifier = Modifier.width(8.dp))
-                    Text(
+                    AvalonText(
                         text = stringResource(Res.string.stats_hero_time_title),
                         style = AvalonTheme.typography.sectionTitle,
                         color = colors.textPrimary
@@ -228,21 +228,21 @@ fun HeroTimeCard(
                         )
                         .padding(horizontal = 6.dp, vertical = 4.dp)
                 ) {
-                    Icon(
+                    AvalonIcon(
                         imageVector = Lucide.Flame,
                         contentDescription = null,
                         tint = milestoneIconColor,
                         modifier = Modifier.size(13.dp)
                     )
                     Spacer(modifier = Modifier.width(6.dp))
-                    Text(
+                    AvalonText(
                         text = milestoneTitle,
                         style = AvalonTheme.typography.labelSmall,
                         fontWeight = if (isMilestoneHovered) FontWeight.Bold else FontWeight.SemiBold,
                         color = milestoneTextColor
                     )
                     Spacer(modifier = Modifier.width(4.dp))
-                    Icon(
+                    AvalonIcon(
                         imageVector = Lucide.ChevronRight,
                         contentDescription = null,
                         tint = milestoneTextColor.copy(alpha = if (isMilestoneHovered) 0.9f else 0.5f),
@@ -254,7 +254,7 @@ fun HeroTimeCard(
             Spacer(modifier = Modifier.height(18.dp))
 
             // Крупное отображение времени
-            Text(
+            AvalonText(
                 text = formattedTotalTime,
                 style = AvalonTheme.typography.kpiHero.copy(
                     fontFeatureSettings = "tnum"
@@ -262,7 +262,7 @@ fun HeroTimeCard(
                 color = colors.textPrimary
             )
 
-            Text(
+            AvalonText(
                 text = milestoneDesc,
                 style = AvalonTheme.typography.bodyMedium,
                 color = colors.textSecondary,
@@ -384,7 +384,7 @@ fun HeroTimeCard(
                             .background(colors.accentPrimary)
                     )
                     Spacer(modifier = Modifier.width(7.dp))
-                    Text(
+                    AvalonText(
                         text = stringResource(Res.string.stats_hero_time_movies_fmt, moviesHours, moviesShare),
                         style = AvalonTheme.typography.bodySmall.copy(
                             fontSize = if (isMoviesHovered) 13.5.sp else 13.sp,
@@ -413,7 +413,7 @@ fun HeroTimeCard(
                             .background(colors.chartBarDefault)
                     )
                     Spacer(modifier = Modifier.width(7.dp))
-                    Text(
+                    AvalonText(
                         text = stringResource(Res.string.stats_hero_time_shows_fmt, showsHours, showsShare),
                         style = AvalonTheme.typography.bodySmall.copy(
                             fontSize = if (isShowsHovered) 13.5.sp else 13.sp,
@@ -499,7 +499,7 @@ private fun MilestonesDialog(
                 .padding(24.dp),
             contentAlignment = Alignment.Center
         ) {
-            Surface(
+            AvalonSurface(
                 shape = shapes.container,
                 color = colors.bgSurface,
                 border = BorderStroke(1.dp, colors.borderSubtle),
@@ -519,14 +519,14 @@ private fun MilestonesDialog(
                         verticalAlignment = Alignment.CenterVertically
                     ) {
                         Row(verticalAlignment = Alignment.CenterVertically) {
-                            Icon(
+                            AvalonIcon(
                                 imageVector = Lucide.Flame,
                                 contentDescription = null,
                                 tint = colors.textPrimary,
                                 modifier = Modifier.size(18.dp)
                             )
                             Spacer(modifier = Modifier.width(10.dp))
-                            Text(
+                            AvalonText(
                                 text = "Шкала экранных вех",
                                 style = AvalonTheme.typography.titleMedium,
                                 fontWeight = FontWeight.Bold,
@@ -534,8 +534,8 @@ private fun MilestonesDialog(
                             )
                         }
 
-                        IconButton(onClick = onDismiss) {
-                            Icon(
+                        AvalonIconButton(onClick = onDismiss) {
+                            AvalonIcon(
                                 imageVector = Lucide.X,
                                 contentDescription = "Закрыть",
                                 tint = colors.textSecondary,
@@ -546,7 +546,7 @@ private fun MilestonesDialog(
 
                     Spacer(modifier = Modifier.height(16.dp))
 
-                    Text(
+                    AvalonText(
                         text = "Каждая веха отмечает масштаб просмотренного контента и сопоставляет его с историческими экспедициями и рекордами человечества.",
                         style = AvalonTheme.typography.bodySmall,
                         color = colors.textSecondary,
@@ -563,7 +563,7 @@ private fun MilestonesDialog(
                             val isCompleted = index < currentIdx
                             val isCurrent = index == currentIdx
 
-                            Surface(
+                            AvalonSurface(
                                 shape = shapes.control,
                                 color = if (isCurrent) colors.bgElevated else colors.bgSurface,
                                 border = if (isCurrent) BorderStroke(1.dp, colors.borderSubtle) else null,
@@ -588,14 +588,14 @@ private fun MilestonesDialog(
                                         contentAlignment = Alignment.Center
                                     ) {
                                         if (isCompleted) {
-                                            Icon(
+                                            AvalonIcon(
                                                 imageVector = Lucide.Check,
                                                 contentDescription = null,
                                                 tint = colors.bgSurface,
                                                 modifier = Modifier.size(14.dp)
                                             )
                                         } else if (isCurrent) {
-                                            Icon(
+                                            AvalonIcon(
                                                 imageVector = Lucide.Flame,
                                                 contentDescription = null,
                                                 tint = colors.bgSurface,
@@ -612,18 +612,18 @@ private fun MilestonesDialog(
                                             horizontalArrangement = Arrangement.SpaceBetween,
                                             verticalAlignment = Alignment.CenterVertically
                                         ) {
-                                            Text(
+                                            AvalonText(
                                                 text = step.title,
                                                 style = AvalonTheme.typography.bodyMedium,
                                                 fontWeight = if (isCurrent) FontWeight.Bold else FontWeight.Medium,
                                                 color = if (isCurrent) colors.textPrimary else if (isCompleted) colors.textSecondary else colors.textSecondary.copy(alpha = 0.5f)
                                             )
                                             if (isCurrent) {
-                                                Surface(
+                                                AvalonSurface(
                                                     shape = shapes.micro,
                                                     color = colors.accentPrimary
                                                 ) {
-                                                    Text(
+                                                    AvalonText(
                                                         text = "Текущий",
                                                         style = AvalonTheme.typography.labelSmall.copy(fontSize = 9.sp),
                                                         fontWeight = FontWeight.Bold,
@@ -633,7 +633,7 @@ private fun MilestonesDialog(
                                                 }
                                             }
                                         }
-                                        Text(
+                                        AvalonText(
                                             text = step.subtitle,
                                             style = AvalonTheme.typography.bodySmall.copy(fontSize = 11.sp),
                                             color = colors.textSecondary.copy(alpha = if (isCurrent) 0.9f else 0.6f),
@@ -648,7 +648,7 @@ private fun MilestonesDialog(
                     Spacer(modifier = Modifier.height(20.dp))
 
                     // Кнопка закрытия
-                    Surface(
+                    AvalonSurface(
                         onClick = onDismiss,
                         shape = shapes.control,
                         color = colors.bgElevated,
@@ -665,7 +665,7 @@ private fun MilestonesDialog(
                             modifier = Modifier.padding(vertical = 10.dp),
                             contentAlignment = Alignment.Center
                         ) {
-                            Text(
+                            AvalonText(
                                 text = "Понятно",
                                 style = AvalonTheme.typography.labelMedium,
                                 fontWeight = FontWeight.Bold,

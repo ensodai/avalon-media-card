@@ -14,7 +14,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
-import org.ensodai.avalonmediacard.designsystem.components.AvalonText as Text
+import org.ensodai.avalonmediacard.designsystem.components.AvalonText
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -59,7 +59,7 @@ fun WatchPartyIntentSelectorTv(
             horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically
         ) {
-            Text(
+            AvalonText(
                 text = if (isReady && selectedIntent != null) {
                     stringResource(Res.string.watch_party_my_intent_label)
                 } else {
@@ -71,14 +71,14 @@ fun WatchPartyIntentSelectorTv(
                 letterSpacing = 0.5.sp
             )
             if (isReady && selectedIntent != null) {
-                Text(
+                AvalonText(
                     text = stringResource(selectedIntent.toLabelRes()),
                     fontSize = 14.sp,
                     fontWeight = FontWeight.SemiBold,
                     color = Color(0xFF81C784)
                 )
             } else {
-                Text(
+                AvalonText(
                     text = stringResource(Res.string.watch_party_ready_status_not_ready),
                     fontSize = 13.sp,
                     fontWeight = FontWeight.Medium,
@@ -130,12 +130,12 @@ fun WatchPartyIntentSelectorTv(
                                 verticalAlignment = Alignment.CenterVertically,
                                 horizontalArrangement = Arrangement.Center
                             ) {
-                                Text(
+                                AvalonText(
                                     text = intentToEmoji(intent),
                                     fontSize = 20.sp
                                 )
                                 Spacer(modifier = Modifier.width(8.dp))
-                                Text(
+                                AvalonText(
                                     text = stringResource(intent.toLabelRes()),
                                     fontSize = 13.sp,
                                     fontWeight = if (isSelected) FontWeight.Bold else FontWeight.Medium,

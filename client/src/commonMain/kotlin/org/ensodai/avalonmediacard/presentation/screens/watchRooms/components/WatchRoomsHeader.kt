@@ -13,8 +13,8 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
-import org.ensodai.avalonmediacard.designsystem.components.AvalonIcon as Icon
-import org.ensodai.avalonmediacard.designsystem.components.AvalonText as Text
+import org.ensodai.avalonmediacard.designsystem.components.AvalonIcon
+import org.ensodai.avalonmediacard.designsystem.components.AvalonText
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -45,13 +45,13 @@ fun WatchRoomsHeader(
         verticalAlignment = Alignment.CenterVertically
     ) {
         Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
-            Text(
+            AvalonText(
                 text = stringResource(Res.string.watch_rooms_title),
                 fontSize = titleFontSize,
                 fontWeight = FontWeight.Bold,
                 color = AvalonTheme.colors.onBackground
             )
-            Text(
+            AvalonText(
                 text = stringResource(Res.string.watch_rooms_subtitle),
                 fontSize = subtitleFontSize,
                 color = AvalonTheme.colors.onBackground.copy(alpha = 0.6f)
@@ -80,13 +80,13 @@ fun WatchRoomsHeader(
                 horizontalArrangement = Arrangement.spacedBy(8.dp),
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                Icon(
+                AvalonIcon(
                     imageVector = Lucide.KeyRound,
                     contentDescription = null,
                     tint = Color.White.copy(alpha = 0.9f),
                     modifier = Modifier.size(16.dp)
                 )
-                Text(
+                AvalonText(
                     text = stringResource(Res.string.watch_rooms_btn_connect),
                     fontSize = 13.sp,
                     fontWeight = FontWeight.Medium,

@@ -2,8 +2,8 @@ package org.ensodai.avalonmediacard.presentation.core
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
-import org.ensodai.avalonmediacard.designsystem.components.AvalonSnackbarHost as SnackbarHost
-import org.ensodai.avalonmediacard.designsystem.components.AvalonSnackbarHostState as SnackbarHostState
+import org.ensodai.avalonmediacard.designsystem.components.AvalonSnackbarHost
+import org.ensodai.avalonmediacard.designsystem.components.AvalonSnackbarHostState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.compositionLocalOf
@@ -40,7 +40,7 @@ fun SduiCoordinator(
 
     val scope = rememberCoroutineScope()
     var executingAction by remember { mutableStateOf<Action?>(null) }
-    val snackbarHostState = remember { SnackbarHostState() }
+    val snackbarHostState = remember { AvalonSnackbarHostState() }
 
     val dispatch = remember(navigation, uriHandler, viewModel, scope, snackbarHostState) {
         { action: Action ->
@@ -113,7 +113,7 @@ fun SduiCoordinator(
     CompositionLocalProvider(LocalExecutingAction provides executingAction) {
         Box(modifier = Modifier.fillMaxSize()) {
             content(dispatch)
-            SnackbarHost(
+            AvalonSnackbarHost(
                 hostState = snackbarHostState,
                 modifier = Modifier.align(Alignment.BottomCenter)
             )

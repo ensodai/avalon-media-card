@@ -9,9 +9,9 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
-import org.ensodai.avalonmediacard.designsystem.components.AvalonCircularProgressIndicator as CircularProgressIndicator
-import org.ensodai.avalonmediacard.designsystem.components.AvalonButton as OutlinedButton
-import org.ensodai.avalonmediacard.designsystem.components.AvalonText as Text
+import org.ensodai.avalonmediacard.designsystem.components.AvalonCircularProgressIndicator
+import org.ensodai.avalonmediacard.designsystem.components.AvalonButton
+import org.ensodai.avalonmediacard.designsystem.components.AvalonText
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -29,7 +29,7 @@ fun StatsLoadingState(
             .height(350.dp),
         contentAlignment = Alignment.Center
     ) {
-        CircularProgressIndicator(
+        AvalonCircularProgressIndicator(
             color = AvalonTheme.colors.primary,
             modifier = Modifier.size(44.dp)
         )
@@ -49,17 +49,17 @@ fun StatsErrorState(
         contentAlignment = Alignment.Center
     ) {
         Column(horizontalAlignment = Alignment.CenterHorizontally) {
-            Text(
+            AvalonText(
                 text = errorMessage,
                 style = AvalonTheme.typography.bodyLarge,
                 color = AvalonTheme.colors.error
             )
             Spacer(modifier = Modifier.height(16.dp))
-            OutlinedButton(
+            AvalonButton(
                 onClick = onRetry,
                 shape = RoundedCornerShape(12.dp)
             ) {
-                Text(stringResource(Res.string.stats_retry))
+                AvalonText(stringResource(Res.string.stats_retry))
             }
         }
     }

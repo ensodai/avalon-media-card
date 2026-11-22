@@ -12,8 +12,8 @@ import androidx.compose.foundation.gestures.scrollBy
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.*
 import androidx.compose.foundation.shape.RoundedCornerShape
-import org.ensodai.avalonmediacard.designsystem.components.AvalonIcon as Icon
-import org.ensodai.avalonmediacard.designsystem.components.AvalonText as Text
+import org.ensodai.avalonmediacard.designsystem.components.AvalonIcon
+import org.ensodai.avalonmediacard.designsystem.components.AvalonText
 import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
@@ -175,7 +175,7 @@ fun EpisodeListPanel(
                             .padding(horizontal = 20.dp, vertical = 10.dp), // Сами кнопки делаем чуть пухлее
                         contentAlignment = Alignment.Center
                     ) {
-                        Text(
+                        AvalonText(
                             text = stringResource(Res.string.player_season_fmt, season),
                             color = if (isActive) Color.White else Color.White.copy(alpha = 0.5f),
                             fontWeight = if (isActive) FontWeight.Bold else FontWeight.Medium,
@@ -206,7 +206,7 @@ fun EpisodeListPanel(
                                 .background(Color.Black.copy(alpha = 0.5f))
                                 .padding(horizontal = 16.dp, vertical = 6.dp)
                         ) {
-                            Text(
+                            AvalonText(
                                 text = stringResource(Res.string.player_season_fmt, season),
                                 color = Color.White,
                                 fontWeight = FontWeight.Bold,
@@ -289,14 +289,14 @@ fun PlayerEpisodeCard(
             if (isPlaying) {
                 // Затемняем картинку, чтобы иконка Play была лучше видна
                 Box(modifier = Modifier.fillMaxSize().background(Color.Black.copy(alpha = 0.4f)))
-                Icon(
+                AvalonIcon(
                     imageVector = Lucide.Play,
                     contentDescription = stringResource(Res.string.player_now_playing),
                     tint = Color.White,
                     modifier = Modifier.size(28.dp)
                 )
             } else if (posterUrl.isNullOrBlank()) {
-                Icon(
+                AvalonIcon(
                     imageVector = Lucide.Play,
                     contentDescription = null,
                     tint = Color.White.copy(alpha = 0.2f),
@@ -323,7 +323,7 @@ fun PlayerEpisodeCard(
                 source.title
             }
 
-            Text(
+            AvalonText(
                 text = primaryText,
                 color = if (isPlaying) AvalonTheme.colors.primary else Color.White.copy(
                     alpha = 0.9f
@@ -348,7 +348,7 @@ fun PlayerEpisodeCard(
                     } else {
                         stringResource(Res.string.player_duration_mins_single_fmt, mins)
                     }
-                    Text(
+                    AvalonText(
                         text = text,
                         color = Color.White.copy(alpha = 0.5f),
                         fontSize = 12.sp
@@ -364,7 +364,7 @@ fun PlayerEpisodeCard(
                             .background(Color(0xFF4CAF50)),
                         contentAlignment = Alignment.Center
                     ) {
-                        Icon(
+                        AvalonIcon(
                             imageVector = Lucide.Check,
                             contentDescription = stringResource(Res.string.player_watched),
                             tint = Color.White,
@@ -375,14 +375,14 @@ fun PlayerEpisodeCard(
 
                 if (source.userRating != null) {
                     Spacer(modifier = Modifier.width(8.dp))
-                    Icon(
+                    AvalonIcon(
                         imageVector = Lucide.Star,
                         contentDescription = stringResource(Res.string.player_rate),
                         tint = Color(0xFFFFC107),
                         modifier = Modifier.size(12.dp)
                     )
                     Spacer(modifier = Modifier.width(2.dp))
-                    Text(
+                    AvalonText(
                         text = source.userRating.toString(),
                         color = Color(0xFFFFC107),
                         fontSize = 12.sp,

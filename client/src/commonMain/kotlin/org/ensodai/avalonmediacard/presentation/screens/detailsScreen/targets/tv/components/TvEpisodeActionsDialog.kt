@@ -6,8 +6,8 @@ import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
-import org.ensodai.avalonmediacard.designsystem.components.AvalonIcon as Icon
-import org.ensodai.avalonmediacard.designsystem.components.AvalonText as Text
+import org.ensodai.avalonmediacard.designsystem.components.AvalonIcon
+import org.ensodai.avalonmediacard.designsystem.components.AvalonText
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -55,7 +55,7 @@ internal fun TvEpisodeActionsDialog(
                 .padding(24.dp),
             verticalArrangement = Arrangement.spacedBy(12.dp)
         ) {
-            Text(
+            AvalonText(
                 text = "${targetEpisode.episodeNumber}. ${targetEpisode.name}",
                 style = typography.cardTitle,
                 color = colors.textPrimary,
@@ -120,13 +120,13 @@ internal fun TvActionItem(
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.spacedBy(12.dp)
     ) {
-        Icon(
+        AvalonIcon(
             imageVector = icon,
             contentDescription = null,
             tint = iconTint,
             modifier = Modifier.size(18.dp)
         )
-        Text(
+        AvalonText(
             text = label,
             style = typography.uiLabel,
             color = colors.textPrimary

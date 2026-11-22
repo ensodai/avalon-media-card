@@ -7,7 +7,7 @@ import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
-import org.ensodai.avalonmediacard.designsystem.components.AvalonIcon as Icon
+import org.ensodai.avalonmediacard.designsystem.components.AvalonIcon
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -45,7 +45,7 @@ fun TvIconButton(
             .border(1.dp, colors.borderOverlay, CircleShape),
         contentAlignment = Alignment.Center
     ) {
-        Icon(
+        AvalonIcon(
             imageVector = icon,
             contentDescription = contentDescription,
             tint = tint,

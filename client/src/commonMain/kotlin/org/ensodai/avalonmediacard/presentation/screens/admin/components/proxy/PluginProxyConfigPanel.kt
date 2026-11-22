@@ -8,8 +8,8 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
-import org.ensodai.avalonmediacard.designsystem.components.AvalonSwitch as Switch
-import org.ensodai.avalonmediacard.designsystem.components.AvalonText as Text
+import org.ensodai.avalonmediacard.designsystem.components.AvalonSwitch
+import org.ensodai.avalonmediacard.designsystem.components.AvalonText
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -50,14 +50,14 @@ fun PluginProxyConfigPanel(
             verticalAlignment = Alignment.CenterVertically
         ) {
             Column(modifier = Modifier.weight(1f).padding(end = 12.dp)) {
-                Text(
+                AvalonText(
                     text = selectedPlugin.pluginName,
                     fontSize = 17.sp,
                     fontWeight = FontWeight.Bold,
                     color = AvalonTheme.colors.onSurface
                 )
                 Spacer(modifier = Modifier.height(2.dp))
-                Text(
+                AvalonText(
                     text = "ID: ${selectedPlugin.pluginId} • v${selectedPlugin.pluginVersion}",
                     fontSize = 12.sp,
                     color = AvalonTheme.colors.onSurfaceVariant
@@ -75,14 +75,14 @@ fun PluginProxyConfigPanel(
                         activeBorderColor = Color.Transparent
                     )
             ) {
-                Switch(
+                AvalonSwitch(
                     checked = state.editProxyEnabled,
                     onCheckedChange = null
                 )
             }
         }
 
-        Text(
+        AvalonText(
             text = stringResource(Res.string.admin_plugin_proxy_enable_switch),
             fontSize = 13.sp,
             fontWeight = FontWeight.Medium,

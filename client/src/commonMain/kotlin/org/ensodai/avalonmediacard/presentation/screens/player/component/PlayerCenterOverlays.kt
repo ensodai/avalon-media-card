@@ -28,12 +28,12 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
-import org.ensodai.avalonmediacard.designsystem.components.AvalonButton as Button
-import org.ensodai.avalonmediacard.designsystem.components.AvalonCard as Card
+import org.ensodai.avalonmediacard.designsystem.components.AvalonButton
+import org.ensodai.avalonmediacard.designsystem.components.AvalonCard
 import org.ensodai.avalonmediacard.designsystem.components.CardDefaults
-import org.ensodai.avalonmediacard.designsystem.components.AvalonCircularProgressIndicator as CircularProgressIndicator
-import org.ensodai.avalonmediacard.designsystem.components.AvalonIcon as Icon
-import org.ensodai.avalonmediacard.designsystem.components.AvalonText as Text
+import org.ensodai.avalonmediacard.designsystem.components.AvalonCircularProgressIndicator
+import org.ensodai.avalonmediacard.designsystem.components.AvalonIcon
+import org.ensodai.avalonmediacard.designsystem.components.AvalonText
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -239,14 +239,14 @@ fun PlayerCenterOverlays(
                         verticalAlignment = Alignment.CenterVertically,
                         horizontalArrangement = Arrangement.Center
                     ) {
-                        Icon(
+                        AvalonIcon(
                             imageVector = Lucide.RotateCcw,
                             contentDescription = null,
                             tint = colors.textPrimary,
                             modifier = Modifier.size(28.dp)
                         )
                         Spacer(modifier = Modifier.width(6.dp))
-                        Icon(
+                        AvalonIcon(
                             imageVector = Lucide.ChevronLeft,
                             contentDescription = null,
                             tint = colors.accentPrimary,
@@ -254,7 +254,7 @@ fun PlayerCenterOverlays(
                         )
                     }
                     Spacer(modifier = Modifier.height(6.dp))
-                    Text(
+                    AvalonText(
                         text = stringResource(Res.string.player_seconds_short_fmt, "-$accumulatedSeconds"),
                         color = colors.textPrimary,
                         style = AvalonTheme.typography.cardTitle
@@ -288,14 +288,14 @@ fun PlayerCenterOverlays(
                         verticalAlignment = Alignment.CenterVertically,
                         horizontalArrangement = Arrangement.Center
                     ) {
-                        Icon(
+                        AvalonIcon(
                             imageVector = Lucide.ChevronRight,
                             contentDescription = null,
                             tint = colors.accentPrimary,
                             modifier = Modifier.size(24.dp)
                         )
                         Spacer(modifier = Modifier.width(6.dp))
-                        Icon(
+                        AvalonIcon(
                             imageVector = Lucide.RotateCw,
                             contentDescription = null,
                             tint = colors.textPrimary,
@@ -303,7 +303,7 @@ fun PlayerCenterOverlays(
                         )
                     }
                     Spacer(modifier = Modifier.height(6.dp))
-                    Text(
+                    AvalonText(
                         text = stringResource(Res.string.player_seconds_short_fmt, "+$accumulatedSeconds"),
                         color = colors.textPrimary,
                         style = AvalonTheme.typography.cardTitle
@@ -313,21 +313,21 @@ fun PlayerCenterOverlays(
         }
 
         if (playbackError != null) {
-            Card(
+            AvalonCard(
                 colors = CardDefaults.cardColors(containerColor = colors.statusDanger.copy(alpha = 0.2f)),
                 modifier = Modifier.align(Alignment.Center).padding(24.dp)
             ) {
                 Column(modifier = Modifier.padding(16.dp), horizontalAlignment = Alignment.CenterHorizontally) {
-                    Text(
+                    AvalonText(
                         text = playbackError,
                         color = colors.textPrimary,
                         fontWeight = FontWeight.Bold
                     )
                     Spacer(modifier = Modifier.height(12.dp))
-                    Button(onClick = { if (url != null) openInExternalPlayer(url, title) }) {
-                        Icon(imageVector = Lucide.ExternalLink, contentDescription = null)
+                    AvalonButton(onClick = { if (url != null) openInExternalPlayer(url, title) }) {
+                        AvalonIcon(imageVector = Lucide.ExternalLink, contentDescription = null)
                         Spacer(modifier = Modifier.width(8.dp))
-                        Text(stringResource(Res.string.player_open_external))
+                        AvalonText(stringResource(Res.string.player_open_external))
                     }
                 }
             }
@@ -339,7 +339,7 @@ fun PlayerCenterOverlays(
                     .background(Color.Black.copy(alpha = bgAlpha)),
                 contentAlignment = Alignment.Center
             ) {
-                CircularProgressIndicator(
+                AvalonCircularProgressIndicator(
                     color = colors.accentPrimary,
                     modifier = Modifier.size(64.dp)
                 )
@@ -357,7 +357,7 @@ fun PlayerCenterOverlays(
                     .background(colors.bgPureCinema.copy(alpha = 0.65f), shapes.control)
                     .padding(horizontal = 24.dp, vertical = 12.dp)
             ) {
-                Text(
+                AvalonText(
                     text = currentSubtitleText,
                     color = colors.textPrimary,
                     fontSize = 28.sp,

@@ -14,9 +14,9 @@ import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.runtime.*
-import org.ensodai.avalonmediacard.designsystem.components.AvalonIcon as Icon
-import org.ensodai.avalonmediacard.designsystem.components.AvalonSurface as Surface
-import org.ensodai.avalonmediacard.designsystem.components.AvalonText as Text
+import org.ensodai.avalonmediacard.designsystem.components.AvalonIcon
+import org.ensodai.avalonmediacard.designsystem.components.AvalonSurface
+import org.ensodai.avalonmediacard.designsystem.components.AvalonText
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -181,20 +181,20 @@ fun HeroBannerWidget(
                         .padding(start = 32.dp, end = 120.dp, bottom = 40.dp)
                         .fillMaxWidth(0.75f)
                 ) {
-                    Text(
+                    AvalonText(
                         text = data.title,
                         color = AvalonTheme.colors.textSecondary,
                         style = AvalonTheme.typography.uiLabel
                     )
                     Spacer(modifier = Modifier.height(8.dp))
-                    Text(
+                    AvalonText(
                         text = currentItem.title,
                         color = AvalonTheme.colors.textPrimary,
                         style = AvalonTheme.typography.displayHero
                     )
                     data.subtitle?.let {
                         Spacer(modifier = Modifier.height(8.dp))
-                        Text(
+                        AvalonText(
                             text = it,
                             color = AvalonTheme.colors.textSecondary,
                             style = AvalonTheme.typography.bodySynopsis
@@ -228,7 +228,7 @@ fun HeroBannerWidget(
                     ),
                 contentAlignment = Alignment.Center
             ) {
-                Icon(
+                AvalonIcon(
                     imageVector = Lucide.ChevronLeft,
                     contentDescription = stringResource(Res.string.dashboard_hero_prev_slide),
                     tint = AvalonTheme.colors.textPrimary,
@@ -259,7 +259,7 @@ fun HeroBannerWidget(
                     ),
                 contentAlignment = Alignment.Center
             ) {
-                Icon(
+                AvalonIcon(
                     imageVector = Lucide.ChevronRight,
                     contentDescription = stringResource(Res.string.dashboard_hero_next_slide),
                     tint = AvalonTheme.colors.textPrimary,
@@ -279,12 +279,12 @@ fun HeroBannerWidget(
                 horizontalArrangement = Arrangement.spacedBy(8.dp)
             ) {
                 // Текстовый счетчик 1 / 5
-                Surface(
+                AvalonSurface(
                     color = AvalonTheme.colors.bgOverlay.copy(alpha = 0.85f),
                     border = BorderStroke(1.dp, AvalonTheme.colors.borderStrong),
                     shape = RoundedCornerShape(8.dp)
                 ) {
-                    Text(
+                    AvalonText(
                         text = "${currentActualIndex + 1} / ${items.size}",
                         color = AvalonTheme.colors.textSecondary,
                         style = AvalonTheme.typography.metadata,

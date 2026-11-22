@@ -7,8 +7,8 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
-import org.ensodai.avalonmediacard.designsystem.components.AvalonIcon as Icon
-import org.ensodai.avalonmediacard.designsystem.components.AvalonText as Text
+import org.ensodai.avalonmediacard.designsystem.components.AvalonIcon
+import org.ensodai.avalonmediacard.designsystem.components.AvalonText
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -107,14 +107,14 @@ fun StatusDropdownButton(
             verticalAlignment = Alignment.CenterVertically
         ) {
             val isTvTarget = LocalDeviceTarget.current.isTv
-            Icon(
+            AvalonIcon(
                 Lucide.Eye,
                 contentDescription = null,
                 tint = if (isLoading) Color.Transparent else iconTint,
                 modifier = Modifier.size(16.dp)
             )
             Spacer(modifier = Modifier.width(6.dp))
-            Text(
+            AvalonText(
                 text = label,
                 color = if (isLoading) Color.Transparent else AvalonTheme.colors.textPrimary,
                 fontSize = 14.sp,
@@ -122,7 +122,7 @@ fun StatusDropdownButton(
             )
             if (!isTvTarget) {
                 Spacer(modifier = Modifier.width(4.dp))
-                Icon(
+                AvalonIcon(
                     Lucide.ChevronDown,
                     contentDescription = null,
                     tint = if (isLoading) Color.Transparent else AvalonTheme.colors.textMuted,
@@ -239,14 +239,14 @@ fun RatingDropdownButton(
             verticalAlignment = Alignment.CenterVertically
         ) {
             val isTvTarget = LocalDeviceTarget.current.isTv
-            Icon(
+            AvalonIcon(
                 Lucide.Star,
                 contentDescription = null,
                 tint = if (isLoading) Color.Transparent else iconTint,
                 modifier = Modifier.size(16.dp)
             )
             Spacer(modifier = Modifier.width(6.dp))
-            Text(
+            AvalonText(
                 text = label,
                 color = if (isLoading) Color.Transparent else AvalonTheme.colors.textPrimary,
                 fontSize = 14.sp,
@@ -254,7 +254,7 @@ fun RatingDropdownButton(
             )
             if (!isTvTarget) {
                 Spacer(modifier = Modifier.width(4.dp))
-                Icon(
+                AvalonIcon(
                     Lucide.ChevronDown,
                     contentDescription = null,
                     tint = if (isLoading) Color.Transparent else AvalonTheme.colors.textMuted,

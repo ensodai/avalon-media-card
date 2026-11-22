@@ -21,11 +21,11 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
-import org.ensodai.avalonmediacard.designsystem.components.AvalonButton as Button
-import org.ensodai.avalonmediacard.designsystem.components.AvalonIcon as Icon
-import org.ensodai.avalonmediacard.designsystem.components.AvalonIconButton as IconButton
-import org.ensodai.avalonmediacard.designsystem.components.AvalonSurface as Surface
-import org.ensodai.avalonmediacard.designsystem.components.AvalonText as Text
+import org.ensodai.avalonmediacard.designsystem.components.AvalonButton
+import org.ensodai.avalonmediacard.designsystem.components.AvalonIcon
+import org.ensodai.avalonmediacard.designsystem.components.AvalonIconButton
+import org.ensodai.avalonmediacard.designsystem.components.AvalonSurface
+import org.ensodai.avalonmediacard.designsystem.components.AvalonText
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -63,7 +63,7 @@ fun UpdateBannerOverlay(
                 .padding(top = 16.dp, start = 16.dp, end = 16.dp),
             contentAlignment = Alignment.TopCenter
         ) {
-            Surface(
+            AvalonSurface(
                 modifier = Modifier
                     .clip(RoundedCornerShape(16.dp))
                     .border(
@@ -86,7 +86,7 @@ fun UpdateBannerOverlay(
                             .background(AvalonTheme.colors.primary.copy(alpha = 0.2f)),
                         contentAlignment = Alignment.Center
                     ) {
-                        Icon(
+                        AvalonIcon(
                             imageVector = Lucide.Sparkles,
                             contentDescription = null,
                             modifier = Modifier.size(20.dp),
@@ -95,13 +95,13 @@ fun UpdateBannerOverlay(
                     }
 
                     Column {
-                        Text(
+                        AvalonText(
                             text = stringResource(Res.string.update_banner_title),
                             fontSize = 14.sp,
                             fontWeight = FontWeight.SemiBold,
                             color = AvalonTheme.colors.onSurface
                         )
-                        Text(
+                        AvalonText(
                             text = if (!versionName.isNullOrBlank()) {
                                 stringResource(Res.string.update_banner_version_ready, versionName!!)
                             } else {
@@ -114,25 +114,25 @@ fun UpdateBannerOverlay(
 
                     Spacer(modifier = Modifier.width(8.dp))
 
-                    Button(
+                    AvalonButton(
                         onClick = { updateManager.applyUpdate() },
                         shape = RoundedCornerShape(10.dp),
                         contentPadding = PaddingValues(horizontal = 16.dp, vertical = 8.dp)
                     ) {
-                        Icon(
+                        AvalonIcon(
                             imageVector = Lucide.RefreshCw,
                             contentDescription = null,
                             modifier = Modifier.size(16.dp)
                         )
                         Spacer(modifier = Modifier.width(6.dp))
-                        Text(text = stringResource(Res.string.update_banner_btn_update), fontSize = 13.sp)
+                        AvalonText(text = stringResource(Res.string.update_banner_btn_update), fontSize = 13.sp)
                     }
 
-                    IconButton(
+                    AvalonIconButton(
                         onClick = { updateManager.dismissUpdate() },
                         modifier = Modifier.size(28.dp)
                     ) {
-                        Icon(
+                        AvalonIcon(
                             imageVector = Lucide.X,
                             contentDescription = stringResource(Res.string.common_close),
                             modifier = Modifier.size(18.dp),

@@ -13,9 +13,9 @@ import avalonmediacard.client.generated.resources.*
 import com.composables.icons.lucide.Info
 import com.composables.icons.lucide.Lucide
 import org.ensodai.avalonmediacard.contract.slot.Action
-import org.ensodai.avalonmediacard.designsystem.components.AvalonButton as Button
-import org.ensodai.avalonmediacard.designsystem.components.AvalonIcon as Icon
-import org.ensodai.avalonmediacard.designsystem.components.AvalonText as Text
+import org.ensodai.avalonmediacard.designsystem.components.AvalonButton
+import org.ensodai.avalonmediacard.designsystem.components.AvalonIcon
+import org.ensodai.avalonmediacard.designsystem.components.AvalonText
 import org.ensodai.avalonmediacard.designsystem.components.ButtonDefaults
 import org.ensodai.avalonmediacard.designsystem.theme.AvalonTheme
 import org.jetbrains.compose.resources.stringResource
@@ -44,7 +44,7 @@ fun SlotErrorCard(
             horizontalArrangement = Arrangement.spacedBy(16.dp),
             modifier = Modifier.fillMaxWidth()
         ) {
-            Icon(
+            AvalonIcon(
                 imageVector = Lucide.Info,
                 contentDescription = null,
                 tint = colors.statusDanger,
@@ -52,13 +52,13 @@ fun SlotErrorCard(
             )
 
             Column(modifier = Modifier.weight(1f)) {
-                Text(
+                AvalonText(
                     text = stringResource(Res.string.common_error_something_went_wrong),
                     style = typography.titleMedium.copy(fontSize = 15.sp),
                     color = colors.statusDanger
                 )
                 Spacer(modifier = Modifier.height(2.dp))
-                Text(
+                AvalonText(
                     text = message,
                     style = typography.bodyMedium.copy(fontSize = 13.sp),
                     color = colors.textSecondary,
@@ -67,7 +67,7 @@ fun SlotErrorCard(
             }
 
             if (retryAction != null && onAction != null) {
-                Button(
+                AvalonButton(
                     onClick = { onAction(retryAction) },
                     colors = ButtonDefaults.buttonColors(
                         containerColor = colors.statusDanger
@@ -75,7 +75,7 @@ fun SlotErrorCard(
                     contentPadding = PaddingValues(horizontal = 16.dp, vertical = 6.dp),
                     shape = shapes.control
                 ) {
-                    Text(
+                    AvalonText(
                         text = stringResource(Res.string.common_retry),
                         color = colors.textPrimary,
                         style = typography.labelLarge

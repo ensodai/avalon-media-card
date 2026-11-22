@@ -21,8 +21,8 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
-import org.ensodai.avalonmediacard.designsystem.components.AvalonIcon as Icon
-import org.ensodai.avalonmediacard.designsystem.components.AvalonText as Text
+import org.ensodai.avalonmediacard.designsystem.components.AvalonIcon
+import org.ensodai.avalonmediacard.designsystem.components.AvalonText
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -119,7 +119,7 @@ fun TvEpisodeActionsDrawer(
                                 .background(Color.White.copy(alpha = 0.08f))
                                 .padding(horizontal = 8.dp, vertical = 4.dp)
                         ) {
-                            Text(
+                            AvalonText(
                                 text = stringResource(Res.string.player_duration_mins_single_fmt, duration),
                                 fontSize = 12.sp,
                                 color = Color.White.copy(alpha = 0.8f)
@@ -138,13 +138,13 @@ fun TvEpisodeActionsDrawer(
                             verticalAlignment = Alignment.CenterVertically,
                             horizontalArrangement = Arrangement.spacedBy(4.dp)
                         ) {
-                            Icon(
+                            AvalonIcon(
                                 imageVector = Lucide.Star,
                                 contentDescription = null,
                                 tint = Color(0xFFFFC107),
                                 modifier = Modifier.size(12.dp)
                             )
-                            Text(
+                            AvalonText(
                                 text = formattedRating,
                                 fontSize = 12.sp,
                                 fontWeight = FontWeight.Bold,
@@ -162,13 +162,13 @@ fun TvEpisodeActionsDrawer(
                             verticalAlignment = Alignment.CenterVertically,
                             horizontalArrangement = Arrangement.spacedBy(4.dp)
                         ) {
-                            Icon(
+                            AvalonIcon(
                                 imageVector = Lucide.Check,
                                 contentDescription = null,
                                 tint = Color(0xFF4CAF50),
                                 modifier = Modifier.size(12.dp)
                             )
-                            Text(
+                            AvalonText(
                                 text = stringResource(Res.string.details_seasons_completed),
                                 fontSize = 11.sp,
                                 fontWeight = FontWeight.SemiBold,
@@ -277,7 +277,7 @@ fun TvEpisodeActionsDrawer(
                         .verticalScroll(overviewScrollState)
                         .padding(16.dp)
                 ) {
-                    Text(
+                    AvalonText(
                         text = episode.overview?.takeIf { it.isNotBlank() }
                             ?: stringResource(Res.string.details_seasons_no_desc),
                         fontSize = 14.sp,

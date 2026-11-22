@@ -15,7 +15,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
-import org.ensodai.avalonmediacard.designsystem.components.AvalonText as Text
+import org.ensodai.avalonmediacard.designsystem.components.AvalonText
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -150,7 +150,7 @@ fun EpisodesNotificationsLayoutTv(
                             ) {
                                 filteredSections.forEach { section ->
                                     item(key = "header_${section.sectionId}") {
-                                        Text(
+                                        AvalonText(
                                             text = section.title.uppercase(),
                                             fontSize = 13.sp,
                                             fontWeight = FontWeight.Bold,
@@ -197,7 +197,7 @@ fun EpisodesNotificationsLayoutTv(
                                 // Секция пачек пропущенных серий (Smart Rollup)
                                 if (slotData.rollups.isNotEmpty() && state.selectedFilter == EpisodeFilter.ALL) {
                                     item(key = "header_tv_missed_rollups") {
-                                        Text(
+                                        AvalonText(
                                             text = stringResource(Res.string.episodes_notifications_missed_title).uppercase(),
                                             fontSize = 13.sp,
                                             fontWeight = FontWeight.Bold,

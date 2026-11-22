@@ -4,8 +4,8 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
-import org.ensodai.avalonmediacard.designsystem.components.AvalonIcon as Icon
-import org.ensodai.avalonmediacard.designsystem.components.AvalonText as Text
+import org.ensodai.avalonmediacard.designsystem.components.AvalonIcon
+import org.ensodai.avalonmediacard.designsystem.components.AvalonText
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -122,13 +122,13 @@ fun WatchPartyMediaHeroCard(
                         verticalAlignment = Alignment.CenterVertically,
                         horizontalArrangement = Arrangement.spacedBy(5.dp)
                     ) {
-                        Icon(
+                        AvalonIcon(
                             imageVector = if (seasonNum != null) Lucide.Tv else Lucide.Film,
                             contentDescription = null,
                             tint = Color(0xFFA59EFF),
                             modifier = Modifier.size(13.dp)
                         )
-                        Text(
+                        AvalonText(
                             text = if (seasonNum != null) {
                                 if (episodeNum != null) {
                                     stringResource(Res.string.watch_party_media_info_season_ep, seasonNum, episodeNum)
@@ -148,7 +148,7 @@ fun WatchPartyMediaHeroCard(
 
             // Средний блок с названием фильма / сериала
             Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
-                Text(
+                AvalonText(
                     text = mediaTitle,
                     fontSize = 20.sp,
                     fontWeight = FontWeight.Bold,
@@ -182,7 +182,7 @@ fun WatchPartyMediaHeroCard(
                                 .border(1.dp, Color(0xFF6C63FF).copy(alpha = 0.5f), RoundedCornerShape(6.dp))
                                 .padding(horizontal = 8.dp, vertical = 3.dp)
                         ) {
-                            Text(
+                            AvalonText(
                                 text = sourceProvider,
                                 fontSize = 11.sp,
                                 fontWeight = FontWeight.Bold,
@@ -195,7 +195,7 @@ fun WatchPartyMediaHeroCard(
                         ?: if (sourceProvider.isNullOrBlank()) stringResource(Res.string.watch_party_source_selected) else null
 
                     if (!detailsText.isNullOrBlank()) {
-                        Text(
+                        AvalonText(
                             text = detailsText,
                             fontSize = 12.sp,
                             fontWeight = FontWeight.Medium,
@@ -228,13 +228,13 @@ fun WatchPartyMediaHeroCard(
                         verticalAlignment = Alignment.CenterVertically,
                         horizontalArrangement = Arrangement.spacedBy(5.dp)
                     ) {
-                        Icon(
+                        AvalonIcon(
                             imageVector = Lucide.RefreshCw,
                             contentDescription = null,
                             tint = Color.White,
                             modifier = Modifier.size(12.dp)
                         )
-                        Text(
+                        AvalonText(
                             text = if (isSelectingSource) {
                                 stringResource(Res.string.watch_party_source_close_selector)
                             } else {

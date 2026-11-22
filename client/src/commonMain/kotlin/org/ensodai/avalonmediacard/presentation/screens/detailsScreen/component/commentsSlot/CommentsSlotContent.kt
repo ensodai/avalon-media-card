@@ -15,8 +15,8 @@ import androidx.compose.foundation.relocation.BringIntoViewRequester
 import androidx.compose.foundation.relocation.bringIntoViewRequester
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
-import org.ensodai.avalonmediacard.designsystem.components.AvalonIcon as Icon
-import org.ensodai.avalonmediacard.designsystem.components.AvalonText as Text
+import org.ensodai.avalonmediacard.designsystem.components.AvalonIcon
+import org.ensodai.avalonmediacard.designsystem.components.AvalonText
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -84,7 +84,7 @@ fun CommentsSlotContent(
             .fillMaxWidth()
             .padding(vertical = 16.dp)
     ) {
-        Text(
+        AvalonText(
             text = component.title,
             fontSize = 18.sp,
             fontWeight = FontWeight.SemiBold,
@@ -304,7 +304,7 @@ private fun CommentCard(comment: CommentItem) {
             Column(
                 modifier = Modifier.weight(1f)
             ) {
-                Text(
+                AvalonText(
                     text = comment.authorName,
                     fontSize = 14.sp,
                     fontWeight = FontWeight.Bold,
@@ -314,7 +314,7 @@ private fun CommentCard(comment: CommentItem) {
                 )
                 val date = comment.dateText
                 if (!date.isNullOrEmpty()) {
-                    Text(
+                    AvalonText(
                         text = date,
                         fontSize = 11.sp,
                         color = AvalonTheme.colors.onSurfaceVariant.copy(alpha = 0.7f) // Дату можно не высветлять, чтобы был контраст
@@ -329,13 +329,13 @@ private fun CommentCard(comment: CommentItem) {
                     horizontalArrangement = Arrangement.spacedBy(4.dp)
                     // Убрали background, border и padding
                 ) {
-                    Icon(
+                    AvalonIcon(
                         imageVector = Lucide.Star,
                         contentDescription = "User Rating",
                         tint = Color(0xFFFFC107),
                         modifier = Modifier.size(14.dp)
                     )
-                    Text(
+                    AvalonText(
                         text = comment.userRating.toString(),
                         fontSize = 13.sp,
                         fontWeight = FontWeight.SemiBold,
@@ -351,13 +351,13 @@ private fun CommentCard(comment: CommentItem) {
                     verticalAlignment = Alignment.CenterVertically,
                     horizontalArrangement = Arrangement.spacedBy(4.dp)
                 ) {
-                    Icon(
+                    AvalonIcon(
                         imageVector = Lucide.Heart,
                         contentDescription = "Likes",
                         tint = Color(0xFFE91E63),
                         modifier = Modifier.size(14.dp)
                     )
-                    Text(
+                    AvalonText(
                         text = comment.likesCount.toString(),
                         fontSize = 12.sp,
                         color = AvalonTheme.colors.onSurfaceVariant
@@ -380,14 +380,14 @@ private fun CommentCard(comment: CommentItem) {
                     .padding(horizontal = 12.dp, vertical = 8.dp),
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                Icon(
+                AvalonIcon(
                     imageVector = Lucide.EyeOff,
                     contentDescription = "Spoiler warning",
                     tint = AvalonTheme.colors.error,
                     modifier = Modifier.size(16.dp)
                 )
                 Spacer(modifier = Modifier.width(8.dp))
-                Text(
+                AvalonText(
                     text = stringResource(Res.string.details_comments_spoilers),
                     fontSize = 12.sp,
                     color = AvalonTheme.colors.statusDanger,
@@ -399,7 +399,7 @@ private fun CommentCard(comment: CommentItem) {
         } else {
             // Обычный текст отзыва с авто-вычислением переполнения
             val textModifier = if (expanded) Modifier else Modifier.weight(1f, fill = false)
-            Text(
+            AvalonText(
                 text = comment.commentText,
                 fontSize = 13.sp,
                 lineHeight = 18.sp,

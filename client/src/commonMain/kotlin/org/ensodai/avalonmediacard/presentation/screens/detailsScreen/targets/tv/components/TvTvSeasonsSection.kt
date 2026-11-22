@@ -10,8 +10,8 @@ import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.RoundedCornerShape
-import org.ensodai.avalonmediacard.designsystem.components.AvalonIcon as Icon
-import org.ensodai.avalonmediacard.designsystem.components.AvalonText as Text
+import org.ensodai.avalonmediacard.designsystem.components.AvalonIcon
+import org.ensodai.avalonmediacard.designsystem.components.AvalonText
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -174,7 +174,7 @@ fun TvTvSeasonsSection(
                     .height(180.dp),
                 contentAlignment = Alignment.Center
             ) {
-                Text(
+                AvalonText(
                     text = stringResource(Res.string.details_seasons_not_available),
                     color = AvalonTheme.colors.textSecondary,
                     style = AvalonTheme.typography.bodyMedium
@@ -267,7 +267,7 @@ private fun TvSeasonsHeader(
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.spacedBy(14.dp)
         ) {
-            Text(
+            AvalonText(
                 text = stringResource(Res.string.details_seasons_header),
                 style = typography.sectionTitle,
                 color = colors.textPrimary
@@ -286,7 +286,7 @@ private fun TvSeasonsHeader(
                     val seasonCountText = stringResource(seasonRes, seasonsCount)
                     val episodesText = if (totalEpisodes > 0) " • " + stringResource(episodeRes, totalEpisodes) else ""
                     val specialsText = if (hasSpecials && regularSeasons.isNotEmpty()) " • " + stringResource(Res.string.details_seasons_specials) else ""
-                    Text(
+                    AvalonText(
                         text = "$seasonCountText$episodesText$specialsText",
                         style = typography.metadata,
                         color = colors.textSecondary
@@ -321,12 +321,12 @@ private fun TvSeasonsHeader(
                     verticalAlignment = Alignment.CenterVertically,
                     horizontalArrangement = Arrangement.spacedBy(8.dp)
                 ) {
-                    Text(
+                    AvalonText(
                         text = getSeasonDisplayName(selectedSeason),
                         style = typography.uiLabel,
                         color = colors.textPrimary
                     )
-                    Icon(
+                    AvalonIcon(
                         imageVector = Lucide.ChevronDown,
                         contentDescription = null,
                         tint = colors.textSecondary,
@@ -358,13 +358,13 @@ private fun TvSeasonsHeader(
                     verticalAlignment = Alignment.CenterVertically,
                     horizontalArrangement = Arrangement.spacedBy(6.dp)
                 ) {
-                    Icon(
+                    AvalonIcon(
                         imageVector = if (isFullyWatched) Lucide.CheckCheck else Lucide.Eye,
                         contentDescription = null,
                         tint = markSeasonColor,
                         modifier = Modifier.size(16.dp)
                     )
-                    Text(
+                    AvalonText(
                         text = if (isFullyWatched) stringResource(Res.string.details_seasons_unmark_btn) else stringResource(Res.string.details_seasons_mark_btn),
                         style = typography.labelSmall,
                         color = markSeasonColor
@@ -430,7 +430,7 @@ private fun TvEpisodeInfoBanner(
                     verticalAlignment = Alignment.CenterVertically,
                     horizontalArrangement = Arrangement.SpaceBetween
                 ) {
-                    Text(
+                    AvalonText(
                         text = "${focusedEpisode.episodeNumber}. ${focusedEpisode.name}",
                         style = typography.cardTitle,
                         color = colors.textPrimary,
@@ -450,13 +450,13 @@ private fun TvEpisodeInfoBanner(
                             verticalAlignment = Alignment.CenterVertically,
                             horizontalArrangement = Arrangement.spacedBy(4.dp)
                         ) {
-                            Icon(
+                            AvalonIcon(
                                 imageVector = Lucide.Check,
                                 contentDescription = null,
                                 tint = colors.statusLive,
                                 modifier = Modifier.size(12.dp)
                             )
-                            Text(
+                            AvalonText(
                                 text = stringResource(Res.string.details_seasons_completed),
                                 style = typography.labelSmall,
                                 color = colors.statusLive
@@ -471,7 +471,7 @@ private fun TvEpisodeInfoBanner(
                     horizontalArrangement = Arrangement.spacedBy(6.dp)
                 ) {
                     if (!focusedEpisode.airDate.isNullOrEmpty()) {
-                        Text(
+                        AvalonText(
                             text = focusedEpisode.airDate.orEmpty(),
                             style = typography.metadata,
                             color = colors.accentPrimary
@@ -481,9 +481,9 @@ private fun TvEpisodeInfoBanner(
                     val runtime = focusedEpisode.runtime
                     if (runtime != null && runtime > 0) {
                         if (!focusedEpisode.airDate.isNullOrEmpty()) {
-                            Text(text = "•", style = typography.metadata, color = colors.textMuted)
+                            AvalonText(text = "•", style = typography.metadata, color = colors.textMuted)
                         }
-                        Text(
+                        AvalonText(
                             text = stringResource(Res.string.player_duration_mins_single_fmt, runtime),
                             style = typography.metadata,
                             color = colors.textSecondary
@@ -493,18 +493,18 @@ private fun TvEpisodeInfoBanner(
                     val voteAvg = focusedEpisode.voteAverage
                     if (voteAvg != null && voteAvg > 0.0) {
                         val formattedRating = ((voteAvg * 10).toInt() / 10.0).toString()
-                        Text(text = "•", style = typography.metadata, color = colors.textMuted)
+                        AvalonText(text = "•", style = typography.metadata, color = colors.textMuted)
                         Row(
                             verticalAlignment = Alignment.CenterVertically,
                             horizontalArrangement = Arrangement.spacedBy(3.dp)
                         ) {
-                            Icon(
+                            AvalonIcon(
                                 imageVector = Lucide.Star,
                                 contentDescription = null,
                                 tint = colors.accentGold,
                                 modifier = Modifier.size(12.dp)
                             )
-                            Text(
+                            AvalonText(
                                 text = formattedRating,
                                 style = typography.metadata,
                                 color = colors.accentGold
@@ -521,7 +521,7 @@ private fun TvEpisodeInfoBanner(
                     verticalAlignment = Alignment.Bottom,
                     horizontalArrangement = Arrangement.SpaceBetween
                 ) {
-                    Text(
+                    AvalonText(
                         text = descText,
                         style = typography.bodyMedium,
                         color = colors.textSecondary,
@@ -531,7 +531,7 @@ private fun TvEpisodeInfoBanner(
                     )
                     if (canOpenDescription) {
                         Spacer(modifier = Modifier.width(8.dp))
-                        Icon(
+                        AvalonIcon(
                             imageVector = Lucide.Maximize2,
                             contentDescription = null,
                             tint = colors.textSecondary,
@@ -541,7 +541,7 @@ private fun TvEpisodeInfoBanner(
                 }
             }
         } else {
-            Text(
+            AvalonText(
                 text = stringResource(Res.string.details_seasons_not_available),
                 style = typography.bodyMedium,
                 color = colors.textSecondary

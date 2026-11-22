@@ -15,7 +15,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
-import org.ensodai.avalonmediacard.designsystem.components.AvalonText as Text
+import org.ensodai.avalonmediacard.designsystem.components.AvalonText
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -65,7 +65,7 @@ fun WatchPartyChatMessageItem(
                 .background(avatarBg),
             contentAlignment = Alignment.Center
         ) {
-            Text(
+            AvalonText(
                 text = initial,
                 color = Color.White,
                 fontSize = 11.sp,
@@ -96,7 +96,7 @@ fun WatchPartyChatMessageItem(
                     } else {
                         message.senderUsername
                     }
-                    Text(
+                    AvalonText(
                         text = authorName,
                         color = if (message.isHost) Color(0xFFFBBF24) else Color.White,
                         fontSize = 12.sp,
@@ -111,7 +111,7 @@ fun WatchPartyChatMessageItem(
                                 .background(Color(0xFFD97706).copy(alpha = 0.35f))
                                 .padding(horizontal = 4.dp, vertical = 1.dp)
                         ) {
-                            Text(
+                            AvalonText(
                                 text = stringResource(Res.string.watch_party_host_badge),
                                 color = Color(0xFFFDE68A),
                                 fontSize = 9.sp,
@@ -138,7 +138,7 @@ fun WatchPartyChatMessageItem(
                         .padding(horizontal = 6.dp, vertical = 2.dp),
                     contentAlignment = Alignment.Center
                 ) {
-                    Text(
+                    AvalonText(
                         text = message.formattedPosition,
                         color = Color.White.copy(alpha = 0.85f),
                         fontSize = 10.sp,
@@ -150,7 +150,7 @@ fun WatchPartyChatMessageItem(
             Spacer(modifier = Modifier.height(2.dp))
 
             // Текст сообщения
-            Text(
+            AvalonText(
                 text = message.text,
                 color = Color.White.copy(alpha = if (message.isSending) 0.55f else 0.95f),
                 fontSize = 13.sp,
@@ -159,7 +159,7 @@ fun WatchPartyChatMessageItem(
 
             if (message.isSending) {
                 Spacer(modifier = Modifier.height(2.dp))
-                Text(
+                AvalonText(
                     text = stringResource(Res.string.watch_party_chat_sending),
                     color = Color.White.copy(alpha = 0.40f),
                     fontSize = 10.sp

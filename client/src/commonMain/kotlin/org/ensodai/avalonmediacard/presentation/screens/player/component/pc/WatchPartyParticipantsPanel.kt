@@ -28,9 +28,9 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
-import org.ensodai.avalonmediacard.designsystem.components.AvalonDivider as HorizontalDivider
-import org.ensodai.avalonmediacard.designsystem.components.AvalonIcon as Icon
-import org.ensodai.avalonmediacard.designsystem.components.AvalonText as Text
+import org.ensodai.avalonmediacard.designsystem.components.AvalonDivider
+import org.ensodai.avalonmediacard.designsystem.components.AvalonIcon
+import org.ensodai.avalonmediacard.designsystem.components.AvalonText
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
@@ -130,7 +130,7 @@ fun WatchPartyParticipantsPanel(
                                 .background(Color(0xFF64B5F6).copy(alpha = 0.18f)),
                             contentAlignment = Alignment.Center
                         ) {
-                            Icon(
+                            AvalonIcon(
                                 imageVector = Lucide.Users,
                                 contentDescription = null,
                                 tint = Color(0xFF64B5F6),
@@ -138,7 +138,7 @@ fun WatchPartyParticipantsPanel(
                             )
                         }
 
-                        Text(
+                        AvalonText(
                             text = stringResource(Res.string.watch_party_participants_header),
                             fontSize = 13.sp,
                             fontWeight = FontWeight.SemiBold,
@@ -152,7 +152,7 @@ fun WatchPartyParticipantsPanel(
                                 .background(Color(0xFF4CAF50).copy(alpha = 0.20f))
                                 .padding(horizontal = 6.dp, vertical = 1.dp)
                         ) {
-                            Text(
+                            AvalonText(
                                 text = onlineCount.toString(),
                                 fontSize = 11.sp,
                                 fontWeight = FontWeight.Bold,
@@ -162,7 +162,7 @@ fun WatchPartyParticipantsPanel(
                     }
 
                     // Шеврон сворачивания
-                    Icon(
+                    AvalonIcon(
                         imageVector = Lucide.ChevronUp,
                         contentDescription = stringResource(Res.string.common_collapse),
                         tint = Color.White.copy(alpha = 0.60f),
@@ -170,14 +170,14 @@ fun WatchPartyParticipantsPanel(
                     )
                 } else {
                     // Свернутый вид: таблетка в точности как стиль островка PlayerIslandDynamicButton
-                    Icon(
+                    AvalonIcon(
                         imageVector = Lucide.Users,
                         contentDescription = stringResource(Res.string.watch_party_participants_header),
                         tint = Color(0xFF64B5F6),
                         modifier = Modifier.size(17.dp)
                     )
                     if (onlineCount > 0) {
-                        Text(
+                        AvalonText(
                             text = onlineCount.toString(),
                             fontSize = 12.sp,
                             fontWeight = FontWeight.SemiBold,
@@ -194,7 +194,7 @@ fun WatchPartyParticipantsPanel(
                 exit = fadeOut() + shrinkVertically()
             ) {
                 Column(modifier = Modifier.width(280.dp)) {
-                    HorizontalDivider(
+                    AvalonDivider(
                         color = Color.White.copy(alpha = 0.08f),
                         thickness = 1.dp
                     )
@@ -206,7 +206,7 @@ fun WatchPartyParticipantsPanel(
                                 .padding(14.dp),
                             contentAlignment = Alignment.Center
                         ) {
-                            Text(
+                            AvalonText(
                                 text = stringResource(Res.string.watch_rooms_history_empty),
                                 fontSize = 12.sp,
                                 color = Color.White.copy(alpha = 0.45f)

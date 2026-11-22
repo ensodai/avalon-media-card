@@ -10,7 +10,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import avalonmediacard.client.generated.resources.*
-import org.ensodai.avalonmediacard.designsystem.components.AvalonText as Text
+import org.ensodai.avalonmediacard.designsystem.components.AvalonText
 import org.ensodai.avalonmediacard.designsystem.theme.AvalonTheme
 import org.ensodai.avalonmediacard.presentation.screens.commonComponents.tvAndWebHoverEffect
 import org.jetbrains.compose.resources.stringResource
@@ -54,14 +54,14 @@ fun WatchPartyReadyToggle(
                     .clip(CircleShape)
                     .background(if (isReady) colors.statusLive else colors.textMuted)
             )
-            Text(
+            AvalonText(
                 text = if (isReady) stringResource(Res.string.watch_party_ready_check) else stringResource(Res.string.watch_party_ready_check_hint),
                 style = typography.uiLabel,
                 color = colors.textPrimary
             )
         }
 
-        Text(
+        AvalonText(
             text = if (isReady) stringResource(Res.string.watch_party_ready_status_ready) else stringResource(Res.string.watch_party_ready_status_not_ready),
             style = typography.metadata,
             color = if (isReady) colors.statusLive else colors.textSecondary

@@ -16,8 +16,8 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
-import org.ensodai.avalonmediacard.designsystem.components.AvalonIcon as Icon
-import org.ensodai.avalonmediacard.designsystem.components.AvalonText as Text
+import org.ensodai.avalonmediacard.designsystem.components.AvalonIcon
+import org.ensodai.avalonmediacard.designsystem.components.AvalonText
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
@@ -71,7 +71,7 @@ fun EpisodesNotificationsHeader(
                         .background(AvalonTheme.colors.primaryContainer),
                     contentAlignment = Alignment.Center
                 ) {
-                    Icon(
+                    AvalonIcon(
                         imageVector = Lucide.Bell,
                         contentDescription = null,
                         tint = AvalonTheme.colors.onPrimaryContainer,
@@ -82,13 +82,13 @@ fun EpisodesNotificationsHeader(
                 Spacer(modifier = Modifier.width(16.dp))
 
                 Column {
-                    Text(
+                    AvalonText(
                         text = stringResource(Res.string.episodes_notifications_title),
                         style = AvalonTheme.typography.pageTitle.copy(
                             color = AvalonTheme.colors.textPrimary
                         )
                     )
-                    Text(
+                    AvalonText(
                         text = stringResource(Res.string.episodes_notifications_subtitle),
                         style = AvalonTheme.typography.bodySynopsis.copy(
                             color = AvalonTheme.colors.textSecondary
@@ -114,14 +114,14 @@ fun EpisodesNotificationsHeader(
                         .background(AvalonTheme.colors.primary.copy(alpha = 0.08f))
                         .padding(horizontal = 14.dp, vertical = 8.dp)
                 ) {
-                    Icon(
+                    AvalonIcon(
                         imageVector = Lucide.CheckCheck,
                         contentDescription = null,
                         tint = AvalonTheme.colors.primary,
                         modifier = Modifier.size(16.dp)
                     )
                     Spacer(modifier = Modifier.width(6.dp))
-                    Text(
+                    AvalonText(
                         text = stringResource(Res.string.episodes_notifications_mark_all_read),
                         color = AvalonTheme.colors.primary,
                         fontSize = 13.sp,
@@ -201,7 +201,7 @@ private fun NotificationFilterTab(
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.Center
     ) {
-        Text(
+        AvalonText(
             text = label,
             fontSize = 13.sp,
             fontWeight = if (isSelected) FontWeight.Bold else FontWeight.Medium,
@@ -216,7 +216,7 @@ private fun NotificationFilterTab(
                     .padding(horizontal = 6.dp, vertical = 2.dp),
                 contentAlignment = Alignment.Center
             ) {
-                Text(
+                AvalonText(
                     text = count.toString(),
                     fontSize = 11.sp,
                     fontWeight = FontWeight.Bold,

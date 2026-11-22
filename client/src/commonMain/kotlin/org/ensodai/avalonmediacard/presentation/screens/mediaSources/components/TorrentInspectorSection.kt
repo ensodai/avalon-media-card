@@ -1,10 +1,10 @@
 package org.ensodai.avalonmediacard.presentation.screens.mediaSources.components
 
 import org.ensodai.avalonmediacard.designsystem.theme.AvalonTheme
-import org.ensodai.avalonmediacard.designsystem.components.AvalonIcon as Icon
-import org.ensodai.avalonmediacard.designsystem.components.AvalonText as Text
-import org.ensodai.avalonmediacard.designsystem.components.AvalonIconButton as IconButton
-import org.ensodai.avalonmediacard.designsystem.components.AvalonButton as Button
+import org.ensodai.avalonmediacard.designsystem.components.AvalonIcon
+import org.ensodai.avalonmediacard.designsystem.components.AvalonText
+import org.ensodai.avalonmediacard.designsystem.components.AvalonIconButton
+import org.ensodai.avalonmediacard.designsystem.components.AvalonButton
 import org.ensodai.avalonmediacard.designsystem.components.ButtonDefaults
 
 import androidx.compose.foundation.background
@@ -68,8 +68,8 @@ fun TorrentInspectorSection(
             verticalAlignment = Alignment.CenterVertically
         ) {
             Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(10.dp)) {
-                Icon(Lucide.Info, contentDescription = null, tint = Color(0xFFFFB300), modifier = Modifier.size(if (isTv) 28.dp else 22.dp))
-                Text(
+                AvalonIcon(Lucide.Info, contentDescription = null, tint = Color(0xFFFFB300), modifier = Modifier.size(if (isTv) 28.dp else 22.dp))
+                AvalonText(
                     text = stringResource(Res.string.details_inspector_title),
                     color = Color.White,
                     fontSize = if (isTv) 22.sp else 18.sp,
@@ -84,8 +84,8 @@ fun TorrentInspectorSection(
                     .background(Color.White.copy(alpha = 0.06f)),
                 contentAlignment = Alignment.Center
             ) {
-                IconButton(onClick = onCloseSources) {
-                    Icon(
+                AvalonIconButton(onClick = onCloseSources) {
+                    AvalonIcon(
                         Lucide.X,
                         contentDescription = stringResource(Res.string.common_close),
                         tint = Color.White.copy(alpha = 0.8f),
@@ -95,7 +95,7 @@ fun TorrentInspectorSection(
             }
         }
 
-        Text(
+        AvalonText(
             text = stringResource(Res.string.details_inspector_subtitle, component.torrentTitle),
             color = Color.White.copy(alpha = 0.7f),
             fontSize = if (isTv) 16.sp else 14.sp
@@ -134,7 +134,7 @@ private fun TorrentInspectorFileRow(
         horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.CenterVertically
     ) {
-        Text(
+        AvalonText(
             text = file.path.substringAfterLast('/'),
             color = Color.White,
             fontSize = if (isTv) 15.sp else 13.sp,
@@ -159,7 +159,7 @@ private fun TorrentInspectorFileRow(
                     isTv = isTv
                 )
 
-                Button(
+                AvalonButton(
                     onClick = {
                         val s = season.toIntOrNull()
                         val e = episode.toIntOrNull()
@@ -180,14 +180,14 @@ private fun TorrentInspectorFileRow(
                     contentPadding = PaddingValues(horizontal = if (isTv) 16.dp else 12.dp, vertical = if (isTv) 8.dp else 6.dp),
                     modifier = Modifier.height(if (isTv) 40.dp else 32.dp)
                 ) {
-                    Text(
+                    AvalonText(
                         if (isSaved) stringResource(Res.string.details_inspector_saved) else stringResource(Res.string.details_inspector_save),
                         fontSize = if (isTv) 14.sp else 12.sp
                     )
                 }
             }
         } else {
-            Text(
+            AvalonText(
                 text = stringResource(Res.string.details_inspector_not_video),
                 color = Color.Gray,
                 fontSize = if (isTv) 14.sp else 12.sp
@@ -216,7 +216,7 @@ private fun SmallNumberInput(
                 contentAlignment = Alignment.CenterStart
             ) {
                 if (value.isEmpty()) {
-                    Text(text = placeholder, color = Color.White.copy(alpha = 0.3f), fontSize = if (isTv) 16.sp else 14.sp)
+                    AvalonText(text = placeholder, color = Color.White.copy(alpha = 0.3f), fontSize = if (isTv) 16.sp else 14.sp)
                 }
                 innerTextField()
             }

@@ -4,7 +4,7 @@ import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import org.ensodai.avalonmediacard.designsystem.components.AvalonText as Text
+import org.ensodai.avalonmediacard.designsystem.components.AvalonText
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
@@ -267,7 +267,7 @@ class PlayerAudioDrawerScreen(
 
             if (tracks.isEmpty()) {
                 item(key = "audio_empty_state") {
-                    Text(
+                    AvalonText(
                         text = stringResource(Res.string.player_audio_empty),
                         color = Color.White.copy(alpha = 0.6f),
                         modifier = Modifier.padding(16.dp)

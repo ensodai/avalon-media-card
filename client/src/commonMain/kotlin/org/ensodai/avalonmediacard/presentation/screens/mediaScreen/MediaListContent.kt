@@ -5,7 +5,7 @@ import org.ensodai.avalonmediacard.designsystem.theme.AvalonTheme
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.grid.*
-import org.ensodai.avalonmediacard.designsystem.components.AvalonText as Text
+import org.ensodai.avalonmediacard.designsystem.components.AvalonText
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -75,7 +75,7 @@ fun MediaListContent(
         ) {
             // Заголовок экрана (на всю ширину)
             item(span = { GridItemSpan(maxLineSpan) }) {
-                Text(
+                AvalonText(
                     text = title,
                     fontSize = 28.sp,
                     fontWeight = FontWeight.Bold,

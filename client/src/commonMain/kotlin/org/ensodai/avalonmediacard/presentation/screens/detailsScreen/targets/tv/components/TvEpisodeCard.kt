@@ -10,8 +10,8 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
-import org.ensodai.avalonmediacard.designsystem.components.AvalonIcon as Icon
-import org.ensodai.avalonmediacard.designsystem.components.AvalonText as Text
+import org.ensodai.avalonmediacard.designsystem.components.AvalonIcon
+import org.ensodai.avalonmediacard.designsystem.components.AvalonText
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -87,7 +87,7 @@ internal fun TvEpisodeCard(
                         .graphicsLayer { alpha = imageAlpha }
                 )
             } else {
-                Icon(
+                AvalonIcon(
                     imageVector = Lucide.Film,
                     contentDescription = null,
                     tint = Color.White.copy(alpha = 0.2f),
@@ -114,7 +114,7 @@ internal fun TvEpisodeCard(
                             .background(colors.accentPrimary, CircleShape),
                         contentAlignment = Alignment.Center
                     ) {
-                        Icon(
+                        AvalonIcon(
                             imageVector = Lucide.Play,
                             contentDescription = "Смотреть",
                             tint = colors.onAccentPrimary,
@@ -145,7 +145,7 @@ internal fun TvEpisodeCard(
                         .background(colors.statusLive),
                     contentAlignment = Alignment.Center
                 ) {
-                    Icon(
+                    AvalonIcon(
                         imageVector = Lucide.Check,
                         contentDescription = "Просмотрено",
                         tint = colors.onAccentPrimary,
@@ -161,7 +161,7 @@ internal fun TvEpisodeCard(
                 .fillMaxWidth()
                 .padding(horizontal = 10.dp, vertical = 10.dp)
         ) {
-            Text(
+            AvalonText(
                 text = "${episode.episodeNumber}. ${episode.name}",
                 style = AvalonTheme.typography.cardTitle,
                 color = if (isFocused) colors.textPrimary else colors.textSecondary,

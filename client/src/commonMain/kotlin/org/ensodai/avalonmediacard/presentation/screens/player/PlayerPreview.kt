@@ -13,8 +13,8 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
-import org.ensodai.avalonmediacard.designsystem.components.AvalonIcon as Icon
-import org.ensodai.avalonmediacard.designsystem.components.AvalonText as Text
+import org.ensodai.avalonmediacard.designsystem.components.AvalonIcon
+import org.ensodai.avalonmediacard.designsystem.components.AvalonText
 import org.ensodai.avalonmediacard.designsystem.theme.AvalonDesignSystemTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
@@ -125,14 +125,14 @@ fun MockVideoSurface(
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Center
         ) {
-            Icon(
+            AvalonIcon(
                 imageVector = Lucide.Clapperboard,
                 contentDescription = null,
                 tint = Color.White.copy(alpha = 0.15f),
                 modifier = Modifier.size(80.dp)
             )
             Spacer(modifier = Modifier.height(16.dp))
-            Text(
+            AvalonText(
                 text = title,
                 color = Color.White.copy(alpha = 0.35f),
                 fontSize = 22.sp,
@@ -146,7 +146,7 @@ fun MockVideoSurface(
                     .border(1.dp, Color.White.copy(alpha = 0.15f), RoundedCornerShape(6.dp))
                     .padding(horizontal = 12.dp, vertical = 4.dp)
             ) {
-                Text(
+                AvalonText(
                     text = subtitle,
                     color = Color.White.copy(alpha = 0.6f),
                     fontSize = 12.sp,

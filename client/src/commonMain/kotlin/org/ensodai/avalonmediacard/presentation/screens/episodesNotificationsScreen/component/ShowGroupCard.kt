@@ -19,10 +19,10 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
-import org.ensodai.avalonmediacard.designsystem.components.AvalonCard as Card
+import org.ensodai.avalonmediacard.designsystem.components.AvalonCard
 import org.ensodai.avalonmediacard.designsystem.components.CardDefaults
-import org.ensodai.avalonmediacard.designsystem.components.AvalonIcon as Icon
-import org.ensodai.avalonmediacard.designsystem.components.AvalonText as Text
+import org.ensodai.avalonmediacard.designsystem.components.AvalonIcon
+import org.ensodai.avalonmediacard.designsystem.components.AvalonText
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -71,7 +71,7 @@ fun ShowGroupCard(
     val seasons = episodes.mapNotNull { it.seasonNumber }.distinct().sorted()
     val newCount = episodes.count { it.isNew }
 
-    Card(
+    AvalonCard(
         shape = RoundedCornerShape(16.dp),
         colors = CardDefaults.cardColors(
             containerColor = AvalonTheme.colors.surfaceVariant.copy(alpha = 0.2f)
@@ -124,7 +124,7 @@ fun ShowGroupCard(
                     Spacer(modifier = Modifier.width(12.dp))
 
                     Column(modifier = Modifier.weight(1f)) {
-                        Text(
+                        AvalonText(
                             text = showTitle,
                             style = AvalonTheme.typography.titleMedium.copy(
                                 fontWeight = FontWeight.Bold,
@@ -150,7 +150,7 @@ fun ShowGroupCard(
                             }
                             val countText = "$seasonLabel${formatEpisodeCount(episodes.size)}"
 
-                            Text(
+                            AvalonText(
                                 text = countText,
                                 style = AvalonTheme.typography.bodySmall.copy(
                                     color = AvalonTheme.colors.onSurfaceVariant
@@ -169,7 +169,7 @@ fun ShowGroupCard(
                                         )
                                         .padding(horizontal = 6.dp, vertical = 1.dp)
                                 ) {
-                                    Text(
+                                    AvalonText(
                                         text = stringResource(Res.string.episodes_notifications_new_count, newCount),
                                         color = AvalonTheme.colors.primary,
                                         fontSize = 10.sp,
@@ -203,14 +203,14 @@ fun ShowGroupCard(
                             .padding(horizontal = 12.dp, vertical = 6.dp),
                         verticalAlignment = Alignment.CenterVertically
                     ) {
-                        Text(
+                        AvalonText(
                             text = stringResource(Res.string.episodes_notifications_to_show),
                             fontSize = 12.sp,
                             fontWeight = FontWeight.Medium,
                             color = AvalonTheme.colors.onSurface
                         )
                         Spacer(modifier = Modifier.width(4.dp))
-                        Icon(
+                        AvalonIcon(
                             imageVector = Lucide.ChevronRight,
                             contentDescription = null,
                             modifier = Modifier.size(14.dp),

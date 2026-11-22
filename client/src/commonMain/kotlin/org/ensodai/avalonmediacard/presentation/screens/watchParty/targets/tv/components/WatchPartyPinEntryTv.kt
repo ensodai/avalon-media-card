@@ -17,9 +17,9 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
-import org.ensodai.avalonmediacard.designsystem.components.AvalonCircularProgressIndicator as CircularProgressIndicator
-import org.ensodai.avalonmediacard.designsystem.components.AvalonIcon as Icon
-import org.ensodai.avalonmediacard.designsystem.components.AvalonText as Text
+import org.ensodai.avalonmediacard.designsystem.components.AvalonCircularProgressIndicator
+import org.ensodai.avalonmediacard.designsystem.components.AvalonIcon
+import org.ensodai.avalonmediacard.designsystem.components.AvalonText
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.remember
@@ -135,7 +135,7 @@ fun WatchPartyPinEntryTv(
                 .background(Color.White.copy(alpha = 0.08f)),
             contentAlignment = Alignment.Center
         ) {
-            Icon(
+            AvalonIcon(
                 imageVector = Lucide.X,
                 contentDescription = stringResource(Res.string.common_close),
                 tint = Color.White.copy(alpha = 0.85f),
@@ -156,7 +156,7 @@ fun WatchPartyPinEntryTv(
             verticalArrangement = Arrangement.spacedBy(18.dp)
         ) {
             // Заголовок
-            Text(
+            AvalonText(
                 text = stringResource(Res.string.watch_rooms_btn_connect),
                 fontSize = 24.sp,
                 fontWeight = FontWeight.Bold,
@@ -164,7 +164,7 @@ fun WatchPartyPinEntryTv(
                 textAlign = TextAlign.Center
             )
 
-            Text(
+            AvalonText(
                 text = stringResource(Res.string.watch_party_enter_pin_hint),
                 fontSize = 14.sp,
                 fontWeight = FontWeight.Medium,
@@ -201,14 +201,14 @@ fun WatchPartyPinEntryTv(
                         contentAlignment = Alignment.Center
                     ) {
                         if (isFilled) {
-                            Text(
+                            AvalonText(
                                 text = digitChar.toString(),
                                 fontSize = 28.sp,
                                 fontWeight = FontWeight.Bold,
                                 color = Color.White
                             )
                         } else {
-                            Text(
+                            AvalonText(
                                 text = "•",
                                 fontSize = 22.sp,
                                 fontWeight = FontWeight.Bold,
@@ -221,7 +221,7 @@ fun WatchPartyPinEntryTv(
 
             // Ошибка валидации или подключения
             if (state.joinError != null) {
-                Text(
+                AvalonText(
                     text = state.joinError,
                     fontSize = 13.sp,
                     color = Color(0xFFFF5252),
@@ -282,14 +282,14 @@ fun WatchPartyPinEntryTv(
                                 contentAlignment = Alignment.Center
                             ) {
                                 if (keySymbol == "DEL") {
-                                    Icon(
+                                    AvalonIcon(
                                         imageVector = Lucide.Delete,
                                         contentDescription = "Удалить",
                                         tint = Color.White.copy(alpha = 0.85f),
                                         modifier = Modifier.size(20.dp)
                                     )
                                 } else {
-                                    Text(
+                                    AvalonText(
                                         text = keySymbol,
                                         fontSize = if (isActionKey) 15.sp else 20.sp,
                                         fontWeight = if (isActionKey) FontWeight.SemiBold else FontWeight.Bold,
@@ -325,13 +325,13 @@ fun WatchPartyPinEntryTv(
                 contentAlignment = Alignment.Center
             ) {
                 if (state.isJoining) {
-                    CircularProgressIndicator(
+                    AvalonCircularProgressIndicator(
                         modifier = Modifier.size(22.dp),
                         strokeWidth = 2.5.dp,
                         color = Color.Black
                     )
                 } else {
-                    Text(
+                    AvalonText(
                         text = stringResource(Res.string.watch_party_btn_join),
                         fontSize = 16.sp,
                         fontWeight = FontWeight.Bold,

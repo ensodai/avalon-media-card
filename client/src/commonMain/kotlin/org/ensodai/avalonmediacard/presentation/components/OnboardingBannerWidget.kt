@@ -6,10 +6,10 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
-import org.ensodai.avalonmediacard.designsystem.components.AvalonButton as Button
+import org.ensodai.avalonmediacard.designsystem.components.AvalonButton
 import org.ensodai.avalonmediacard.designsystem.components.ButtonDefaults
-import org.ensodai.avalonmediacard.designsystem.components.AvalonIcon as Icon
-import org.ensodai.avalonmediacard.designsystem.components.AvalonText as Text
+import org.ensodai.avalonmediacard.designsystem.components.AvalonIcon
+import org.ensodai.avalonmediacard.designsystem.components.AvalonText
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -70,7 +70,7 @@ fun OnboardingBannerWidget(
                         .background(AvalonTheme.colors.primary.copy(alpha = 0.2f)),
                     contentAlignment = Alignment.Center
                 ) {
-                    Icon(
+                    AvalonIcon(
                         imageVector = if (data.iconName == "settings") Lucide.Settings else Lucide.Sparkles,
                         contentDescription = null,
                         modifier = Modifier.size(26.dp),
@@ -78,7 +78,7 @@ fun OnboardingBannerWidget(
                     )
                 }
 
-                Text(
+                AvalonText(
                     text = data.title,
                     fontSize = 22.sp,
                     fontWeight = FontWeight.Bold,
@@ -88,7 +88,7 @@ fun OnboardingBannerWidget(
 
             Spacer(modifier = Modifier.height(14.dp))
 
-            Text(
+            AvalonText(
                 text = data.description,
                 fontSize = 15.sp,
                 lineHeight = 22.sp,
@@ -100,7 +100,7 @@ fun OnboardingBannerWidget(
             if (action != null && !label.isNullOrBlank()) {
                 Spacer(modifier = Modifier.height(24.dp))
 
-                Button(
+                AvalonButton(
                     onClick = { onAction(action) },
                     shape = RoundedCornerShape(12.dp),
                     colors = ButtonDefaults.buttonColors(
@@ -112,7 +112,7 @@ fun OnboardingBannerWidget(
                         onClick = { onAction(action) }
                     )
                 ) {
-                    Text(
+                    AvalonText(
                         text = label,
                         fontWeight = FontWeight.SemiBold,
                         fontSize = 15.sp,

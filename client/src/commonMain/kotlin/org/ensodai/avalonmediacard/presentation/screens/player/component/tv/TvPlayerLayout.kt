@@ -13,8 +13,8 @@ import androidx.compose.foundation.gestures.detectVerticalDragGestures
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
-import org.ensodai.avalonmediacard.designsystem.components.AvalonIcon as Icon
-import org.ensodai.avalonmediacard.designsystem.components.AvalonText as Text
+import org.ensodai.avalonmediacard.designsystem.components.AvalonIcon
+import org.ensodai.avalonmediacard.designsystem.components.AvalonText
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -368,13 +368,13 @@ fun TvPlayerLayout(
                                 ) {
                                     // Текущее время / Общая длительность
                                     Row(verticalAlignment = Alignment.CenterVertically) {
-                                        Text(
+                                        AvalonText(
                                             text = formatTime(currentTime),
                                             color = Color.White,
                                             fontSize = 14.sp,
                                             fontWeight = FontWeight.SemiBold
                                         )
-                                        Text(
+                                        AvalonText(
                                             text = " / ${formatTime(duration)}",
                                             color = Color.White.copy(alpha = 0.55f),
                                             fontSize = 14.sp,
@@ -404,7 +404,7 @@ fun TvPlayerLayout(
                                                 ),
                                             contentAlignment = Alignment.Center
                                         ) {
-                                            Icon(
+                                            AvalonIcon(
                                                 imageVector = Lucide.Smile,
                                                 contentDescription = "Reactions",
                                                 tint = if (showReactionsBar) AvalonTheme.colors.primary else Color.White,
@@ -415,7 +415,7 @@ fun TvPlayerLayout(
 
                                     // Оставшееся время
                                     val remainingTime = (duration - currentTime).coerceAtLeast(0.0)
-                                    Text(
+                                    AvalonText(
                                         text = "-${formatTime(remainingTime)}",
                                         color = Color.White.copy(alpha = 0.55f),
                                         fontSize = 13.sp,

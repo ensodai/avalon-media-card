@@ -15,8 +15,8 @@ import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.RoundedCornerShape
-import org.ensodai.avalonmediacard.designsystem.components.AvalonIcon as Icon
-import org.ensodai.avalonmediacard.designsystem.components.AvalonText as Text
+import org.ensodai.avalonmediacard.designsystem.components.AvalonIcon
+import org.ensodai.avalonmediacard.designsystem.components.AvalonText
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -256,13 +256,13 @@ private fun CarouselHeader(
                 ),
             verticalAlignment = Alignment.CenterVertically
         ) {
-            Text(
+            AvalonText(
                 text = title,
                 style = AvalonTheme.typography.sectionTitle,
                 color = headerColor
             )
             Spacer(modifier = Modifier.width(6.dp))
-            Icon(
+            AvalonIcon(
                 imageVector = Lucide.ChevronRight,
                 contentDescription = null,
                 tint = AvalonTheme.colors.textSecondary,
@@ -270,7 +270,7 @@ private fun CarouselHeader(
             )
         }
     } else {
-        Text(
+        AvalonText(
             text = title,
             style = AvalonTheme.typography.sectionTitle,
             color = if (isLoading) Color.Transparent else AvalonTheme.colors.textPrimary,

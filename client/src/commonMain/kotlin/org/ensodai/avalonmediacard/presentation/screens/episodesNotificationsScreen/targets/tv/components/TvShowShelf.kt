@@ -18,8 +18,8 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
-import org.ensodai.avalonmediacard.designsystem.components.AvalonIcon as Icon
-import org.ensodai.avalonmediacard.designsystem.components.AvalonText as Text
+import org.ensodai.avalonmediacard.designsystem.components.AvalonIcon
+import org.ensodai.avalonmediacard.designsystem.components.AvalonText
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -110,7 +110,7 @@ fun TvShowShelf(
                 Spacer(modifier = Modifier.width(12.dp))
 
                 Column(modifier = Modifier.weight(1f)) {
-                    Text(
+                    AvalonText(
                         text = showTitle,
                         fontSize = 16.sp,
                         fontWeight = FontWeight.Bold,
@@ -132,7 +132,7 @@ fun TvShowShelf(
                         }
                         val countText = "$seasonLabel${formatTvEpisodeCount(episodes.size)}"
 
-                        Text(
+                        AvalonText(
                             text = countText,
                             fontSize = 12.sp,
                             color = AvalonTheme.colors.onSurfaceVariant
@@ -150,7 +150,7 @@ fun TvShowShelf(
                                     )
                                     .padding(horizontal = 6.dp, vertical = 1.5.dp)
                             ) {
-                                Text(
+                                AvalonText(
                                     text = stringResource(Res.string.episodes_notifications_new_count, newCount),
                                     color = AvalonTheme.colors.primary,
                                     fontSize = 10.sp,
@@ -182,14 +182,14 @@ fun TvShowShelf(
                         .padding(horizontal = 12.dp, vertical = 6.dp),
                     verticalAlignment = Alignment.CenterVertically
                 ) {
-                    Text(
+                    AvalonText(
                         text = stringResource(Res.string.episodes_notifications_to_show),
                         fontSize = 12.sp,
                         fontWeight = FontWeight.Medium,
                         color = AvalonTheme.colors.onSurface
                     )
                     Spacer(modifier = Modifier.width(4.dp))
-                    Icon(
+                    AvalonIcon(
                         imageVector = Lucide.ChevronRight,
                         contentDescription = null,
                         modifier = Modifier.size(14.dp),

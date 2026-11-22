@@ -16,8 +16,8 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
-import org.ensodai.avalonmediacard.designsystem.components.AvalonIcon as Icon
-import org.ensodai.avalonmediacard.designsystem.components.AvalonText as Text
+import org.ensodai.avalonmediacard.designsystem.components.AvalonIcon
+import org.ensodai.avalonmediacard.designsystem.components.AvalonText
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -90,7 +90,7 @@ fun PlayerIslandIconButton(
             .background(backgroundColor),
         contentAlignment = Alignment.Center
     ) {
-        Icon(
+        AvalonIcon(
             imageVector = icon,
             contentDescription = contentDescription,
             tint = tint,
@@ -118,7 +118,7 @@ fun PlayerIslandTitle(
             verticalArrangement = Arrangement.Center
         ) {
             if (topText.isNotBlank()) {
-                Text(
+                AvalonText(
                     text = topText,
                     color = AvalonTheme.colors.textSecondary,
                     style = AvalonTheme.typography.metadata,
@@ -127,7 +127,7 @@ fun PlayerIslandTitle(
                 )
                 Spacer(modifier = Modifier.height(2.dp))
             }
-            Text(
+            AvalonText(
                 text = bottomText,
                 color = AvalonTheme.colors.textPrimary,
                 style = AvalonTheme.typography.cardTitle,
@@ -173,14 +173,14 @@ fun PlayerIslandActionButton(
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.Center
         ) {
-            Icon(
+            AvalonIcon(
                 imageVector = icon,
                 contentDescription = text,
                 tint = iconTint,
                 modifier = Modifier.size(17.dp)
             )
             Spacer(modifier = Modifier.width(7.dp))
-            Text(
+            AvalonText(
                 text = text,
                 color = textColor,
                 style = AvalonTheme.typography.labelSmall
@@ -239,7 +239,7 @@ fun PlayerIslandDynamicButton(
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.Center
         ) {
-            Icon(
+            AvalonIcon(
                 imageVector = icon,
                 contentDescription = contentDescription ?: text,
                 tint = iconTint,
@@ -247,7 +247,7 @@ fun PlayerIslandDynamicButton(
             )
             if (hasText && text != null) {
                 Spacer(modifier = Modifier.width(7.dp))
-                Text(
+                AvalonText(
                     text = text,
                     color = textColor,
                     style = AvalonTheme.typography.labelSmall

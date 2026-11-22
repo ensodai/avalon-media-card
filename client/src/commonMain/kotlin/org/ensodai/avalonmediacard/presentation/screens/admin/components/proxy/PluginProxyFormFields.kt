@@ -4,8 +4,8 @@ import org.ensodai.avalonmediacard.designsystem.theme.AvalonTheme
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
-import org.ensodai.avalonmediacard.designsystem.components.AvalonIcon as Icon
-import org.ensodai.avalonmediacard.designsystem.components.AvalonText as Text
+import org.ensodai.avalonmediacard.designsystem.components.AvalonIcon
+import org.ensodai.avalonmediacard.designsystem.components.AvalonText
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -43,7 +43,7 @@ fun PluginProxyFormFields(
                 modifier = Modifier.weight(1f),
                 verticalArrangement = Arrangement.spacedBy(6.dp)
             ) {
-                Text(
+                AvalonText(
                     text = stringResource(Res.string.admin_plugin_proxy_type_label),
                     fontSize = 12.sp,
                     fontWeight = FontWeight.Medium,
@@ -59,7 +59,7 @@ fun PluginProxyFormFields(
                 modifier = Modifier.width(130.dp),
                 verticalArrangement = Arrangement.spacedBy(6.dp)
             ) {
-                Text(
+                AvalonText(
                     text = stringResource(Res.string.admin_plugin_proxy_port_placeholder),
                     fontSize = 12.sp,
                     fontWeight = FontWeight.Medium,
@@ -82,7 +82,7 @@ fun PluginProxyFormFields(
             modifier = Modifier.fillMaxWidth(),
             verticalArrangement = Arrangement.spacedBy(6.dp)
         ) {
-            Text(
+            AvalonText(
                 text = stringResource(Res.string.admin_plugin_proxy_host_placeholder),
                 fontSize = 12.sp,
                 fontWeight = FontWeight.Medium,
@@ -93,7 +93,7 @@ fun PluginProxyFormFields(
                 onValueChange = actions.onEditProxyHostChanged,
                 placeholder = "127.0.0.1 или proxy.domain.com",
                 leadingIcon = {
-                    Icon(
+                    AvalonIcon(
                         imageVector = Lucide.Server,
                         contentDescription = null,
                         tint = AvalonTheme.colors.onSurfaceVariant,
@@ -116,7 +116,7 @@ fun PluginProxyFormFields(
                 modifier = Modifier.weight(1f),
                 verticalArrangement = Arrangement.spacedBy(6.dp)
             ) {
-                Text(
+                AvalonText(
                     text = stringResource(Res.string.admin_plugin_proxy_username_placeholder),
                     fontSize = 12.sp,
                     fontWeight = FontWeight.Medium,
@@ -127,7 +127,7 @@ fun PluginProxyFormFields(
                     onValueChange = actions.onEditProxyUsernameChanged,
                     placeholder = stringResource(Res.string.admin_plugin_proxy_username_placeholder),
                     leadingIcon = {
-                        Icon(
+                        AvalonIcon(
                             imageVector = Lucide.User,
                             contentDescription = null,
                             tint = AvalonTheme.colors.onSurfaceVariant,
@@ -145,7 +145,7 @@ fun PluginProxyFormFields(
                 modifier = Modifier.weight(1f),
                 verticalArrangement = Arrangement.spacedBy(6.dp)
             ) {
-                Text(
+                AvalonText(
                     text = stringResource(Res.string.admin_plugin_proxy_password_placeholder),
                     fontSize = 12.sp,
                     fontWeight = FontWeight.Medium,
@@ -157,7 +157,7 @@ fun PluginProxyFormFields(
                     placeholder = stringResource(Res.string.admin_plugin_proxy_password_placeholder),
                     visualTransformation = PasswordVisualTransformation(),
                     leadingIcon = {
-                        Icon(
+                        AvalonIcon(
                             imageVector = Lucide.Lock,
                             contentDescription = null,
                             tint = AvalonTheme.colors.onSurfaceVariant,

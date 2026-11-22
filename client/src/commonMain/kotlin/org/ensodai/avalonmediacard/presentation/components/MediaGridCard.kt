@@ -23,7 +23,7 @@ import org.ensodai.avalonmediacard.contract.slot.Action
 import org.ensodai.avalonmediacard.contract.slot.ActionNavigate
 import org.ensodai.avalonmediacard.contract.slot.MovieCarouselItem
 import org.ensodai.avalonmediacard.contract.ui.navigation.Screen
-import org.ensodai.avalonmediacard.designsystem.components.AvalonText as Text
+import org.ensodai.avalonmediacard.designsystem.components.AvalonText
 import org.ensodai.avalonmediacard.designsystem.theme.AvalonTheme
 import org.ensodai.avalonmediacard.presentation.screens.commonComponents.tvAndWebHoverEffect
 import kotlin.time.Duration.Companion.milliseconds
@@ -133,7 +133,7 @@ fun MediaGridCard(
                                 .border(elevation.borderWidth, colors.borderSubtle, shapes.micro)
                                 .padding(horizontal = 6.dp, vertical = 2.dp)
                         ) {
-                            Text(
+                            AvalonText(
                                 text = badge.uppercase(),
                                 color = colors.textPrimary,
                                 style = typography.microCaption
@@ -146,7 +146,7 @@ fun MediaGridCard(
 
         Spacer(modifier = Modifier.height(spacing.space8))
 
-        Text(
+        AvalonText(
             text = if (isLoading) "" else item.title,
             style = typography.cardTitle,
             maxLines = 2,

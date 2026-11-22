@@ -17,9 +17,9 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
-import org.ensodai.avalonmediacard.designsystem.components.AvalonCircularProgressIndicator as CircularProgressIndicator
-import org.ensodai.avalonmediacard.designsystem.components.AvalonIcon as Icon
-import org.ensodai.avalonmediacard.designsystem.components.AvalonText as Text
+import org.ensodai.avalonmediacard.designsystem.components.AvalonCircularProgressIndicator
+import org.ensodai.avalonmediacard.designsystem.components.AvalonIcon
+import org.ensodai.avalonmediacard.designsystem.components.AvalonText
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
@@ -80,7 +80,7 @@ internal fun SourceTab(
             .padding(horizontal = if (isTv) 20.dp else 16.dp, vertical = if (isTv) 12.dp else 8.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
-        Text(
+        AvalonText(
             text = text,
             color = textColor,
             fontSize = if (isTv) 18.sp else 14.sp,
@@ -88,7 +88,7 @@ internal fun SourceTab(
         )
         Spacer(modifier = Modifier.width(8.dp))
         if (isLoading) {
-            CircularProgressIndicator(
+            AvalonCircularProgressIndicator(
                 modifier = Modifier.size(if (isTv) 16.dp else 12.dp),
                 color = textColor,
                 strokeWidth = 2.dp
@@ -100,7 +100,7 @@ internal fun SourceTab(
                     RoundedCornerShape(4.dp)
                 ).padding(horizontal = 6.dp, vertical = 2.dp)
             ) {
-                Text(
+                AvalonText(
                     text = count.toString(),
                     color = textColor,
                     fontSize = if (isTv) 14.sp else 11.sp,
@@ -142,7 +142,7 @@ internal fun SubFilterChip(
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.spacedBy(6.dp)
     ) {
-        Text(
+        AvalonText(
             text = label,
             color = textColor,
             fontSize = if (isTv) 13.sp else 12.sp,
@@ -155,7 +155,7 @@ internal fun SubFilterChip(
                     .background(if (isSelected) AvalonTheme.colors.primary else Color.White.copy(alpha = 0.15f))
                     .padding(horizontal = 6.dp, vertical = 1.dp)
             ) {
-                Text(
+                AvalonText(
                     text = "$count",
                     color = if (isSelected) AvalonTheme.colors.onPrimary else Color.White.copy(alpha = 0.9f),
                     fontSize = if (isTv) 11.sp else 10.sp,
@@ -193,7 +193,7 @@ internal fun MovieSourceCard(
     ) {
         Column(modifier = Modifier.weight(1f)) {
             Row(verticalAlignment = Alignment.CenterVertically) {
-                Text(
+                AvalonText(
                     text = item.title,
                     color = Color.White,
                     fontSize = titleSize,
@@ -204,7 +204,7 @@ internal fun MovieSourceCard(
                 )
                 if (isLoading) {
                     Spacer(modifier = Modifier.width(12.dp))
-                    CircularProgressIndicator(
+                    AvalonCircularProgressIndicator(
                         color = Color(0xFF4CAF50),
                         modifier = Modifier.size(20.dp),
                         strokeWidth = 2.dp
@@ -218,14 +218,14 @@ internal fun MovieSourceCard(
             ) {
                 if (!item.durationFormatted.isNullOrBlank()) {
                     Row(verticalAlignment = Alignment.CenterVertically) {
-                        Icon(
+                        AvalonIcon(
                             Lucide.Clock,
                             contentDescription = null,
                             tint = Color(0xFF4CAF50),
                             modifier = Modifier.size(subtitleSize.value.dp)
                         )
                         Spacer(modifier = Modifier.width(4.dp))
-                        Text(
+                        AvalonText(
                             text = item.durationFormatted,
                             color = Color(0xFF4CAF50),
                             fontSize = subtitleSize,
@@ -234,7 +234,7 @@ internal fun MovieSourceCard(
                     }
                 }
                 if (!item.channel.isNullOrBlank()) {
-                    Text(
+                    AvalonText(
                         text = "•  ${item.channel}",
                         color = Color.White.copy(alpha = 0.6f),
                         fontSize = subtitleSize,
@@ -279,7 +279,7 @@ internal fun SeasonGroupSourceCard(
     ) {
         Column(modifier = Modifier.weight(1f)) {
             Row(verticalAlignment = Alignment.CenterVertically) {
-                Text(
+                AvalonText(
                     text = item.title,
                     color = Color.White,
                     fontSize = titleSize,
@@ -290,7 +290,7 @@ internal fun SeasonGroupSourceCard(
                 )
                 if (isLoading) {
                     Spacer(modifier = Modifier.width(12.dp))
-                    CircularProgressIndicator(
+                    AvalonCircularProgressIndicator(
                         color = Color(0xFF4CAF50),
                         modifier = Modifier.size(20.dp),
                         strokeWidth = 2.dp
@@ -303,7 +303,7 @@ internal fun SeasonGroupSourceCard(
                 horizontalArrangement = Arrangement.spacedBy(10.dp)
             ) {
                 Row(verticalAlignment = Alignment.CenterVertically) {
-                    Icon(
+                    AvalonIcon(
                         Lucide.Tv,
                         contentDescription = null,
                         tint = Color(0xFF4CAF50),
@@ -318,7 +318,7 @@ internal fun SeasonGroupSourceCard(
                         else ->
                             stringResource(Res.string.details_sources_found_episodes, item.episodesCount)
                     }
-                    Text(
+                    AvalonText(
                         text = episodesSummary,
                         color = Color(0xFF4CAF50),
                         fontSize = subtitleSize,
@@ -326,7 +326,7 @@ internal fun SeasonGroupSourceCard(
                     )
                 }
                 if (!item.channel.isNullOrBlank()) {
-                    Text(
+                    AvalonText(
                         text = "•  ${item.channel}",
                         color = Color.White.copy(alpha = 0.6f),
                         fontSize = subtitleSize,
@@ -371,7 +371,7 @@ internal fun SingleEpisodeSourceCard(
     ) {
         Column(modifier = Modifier.weight(1f)) {
             Row(verticalAlignment = Alignment.CenterVertically) {
-                Text(
+                AvalonText(
                     text = item.title,
                     color = Color.White,
                     fontSize = titleSize,
@@ -382,7 +382,7 @@ internal fun SingleEpisodeSourceCard(
                 )
                 if (isLoading) {
                     Spacer(modifier = Modifier.width(12.dp))
-                    CircularProgressIndicator(
+                    AvalonCircularProgressIndicator(
                         color = Color(0xFF4CAF50),
                         modifier = Modifier.size(20.dp),
                         strokeWidth = 2.dp
@@ -399,14 +399,14 @@ internal fun SingleEpisodeSourceCard(
                         modifier = Modifier.weight(1f, fill = false),
                         verticalAlignment = Alignment.CenterVertically
                     ) {
-                        Icon(
+                        AvalonIcon(
                             Lucide.Tv,
                             contentDescription = null,
                             tint = Color(0xFF4CAF50),
                             modifier = Modifier.size(subtitleSize.value.dp)
                         )
                         Spacer(modifier = Modifier.width(4.dp))
-                        Text(
+                        AvalonText(
                             text = item.channel,
                             color = Color(0xFF4CAF50),
                             fontSize = subtitleSize,
@@ -417,7 +417,7 @@ internal fun SingleEpisodeSourceCard(
                     }
                 }
                 if (!item.durationFormatted.isNullOrBlank()) {
-                    Text(
+                    AvalonText(
                         text = "•  ${item.durationFormatted}",
                         color = Color.White.copy(alpha = 0.6f),
                         fontSize = subtitleSize,
@@ -465,7 +465,7 @@ internal fun TorrentSourceCard(
     ) {
         Column(modifier = Modifier.weight(1f)) {
             Row(verticalAlignment = Alignment.CenterVertically) {
-                Text(
+                AvalonText(
                     text = item.title,
                     color = Color.White,
                     fontSize = titleSize,
@@ -476,7 +476,7 @@ internal fun TorrentSourceCard(
                 )
                 if (isLoading) {
                     Spacer(modifier = Modifier.width(12.dp))
-                    CircularProgressIndicator(
+                    AvalonCircularProgressIndicator(
                         color = Color(0xFF4CAF50),
                         modifier = Modifier.size(20.dp),
                         strokeWidth = 2.dp
@@ -488,14 +488,14 @@ internal fun TorrentSourceCard(
             Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(16.dp)) {
                 if (item.sizeBytes != null && item.sizeBytes > 0) {
                     Row(verticalAlignment = Alignment.CenterVertically) {
-                        Icon(
+                        AvalonIcon(
                             Lucide.HardDrive,
                             contentDescription = null,
                             tint = Color.White.copy(alpha = 0.4f),
                             modifier = Modifier.size(statSize.value.dp)
                         )
                         Spacer(modifier = Modifier.width(6.dp))
-                        Text(
+                        AvalonText(
                             text = formatBytes(item.sizeBytes),
                             color = Color.White.copy(alpha = 0.6f),
                             fontSize = statSize
@@ -505,14 +505,14 @@ internal fun TorrentSourceCard(
 
                 if (item.seeders != null) {
                     Row(verticalAlignment = Alignment.CenterVertically) {
-                        Icon(
+                        AvalonIcon(
                             Lucide.CircleArrowDown,
                             contentDescription = null,
                             tint = Color(0xFF4CAF50),
                             modifier = Modifier.size(statSize.value.dp)
                         )
                         Spacer(modifier = Modifier.width(6.dp))
-                        Text(
+                        AvalonText(
                             text = "${item.seeders}",
                             color = Color(0xFF4CAF50),
                             fontSize = statSize,
@@ -523,14 +523,14 @@ internal fun TorrentSourceCard(
 
                 if (item.leechers != null) {
                     Row(verticalAlignment = Alignment.CenterVertically) {
-                        Icon(
+                        AvalonIcon(
                             Lucide.CircleArrowDown,
                             contentDescription = null,
                             tint = Color(0xFFF44336),
                             modifier = Modifier.size(statSize.value.dp)
                         )
                         Spacer(modifier = Modifier.width(6.dp))
-                        Text(
+                        AvalonText(
                             text = "${item.leechers}",
                             color = Color(0xFFF44336),
                             fontSize = statSize
@@ -573,7 +573,7 @@ internal fun MetadataBadge(text: String, tint: Color, isTv: Boolean) {
             .border(1.dp, tint.copy(alpha = 0.2f), RoundedCornerShape(4.dp))
             .padding(horizontal = if (isTv) 6.dp else 4.dp, vertical = if (isTv) 4.dp else 2.dp)
     ) {
-        Text(text = text, color = tint, fontSize = if (isTv) 12.sp else 9.sp, fontWeight = FontWeight.Medium)
+        AvalonText(text = text, color = tint, fontSize = if (isTv) 12.sp else 9.sp, fontWeight = FontWeight.Medium)
     }
 }
 
@@ -584,7 +584,7 @@ internal fun QualityPill(quality: String, isTv: Boolean) {
             .border(1.dp, Color.White.copy(alpha = 0.2f), RoundedCornerShape(4.dp))
             .padding(horizontal = if (isTv) 8.dp else 6.dp, vertical = if (isTv) 4.dp else 2.dp)
     ) {
-        Text(text = quality, color = Color.White, fontSize = if (isTv) 14.sp else 11.sp, fontWeight = FontWeight.Bold)
+        AvalonText(text = quality, color = Color.White, fontSize = if (isTv) 14.sp else 11.sp, fontWeight = FontWeight.Bold)
     }
 }
 
@@ -626,7 +626,7 @@ internal fun MappedEpisodeCard(source: MediaStream, isTv: Boolean, onClick: () -
                     .background(AvalonTheme.colors.primary.copy(alpha = 0.2f), RoundedCornerShape(8.dp)),
                 contentAlignment = Alignment.Center
             ) {
-                Icon(
+                AvalonIcon(
                     Lucide.Play,
                     contentDescription = null,
                     tint = AvalonTheme.colors.primary,
@@ -645,7 +645,7 @@ internal fun MappedEpisodeCard(source: MediaStream, isTv: Boolean, onClick: () -
                 source.title
             }
 
-            Text(
+            AvalonText(
                 text = primaryText,
                 color = Color.White,
                 fontSize = if (isTv) 16.sp else 14.sp,
@@ -655,7 +655,7 @@ internal fun MappedEpisodeCard(source: MediaStream, isTv: Boolean, onClick: () -
             )
             if (source.durationSeconds != null && source.durationSeconds!! > 0) {
                 val mins = (source.durationSeconds!! / 60).toInt()
-                Text(
+                AvalonText(
                     text = stringResource(Res.string.player_duration_mins_single_fmt, mins),
                     color = Color.White.copy(alpha = 0.5f),
                     fontSize = if (isTv) 14.sp else 12.sp
@@ -669,7 +669,7 @@ internal fun MappedEpisodeCard(source: MediaStream, isTv: Boolean, onClick: () -
                 .border(1.dp, AvalonTheme.colors.primary.copy(alpha = 0.5f), RoundedCornerShape(8.dp))
                 .padding(horizontal = 16.dp, vertical = 8.dp)
         ) {
-            Text(
+            AvalonText(
                 text = stringResource(Res.string.details_sources_watch),
                 color = AvalonTheme.colors.primary,
                 fontSize = if (isTv) 14.sp else 12.sp,

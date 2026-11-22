@@ -6,8 +6,8 @@ import androidx.compose.animation.animateColorAsState
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
-import org.ensodai.avalonmediacard.designsystem.components.AvalonIcon as Icon
-import org.ensodai.avalonmediacard.designsystem.components.AvalonText as Text
+import org.ensodai.avalonmediacard.designsystem.components.AvalonIcon
+import org.ensodai.avalonmediacard.designsystem.components.AvalonText
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -68,7 +68,7 @@ fun AvalonTvDrawerItem(
         verticalAlignment = Alignment.CenterVertically
     ) {
         if (icon != null) {
-            Icon(
+            AvalonIcon(
                 imageVector = icon,
                 contentDescription = null,
                 tint = if (isSelected) colors.accentPrimary else if (isFocused) colors.textPrimary else colors.textSecondary,
@@ -78,13 +78,13 @@ fun AvalonTvDrawerItem(
         }
 
         Column(modifier = Modifier.weight(1f)) {
-            Text(
+            AvalonText(
                 text = title,
                 color = if (isSelected) colors.accentPrimary else colors.textPrimary,
                 style = typography.uiLabel
             )
             if (subtitle != null) {
-                Text(
+                AvalonText(
                     text = subtitle,
                     color = colors.textSecondary,
                     style = typography.microCaption
@@ -93,7 +93,7 @@ fun AvalonTvDrawerItem(
         }
 
         if (isSelected) {
-            Icon(
+            AvalonIcon(
                 imageVector = Lucide.Check,
                 contentDescription = "Selected",
                 tint = colors.accentPrimary,

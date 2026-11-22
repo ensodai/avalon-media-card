@@ -6,8 +6,8 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
-import org.ensodai.avalonmediacard.designsystem.components.AvalonIcon as Icon
-import org.ensodai.avalonmediacard.designsystem.components.AvalonText as Text
+import org.ensodai.avalonmediacard.designsystem.components.AvalonIcon
+import org.ensodai.avalonmediacard.designsystem.components.AvalonText
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -48,7 +48,7 @@ fun PluginProxyDisabledView(
                     .background(Color(0xFFEF4444).copy(alpha = 0.15f)),
                 contentAlignment = Alignment.Center
             ) {
-                Icon(
+                AvalonIcon(
                     imageVector = Lucide.ShieldAlert,
                     contentDescription = null,
                     tint = Color(0xFFEF4444),
@@ -56,14 +56,14 @@ fun PluginProxyDisabledView(
                 )
             }
             Spacer(modifier = Modifier.height(12.dp))
-            Text(
+            AvalonText(
                 text = stringResource(Res.string.admin_plugin_proxy_disabled_title),
                 fontSize = 16.sp,
                 fontWeight = FontWeight.Bold,
                 color = AvalonTheme.colors.onSurface
             )
             Spacer(modifier = Modifier.height(4.dp))
-            Text(
+            AvalonText(
                 text = stringResource(Res.string.admin_plugin_proxy_pending_disable_desc),
                 fontSize = 13.sp,
                 color = AvalonTheme.colors.onSurfaceVariant,
@@ -98,7 +98,7 @@ fun PluginProxyDisabledView(
                     .background(AvalonTheme.colors.surfaceVariant.copy(alpha = 0.5f)),
                 contentAlignment = Alignment.Center
             ) {
-                Icon(
+                AvalonIcon(
                     imageVector = Lucide.Globe,
                     contentDescription = null,
                     tint = AvalonTheme.colors.onSurfaceVariant.copy(alpha = 0.7f),
@@ -106,14 +106,14 @@ fun PluginProxyDisabledView(
                 )
             }
             Spacer(modifier = Modifier.height(12.dp))
-            Text(
+            AvalonText(
                 text = stringResource(Res.string.admin_plugin_proxy_disabled_title),
                 fontSize = 16.sp,
                 fontWeight = FontWeight.Bold,
                 color = AvalonTheme.colors.onSurface
             )
             Spacer(modifier = Modifier.height(4.dp))
-            Text(
+            AvalonText(
                 text = stringResource(Res.string.admin_plugin_proxy_disabled_desc),
                 fontSize = 13.sp,
                 color = AvalonTheme.colors.onSurfaceVariant,

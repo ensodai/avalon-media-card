@@ -13,8 +13,8 @@ import avalonmediacard.client.generated.resources.*
 import com.composables.icons.lucide.Check
 import com.composables.icons.lucide.Lucide
 import com.composables.icons.lucide.Users
-import org.ensodai.avalonmediacard.designsystem.components.AvalonIcon as Icon
-import org.ensodai.avalonmediacard.designsystem.components.AvalonText as Text
+import org.ensodai.avalonmediacard.designsystem.components.AvalonIcon
+import org.ensodai.avalonmediacard.designsystem.components.AvalonText
 import org.ensodai.avalonmediacard.designsystem.theme.AvalonTheme
 import org.jetbrains.compose.resources.stringResource
 
@@ -46,13 +46,13 @@ fun WatchPartyReadinessBanner(
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.spacedBy(8.dp)
     ) {
-        Icon(
+        AvalonIcon(
             imageVector = if (isAllReady) Lucide.Check else Lucide.Users,
             contentDescription = null,
             tint = statusColor,
             modifier = Modifier.size(16.dp)
         )
-        Text(
+        AvalonText(
             text = if (isAllReady) {
                 stringResource(Res.string.watch_party_ready_counter_all, readyCount, totalCount)
             } else {

@@ -19,8 +19,8 @@ import androidx.compose.foundation.lazy.grid.GridItemSpan
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.lazy.grid.itemsIndexed
-import org.ensodai.avalonmediacard.designsystem.components.AvalonCircularProgressIndicator as CircularProgressIndicator
-import org.ensodai.avalonmediacard.designsystem.components.AvalonText as Text
+import org.ensodai.avalonmediacard.designsystem.components.AvalonCircularProgressIndicator
+import org.ensodai.avalonmediacard.designsystem.components.AvalonText
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.LaunchedEffect
@@ -158,14 +158,14 @@ fun WatchRoomsLayoutTv(
                     horizontalArrangement = Arrangement.SpaceBetween,
                     verticalAlignment = Alignment.CenterVertically
                 ) {
-                    Text(
+                    AvalonText(
                         text = stringResource(Res.string.watch_rooms_history_title),
                         style = AvalonTheme.typography.sectionTitle,
                         color = AvalonTheme.colors.textPrimary
                     )
 
                     if (state.isLoading) {
-                        CircularProgressIndicator(
+                        AvalonCircularProgressIndicator(
                             modifier = Modifier.size(20.dp),
                             strokeWidth = 2.dp,
                             color = AvalonTheme.colors.accentPrimary
@@ -190,7 +190,7 @@ fun WatchRoomsLayoutTv(
                                 .padding(vertical = 32.dp),
                             contentAlignment = Alignment.Center
                         ) {
-                            Text(
+                            AvalonText(
                                 text = stringResource(Res.string.watch_rooms_history_empty),
                                 fontSize = 16.sp,
                                 color = AvalonTheme.colors.onBackground.copy(alpha = 0.5f)

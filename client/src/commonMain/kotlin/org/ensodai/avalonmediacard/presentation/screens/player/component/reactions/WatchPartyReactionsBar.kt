@@ -15,8 +15,8 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
-import org.ensodai.avalonmediacard.designsystem.components.AvalonIcon as Icon
-import org.ensodai.avalonmediacard.designsystem.components.AvalonText as Text
+import org.ensodai.avalonmediacard.designsystem.components.AvalonIcon
+import org.ensodai.avalonmediacard.designsystem.components.AvalonText
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -88,7 +88,7 @@ fun WatchPartyReactionsControl(
                 .pointerHoverIcon(PointerIcon.Hand, overrideDescendants = true),
             contentAlignment = Alignment.Center
         ) {
-            Icon(
+            AvalonIcon(
                 imageVector = Lucide.Smile,
                 contentDescription = "Reactions",
                 tint = if (isExpanded) colors.accentPrimary else colors.textPrimary,
@@ -160,7 +160,7 @@ fun WatchPartyReactionsBar(
                         ),
                     contentAlignment = Alignment.Center
                 ) {
-                    Text(
+                    AvalonText(
                         text = emoji,
                         fontSize = 20.sp
                     )

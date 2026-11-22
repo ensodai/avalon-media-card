@@ -3,7 +3,7 @@ package org.ensodai.avalonmediacard.presentation.components.textSlot
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import org.ensodai.avalonmediacard.designsystem.components.AvalonText as Text
+import org.ensodai.avalonmediacard.designsystem.components.AvalonText
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -36,7 +36,7 @@ fun TextSlot(
                 .shimmerEffect()
         )
     } else {
-        Text(
+        AvalonText(
             text = data.content,
             color = Color.White,
             modifier = modifier

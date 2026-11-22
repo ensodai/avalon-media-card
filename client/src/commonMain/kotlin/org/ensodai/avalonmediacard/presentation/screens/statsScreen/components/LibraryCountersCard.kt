@@ -6,6 +6,9 @@ import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.interaction.MutableInteractionSource
+import androidx.compose.foundation.interaction.collectIsFocusedAsState
+import androidx.compose.foundation.interaction.collectIsHoveredAsState
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -20,8 +23,10 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.text.BasicText
 import org.ensodai.avalonmediacard.designsystem.components.AvalonBentoCard
 import org.ensodai.avalonmediacard.designsystem.components.AvalonIcon
+import org.ensodai.avalonmediacard.designsystem.components.AvalonSegmentedControl
 import org.ensodai.avalonmediacard.designsystem.components.AvalonSurface
 import org.ensodai.avalonmediacard.designsystem.components.AvalonText
 import androidx.compose.runtime.Composable
@@ -212,29 +217,26 @@ fun LibraryCountersCard(
                 )
 
                 // Сегментированный переключатель (Segmented Control) в едином дизайн-коде
-                AvalonSurface(
-                    shape = shapes.control,
-                    color = colors.bgElevated
-                ) {
-                    Row(modifier = Modifier.padding(2.dp)) {
-                        LibrarySegmentTab(
-                            text = stringResource(Res.string.stats_library_tab_movies),
-                            isSelected = selectedMode == LibraryStatsMode.MOVIES,
-                            onClick = {
-                                selectedMode = LibraryStatsMode.MOVIES
-                                hoveredCategory = null
-                            }
-                        )
-                        LibrarySegmentTab(
-                            text = stringResource(Res.string.stats_library_tab_shows),
-                            isSelected = selectedMode == LibraryStatsMode.SHOWS,
-                            onClick = {
-                                selectedMode = LibraryStatsMode.SHOWS
-                                hoveredCategory = null
-                            }
+                AvalonSegmentedControl(
+                    items = listOf(LibraryStatsMode.MOVIES, LibraryStatsMode.SHOWS),
+                    selectedItem = selectedMode,
+                    onItemSelected = {
+                        selectedMode = it
+                        hoveredCategory = null
+                    },
+                    itemLabel = { mode ->
+                        BasicText(
+                            text = when (mode) {
+                                LibraryStatsMode.MOVIES -> stringResource(Res.string.stats_library_tab_movies)
+                                LibraryStatsMode.SHOWS -> stringResource(Res.string.stats_library_tab_shows)
+                            },
+                            style = AvalonTheme.typography.labelSmall.copy(
+                                color = if (mode == selectedMode) colors.textPrimary else colors.textSecondary,
+                                fontWeight = if (mode == selectedMode) FontWeight.SemiBold else FontWeight.Medium
+                            )
                         )
                     }
-                }
+                )
             }
 
             Spacer(modifier = Modifier.height(8.dp))
@@ -344,57 +346,6 @@ fun LibraryCountersCard(
     }
 
 @Composable
-private fun LibrarySegmentTab(
-    text: String,
-    isSelected: Boolean,
-    onClick: () -> Unit
-) {
-    val colors = AvalonTheme.colors
-    val shapes = AvalonTheme.shapes
-    var isHovered by remember { mutableStateOf(false) }
-
-    val animatedBg by animateColorAsState(
-        if (isSelected) {
-            colors.bgSurface
-        } else if (isHovered) {
-            colors.borderSubtle.copy(alpha = 0.4f)
-        } else {
-            Color.Transparent
-        }
-    )
-    val animatedTextColor by animateColorAsState(
-        if (isSelected || isHovered) colors.textPrimary else colors.textSecondary
-    )
-
-    Box(
-        modifier = Modifier
-            .clip(shapes.control)
-            .background(animatedBg)
-            .pointerHoverIcon(PointerIcon.Hand)
-            .pointerInput(Unit) {
-                awaitPointerEventScope {
-                    while (true) {
-                        val event = awaitPointerEvent()
-                        when (event.type) {
-                            PointerEventType.Enter, PointerEventType.Move -> isHovered = true
-                            PointerEventType.Exit -> isHovered = false
-                        }
-                    }
-                }
-            }
-            .clickable(onClick = onClick)
-            .padding(horizontal = 10.dp, vertical = 4.dp)
-    ) {
-        AvalonText(
-            text = text,
-            style = AvalonTheme.typography.labelSmall.copy(fontSize = 11.sp),
-            fontWeight = if (isSelected) FontWeight.Bold else FontWeight.Medium,
-            color = animatedTextColor
-        )
-    }
-}
-
-@Composable
 private fun KpiPill(
     icon: ImageVector,
     count: Int,
@@ -405,41 +356,44 @@ private fun KpiPill(
 ) {
     val colors = AvalonTheme.colors
     val shapes = AvalonTheme.shapes
+    val elevation = AvalonTheme.elevation
 
-    var isHovered by remember { mutableStateOf(false) }
+    val interactionSource = remember { MutableInteractionSource() }
+    val isHovered by interactionSource.collectIsHoveredAsState()
+    val isFocused by interactionSource.collectIsFocusedAsState()
+    val isInteractive = onClick != null
+    val isActive = isInteractive && (isHovered || isFocused)
 
     val animatedBg by animateColorAsState(
         if (isSelected) {
             colors.bgOverlay
-        } else if (isHovered) {
-            colors.borderSubtle.copy(alpha = 0.4f)
+        } else if (isActive) {
+            colors.bgElevated.copy(alpha = 0.9f)
         } else {
             colors.bgElevated
         }
     )
+    val animatedBorder by animateColorAsState(
+        if (isSelected) {
+            colors.borderFocus
+        } else if (isActive) {
+            colors.borderFocus.copy(alpha = 0.6f)
+        } else {
+            colors.borderSubtle
+        }
+    )
     val animatedIconColor by animateColorAsState(
-        if (isSelected || isHovered) colors.textPrimary else colors.textSecondary
+        if (isSelected || isActive) colors.textPrimary else colors.textSecondary
     )
 
     AvalonSurface(
-        onClick = onClick ?: {},
-        enabled = onClick != null,
-        modifier = modifier
-            .pointerHoverIcon(if (onClick != null) PointerIcon.Hand else PointerIcon.Default)
-            .pointerInput(Unit) {
-                awaitPointerEventScope {
-                    while (true) {
-                        val event = awaitPointerEvent()
-                        when (event.type) {
-                            PointerEventType.Enter, PointerEventType.Move -> isHovered = true
-                            PointerEventType.Exit -> isHovered = false
-                        }
-                    }
-                }
-            },
+        onClick = onClick,
+        enabled = isInteractive,
+        modifier = modifier.pointerHoverIcon(if (isInteractive) PointerIcon.Hand else PointerIcon.Default),
+        interactionSource = interactionSource,
         shape = shapes.control,
         color = animatedBg,
-        border = null
+        border = BorderStroke(if (isSelected) elevation.focusBorderWidth.coerceAtLeast(1.dp) else elevation.borderWidth, animatedBorder)
     ) {
         Column(
             modifier = Modifier.padding(horizontal = 14.dp, vertical = 12.dp),
@@ -461,7 +415,7 @@ private fun KpiPill(
             AvalonText(
                 text = label,
                 style = AvalonTheme.typography.metadata,
-                color = if (isSelected) colors.textPrimary else colors.textSecondary
+                color = if (isSelected || isActive) colors.textPrimary else colors.textSecondary
             )
         }
     }
@@ -614,13 +568,17 @@ private fun StatusTag(
 ) {
     val colors = AvalonTheme.colors
     val shapes = AvalonTheme.shapes
+    val elevation = AvalonTheme.elevation
 
     val currentHovered by rememberUpdatedState(hoveredCategory)
     val isHovered = hoveredCategory == category
     val isAnyHovered = hoveredCategory != null
 
     val animatedBg by animateColorAsState(
-        if (isHovered) colors.borderSubtle.copy(alpha = 0.5f) else colors.bgElevated
+        if (isHovered) colors.bgOverlay else colors.bgElevated
+    )
+    val animatedBorder by animateColorAsState(
+        if (isHovered) colors.borderFocus else colors.borderSubtle
     )
     val animatedDotSize by animateDpAsState(
         if (isHovered) 8.dp else 6.dp
@@ -654,7 +612,7 @@ private fun StatusTag(
             },
         shape = shapes.control,
         color = animatedBg,
-        border = null
+        border = BorderStroke(if (isHovered) elevation.focusBorderWidth.coerceAtLeast(1.dp) else elevation.borderWidth, animatedBorder)
     ) {
         Row(
             modifier = Modifier

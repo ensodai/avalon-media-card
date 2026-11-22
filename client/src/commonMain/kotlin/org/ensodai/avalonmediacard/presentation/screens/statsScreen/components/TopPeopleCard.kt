@@ -3,23 +3,22 @@ package org.ensodai.avalonmediacard.presentation.screens.statsScreen.components
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
+import androidx.compose.foundation.interaction.MutableInteractionSource
+import androidx.compose.foundation.interaction.collectIsFocusedAsState
+import androidx.compose.foundation.interaction.collectIsHoveredAsState
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.defaultMinSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
-import org.ensodai.avalonmediacard.designsystem.components.AvalonIcon
-import org.ensodai.avalonmediacard.designsystem.components.AvalonSurface
-import org.ensodai.avalonmediacard.designsystem.components.AvalonText
+import androidx.compose.foundation.text.BasicText
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -28,15 +27,11 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.input.pointer.PointerEventType
 import androidx.compose.ui.input.pointer.PointerIcon
 import androidx.compose.ui.input.pointer.pointerHoverIcon
-import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import avalonmediacard.client.generated.resources.*
 import com.composables.icons.lucide.Lucide
 import com.composables.icons.lucide.Star
@@ -45,8 +40,13 @@ import com.composables.icons.lucide.Users
 import org.ensodai.avalonmediacard.contract.model.PersonStatDto
 import org.ensodai.avalonmediacard.contract.model.TopPeopleStatsDto
 import org.ensodai.avalonmediacard.contract.utils.toProxyImageUrl
-import org.ensodai.avalonmediacard.presentation.components.ShimmerImage
+import org.ensodai.avalonmediacard.designsystem.components.AvalonBentoCard
+import org.ensodai.avalonmediacard.designsystem.components.AvalonIcon
+import org.ensodai.avalonmediacard.designsystem.components.AvalonSegmentedControl
+import org.ensodai.avalonmediacard.designsystem.components.AvalonSurface
+import org.ensodai.avalonmediacard.designsystem.components.AvalonText
 import org.ensodai.avalonmediacard.designsystem.theme.AvalonTheme
+import org.ensodai.avalonmediacard.presentation.components.ShimmerImage
 import org.jetbrains.compose.resources.stringResource
 
 @Composable
@@ -58,19 +58,12 @@ fun TopPeopleCard(
     var selectedTab by remember { mutableStateOf(0) } // 0: Режиссеры, 1: Актеры
 
     val colors = AvalonTheme.colors
-    val shapes = AvalonTheme.shapes
 
-    AvalonSurface(
-        modifier = modifier.defaultMinSize(minHeight = 260.dp),
-        shape = shapes.container,
-        color = colors.bgSurface,
-        border = BorderStroke(1.dp, colors.borderSubtle)
+    AvalonBentoCard(
+        modifier = modifier.fillMaxWidth(),
+        contentPadding = 24.dp
     ) {
-        BoxWithConstraints(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(24.dp)
-        ) {
+        BoxWithConstraints(modifier = Modifier.fillMaxWidth()) {
             val isDualColumn = maxWidth >= 680.dp
 
             Column(modifier = Modifier.fillMaxWidth()) {
@@ -97,23 +90,24 @@ fun TopPeopleCard(
 
                     // Табы показываем только если экран узкий и не помещаются 2 колонки
                     if (!isDualColumn) {
-                        AvalonSurface(
-                            shape = shapes.control,
-                            color = colors.bgElevated
-                        ) {
-                            Row(modifier = Modifier.padding(3.dp)) {
-                                TabPill(
-                                    text = stringResource(Res.string.stats_people_directors),
-                                    isSelected = selectedTab == 0,
-                                    onClick = { selectedTab = 0 }
-                                )
-                                TabPill(
-                                    text = stringResource(Res.string.stats_people_actors),
-                                    isSelected = selectedTab == 1,
-                                    onClick = { selectedTab = 1 }
+                        AvalonSegmentedControl(
+                            items = listOf(0, 1),
+                            selectedItem = selectedTab,
+                            onItemSelected = { selectedTab = it },
+                            itemLabel = { tab ->
+                                BasicText(
+                                    text = if (tab == 0) {
+                                        stringResource(Res.string.stats_people_directors)
+                                    } else {
+                                        stringResource(Res.string.stats_people_actors)
+                                    },
+                                    style = AvalonTheme.typography.labelSmall.copy(
+                                        color = if (tab == selectedTab) colors.textPrimary else colors.textSecondary,
+                                        fontWeight = if (tab == selectedTab) FontWeight.SemiBold else FontWeight.Medium
+                                    )
                                 )
                             }
-                        }
+                        )
                     }
                 }
 
@@ -169,31 +163,6 @@ private fun SectionHeader(title: String) {
 }
 
 @Composable
-private fun TabPill(
-    text: String,
-    isSelected: Boolean,
-    onClick: () -> Unit
-) {
-    val colors = AvalonTheme.colors
-    val shapes = AvalonTheme.shapes
-
-    Box(
-        modifier = Modifier
-            .clip(shapes.control)
-            .background(if (isSelected) colors.bgSurface else Color.Transparent)
-            .clickable(onClick = onClick)
-            .padding(horizontal = 10.dp, vertical = 5.dp)
-    ) {
-        AvalonText(
-            text = text,
-            style = AvalonTheme.typography.labelSmall,
-            fontWeight = if (isSelected) FontWeight.Bold else FontWeight.Medium,
-            color = if (isSelected) colors.textPrimary else colors.textSecondary
-        )
-    }
-}
-
-@Composable
 private fun PeopleList(
     people: List<PersonStatDto>,
     onPersonClicked: (personId: String, name: String) -> Unit,
@@ -232,33 +201,29 @@ private fun PersonRow(
 ) {
     val colors = AvalonTheme.colors
     val shapes = AvalonTheme.shapes
-    var isHovered by remember { mutableStateOf(false) }
+    val elevation = AvalonTheme.elevation
+
+    val interactionSource = remember { MutableInteractionSource() }
+    val isHovered by interactionSource.collectIsHoveredAsState()
+    val isFocused by interactionSource.collectIsFocusedAsState()
+    val isActive = isHovered || isFocused
 
     val animatedBg by animateColorAsState(
-        if (isHovered) colors.borderSubtle.copy(alpha = 0.5f) else colors.bgElevated
+        if (isActive) colors.bgOverlay else colors.bgElevated
     )
     val animatedBorder by animateColorAsState(
-        if (isHovered) colors.borderStrong else Color.Transparent
+        if (isActive) colors.borderFocus else colors.borderSubtle
     )
 
     AvalonSurface(
         onClick = onClick,
         shape = shapes.control,
         color = animatedBg,
-        border = BorderStroke(1.dp, animatedBorder),
+        border = BorderStroke(if (isActive) elevation.focusBorderWidth.coerceAtLeast(1.dp) else elevation.borderWidth, animatedBorder),
+        interactionSource = interactionSource,
         modifier = Modifier
+            .fillMaxWidth()
             .pointerHoverIcon(PointerIcon.Hand)
-            .pointerInput(Unit) {
-                awaitPointerEventScope {
-                    while (true) {
-                        val event = awaitPointerEvent()
-                        when (event.type) {
-                            PointerEventType.Enter, PointerEventType.Move -> isHovered = true
-                            PointerEventType.Exit -> isHovered = false
-                        }
-                    }
-                }
-            }
     ) {
         Row(
             modifier = Modifier

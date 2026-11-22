@@ -63,8 +63,10 @@ fun AvalonTextField(
 
     var isFocused by remember { mutableStateOf(false) }
 
+    val colors = AvalonTheme.colors
     val borderColor by animateColorAsState(
-        targetValue = if (isFocused) AvalonTheme.colors.primary else Color.Transparent
+        targetValue = if (isFocused) colors.borderStrong else colors.borderSubtle,
+        label = "TextFieldBorder"
     )
 
     val interactionSource = remember { MutableInteractionSource() }
@@ -81,8 +83,8 @@ fun AvalonTextField(
                 defaultBorderWidth = 0.dp
             )
             .clip(shape)
-            .background(AvalonTheme.colors.surface)
-            .border(1.dp, borderColor, shape)
+            .background(colors.bgElevated)
+            .border(AvalonTheme.elevation.borderWidth, borderColor, shape)
             .clickable(
                 interactionSource = interactionSource,
                 indication = null
@@ -101,11 +103,11 @@ fun AvalonTextField(
             value = value,
             onValueChange = onValueChange,
             textStyle = TextStyle(
-                color = AvalonTheme.colors.onSurface,
+                color = colors.textPrimary,
                 fontSize = fontSize,
                 fontWeight = FontWeight.Medium
             ),
-            cursorBrush = SolidColor(AvalonTheme.colors.primary),
+            cursorBrush = SolidColor(colors.accentPrimary),
             modifier = Modifier
                 .weight(1f)
                 .focusRequester(effectiveRequester)
@@ -144,7 +146,7 @@ fun AvalonTextField(
                     if (value.isEmpty()) {
                         Text(
                             text = placeholder,
-                            color = Color.Gray.copy(alpha = 0.6f),
+                            color = colors.textSecondary,
                             fontSize = fontSize,
                             fontWeight = FontWeight.Medium
                         )
@@ -168,17 +170,17 @@ fun AvalonTextField(
                             onValueChange("")
                             effectiveRequester.requestFocus()
                         },
-                        activeBorderColor = Color.White.copy(alpha = 0.8f),
-                        activeBorderWidth = 1.5.dp
+                        activeBorderColor = colors.borderStrong,
+                        activeBorderWidth = 1.dp
                     )
                     .clip(CircleShape)
-                    .background(Color.White.copy(alpha = 0.12f)),
+                    .background(colors.bgSurface),
                 contentAlignment = Alignment.Center
             ) {
                 Icon(
                     Lucide.X,
                     contentDescription = "Clear",
-                    tint = Color.White,
+                    tint = colors.textSecondary,
                     modifier = Modifier.size(clearIconSize)
                 )
             }

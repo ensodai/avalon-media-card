@@ -1,5 +1,8 @@
 package org.ensodai.avalonmediacard.presentation.screens.detailsScreen.targets.tv.components
 
+import org.ensodai.avalonmediacard.designsystem.theme.AvalonTheme
+import org.ensodai.avalonmediacard.designsystem.components.AvalonBadge
+import org.ensodai.avalonmediacard.designsystem.components.AvalonBadgeVariant
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
@@ -40,17 +43,20 @@ internal fun TvEpisodeCard(
 ) {
     var isFocused by remember { mutableStateOf(false) }
 
+    val colors = AvalonTheme.colors
+    val shapes = AvalonTheme.shapes
+
     Column(
         modifier = modifier
             .width(260.dp)
             .padding(vertical = 4.dp)
             .tvAndWebHoverEffect(
                 scaleTarget = 1.06f,
-                activeBorderWidth = 2.dp,
-                activeBorderColor = Color.White,
+                activeBorderWidth = AvalonTheme.elevation.focusBorderWidth,
+                activeBorderColor = colors.borderFocus,
                 defaultBorderWidth = 1.dp,
-                defaultBorderColor = if (isCurrentFocused) Color.White.copy(alpha = 0.3f) else Color.White.copy(alpha = 0.08f),
-                shape = RoundedCornerShape(12.dp),
+                defaultBorderColor = if (isCurrentFocused) colors.borderStrong else colors.borderSubtle,
+                shape = shapes.media,
                 tiltEnabled = false,
                 onClick = onPlay,
                 onStateChange = { active ->
@@ -58,7 +64,7 @@ internal fun TvEpisodeCard(
                     if (active) onFocus()
                 }
             )
-            .background(Color(0xFF141418), RoundedCornerShape(12.dp))
+            .background(colors.bgSurface, shapes.media)
     ) {
         // 16:9 Thumbnail
         Box(
@@ -66,7 +72,7 @@ internal fun TvEpisodeCard(
                 .fillMaxWidth()
                 .aspectRatio(16f / 9f)
                 .clip(RoundedCornerShape(topStart = 12.dp, topEnd = 12.dp))
-                .background(Color(0xFF0D0D10)),
+                .background(colors.bgCanvas),
             contentAlignment = Alignment.Center
         ) {
             val imageAlpha = if (episode.isWatched && !isFocused) 0.65f else 1.0f
@@ -121,21 +127,11 @@ internal fun TvEpisodeCard(
             // Duration badge (bottom-left)
             val runtime = episode.runtime
             if (runtime != null && runtime > 0) {
-                Box(
-                    modifier = Modifier
-                        .align(Alignment.BottomStart)
-                        .padding(6.dp)
-                        .clip(RoundedCornerShape(4.dp))
-                        .background(Color.Black.copy(alpha = 0.85f))
-                        .padding(horizontal = 5.dp, vertical = 2.dp)
-                ) {
-                    Text(
-                        text = stringResource(Res.string.player_duration_mins_single_fmt, runtime),
-                        fontSize = 10.sp,
-                        fontWeight = FontWeight.Medium,
-                        color = Color.White.copy(alpha = 0.9f)
-                    )
-                }
+                AvalonBadge(
+                    text = stringResource(Res.string.player_duration_mins_single_fmt, runtime),
+                    variant = AvalonBadgeVariant.Glass,
+                    modifier = Modifier.align(Alignment.BottomStart).padding(6.dp)
+                )
             }
 
             // Watched checkmark badge (top-right)
@@ -146,13 +142,13 @@ internal fun TvEpisodeCard(
                         .padding(6.dp)
                         .size(24.dp)
                         .clip(CircleShape)
-                        .background(Color(0xFF4CAF50).copy(alpha = 0.9f)),
+                        .background(colors.statusLive),
                     contentAlignment = Alignment.Center
                 ) {
                     Icon(
                         imageVector = Lucide.Check,
                         contentDescription = "Просмотрено",
-                        tint = Color.White,
+                        tint = colors.onAccentPrimary,
                         modifier = Modifier.size(14.dp)
                     )
                 }

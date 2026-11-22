@@ -1,6 +1,7 @@
 package org.ensodai.avalonmediacard.presentation.screens.detailsScreen.component.tvSeasonsSlot
 
 import org.ensodai.avalonmediacard.designsystem.theme.AvalonTheme
+import org.ensodai.avalonmediacard.designsystem.components.AvalonScrollableTabRow
 
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.animateContentSize
@@ -66,30 +67,62 @@ fun TvSeasonsSlotContent(
 
         Spacer(modifier = Modifier.height(16.dp))
 
-        // === СЕЛЕКТОР СЕЗОНОВ ===
-        FlowRow(
-            horizontalArrangement = Arrangement.spacedBy(12.dp),
-            verticalArrangement = Arrangement.spacedBy(12.dp),
-            modifier = Modifier.fillMaxWidth().padding(horizontal = 32.dp)
-        ) {
-            if (isLoading) {
+        // === СЕЛЕКТОР СЕЗОНОВ (AvalonScrollableTabRow) ===
+        if (isLoading) {
+            Row(
+                horizontalArrangement = Arrangement.spacedBy(8.dp),
+                modifier = Modifier.fillMaxWidth().padding(horizontal = 32.dp)
+            ) {
                 repeat(3) { SeasonTabSkeleton() }
-            } else {
-                component.seasons.forEach { season ->
-                    val isSelected = season.seasonNumber == component.selectedSeasonNumber
-                    SeasonTab(
-                        season = season,
-                        isSelected = isSelected,
-                        onClick = {
-                            if (!isSelected) {
-                                val seasonAction = season.selectAction
-                                if (seasonAction != null) {
-                                    onAction(seasonAction)
-                                }
-                            }
+            }
+        } else {
+            val selectedSeason = component.seasons.firstOrNull { it.seasonNumber == component.selectedSeasonNumber }
+                ?: component.seasons.firstOrNull()
+
+            if (selectedSeason != null) {
+                AvalonScrollableTabRow(
+                    items = component.seasons,
+                    selectedItem = selectedSeason,
+                    onItemSelected = { season ->
+                        if (season != selectedSeason) {
+                            season.selectAction?.let(onAction)
                         }
-                    )
-                }
+                    },
+                    modifier = Modifier.padding(horizontal = 32.dp),
+                    leadingIcon = { season ->
+                        if (season.isFullyWatched) {
+                            Icon(
+                                imageVector = Lucide.CheckCheck,
+                                contentDescription = stringResource(Res.string.details_seasons_completed),
+                                tint = AvalonTheme.colors.statusLive,
+                                modifier = Modifier.size(15.dp)
+                            )
+                        } else if (season.isWatching) {
+                            Icon(
+                                imageVector = Lucide.Eye,
+                                contentDescription = stringResource(Res.string.details_seasons_watching),
+                                tint = AvalonTheme.colors.accentPrimary,
+                                modifier = Modifier.size(15.dp)
+                            )
+                        }
+                    },
+                    itemLabel = { season ->
+                        Text(
+                            text = season.name,
+                            style = AvalonTheme.typography.uiLabel,
+                            fontWeight = if (season == selectedSeason) FontWeight.SemiBold else FontWeight.Medium
+                        )
+                    },
+                    trailingBadge = { season ->
+                        if (season.episodeCount > 0 && season != selectedSeason) {
+                            Text(
+                                text = "${season.episodeCount}",
+                                style = AvalonTheme.typography.monoTech,
+                                color = AvalonTheme.colors.textSecondary.copy(alpha = 0.6f)
+                            )
+                        }
+                    }
+                )
             }
         }
         Spacer(modifier = Modifier.height(16.dp))
@@ -510,67 +543,6 @@ private fun MarkSeasonAsWatchedButton(isLoading: Boolean, component: SlotData.Tv
                     color = buttonTextColor,
                     fontSize = 13.sp,
                     fontWeight = FontWeight.Medium
-                )
-            }
-        }
-    }
-}
-
-@Composable
-private fun SeasonTab(
-    season: SeasonItem,
-    isSelected: Boolean,
-    onClick: () -> Unit
-) {
-    val bgColor by animateColorAsState(
-        targetValue = if (isSelected) Color.White else Color.White.copy(alpha = 0.05f)
-    )
-    val textColor by animateColorAsState(
-        targetValue = if (isSelected) Color.Black else Color.White.copy(alpha = 0.8f)
-    )
-
-    Box(
-        modifier = Modifier
-            .tvAndWebHoverEffect(scaleTarget = 1.05f, shape = RoundedCornerShape(8.dp),
-    onClick = { onClick() })
-            .clip(RoundedCornerShape(8.dp))
-            .background(bgColor)
-            
-            .padding(horizontal = 20.dp, vertical = 10.dp),
-        contentAlignment = Alignment.Center
-    ) {
-        Row(verticalAlignment = Alignment.CenterVertically) {
-            if (season.isFullyWatched) {
-                Icon(
-                    imageVector = Lucide.CheckCheck,
-                    contentDescription = stringResource(Res.string.details_seasons_completed),
-                    tint = Color(0xFF4CAF50), // Green for fully watched
-                    modifier = Modifier.size(16.dp)
-                )
-                Spacer(modifier = Modifier.width(6.dp))
-            } else if (season.isWatching) {
-                Icon(
-                    imageVector = Lucide.Eye,
-                    contentDescription = stringResource(Res.string.details_seasons_watching),
-                    tint = textColor.copy(alpha = 0.8f),
-                    modifier = Modifier.size(16.dp)
-                )
-                Spacer(modifier = Modifier.width(6.dp))
-            }
-
-            Text(
-                text = season.name,
-                color = textColor,
-                fontSize = 15.sp,
-                fontWeight = if (isSelected) FontWeight.Bold else FontWeight.Medium
-            )
-            if (season.episodeCount > 0 && !isSelected) {
-                Spacer(modifier = Modifier.width(6.dp))
-                Text(
-                    text = "${season.episodeCount}",
-                    color = textColor.copy(alpha = 0.5f),
-                    fontSize = 12.sp,
-                    fontWeight = FontWeight.Normal
                 )
             }
         }

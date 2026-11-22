@@ -1,6 +1,8 @@
 package org.ensodai.avalonmediacard.presentation.screens.episodesNotificationsScreen.component
 
 import org.ensodai.avalonmediacard.designsystem.theme.AvalonTheme
+import org.ensodai.avalonmediacard.designsystem.components.AvalonBadge
+import org.ensodai.avalonmediacard.designsystem.components.AvalonBadgeVariant
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.animateColorAsState
@@ -197,59 +199,29 @@ fun EpisodeCard(
 
                 // Бейдж "NEW"
                 if (item.isNew && !item.isWatched) {
-                    Box(
-                        modifier = Modifier
-                            .align(Alignment.TopStart)
-                            .padding(6.dp)
-                            .clip(RoundedCornerShape(4.dp))
-                            .background(AvalonTheme.colors.primary)
-                            .padding(horizontal = 6.dp, vertical = 2.dp)
-                    ) {
-                        Text(
-                            text = stringResource(Res.string.episodes_notifications_badge_new),
-                            color = AvalonTheme.colors.onPrimary,
-                            fontSize = 10.sp,
-                            fontWeight = FontWeight.Bold
-                        )
-                    }
+                    AvalonBadge(
+                        text = stringResource(Res.string.episodes_notifications_badge_new),
+                        variant = AvalonBadgeVariant.Accent,
+                        modifier = Modifier.align(Alignment.TopStart).padding(6.dp)
+                    )
                 }
 
                 // Дата выхода (когда капсула действий скрыта)
                 if (!isControlsVisible && formattedDate != null) {
-                    Box(
-                        modifier = Modifier
-                            .align(Alignment.TopEnd)
-                            .padding(6.dp)
-                            .clip(RoundedCornerShape(4.dp))
-                            .background(Color.Black.copy(alpha = 0.75f))
-                            .padding(horizontal = 6.dp, vertical = 2.dp)
-                    ) {
-                        Text(
-                            text = formattedDate,
-                            color = Color.White,
-                            fontSize = 10.sp,
-                            fontWeight = FontWeight.Medium
-                        )
-                    }
+                    AvalonBadge(
+                        text = formattedDate,
+                        variant = AvalonBadgeVariant.Glass,
+                        modifier = Modifier.align(Alignment.TopEnd).padding(6.dp)
+                    )
                 }
 
                 // Длительность (bottom-start)
                 if (durationMinutes != null && durationMinutes > 0) {
-                    Box(
-                        modifier = Modifier
-                            .align(Alignment.BottomStart)
-                            .padding(6.dp)
-                            .clip(RoundedCornerShape(4.dp))
-                            .background(Color.Black.copy(alpha = 0.85f))
-                            .padding(horizontal = 6.dp, vertical = 2.dp)
-                    ) {
-                        Text(
-                            text = stringResource(Res.string.player_duration_mins_single_fmt, durationMinutes),
-                            color = Color.White.copy(alpha = 0.9f),
-                            fontSize = 10.sp,
-                            fontWeight = FontWeight.Medium
-                        )
-                    }
+                    AvalonBadge(
+                        text = stringResource(Res.string.player_duration_mins_single_fmt, durationMinutes),
+                        variant = AvalonBadgeVariant.Glass,
+                        modifier = Modifier.align(Alignment.BottomStart).padding(6.dp)
+                    )
                 }
 
                 // Центральная кнопка Play при ховере/фокусе

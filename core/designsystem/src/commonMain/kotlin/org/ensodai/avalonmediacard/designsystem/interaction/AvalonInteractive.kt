@@ -71,6 +71,7 @@ enum class AvalonInteractiveRole(
     Control(tvScale = 1.06f),
     PrimaryCta(tvScale = 1.06f),
     NavItem(tvScale = 1.04f),
+    Tab(tvScale = 1.04f),
     MediaWide(tvScale = 1.06f, isMediaCard = true),
     MediaPoster(tvScale = 1.08f, isMediaCard = true)
 }

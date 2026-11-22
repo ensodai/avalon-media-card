@@ -337,19 +337,19 @@ private fun MovieCard(
             Box(
                 modifier = Modifier
                     .fillMaxSize()
-                    .clip(RoundedCornerShape(12.dp))
-                    .background(Color.Black.copy(alpha = veilAlpha))
+                    .clip(AvalonTheme.shapes.media)
+                    .background(AvalonTheme.colors.mediaRestingVeil.copy(alpha = veilAlpha))
             )
         }
 
-        // Внутренний волосковый контур 10% белого (Закон 5 Design Craft)
+        // Внутренний волосковый контур (Закон 5 Design Craft)
         Box(
             modifier = Modifier
                 .fillMaxSize()
                 .border(
-                    width = 1.dp,
-                    color = Color.White.copy(alpha = 0.10f),
-                    shape = RoundedCornerShape(12.dp)
+                    width = AvalonTheme.elevation.borderWidth,
+                    color = AvalonTheme.colors.mediaHairline,
+                    shape = AvalonTheme.shapes.media
                 )
         )
     }

@@ -3,7 +3,6 @@ package org.ensodai.avalonmediacard.presentation.screens.detailsScreen.component
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.shape.RoundedCornerShape
 import org.ensodai.avalonmediacard.designsystem.components.AvalonIcon as Icon
 import org.ensodai.avalonmediacard.designsystem.components.AvalonText as Text
 import androidx.compose.runtime.Composable
@@ -15,30 +14,33 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.composables.icons.lucide.Lucide
 import com.composables.icons.lucide.Star
+import org.ensodai.avalonmediacard.designsystem.theme.AvalonTheme
 import org.ensodai.avalonmediacard.presentation.components.shimmerPlaceholder
 
 @Composable
 fun RatingPill(
     source: String,
     value: String,
-    tint: Color = Color(0xFF4CAF50),
+    tint: Color = AvalonTheme.colors.accentGold,
     isLoading: Boolean = false,
     modifier: Modifier = Modifier
 ) {
+    val colors = AvalonTheme.colors
+    val shape = AvalonTheme.shapes.micro
 
     Box(
         modifier = modifier
             .background(
-                color = if (isLoading) Color.Transparent else Color(0xFF141414),
-                shape = RoundedCornerShape(50)
+                color = if (isLoading) Color.Transparent else colors.bgElevated,
+                shape = shape
             )
             .border(
-                width = 1.dp,
-                color = if (isLoading) Color.Transparent else Color(0xFF27272A),
-                shape = RoundedCornerShape(50)
+                width = AvalonTheme.elevation.borderWidth,
+                color = if (isLoading) Color.Transparent else colors.borderSubtle,
+                shape = shape
             )
-            .shimmerPlaceholder(isLoading, RoundedCornerShape(50))
-            .padding(horizontal = 12.dp, vertical = 5.dp)
+            .shimmerPlaceholder(isLoading, shape)
+            .padding(horizontal = 8.dp, vertical = 4.dp)
     ) {
         Row(
             horizontalArrangement = Arrangement.spacedBy(4.dp),
@@ -48,19 +50,19 @@ fun RatingPill(
                 imageVector = Lucide.Star,
                 contentDescription = null,
                 tint = if (isLoading) Color.Transparent else tint,
-                modifier = Modifier.size(14.dp)
+                modifier = Modifier.size(13.dp)
             )
             Text(
                 text = source,
-                color = if (isLoading) Color.Transparent else Color.White.copy(alpha = 0.5f),
-                fontSize = 12.sp,
-                fontWeight = FontWeight.Normal
+                color = if (isLoading) Color.Transparent else colors.textSecondary,
+                fontSize = 11.sp,
+                fontWeight = FontWeight.Medium
             )
             Text(
                 text = value,
-                color = if (isLoading) Color.Transparent else tint,
-                fontSize = 12.sp,
-                fontWeight = FontWeight.Bold
+                color = if (isLoading) Color.Transparent else colors.textPrimary,
+                fontSize = 11.sp,
+                fontWeight = FontWeight.SemiBold
             )
         }
     }

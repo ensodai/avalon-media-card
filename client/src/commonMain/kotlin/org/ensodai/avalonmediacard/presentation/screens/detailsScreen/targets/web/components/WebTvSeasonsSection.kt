@@ -952,28 +952,30 @@ private fun WebSeasonSidebarItem(
     onClick: () -> Unit
 ) {
     var isHovered by remember { mutableStateOf(false) }
+    val colors = AvalonTheme.colors
+    val shape = AvalonTheme.shapes.control // 10.dp
 
     val bgColor by animateColorAsState(
         targetValue = when {
-            isSelected -> Color.White.copy(alpha = 0.16f)
-            isHovered -> Color.White.copy(alpha = 0.08f)
+            isSelected -> colors.bgElevated
+            isHovered -> colors.bgSurface
             else -> Color.Transparent
         },
         label = "SidebarBg"
     )
     val borderColor by animateColorAsState(
         targetValue = when {
-            isSelected -> Color.White.copy(alpha = 0.35f)
-            isHovered -> Color.White.copy(alpha = 0.2f)
+            isSelected -> colors.borderStrong
+            isHovered -> colors.borderSubtle
             else -> Color.Transparent
         },
         label = "SidebarBorder"
     )
     val textColor by animateColorAsState(
         targetValue = when {
-            isSelected -> Color.White
-            isHovered -> Color.White.copy(alpha = 0.95f)
-            else -> Color.White.copy(alpha = 0.7f)
+            isSelected -> colors.textPrimary
+            isHovered -> colors.textPrimary.copy(alpha = 0.95f)
+            else -> colors.textSecondary
         },
         label = "SidebarText"
     )
@@ -983,7 +985,7 @@ private fun WebSeasonSidebarItem(
             .fillMaxWidth()
             .tvAndWebHoverEffect(
                 scaleTarget = 1.01f,
-                shape = RoundedCornerShape(10.dp),
+                shape = shape,
                 activeBorderWidth = 1.dp,
                 activeBorderColor = borderColor,
                 defaultBorderWidth = 1.dp,
@@ -992,7 +994,7 @@ private fun WebSeasonSidebarItem(
                 onStateChange = { isHovered = it },
                 onClick = onClick
             )
-            .background(bgColor, RoundedCornerShape(10.dp))
+            .background(bgColor, shape)
             .padding(horizontal = 12.dp, vertical = 10.dp),
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.SpaceBetween
@@ -1006,14 +1008,14 @@ private fun WebSeasonSidebarItem(
                 Icon(
                     imageVector = Lucide.CheckCheck,
                     contentDescription = stringResource(Res.string.details_seasons_completed),
-                    tint = Color(0xFF4CAF50),
+                    tint = colors.statusLive,
                     modifier = Modifier.size(15.dp)
                 )
             } else if (season.isWatching) {
                 Icon(
                     imageVector = Lucide.Eye,
                     contentDescription = stringResource(Res.string.details_seasons_watching),
-                    tint = AvalonTheme.colors.accentPrimary,
+                    tint = colors.accentPrimary,
                     modifier = Modifier.size(15.dp)
                 )
             }

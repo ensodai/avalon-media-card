@@ -2,25 +2,37 @@ package org.ensodai.avalonmediacard.presentation.screens.commonComponents
 
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.foundation.focusGroup
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
-import org.ensodai.avalonmediacard.designsystem.components.AvalonIcon as Icon
-import org.ensodai.avalonmediacard.designsystem.components.AvalonText as Text
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.key
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusProperties
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.focus.focusRestorer
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import avalonmediacard.client.generated.resources.*
 import com.composables.icons.lucide.Lucide
 import com.composables.icons.lucide.Star
-import org.ensodai.avalonmediacard.presentation.overlay.TvModalSurface
+import org.ensodai.avalonmediacard.designsystem.components.AvalonDialog
+import org.ensodai.avalonmediacard.designsystem.components.AvalonIcon as Icon
+import org.ensodai.avalonmediacard.designsystem.components.AvalonText as Text
+import org.ensodai.avalonmediacard.designsystem.theme.AvalonTheme
 import org.jetbrains.compose.resources.stringResource
 
 @Composable
@@ -31,37 +43,38 @@ fun TvEpisodeRatingPopup(
     onDismiss: () -> Unit,
     onRate: (Int) -> Unit
 ) {
+    val colors = AvalonTheme.colors
     val initialRating = currentRating ?: maxRating
     var focusedRating by remember { mutableStateOf(initialRating) }
     val focusRequesters = remember { List(maxRating) { FocusRequester() } }
     val indexToFocus = (initialRating - 1).coerceIn(0, maxRating - 1)
 
-    TvModalSurface(
+    AvalonDialog(
         isOpen = true,
         onDismissRequest = onDismiss,
         callerFocusRequester = callerFocusRequester,
-        initialFocusRequester = focusRequesters[indexToFocus],
-        scrimColor = Color.Black.copy(alpha = 0.85f)
+        initialFocusRequester = focusRequesters[indexToFocus]
     ) {
         Column(
             horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.Center
+            verticalArrangement = Arrangement.Center,
+            modifier = Modifier.padding(vertical = 16.dp)
         ) {
             // Заголовок и текущий рейтинг
             Text(
                 text = stringResource(Res.string.details_rating_my_title),
-                color = Color.White.copy(alpha = 0.5f),
-                fontSize = 18.sp,
-                fontWeight = FontWeight.SemiBold,
-                modifier = Modifier.padding(bottom = 16.dp)
+                color = colors.textSecondary,
+                style = AvalonTheme.typography.sectionTitle,
+                modifier = Modifier.padding(bottom = 12.dp)
             )
 
             Text(
                 text = "$focusedRating / $maxRating",
-                fontSize = 48.sp,
+                style = AvalonTheme.typography.kpiHero,
+                fontSize = 44.sp,
                 fontWeight = FontWeight.Bold,
-                color = Color(0xFFFFD700),
-                modifier = Modifier.padding(bottom = 32.dp)
+                color = colors.accentGold,
+                modifier = Modifier.padding(bottom = 28.dp)
             )
 
             // Ряд звезд с навигацией Влево/Вправо
@@ -73,7 +86,7 @@ fun TvEpisodeRatingPopup(
                     }
                     .focusRestorer(focusRequesters[indexToFocus])
                     .focusGroup(),
-                horizontalArrangement = Arrangement.spacedBy(16.dp),
+                horizontalArrangement = Arrangement.spacedBy(14.dp),
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 for (i in 1..maxRating) {
@@ -81,41 +94,41 @@ fun TvEpisodeRatingPopup(
                         val starIndex = i - 1
                         val isActive = i <= focusedRating
                         val starColor by animateColorAsState(
-                            if (isActive) Color(0xFFFFD700) else Color.White.copy(alpha = 0.15f)
+                            if (isActive) colors.accentGold else colors.textMuted.copy(alpha = 0.25f)
                         )
 
                         Box(
                             modifier = Modifier
                                 .focusRequester(focusRequesters[starIndex])
                                 .tvAndWebHoverEffect(
-                                    scaleTarget = 1.35f,
+                                    scaleTarget = 1.3f,
                                     activeBorderWidth = 0.dp,
                                     shape = CircleShape,
                                     tiltEnabled = false,
                                     onClick = { onRate(i) },
                                     onStateChange = { active -> if (active) focusedRating = i }
                                 )
-                                .padding(8.dp),
+                                .padding(6.dp),
                             contentAlignment = Alignment.Center
                         ) {
                             Icon(
                                 imageVector = Lucide.Star,
                                 contentDescription = null,
                                 tint = starColor,
-                                modifier = Modifier.size(44.dp)
+                                modifier = Modifier.size(40.dp)
                             )
                         }
                     }
                 }
             }
 
-            Spacer(modifier = Modifier.height(48.dp))
+            Spacer(modifier = Modifier.height(36.dp))
 
             // Подсказка для пользователя
             Text(
                 text = stringResource(Res.string.details_rating_tv_hint),
-                color = Color.White.copy(alpha = 0.4f),
-                fontSize = 14.sp
+                color = colors.textMuted,
+                style = AvalonTheme.typography.microCaption
             )
         }
     }

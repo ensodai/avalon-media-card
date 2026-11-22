@@ -49,6 +49,10 @@ internal fun TvEpisodeDetailsDrawer(
 
     var isRatingPopupOpen by remember { mutableStateOf(false) }
 
+    val colors = AvalonTheme.colors
+    val shapes = AvalonTheme.shapes
+    val typography = AvalonTheme.typography
+
     TvDrawerEffect(
         title = "${episode.episodeNumber}. ${episode.name}",
         subtitle = episode.airDate,
@@ -74,14 +78,15 @@ internal fun TvEpisodeDetailsDrawer(
                     if (runtime != null && runtime > 0) {
                         Box(
                             modifier = Modifier
-                                .clip(RoundedCornerShape(6.dp))
-                                .background(Color.White.copy(alpha = 0.08f))
+                                .clip(shapes.micro)
+                                .background(colors.bgElevated)
+                                .border(1.dp, colors.borderSubtle, shapes.micro)
                                 .padding(horizontal = 8.dp, vertical = 4.dp)
                         ) {
                             Text(
                                 text = stringResource(Res.string.player_duration_mins_single_fmt, runtime),
-                                fontSize = 12.sp,
-                                color = Color.White.copy(alpha = 0.8f)
+                                style = typography.metadata,
+                                color = colors.textSecondary
                             )
                         }
                     }
@@ -91,8 +96,9 @@ internal fun TvEpisodeDetailsDrawer(
                         val formattedRating = ((voteAvg * 10).toInt() / 10.0).toString()
                         Row(
                             modifier = Modifier
-                                .clip(RoundedCornerShape(6.dp))
-                                .background(Color.White.copy(alpha = 0.08f))
+                                .clip(shapes.micro)
+                                .background(colors.bgElevated)
+                                .border(1.dp, colors.borderSubtle, shapes.micro)
                                 .padding(horizontal = 8.dp, vertical = 4.dp),
                             verticalAlignment = Alignment.CenterVertically,
                             horizontalArrangement = Arrangement.spacedBy(4.dp)
@@ -100,14 +106,13 @@ internal fun TvEpisodeDetailsDrawer(
                             Icon(
                                 imageVector = Lucide.Star,
                                 contentDescription = null,
-                                tint = Color(0xFFFFC107),
+                                tint = colors.accentGold,
                                 modifier = Modifier.size(12.dp)
                             )
                             Text(
                                 text = formattedRating,
-                                fontSize = 12.sp,
-                                fontWeight = FontWeight.Bold,
-                                color = Color(0xFFFFC107)
+                                style = typography.metadata,
+                                color = colors.accentGold
                             )
                         }
                     }
@@ -115,8 +120,9 @@ internal fun TvEpisodeDetailsDrawer(
                     if (episode.isWatched) {
                         Row(
                             modifier = Modifier
-                                .clip(RoundedCornerShape(6.dp))
-                                .background(Color(0xFF4CAF50).copy(alpha = 0.15f))
+                                .clip(shapes.micro)
+                                .background(colors.statusLive.copy(alpha = 0.15f))
+                                .border(1.dp, colors.statusLive.copy(alpha = 0.35f), shapes.micro)
                                 .padding(horizontal = 8.dp, vertical = 4.dp),
                             verticalAlignment = Alignment.CenterVertically,
                             horizontalArrangement = Arrangement.spacedBy(4.dp)
@@ -124,14 +130,13 @@ internal fun TvEpisodeDetailsDrawer(
                             Icon(
                                 imageVector = Lucide.Check,
                                 contentDescription = null,
-                                tint = Color(0xFF4CAF50),
+                                tint = colors.statusLive,
                                 modifier = Modifier.size(12.dp)
                             )
                             Text(
                                 text = stringResource(Res.string.details_seasons_completed),
-                                fontSize = 11.sp,
-                                fontWeight = FontWeight.SemiBold,
-                                color = Color(0xFF4CAF50)
+                                style = typography.labelSmall,
+                                color = colors.statusLive
                             )
                         }
                     }
@@ -166,12 +171,12 @@ internal fun TvEpisodeDetailsDrawer(
                     modifier = Modifier
                         .fillMaxWidth()
                         .heightIn(max = 280.dp)
-                        .clip(RoundedCornerShape(12.dp))
-                        .background(if (isTextFocused) Color.White.copy(alpha = 0.08f) else Color.White.copy(alpha = 0.03f))
+                        .clip(shapes.control)
+                        .background(if (isTextFocused) colors.bgElevated else colors.bgSurface)
                         .border(
                             width = 1.dp,
-                            color = if (isTextFocused) AvalonTheme.colors.primary else Color.White.copy(alpha = 0.08f),
-                            shape = RoundedCornerShape(12.dp)
+                            color = if (isTextFocused) colors.accentPrimary else colors.borderSubtle,
+                            shape = shapes.control
                         )
                         .onFocusChanged { isTextFocused = it.isFocused }
                         .onKeyEvent { event ->
@@ -200,9 +205,8 @@ internal fun TvEpisodeDetailsDrawer(
                     Text(
                         text = episode.overview?.takeIf { it.isNotBlank() }
                             ?: stringResource(Res.string.details_seasons_no_desc),
-                        fontSize = 14.sp,
-                        lineHeight = 22.sp,
-                        color = Color.White.copy(alpha = 0.9f)
+                        style = typography.bodyMedium,
+                        color = if (isTextFocused) colors.textPrimary else colors.textSecondary
                     )
                 }
             }

@@ -152,16 +152,12 @@ fun WebTvSeasonsSection(
         }
     }
 
-    // Outer Glassmorphic Card Container
-    Box(
+    // Free-flowing layout without heavy outer glass box (Obsidian Cinema 7.5)
+    Column(
         modifier = modifier
             .fillMaxWidth()
-            .clip(RoundedCornerShape(16.dp))
-            .background(Color.White.copy(alpha = 0.03f))
-            .border(1.dp, Color.White.copy(alpha = 0.08f), RoundedCornerShape(16.dp))
-            .padding(24.dp)
+            .padding(vertical = 16.dp)
     ) {
-        Column(modifier = Modifier.fillMaxWidth()) {
             // === CARD HEADER ===
             Row(
                 modifier = Modifier.fillMaxWidth(),
@@ -174,16 +170,16 @@ fun WebTvSeasonsSection(
                 ) {
                     Text(
                         text = stringResource(Res.string.details_seasons_header),
-                        fontSize = 20.sp,
-                        fontWeight = FontWeight.Bold,
-                        color = Color.White
+                        style = AvalonTheme.typography.sectionTitle,
+                        color = AvalonTheme.colors.textPrimary
                     )
 
                     if (!isLoading && component.seasons.isNotEmpty()) {
                         Box(
                             modifier = Modifier
-                                .clip(RoundedCornerShape(6.dp))
-                                .background(Color.White.copy(alpha = 0.08f))
+                                .clip(AvalonTheme.shapes.micro)
+                                .background(AvalonTheme.colors.bgElevated)
+                                .border(1.dp, AvalonTheme.colors.borderSubtle, AvalonTheme.shapes.micro)
                                 .padding(horizontal = 8.dp, vertical = 3.dp)
                         ) {
                             val seasonRes = getPluralSeasonRes(seasonsCount)
@@ -193,9 +189,8 @@ fun WebTvSeasonsSection(
                             val specialsText = if (hasSpecials && regularSeasons.isNotEmpty()) " • " + stringResource(Res.string.details_seasons_specials) else ""
                             Text(
                                 text = "$seasonCountText$episodesText$specialsText",
-                                fontSize = 12.sp,
-                                fontWeight = FontWeight.Medium,
-                                color = Color.White.copy(alpha = 0.7f)
+                                style = AvalonTheme.typography.metadata,
+                                color = AvalonTheme.colors.textSecondary
                             )
                         }
                     }
@@ -212,19 +207,18 @@ fun WebTvSeasonsSection(
                     ) {
                         Text(
                             text = stringResource(Res.string.details_seasons_page_range_fmt, startIndex, endIndex, episodes.size),
-                            fontSize = 13.sp,
-                            fontWeight = FontWeight.Medium,
-                            color = Color.White.copy(alpha = 0.6f)
+                            style = AvalonTheme.typography.labelSmall,
+                            color = AvalonTheme.colors.textSecondary
                         )
 
                         // Previous Page Button
                         val canGoPrev = pagerState.currentPage > 0
                         Box(
                             modifier = Modifier
-                                .size(42.dp)
+                                .size(38.dp)
                                 .clip(CircleShape)
-                                .background(if (canGoPrev) Color.White.copy(alpha = 0.10f) else Color.White.copy(alpha = 0.03f))
-                                .border(1.dp, if (canGoPrev) Color.White.copy(alpha = 0.20f) else Color.Transparent, CircleShape)
+                                .background(if (canGoPrev) AvalonTheme.colors.bgElevated else AvalonTheme.colors.bgSurface.copy(alpha = 0.5f))
+                                .border(1.dp, if (canGoPrev) AvalonTheme.colors.borderStrong else AvalonTheme.colors.borderSubtle, CircleShape)
                                 .tvAndWebHoverEffect(
                                     scaleTarget = if (canGoPrev) 1.08f else 1f,
                                     shape = CircleShape,
@@ -242,8 +236,8 @@ fun WebTvSeasonsSection(
                             Icon(
                                 imageVector = Lucide.ChevronLeft,
                                 contentDescription = "Назад",
-                                tint = if (canGoPrev) Color.White else Color.White.copy(alpha = 0.2f),
-                                modifier = Modifier.size(22.dp)
+                                tint = if (canGoPrev) AvalonTheme.colors.textPrimary else AvalonTheme.colors.textSecondary.copy(alpha = 0.35f),
+                                modifier = Modifier.size(18.dp)
                             )
                         }
 
@@ -251,10 +245,10 @@ fun WebTvSeasonsSection(
                         val canGoNext = pagerState.currentPage < totalPages - 1
                         Box(
                             modifier = Modifier
-                                .size(42.dp)
+                                .size(38.dp)
                                 .clip(CircleShape)
-                                .background(if (canGoNext) Color.White.copy(alpha = 0.10f) else Color.White.copy(alpha = 0.03f))
-                                .border(1.dp, if (canGoNext) Color.White.copy(alpha = 0.20f) else Color.Transparent, CircleShape)
+                                .background(if (canGoNext) AvalonTheme.colors.bgElevated else AvalonTheme.colors.bgSurface.copy(alpha = 0.5f))
+                                .border(1.dp, if (canGoNext) AvalonTheme.colors.borderStrong else AvalonTheme.colors.borderSubtle, CircleShape)
                                 .tvAndWebHoverEffect(
                                     scaleTarget = if (canGoNext) 1.08f else 1f,
                                     shape = CircleShape,
@@ -272,8 +266,8 @@ fun WebTvSeasonsSection(
                             Icon(
                                 imageVector = Lucide.ChevronRight,
                                 contentDescription = "Вперед",
-                                tint = if (canGoNext) Color.White else Color.White.copy(alpha = 0.2f),
-                                modifier = Modifier.size(22.dp)
+                                tint = if (canGoNext) AvalonTheme.colors.textPrimary else AvalonTheme.colors.textSecondary.copy(alpha = 0.35f),
+                                modifier = Modifier.size(18.dp)
                             )
                         }
                     }
@@ -506,7 +500,6 @@ fun WebTvSeasonsSection(
             }
         }
     }
-}
 
 // ============================================================================
 // EPISODE CARD (WITH COMFORTABLE ACTION PILL & PLAY BUTTON)
@@ -530,9 +523,11 @@ private fun WebEpisodeGridCard(
     var isDetailsDialogOpen by remember { mutableStateOf(false) }
 
     val isControlsVisible = if (isTouch) isSelectedOnTouch || isRatingPopupOpen else isHovered || isRatingPopupOpen
+    val colors = AvalonTheme.colors
+    val shapes = AvalonTheme.shapes
 
     val cardBgColor by animateColorAsState(
-        targetValue = if (isControlsVisible) Color(0xFF1E1E24) else Color(0xFF141418),
+        targetValue = if (isControlsVisible) colors.bgElevated else colors.bgSurface,
         label = "CardBgColor"
     )
 
@@ -543,16 +538,16 @@ private fun WebEpisodeGridCard(
             .tvAndWebHoverEffect(
                 scaleTarget = if (isTouch) 1f else 1.02f,
                 activeBorderWidth = 1.5.dp,
-                activeBorderColor = Color.White.copy(alpha = 0.35f),
+                activeBorderColor = colors.borderStrong,
                 defaultBorderWidth = 1.dp,
-                defaultBorderColor = if (isSelectedOnTouch) Color.White.copy(alpha = 0.35f) else Color.White.copy(alpha = 0.08f),
-                shape = RoundedCornerShape(12.dp),
+                defaultBorderColor = if (isSelectedOnTouch) colors.borderStrong else colors.borderSubtle,
+                shape = shapes.media,
                 tiltEnabled = false,
                 clickEnabled = isTouch,
                 onClick = if (isTouch) onTouchSelect else null,
                 onStateChange = { if (!isTouch) isHovered = it }
             )
-            .background(cardBgColor, RoundedCornerShape(12.dp))
+            .background(cardBgColor, shapes.media)
     ) {
         // 1. Thumbnail Container 16:9
         Box(
@@ -560,7 +555,7 @@ private fun WebEpisodeGridCard(
                 .fillMaxWidth()
                 .aspectRatio(16f / 9f)
                 .clip(RoundedCornerShape(topStart = 12.dp, topEnd = 12.dp))
-                .background(Color(0xFF0D0D10)),
+                .background(colors.bgCanvas),
             contentAlignment = Alignment.Center
         ) {
             val imageAlpha = if (episode.isWatched && !isControlsVisible) 0.65f else 1.0f
@@ -592,16 +587,16 @@ private fun WebEpisodeGridCard(
                 Box(
                     modifier = Modifier
                         .fillMaxSize()
-                        .background(Color.Black.copy(alpha = 0.4f)),
+                        .background(colors.bgCanvas.copy(alpha = 0.55f)),
                     contentAlignment = Alignment.Center
                 ) {
                     // Center Play Button (High Contrast, Hand Cursor on Play)
                     val playBg by animateColorAsState(
-                        targetValue = if (isPlayHovered) Color.White else Color.Black.copy(alpha = 0.7f),
+                        targetValue = if (isPlayHovered) colors.accentPrimary else colors.bgElevated,
                         label = "PlayBg"
                     )
                     val playIconTint by animateColorAsState(
-                        targetValue = if (isPlayHovered) Color.Black else Color.White,
+                        targetValue = if (isPlayHovered) Color(0xFF0B0B0D) else colors.textPrimary,
                         label = "PlayIconTint"
                     )
 
@@ -613,9 +608,9 @@ private fun WebEpisodeGridCard(
                                 scaleTarget = 1.12f,
                                 shape = CircleShape,
                                 activeBorderWidth = 2.dp,
-                                activeBorderColor = Color.White,
+                                activeBorderColor = colors.accentPrimary,
                                 defaultBorderWidth = 1.5.dp,
-                                defaultBorderColor = Color.White.copy(alpha = 0.8f),
+                                defaultBorderColor = colors.borderStrong,
                                 tiltEnabled = false,
                                 onStateChange = { isPlayHovered = it },
                                 onClick = onPlay
@@ -640,15 +635,14 @@ private fun WebEpisodeGridCard(
                     modifier = Modifier
                         .align(Alignment.BottomStart)
                         .padding(8.dp)
-                        .clip(RoundedCornerShape(4.dp))
-                        .background(Color.Black.copy(alpha = 0.85f))
+                        .clip(shapes.micro)
+                        .background(colors.bgCanvas.copy(alpha = 0.85f))
                         .padding(horizontal = 6.dp, vertical = 2.dp)
                 ) {
                     Text(
                         text = stringResource(Res.string.player_duration_mins_single_fmt, runtime),
-                        fontSize = 11.sp,
-                        fontWeight = FontWeight.Medium,
-                        color = Color.White.copy(alpha = 0.9f)
+                        style = AvalonTheme.typography.monoTech,
+                        color = colors.textPrimary
                     )
                 }
             }
@@ -666,40 +660,40 @@ private fun WebEpisodeGridCard(
                 var isRatingHovered by remember { mutableStateOf(false) }
 
                 val isWatched = episode.isWatched
-                val watchColor = if (isWatched) Color(0xFF4CAF50) else Color.White.copy(alpha = 0.9f)
+                val watchColor = if (isWatched) colors.statusLive else colors.textPrimary
                 val currentWatchBg by animateColorAsState(
                     targetValue = if (isWatched) {
-                        if (isWatchHovered) Color(0xFF4CAF50).copy(alpha = 0.35f) else Color(0xFF4CAF50).copy(alpha = 0.2f)
+                        colors.statusLive.copy(alpha = if (isWatchHovered) 0.35f else 0.18f)
                     } else {
-                        if (isWatchHovered) Color.White.copy(alpha = 0.18f) else Color.White.copy(alpha = 0.08f)
+                        colors.bgElevated.copy(alpha = if (isWatchHovered) 0.8f else 0.4f)
                     },
                     label = "WatchBg"
                 )
                 val currentWatchBorder by animateColorAsState(
                     targetValue = if (isWatched) {
-                        if (isWatchHovered) Color(0xFF4CAF50).copy(alpha = 0.7f) else Color(0xFF4CAF50).copy(alpha = 0.4f)
+                        colors.statusLive.copy(alpha = if (isWatchHovered) 0.7f else 0.4f)
                     } else {
-                        if (isWatchHovered) Color.White.copy(alpha = 0.4f) else Color.White.copy(alpha = 0.15f)
+                        colors.borderStrong.copy(alpha = if (isWatchHovered) 0.6f else 0.3f)
                     },
                     label = "WatchBorder"
                 )
 
                 val userRating = episode.userRating
                 val hasRating = userRating != null && userRating > 0
-                val ratingColor = if (hasRating) Color(0xFFFFC107) else Color.White.copy(alpha = 0.9f)
+                val ratingColor = if (hasRating) colors.accentGold else colors.textPrimary
                 val currentRatingBg by animateColorAsState(
                     targetValue = if (hasRating) {
-                        if (isRatingHovered) Color(0xFFFFC107).copy(alpha = 0.35f) else Color(0xFFFFC107).copy(alpha = 0.2f)
+                        colors.accentGold.copy(alpha = if (isRatingHovered) 0.35f else 0.18f)
                     } else {
-                        if (isRatingHovered) Color.White.copy(alpha = 0.18f) else Color.White.copy(alpha = 0.08f)
+                        colors.bgElevated.copy(alpha = if (isRatingHovered) 0.8f else 0.4f)
                     },
                     label = "RatingBg"
                 )
                 val currentRatingBorder by animateColorAsState(
                     targetValue = if (hasRating) {
-                        if (isRatingHovered) Color(0xFFFFC107).copy(alpha = 0.7f) else Color(0xFFFFC107).copy(alpha = 0.4f)
+                        colors.accentGold.copy(alpha = if (isRatingHovered) 0.7f else 0.4f)
                     } else {
-                        if (isRatingHovered) Color.White.copy(alpha = 0.4f) else Color.White.copy(alpha = 0.15f)
+                        colors.borderStrong.copy(alpha = if (isRatingHovered) 0.6f else 0.3f)
                     },
                     label = "RatingBorder"
                 )
@@ -707,8 +701,8 @@ private fun WebEpisodeGridCard(
                 Row(
                     modifier = Modifier
                         .shadow(10.dp, RoundedCornerShape(20.dp))
-                        .background(Color(0xFF141418).copy(alpha = 0.96f), RoundedCornerShape(20.dp))
-                        .border(1.dp, Color.White.copy(alpha = 0.22f), RoundedCornerShape(20.dp))
+                        .background(colors.bgOverlay.copy(alpha = 0.96f), RoundedCornerShape(20.dp))
+                        .border(1.dp, colors.borderOverlay, RoundedCornerShape(20.dp))
                         .padding(horizontal = 6.dp, vertical = 4.dp),
                     verticalAlignment = Alignment.CenterVertically,
                     horizontalArrangement = Arrangement.spacedBy(6.dp)
@@ -744,7 +738,7 @@ private fun WebEpisodeGridCard(
                         modifier = Modifier
                             .width(1.dp)
                             .height(18.dp)
-                            .background(Color.White.copy(alpha = 0.18f))
+                            .background(colors.borderSubtle)
                     )
 
                     // Rating Button (34dp height)
@@ -807,14 +801,14 @@ private fun WebEpisodeGridCard(
                 }
             }
 
-            // Green Progress Bar at Bottom of Thumbnail (if watched)
+            // Status Progress Bar at Bottom of Thumbnail (if watched)
             if (episode.isWatched) {
                 Box(
                     modifier = Modifier
                         .align(Alignment.BottomCenter)
                         .fillMaxWidth()
                         .height(3.dp)
-                        .background(Color(0xFF4CAF50))
+                        .background(colors.statusLive)
                 )
             }
         }
@@ -835,16 +829,15 @@ private fun WebEpisodeGridCard(
                     Icon(
                         imageVector = Lucide.CheckCheck,
                         contentDescription = "Просмотрено",
-                        tint = Color(0xFF4CAF50),
+                        tint = colors.statusLive,
                         modifier = Modifier.size(15.dp)
                     )
                 }
 
                 Text(
                     text = "${episode.episodeNumber}. ${episode.name}",
-                    fontSize = 14.sp,
-                    fontWeight = FontWeight.SemiBold,
-                    color = Color.White,
+                    style = AvalonTheme.typography.cardTitle,
+                    color = colors.textPrimary,
                     maxLines = 1,
                     overflow = TextOverflow.Ellipsis,
                     modifier = Modifier.weight(1f, fill = false)
@@ -862,8 +855,8 @@ private fun WebEpisodeGridCard(
                 if (!airDate.isNullOrEmpty()) {
                     Text(
                         text = airDate,
-                        fontSize = 12.sp,
-                        color = Color.White.copy(alpha = 0.5f)
+                        style = AvalonTheme.typography.metadata,
+                        color = colors.textSecondary
                     )
                 }
 
@@ -872,7 +865,7 @@ private fun WebEpisodeGridCard(
                     val formattedRating = ((rating * 10).toInt() / 10.0).toString()
                     Text(
                         text = "•",
-                        color = Color.White.copy(alpha = 0.3f),
+                        color = colors.textSecondary.copy(alpha = 0.5f),
                         fontSize = 12.sp
                     )
                     Row(
@@ -882,14 +875,13 @@ private fun WebEpisodeGridCard(
                         Icon(
                             imageVector = Lucide.Star,
                             contentDescription = null,
-                            tint = Color(0xFFFFC107),
+                            tint = colors.accentGold,
                             modifier = Modifier.size(12.dp)
                         )
                         Text(
                             text = formattedRating,
-                            fontSize = 12.sp,
-                            fontWeight = FontWeight.Medium,
-                            color = Color(0xFFFFC107)
+                            style = AvalonTheme.typography.metadata,
+                            color = colors.accentGold
                         )
                     }
                 }
@@ -904,7 +896,7 @@ private fun WebEpisodeGridCard(
                         .fillMaxWidth()
                         .tvAndWebHoverEffect(
                             scaleTarget = 1.0f,
-                            shape = RoundedCornerShape(4.dp),
+                            shape = shapes.micro,
                             tiltEnabled = false,
                             onClick = { isDetailsDialogOpen = true }
                         ),
@@ -912,9 +904,8 @@ private fun WebEpisodeGridCard(
                 ) {
                     Text(
                         text = overview,
-                        fontSize = 12.sp,
-                        lineHeight = 16.sp,
-                        color = Color.White.copy(alpha = if (isHovered) 0.8f else 0.5f),
+                        style = AvalonTheme.typography.metadata,
+                        color = if (isHovered) colors.textPrimary.copy(alpha = 0.9f) else colors.textSecondary,
                         maxLines = 2,
                         overflow = TextOverflow.Ellipsis,
                         modifier = Modifier.weight(1f)
@@ -1047,32 +1038,34 @@ private fun WebMarkSeasonButton(
     onAction: (Action) -> Unit
 ) {
     var isHovered by remember { mutableStateOf(false) }
+    val colors = AvalonTheme.colors
+    val shapes = AvalonTheme.shapes
 
     val isWatched = season.isFullyWatched
     val buttonBgColor by animateColorAsState(
         targetValue = if (isWatched) {
-            if (isHovered) Color(0xFF4CAF50).copy(alpha = 0.28f) else Color(0xFF4CAF50).copy(alpha = 0.16f)
+            colors.statusLive.copy(alpha = if (isHovered) 0.25f else 0.15f)
         } else {
-            if (isHovered) Color.White.copy(alpha = 0.12f) else Color.White.copy(alpha = 0.06f)
+            if (isHovered) colors.bgElevated else colors.bgSurface
         },
         label = "MarkSeasonBg"
     )
     val buttonBorderColor by animateColorAsState(
         targetValue = if (isWatched) {
-            if (isHovered) Color(0xFF4CAF50).copy(alpha = 0.6f) else Color(0xFF4CAF50).copy(alpha = 0.35f)
+            colors.statusLive.copy(alpha = if (isHovered) 0.6f else 0.35f)
         } else {
-            if (isHovered) Color.White.copy(alpha = 0.25f) else Color.White.copy(alpha = 0.12f)
+            if (isHovered) colors.borderStrong else colors.borderSubtle
         },
         label = "MarkSeasonBorder"
     )
-    val buttonContentColor = if (isWatched) Color(0xFF4CAF50) else Color.White.copy(alpha = 0.85f)
+    val buttonContentColor = if (isWatched) colors.statusLive else colors.textPrimary
 
     Row(
         modifier = Modifier
             .fillMaxWidth()
             .tvAndWebHoverEffect(
                 scaleTarget = 1.02f,
-                shape = RoundedCornerShape(10.dp),
+                shape = shapes.control,
                 activeBorderWidth = 1.dp,
                 activeBorderColor = buttonBorderColor,
                 defaultBorderWidth = 1.dp,
@@ -1083,7 +1076,7 @@ private fun WebMarkSeasonButton(
                     season.markWatchedAction?.let(onAction)
                 }
             )
-            .background(buttonBgColor, RoundedCornerShape(10.dp))
+            .background(buttonBgColor, shapes.control)
             .padding(horizontal = 12.dp, vertical = 10.dp),
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.Center
@@ -1098,8 +1091,7 @@ private fun WebMarkSeasonButton(
         Text(
             text = if (isWatched) stringResource(Res.string.details_seasons_unmark_btn) else stringResource(Res.string.details_seasons_mark_btn),
             color = buttonContentColor,
-            fontSize = 12.sp,
-            fontWeight = FontWeight.Medium
+            style = AvalonTheme.typography.labelSmall
         )
     }
 }
@@ -1129,12 +1121,15 @@ private fun WebEpisodesGridSkeleton(modifier: Modifier = Modifier) {
 
 @Composable
 private fun WebEpisodeGridSkeletonCard(modifier: Modifier = Modifier) {
+    val colors = AvalonTheme.colors
+    val shapes = AvalonTheme.shapes
+
     Column(
         modifier = modifier
             .fillMaxWidth()
             .padding(vertical = 4.dp)
-            .border(1.dp, Color.White.copy(alpha = 0.08f), RoundedCornerShape(12.dp))
-            .background(Color(0xFF141418), RoundedCornerShape(12.dp))
+            .border(1.dp, colors.borderSubtle, shapes.media)
+            .background(colors.bgSurface, shapes.media)
     ) {
         // 1. Thumbnail Container 16:9
         Box(

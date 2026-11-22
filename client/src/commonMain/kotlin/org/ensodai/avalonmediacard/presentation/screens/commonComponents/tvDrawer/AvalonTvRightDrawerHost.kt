@@ -150,7 +150,7 @@ fun AvalonTvRightDrawerHost(
                             Box(
                                 modifier = Modifier
                                     .fillMaxSize()
-                                    .background(Color.Black.copy(alpha = 0.65f))
+                                    .background(AvalonTheme.colors.bgPureCinema.copy(alpha = 0.72f))
                                     .pointerInput(Unit) { detectTapGestures { safeDismiss() } }
                             )
                         }
@@ -168,17 +168,20 @@ fun AvalonTvRightDrawerHost(
                             ),
                             modifier = Modifier.align(Alignment.CenterEnd)
                         ) {
+                            val borderOverlayColor = AvalonTheme.colors.borderOverlay
+                            val bgOverlayColor = AvalonTheme.colors.bgOverlay
+
                             Box(
                                 modifier = Modifier
                                     .fillMaxHeight()
                                     .width(drawerWidth)
                                     .clipToBounds()
-                                    .background(Color(0xFF131317))
+                                    .background(bgOverlayColor)
                                     .drawWithContent {
                                         drawContent()
                                         // Четкая левая грань поверх контента шторки
                                         drawLine(
-                                            color = Color.White.copy(alpha = 0.08f),
+                                            color = borderOverlayColor,
                                             start = Offset(0f, 0f),
                                             end = Offset(0f, size.height),
                                             strokeWidth = 1.dp.toPx()
@@ -248,7 +251,7 @@ fun AvalonTvRightDrawerHost(
                                                     Icon(
                                                         imageVector = screen.icon!!,
                                                         contentDescription = null,
-                                                        tint = AvalonTheme.colors.primary,
+                                                        tint = AvalonTheme.colors.accentPrimary,
                                                         modifier = Modifier.size(28.dp)
                                                     )
                                                     Spacer(modifier = Modifier.width(12.dp))
@@ -257,17 +260,16 @@ fun AvalonTvRightDrawerHost(
                                                 Column(modifier = Modifier.weight(1f)) {
                                                     Text(
                                                         text = screen.title,
-                                                        color = Color.White,
-                                                        fontSize = 20.sp,
-                                                        fontWeight = FontWeight.Bold,
+                                                        color = AvalonTheme.colors.textPrimary,
+                                                        style = AvalonTheme.typography.sectionTitle,
                                                         maxLines = 1,
                                                         overflow = TextOverflow.Ellipsis
                                                     )
                                                     if (screen.subtitle != null) {
                                                         Text(
                                                             text = screen.subtitle!!,
-                                                            color = Color.White.copy(alpha = 0.6f),
-                                                            fontSize = 13.sp,
+                                                            color = AvalonTheme.colors.textSecondary,
+                                                            style = AvalonTheme.typography.metadata,
                                                             maxLines = 1,
                                                             overflow = TextOverflow.Ellipsis
                                                         )
@@ -280,7 +282,7 @@ fun AvalonTvRightDrawerHost(
                                                 modifier = Modifier
                                                     .fillMaxWidth()
                                                     .height(1.dp)
-                                                    .background(Color.White.copy(alpha = 0.1f))
+                                                    .background(AvalonTheme.colors.borderSubtle)
                                             )
 
                                             Spacer(modifier = Modifier.height(12.dp))

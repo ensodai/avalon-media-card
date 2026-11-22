@@ -111,13 +111,13 @@ internal fun TvEpisodeCard(
                         modifier = Modifier
                             .size(46.dp)
                             .shadow(8.dp, CircleShape)
-                            .background(Color.White, CircleShape),
+                            .background(colors.accentPrimary, CircleShape),
                         contentAlignment = Alignment.Center
                     ) {
                         Icon(
                             imageVector = Lucide.Play,
                             contentDescription = "Смотреть",
-                            tint = Color.Black,
+                            tint = colors.onAccentPrimary,
                             modifier = Modifier.size(22.dp).offset(x = 1.5.dp)
                         )
                     }
@@ -163,9 +163,8 @@ internal fun TvEpisodeCard(
         ) {
             Text(
                 text = "${episode.episodeNumber}. ${episode.name}",
-                fontSize = 13.sp,
-                fontWeight = FontWeight.SemiBold,
-                color = if (isFocused) Color.White else Color.White.copy(alpha = 0.85f),
+                style = AvalonTheme.typography.cardTitle,
+                color = if (isFocused) colors.textPrimary else colors.textSecondary,
                 maxLines = 1,
                 overflow = TextOverflow.Ellipsis
             )
@@ -177,11 +176,14 @@ internal fun TvEpisodeCard(
 internal fun TvEpisodeCardSkeleton(
     modifier: Modifier = Modifier
 ) {
+    val colors = AvalonTheme.colors
+    val shapes = AvalonTheme.shapes
+
     Column(
         modifier = modifier
             .width(260.dp)
             .padding(vertical = 4.dp)
-            .background(Color(0xFF141418), RoundedCornerShape(12.dp))
+            .background(colors.bgSurface, shapes.media)
     ) {
         Box(
             modifier = Modifier
@@ -195,7 +197,7 @@ internal fun TvEpisodeCardSkeleton(
                 .padding(horizontal = 10.dp)
                 .fillMaxWidth(0.7f)
                 .height(14.dp)
-                .shimmerPlaceholder(true, RoundedCornerShape(4.dp))
+                .shimmerPlaceholder(true, shapes.micro)
         )
         Spacer(modifier = Modifier.height(10.dp))
     }

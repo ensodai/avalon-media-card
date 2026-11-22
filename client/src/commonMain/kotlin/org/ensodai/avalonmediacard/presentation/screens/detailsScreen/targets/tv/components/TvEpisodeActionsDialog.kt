@@ -1,5 +1,6 @@
 package org.ensodai.avalonmediacard.presentation.screens.detailsScreen.targets.tv.components
 
+import org.ensodai.avalonmediacard.designsystem.theme.AvalonTheme
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -33,28 +34,31 @@ internal fun TvEpisodeActionsDialog(
     onDismiss: () -> Unit,
     onAction: (Action) -> Unit
 ) {
+    val colors = AvalonTheme.colors
+    val shapes = AvalonTheme.shapes
+    val typography = AvalonTheme.typography
+
     TvModalSurface(
         isOpen = targetEpisode != null,
         onDismissRequest = onDismiss,
         callerFocusRequester = callerFocusRequester,
-        scrimColor = Color.Black.copy(alpha = 0.75f)
+        scrimColor = colors.bgPureCinema.copy(alpha = 0.72f)
     ) {
         if (targetEpisode == null) return@TvModalSurface
 
         Column(
             modifier = Modifier
                 .width(380.dp)
-                .clip(RoundedCornerShape(16.dp))
-                .background(Color(0xFF141418))
-                .border(1.dp, Color.White.copy(alpha = 0.2f), RoundedCornerShape(16.dp))
+                .clip(shapes.container)
+                .background(colors.bgOverlay)
+                .border(1.dp, colors.borderOverlay, shapes.container)
                 .padding(24.dp),
             verticalArrangement = Arrangement.spacedBy(12.dp)
         ) {
             Text(
                 text = "${targetEpisode.episodeNumber}. ${targetEpisode.name}",
-                fontSize = 17.sp,
-                fontWeight = FontWeight.Bold,
-                color = Color.White,
+                style = typography.cardTitle,
+                color = colors.textPrimary,
                 maxLines = 1,
                 overflow = TextOverflow.Ellipsis
             )
@@ -65,7 +69,7 @@ internal fun TvEpisodeActionsDialog(
             TvActionItem(
                 icon = Lucide.Play,
                 label = stringResource(Res.string.details_episodes_play),
-                iconTint = Color.White,
+                iconTint = colors.accentPrimary,
                 onClick = {
                     targetEpisode.playAction?.let(onAction)
                     onDismiss()
@@ -76,7 +80,7 @@ internal fun TvEpisodeActionsDialog(
             TvActionItem(
                 icon = if (targetEpisode.isWatched) Lucide.EyeOff else Lucide.CheckCheck,
                 label = if (targetEpisode.isWatched) stringResource(Res.string.details_episodes_unmark_watched) else stringResource(Res.string.details_episodes_mark_watched),
-                iconTint = if (targetEpisode.isWatched) Color.White.copy(alpha = 0.7f) else Color(0xFF4CAF50),
+                iconTint = if (targetEpisode.isWatched) colors.textSecondary else colors.statusLive,
                 onClick = {
                     targetEpisode.toggleWatchedAction?.let(onAction)
                     onDismiss()
@@ -94,20 +98,24 @@ internal fun TvActionItem(
     onClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
+    val colors = AvalonTheme.colors
+    val shapes = AvalonTheme.shapes
+    val typography = AvalonTheme.typography
+
     Row(
         modifier = modifier
             .fillMaxWidth()
             .tvAndWebHoverEffect(
                 scaleTarget = 1.02f,
                 activeBorderWidth = 1.5.dp,
-                activeBorderColor = Color.White,
+                activeBorderColor = colors.accentPrimary,
                 defaultBorderWidth = 1.dp,
-                defaultBorderColor = Color.Transparent,
-                shape = RoundedCornerShape(10.dp),
+                defaultBorderColor = colors.borderSubtle,
+                shape = shapes.control,
                 tiltEnabled = false,
                 onClick = onClick
             )
-            .background(Color.White.copy(alpha = 0.06f), RoundedCornerShape(10.dp))
+            .background(colors.bgElevated, shapes.control)
             .padding(horizontal = 16.dp, vertical = 12.dp),
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.spacedBy(12.dp)
@@ -120,9 +128,8 @@ internal fun TvActionItem(
         )
         Text(
             text = label,
-            fontSize = 14.sp,
-            fontWeight = FontWeight.Medium,
-            color = Color.White
+            style = typography.uiLabel,
+            color = colors.textPrimary
         )
     }
 }

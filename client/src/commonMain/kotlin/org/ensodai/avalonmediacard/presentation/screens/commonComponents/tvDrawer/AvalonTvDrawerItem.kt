@@ -38,12 +38,15 @@ fun AvalonTvDrawerItem(
     onClick: () -> Unit
 ) {
     var isFocused by remember { mutableStateOf(false) }
+    val colors = AvalonTheme.colors
+    val shapes = AvalonTheme.shapes
+    val typography = AvalonTheme.typography
 
     val backgroundColor by animateColorAsState(
         targetValue = when {
-            isSelected -> AvalonTheme.colors.primary.copy(alpha = 0.22f)
-            isFocused -> Color.White.copy(alpha = 0.14f)
-            else -> Color.White.copy(alpha = 0.05f)
+            isSelected -> colors.accentPrimary.copy(alpha = 0.22f)
+            isFocused -> colors.bgElevated
+            else -> colors.bgSurface
         }
     )
 
@@ -54,12 +57,12 @@ fun AvalonTvDrawerItem(
             .onFocusChanged { isFocused = it.isFocused }
             .tvAndWebHoverEffect(
                 scaleTarget = 1.02f,
-                activeBorderColor = AvalonTheme.colors.primary,
+                activeBorderColor = colors.accentPrimary,
                 activeBorderWidth = 1.5.dp,
-                shape = RoundedCornerShape(12.dp),
+                shape = shapes.control,
                 onClick = onClick
             )
-            .clip(RoundedCornerShape(12.dp))
+            .clip(shapes.control)
             .background(backgroundColor)
             .padding(horizontal = 16.dp, vertical = 14.dp),
         verticalAlignment = Alignment.CenterVertically
@@ -68,7 +71,7 @@ fun AvalonTvDrawerItem(
             Icon(
                 imageVector = icon,
                 contentDescription = null,
-                tint = if (isSelected) AvalonTheme.colors.primary else Color.White.copy(alpha = if (isFocused) 0.95f else 0.7f),
+                tint = if (isSelected) colors.accentPrimary else if (isFocused) colors.textPrimary else colors.textSecondary,
                 modifier = Modifier.size(24.dp)
             )
             Spacer(modifier = Modifier.width(14.dp))
@@ -77,15 +80,14 @@ fun AvalonTvDrawerItem(
         Column(modifier = Modifier.weight(1f)) {
             Text(
                 text = title,
-                color = if (isSelected) AvalonTheme.colors.primary else Color.White,
-                fontSize = 17.sp,
-                fontWeight = if (isSelected || isFocused) FontWeight.Bold else FontWeight.Medium
+                color = if (isSelected) colors.accentPrimary else colors.textPrimary,
+                style = typography.uiLabel
             )
             if (subtitle != null) {
                 Text(
                     text = subtitle,
-                    color = Color.White.copy(alpha = if (isFocused) 0.8f else 0.5f),
-                    fontSize = 12.sp
+                    color = colors.textSecondary,
+                    style = typography.microCaption
                 )
             }
         }
@@ -94,7 +96,7 @@ fun AvalonTvDrawerItem(
             Icon(
                 imageVector = Lucide.Check,
                 contentDescription = "Selected",
-                tint = AvalonTheme.colors.primary,
+                tint = colors.accentPrimary,
                 modifier = Modifier.size(20.dp)
             )
         }

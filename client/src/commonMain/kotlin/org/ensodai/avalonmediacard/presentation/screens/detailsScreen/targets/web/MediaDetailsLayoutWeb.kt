@@ -11,6 +11,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import org.ensodai.avalonmediacard.contract.slot.Action
+import org.ensodai.avalonmediacard.designsystem.theme.AvalonTheme
 import org.ensodai.avalonmediacard.presentation.screens.commonComponents.LocalRootOverlay
 import org.ensodai.avalonmediacard.presentation.screens.detailsScreen.component.carouselsSlot.CarouselsSlot
 import org.ensodai.avalonmediacard.presentation.screens.detailsScreen.component.commentsSlot.CommentsSlot
@@ -47,7 +48,7 @@ fun MediaDetailsLayoutWeb(
     BoxWithConstraints(
         modifier = modifier
             .fillMaxSize()
-            .background(Color.Black)
+            .background(AvalonTheme.colors.bgCanvas)
     ) {
         val screenHeight = maxHeight
         val heroHeight = (screenHeight * 0.88f).coerceIn(720.dp, 920.dp)

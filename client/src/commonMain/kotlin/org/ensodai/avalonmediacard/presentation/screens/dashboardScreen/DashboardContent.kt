@@ -87,16 +87,14 @@ fun DashboardContent(
                         is FeedItem.Backdrops -> {
                             BackdropsCarouselWidget(
                                 state = item.state,
-                                onAction = onAction,
-                                modifier = Modifier.padding(horizontal = 16.dp)
+                                onAction = onAction
                             )
                         }
 
                         is FeedItem.Exploration -> {
                             ExplorationWidget(
                                 state = item.state,
-                                onAction = onAction,
-                                modifier = Modifier.padding(horizontal = 16.dp)
+                                onAction = onAction
                             )
                         }
 
@@ -104,15 +102,14 @@ fun DashboardContent(
                             OnboardingBannerWidget(
                                 state = item.state,
                                 onAction = onAction,
-                                modifier = Modifier.padding(horizontal = 16.dp)
+                                modifier = Modifier.padding(horizontal = 32.dp)
                             )
                         }
 
                         is FeedItem.Carousel -> {
                             MovieCarousel(
                                 state = item.state,
-                                onAction = onAction,
-                                modifier = Modifier.padding(horizontal = 16.dp)
+                                onAction = onAction
                             )
                         }
                     }

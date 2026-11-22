@@ -41,6 +41,11 @@ import androidx.compose.ui.unit.sp
 import avalonmediacard.client.generated.resources.*
 import com.composables.icons.lucide.*
 import org.ensodai.avalonmediacard.contract.model.MediaStatus
+import org.ensodai.avalonmediacard.designsystem.components.AvalonButton
+import org.ensodai.avalonmediacard.designsystem.components.AvalonButtonSize
+import org.ensodai.avalonmediacard.designsystem.components.AvalonButtonVariant
+import org.ensodai.avalonmediacard.designsystem.components.AvalonIconButton
+import org.ensodai.avalonmediacard.designsystem.theme.AvalonTheme
 import org.ensodai.avalonmediacard.contract.slot.Action
 import org.ensodai.avalonmediacard.contract.slot.ButtonItem
 import org.ensodai.avalonmediacard.contract.slot.IconType
@@ -82,20 +87,20 @@ fun WebActionToolbar(
                     modifier = Modifier
                         .width(160.dp)
                         .height(44.dp)
-                        .shimmerPlaceholder(true, RoundedCornerShape(22.dp))
+                        .shimmerPlaceholder(true, AvalonTheme.shapes.control)
                 )
                 // Custom list button skeleton
                 Box(
                     modifier = Modifier
                         .width(110.dp)
-                        .height(44.dp)
-                        .shimmerPlaceholder(true, RoundedCornerShape(22.dp))
+                        .height(40.dp)
+                        .shimmerPlaceholder(true, AvalonTheme.shapes.control)
                 )
                 // Favorite heart skeleton
                 Box(
                     modifier = Modifier
-                        .size(44.dp)
-                        .shimmerPlaceholder(true, CircleShape)
+                        .size(40.dp)
+                        .shimmerPlaceholder(true, AvalonTheme.shapes.control)
                 )
                 // Divider
                 Box(
@@ -103,28 +108,28 @@ fun WebActionToolbar(
                         .padding(horizontal = 4.dp)
                         .width(1.dp)
                         .height(20.dp)
-                        .background(Color.White.copy(alpha = 0.15f))
+                        .background(AvalonTheme.colors.borderSubtle)
                 )
                 // Status dropdown skeleton
                 Box(
                     modifier = Modifier
                         .width(110.dp)
                         .height(40.dp)
-                        .shimmerPlaceholder(true, RoundedCornerShape(20.dp))
+                        .shimmerPlaceholder(true, AvalonTheme.shapes.control)
                 )
                 // Rating dropdown skeleton
                 Box(
                     modifier = Modifier
                         .width(90.dp)
                         .height(40.dp)
-                        .shimmerPlaceholder(true, RoundedCornerShape(20.dp))
+                        .shimmerPlaceholder(true, AvalonTheme.shapes.control)
                 )
                 // Settings button skeleton
                 if (onOpenWatchParty != null) {
                     Box(
                         modifier = Modifier
                             .size(40.dp)
-                            .shimmerPlaceholder(true, CircleShape)
+                            .shimmerPlaceholder(true, AvalonTheme.shapes.control)
                     )
                 }
             }
@@ -137,32 +142,19 @@ fun WebActionToolbar(
                 val primaryBtn = playButtons?.buttons?.firstOrNull()
                 val playLabel = primaryBtn?.label?.takeIf { it.isNotBlank() } ?: stringResource(Res.string.details_btn_watch_online)
                 
-                Row(
-                    verticalAlignment = Alignment.CenterVertically,
-                    modifier = Modifier
-                        .height(44.dp)
-                        .tvAndWebHoverEffect(
-                            scaleTarget = 1.04f,
-                            shape = RoundedCornerShape(22.dp),
-                            onClick = { primaryBtn?.action?.let { onAction(it) } }
+                AvalonButton(
+                    text = playLabel,
+                    onClick = { primaryBtn?.action?.let { onAction(it) } },
+                    variant = AvalonButtonVariant.Primary,
+                    size = AvalonButtonSize.Hero,
+                    leadingIcon = {
+                        Icon(
+                            imageVector = Lucide.Play,
+                            contentDescription = null,
+                            modifier = Modifier.size(18.dp)
                         )
-                        .background(Color.White, RoundedCornerShape(22.dp))
-                        .padding(horizontal = 22.dp)
-                ) {
-                    Icon(
-                        imageVector = Lucide.Play,
-                        contentDescription = null,
-                        modifier = Modifier.size(17.dp),
-                        tint = Color.Black
-                    )
-                    Spacer(modifier = Modifier.width(8.dp))
-                    Text(
-                        text = playLabel,
-                        fontSize = 14.sp,
-                        fontWeight = FontWeight.Bold,
-                        color = Color.Black
-                    )
-                }
+                    }
+                )
 
                 // 2. Custom List Dropdown Button (+ В списки ∨)
                 val customListBtn = collectionButtons?.buttons?.find { it.customLists != null || it.createListActionTemplate != null }
@@ -178,12 +170,20 @@ fun WebActionToolbar(
                 if (favoriteBtn != null) {
                     val isFavorite = favoriteBtn.icon == IconType.HEART_FILLED
                     val icon = IconManager.getIcon(favoriteBtn.icon)
-                    val tint = if (isFavorite) Color(0xFFE91E63) else Color.White
-                    SecondaryActionButton(
-                        icon = icon,
-                        tint = tint,
-                        onClick = { favoriteBtn.action?.let { onAction(it) } }
-                    )
+                    val tint = if (isFavorite) Color(0xFFE91E63) else AvalonTheme.colors.textPrimary
+                    AvalonIconButton(
+                        onClick = { favoriteBtn.action?.let { onAction(it) } },
+                        contentDescription = "Favorite",
+                        variant = AvalonButtonVariant.Secondary,
+                        size = AvalonButtonSize.Standard
+                    ) {
+                        Icon(
+                            imageVector = icon,
+                            contentDescription = null,
+                            tint = tint,
+                            modifier = Modifier.size(18.dp)
+                        )
+                    }
                 }
 
                 // Divider between main player actions and tracking actions
@@ -213,36 +213,19 @@ fun WebActionToolbar(
 
                 // 6. Optional Sources Button
                 if (onRequestOtherSource != null) {
-                    Row(
-                        verticalAlignment = Alignment.CenterVertically,
-                        modifier = Modifier
-                            .height(40.dp)
-                            .tvAndWebHoverEffect(
-                                scaleTarget = 1.04f,
-                                defaultBorderWidth = 1.dp,
-                                defaultBorderColor = Color.White.copy(alpha = 0.12f),
-                                activeBorderWidth = 1.dp,
-                                activeBorderColor = Color.White.copy(alpha = 0.6f),
-                                shape = RoundedCornerShape(20.dp),
-                                onClick = onRequestOtherSource
+                    AvalonButton(
+                        text = stringResource(Res.string.details_sources_select),
+                        onClick = onRequestOtherSource,
+                        variant = AvalonButtonVariant.Secondary,
+                        size = AvalonButtonSize.Standard,
+                        leadingIcon = {
+                            Icon(
+                                imageVector = Lucide.HardDrive,
+                                contentDescription = null,
+                                modifier = Modifier.size(18.dp)
                             )
-                            .background(Color.White.copy(alpha = 0.05f), RoundedCornerShape(20.dp))
-                            .padding(horizontal = 14.dp)
-                    ) {
-                        Icon(
-                            imageVector = Lucide.HardDrive,
-                            contentDescription = null,
-                            modifier = Modifier.size(15.dp),
-                            tint = Color.White.copy(alpha = 0.85f)
-                        )
-                        Spacer(modifier = Modifier.width(6.dp))
-                        Text(
-                            text = stringResource(Res.string.details_sources_select),
-                            fontSize = 13.sp,
-                            fontWeight = FontWeight.Medium,
-                            color = Color.White.copy(alpha = 0.9f)
-                        )
-                    }
+                        }
+                    )
                 }
 
                 // 7. Settings Dropdown (Шестеренка: совместный просмотр и др.)
@@ -264,26 +247,17 @@ private fun WebSettingsMenuButton(
     val density = LocalDensity.current
 
     Box {
-        Box(
-            modifier = Modifier
-                .size(40.dp)
-                .tvAndWebHoverEffect(
-                    scaleTarget = 1.08f,
-                    defaultBorderWidth = 1.dp,
-                    defaultBorderColor = Color.White.copy(alpha = 0.12f),
-                    activeBorderWidth = 1.dp,
-                    activeBorderColor = Color.White.copy(alpha = 0.6f),
-                    shape = CircleShape,
-                    onClick = { expanded = !expanded }
-                )
-                .background(Color.White.copy(alpha = 0.05f), CircleShape),
-            contentAlignment = Alignment.Center
+        AvalonIconButton(
+            onClick = { expanded = !expanded },
+            contentDescription = stringResource(Res.string.settings_title),
+            variant = AvalonButtonVariant.Secondary,
+            size = AvalonButtonSize.Standard
         ) {
             Icon(
                 imageVector = Lucide.Settings,
-                contentDescription = stringResource(Res.string.settings_title),
-                tint = if (expanded) MaterialTheme.colorScheme.primary else Color.White.copy(alpha = 0.85f),
-                modifier = Modifier.size(17.dp)
+                contentDescription = null,
+                tint = if (expanded) AvalonTheme.colors.textPrimary else AvalonTheme.colors.textSecondary,
+                modifier = Modifier.size(18.dp)
             )
         }
 
@@ -337,43 +311,27 @@ private fun WebCustomListButton(
     }
 
     Box {
-        Row(
-            verticalAlignment = Alignment.CenterVertically,
-            modifier = Modifier
-                .height(44.dp)
-                .tvAndWebHoverEffect(
-                    scaleTarget = 1.04f,
-                    defaultBorderWidth = 1.dp,
-                    defaultBorderColor = Color.White.copy(alpha = 0.15f),
-                    activeBorderWidth = 1.dp,
-                    activeBorderColor = Color.White,
-                    shape = RoundedCornerShape(22.dp),
-                    onClick = { expanded = true }
+        AvalonButton(
+            onClick = { expanded = true },
+            text = stringResource(Res.string.details_custom_lists),
+            leadingIcon = {
+                Icon(
+                    imageVector = Lucide.Plus,
+                    contentDescription = null,
+                    modifier = Modifier.size(16.dp)
                 )
-                .background(Color.White.copy(alpha = 0.08f), RoundedCornerShape(22.dp))
-                .padding(horizontal = 16.dp)
-        ) {
-            Icon(
-                imageVector = Lucide.Plus,
-                contentDescription = null,
-                modifier = Modifier.size(16.dp),
-                tint = Color.White
-            )
-            Spacer(modifier = Modifier.width(6.dp))
-            Text(
-                text = stringResource(Res.string.details_custom_lists),
-                fontSize = 14.sp,
-                fontWeight = FontWeight.Medium,
-                color = Color.White
-            )
-            Spacer(modifier = Modifier.width(4.dp))
-            Icon(
-                imageVector = Lucide.ChevronDown,
-                contentDescription = null,
-                modifier = Modifier.size(13.dp),
-                tint = Color.White.copy(alpha = 0.6f)
-            )
-        }
+            },
+            trailingIcon = {
+                Icon(
+                    imageVector = Lucide.ChevronDown,
+                    contentDescription = null,
+                    modifier = Modifier.size(14.dp),
+                    tint = AvalonTheme.colors.textMuted
+                )
+            },
+            variant = AvalonButtonVariant.Secondary,
+            size = AvalonButtonSize.Standard
+        )
 
         if (expanded) {
             val density = LocalDensity.current
@@ -560,43 +518,28 @@ private fun WebStatusDropdown(
     val iconTint = if (currentStatusOption != null) MaterialTheme.colorScheme.primary else Color.White.copy(alpha = 0.7f)
 
     Box {
-        Row(
-            verticalAlignment = Alignment.CenterVertically,
-            modifier = Modifier
-                .height(40.dp)
-                .tvAndWebHoverEffect(
-                    scaleTarget = 1.04f,
-                    defaultBorderWidth = 1.dp,
-                    defaultBorderColor = Color.White.copy(alpha = 0.12f),
-                    activeBorderWidth = 1.dp,
-                    activeBorderColor = Color.White.copy(alpha = 0.6f),
-                    shape = RoundedCornerShape(20.dp),
-                    onClick = { expanded = true }
+        AvalonButton(
+            onClick = { expanded = true },
+            text = label,
+            leadingIcon = {
+                Icon(
+                    imageVector = Lucide.Eye,
+                    contentDescription = null,
+                    tint = iconTint,
+                    modifier = Modifier.size(15.dp)
                 )
-                .background(Color.White.copy(alpha = 0.05f), RoundedCornerShape(20.dp))
-                .padding(horizontal = 14.dp)
-        ) {
-            Icon(
-                Lucide.Eye,
-                contentDescription = null,
-                tint = iconTint,
-                modifier = Modifier.size(15.dp)
-            )
-            Spacer(modifier = Modifier.width(6.dp))
-            Text(
-                text = label,
-                color = Color.White.copy(alpha = 0.9f),
-                fontSize = 13.sp,
-                fontWeight = FontWeight.Medium
-            )
-            Spacer(modifier = Modifier.width(4.dp))
-            Icon(
-                Lucide.ChevronDown,
-                contentDescription = null,
-                tint = Color.White.copy(alpha = 0.5f),
-                modifier = Modifier.size(13.dp)
-            )
-        }
+            },
+            trailingIcon = {
+                Icon(
+                    imageVector = Lucide.ChevronDown,
+                    contentDescription = null,
+                    tint = AvalonTheme.colors.textMuted,
+                    modifier = Modifier.size(13.dp)
+                )
+            },
+            variant = AvalonButtonVariant.Secondary,
+            size = AvalonButtonSize.Standard
+        )
 
         if (expanded) {
             val density = LocalDensity.current
@@ -639,46 +582,31 @@ private fun WebRatingDropdown(
     } else {
         stringResource(Res.string.details_rating_rate)
     }
-    val iconTint = if (currentRating != null) Color(0xFFFFC107) else Color.White.copy(alpha = 0.7f)
+    val iconTint = if (currentRating != null) AvalonTheme.colors.accentGold else AvalonTheme.colors.textMuted
 
     Box {
-        Row(
-            verticalAlignment = Alignment.CenterVertically,
-            modifier = Modifier
-                .height(40.dp)
-                .tvAndWebHoverEffect(
-                    scaleTarget = 1.04f,
-                    defaultBorderWidth = 1.dp,
-                    defaultBorderColor = Color.White.copy(alpha = 0.12f),
-                    activeBorderWidth = 1.dp,
-                    activeBorderColor = Color.White.copy(alpha = 0.6f),
-                    shape = RoundedCornerShape(20.dp),
-                    onClick = { expanded = true }
+        AvalonButton(
+            onClick = { expanded = true },
+            text = label,
+            leadingIcon = {
+                Icon(
+                    imageVector = Lucide.Star,
+                    contentDescription = null,
+                    tint = iconTint,
+                    modifier = Modifier.size(15.dp)
                 )
-                .background(Color.White.copy(alpha = 0.05f), RoundedCornerShape(20.dp))
-                .padding(horizontal = 14.dp)
-        ) {
-            Icon(
-                Lucide.Star,
-                contentDescription = null,
-                tint = iconTint,
-                modifier = Modifier.size(15.dp)
-            )
-            Spacer(modifier = Modifier.width(6.dp))
-            Text(
-                text = label,
-                color = Color.White.copy(alpha = 0.9f),
-                fontSize = 13.sp,
-                fontWeight = FontWeight.Medium
-            )
-            Spacer(modifier = Modifier.width(4.dp))
-            Icon(
-                Lucide.ChevronDown,
-                contentDescription = null,
-                tint = Color.White.copy(alpha = 0.5f),
-                modifier = Modifier.size(13.dp)
-            )
-        }
+            },
+            trailingIcon = {
+                Icon(
+                    imageVector = Lucide.ChevronDown,
+                    contentDescription = null,
+                    tint = AvalonTheme.colors.textMuted,
+                    modifier = Modifier.size(13.dp)
+                )
+            },
+            variant = AvalonButtonVariant.Secondary,
+            size = AvalonButtonSize.Standard
+        )
 
         if (expanded) {
             val density = LocalDensity.current

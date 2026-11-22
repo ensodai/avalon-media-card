@@ -1,6 +1,7 @@
 package org.ensodai.avalonmediacard.presentation.screens.dashboardScreen.component
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.grid.GridCells
@@ -30,6 +31,7 @@ import org.ensodai.avalonmediacard.presentation.core.SlotUiState
 import org.ensodai.avalonmediacard.presentation.screens.commonComponents.LocalDeviceTarget
 import org.ensodai.avalonmediacard.presentation.screens.commonComponents.TvHorizontalFocusProvider
 import org.ensodai.avalonmediacard.presentation.screens.commonComponents.tvAndWebHoverEffect
+import org.ensodai.avalonmediacard.presentation.theme.AvalonTheme
 
 @Composable
 fun ExplorationWidget(
@@ -41,6 +43,7 @@ fun ExplorationWidget(
         Column(modifier = modifier.fillMaxWidth()) {
             Box(
                 modifier = Modifier
+                    .padding(horizontal = 32.dp)
                     .width(180.dp)
                     .height(24.dp)
                     .shimmerPlaceholder(isLoading = true, shape = RoundedCornerShape(4.dp))
@@ -51,7 +54,7 @@ fun ExplorationWidget(
                 rows = GridCells.Fixed(2),
                 horizontalArrangement = Arrangement.spacedBy(16.dp),
                 verticalArrangement = Arrangement.spacedBy(16.dp),
-                contentPadding = PaddingValues(horizontal = 24.dp),
+                contentPadding = PaddingValues(horizontal = 32.dp),
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(260.dp)
@@ -74,17 +77,14 @@ fun ExplorationWidget(
     Column(modifier = modifier.fillMaxWidth()) {
         Text(
             text = data.title,
-            color = MaterialTheme.colorScheme.secondary,
-            style = MaterialTheme.typography.titleLarge.copy(
-                fontSize = 20.sp,
-                fontWeight = FontWeight.Bold
-            ),
-            modifier = Modifier.padding(start = 24.dp, end = 24.dp, bottom = 16.dp)
+            color = AvalonTheme.colors.textPrimary,
+            style = AvalonTheme.typography.sectionTitle,
+            modifier = Modifier.padding(horizontal = 32.dp).padding(bottom = 16.dp)
         )
 
         BoxWithConstraints(modifier = Modifier.fillMaxWidth()) {
             val targetVisibleItems = 5.5f
-            val horizontalPadding = 48.dp // 24.dp * 2
+            val horizontalPadding = 64.dp // 32.dp * 2
             val spacingTotal = 16.dp * (targetVisibleItems.toInt())
             val calculatedSize = (maxWidth - horizontalPadding - spacingTotal) / targetVisibleItems
             val tileSize = calculatedSize.coerceAtLeast(110.dp)
@@ -97,7 +97,7 @@ fun ExplorationWidget(
                     rows = GridCells.Fixed(2),
                     horizontalArrangement = Arrangement.spacedBy(16.dp),
                     verticalArrangement = Arrangement.spacedBy(16.dp),
-                    contentPadding = PaddingValues(start = 24.dp, end = 24.dp, bottom = 8.dp),
+                    contentPadding = PaddingValues(horizontal = 32.dp, vertical = 4.dp),
                     modifier = Modifier
                         .fillMaxWidth()
                         .height(gridHeight)
@@ -140,18 +140,29 @@ private fun ExplorationCard(
                 activeBorderColor = MaterialTheme.colorScheme.secondary,
                 activeBorderWidth = 2.dp,
                 shape = RoundedCornerShape(16.dp),
-                onStateChange = { isActive = it }
-            ,
-    onClick = {
-                onAction(ActionNavigate(Screen.Details(item.key)))
-            })
-            
+                onStateChange = { isActive = it },
+                onClick = {
+                    onAction(ActionNavigate(Screen.Details(item.key)))
+                }
+            )
     ) {
         ShimmerImage(
             model = item.backdropUrl ?: item.posterUrl,
             contentDescription = item.title,
             contentScale = ContentScale.Crop,
+            shape = RoundedCornerShape(16.dp),
             modifier = Modifier.fillMaxSize()
+        )
+
+        // Внутренний волосковый контур 10% белого
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
+                .border(
+                    width = 1.dp,
+                    color = Color.White.copy(alpha = 0.10f),
+                    shape = RoundedCornerShape(16.dp)
+                )
         )
 
         Box(
@@ -170,15 +181,13 @@ private fun ExplorationCard(
 
         Text(
             text = item.title,
-            color = if (isActive) MaterialTheme.colorScheme.secondary else Color.White,
-            fontSize = 13.sp,
-            fontWeight = FontWeight.ExtraBold,
+            color = if (isActive) AvalonTheme.colors.textPrimary else AvalonTheme.colors.textPrimary.copy(alpha = 0.9f),
+            style = AvalonTheme.typography.cardTitle,
             maxLines = 2,
             overflow = TextOverflow.Ellipsis,
-            lineHeight = 16.sp,
             modifier = Modifier
                 .align(Alignment.Center)
-                .padding(12.dp)
+                .padding(8.dp)
         )
     }
 }

@@ -22,6 +22,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import org.ensodai.avalonmediacard.contract.slot.Action
 import org.ensodai.avalonmediacard.contract.slot.SlotData
+import org.ensodai.avalonmediacard.designsystem.theme.AvalonTheme
 import org.ensodai.avalonmediacard.presentation.components.ShimmerImage
 import org.ensodai.avalonmediacard.presentation.components.shimmerPlaceholder
 
@@ -47,11 +48,13 @@ fun WebHeroSection(
     val originalTitle = headerData?.originalTitle?.takeIf { it.isNotBlank() && it != title }
     val description = descriptionData?.content?.takeIf { it.isNotBlank() } ?: headerData?.tagline ?: ""
 
+    val canvas = AvalonTheme.colors.bgCanvas
+
     Box(
         modifier = modifier
             .fillMaxWidth()
             .height(heroHeight)
-            .background(Color.Black)
+            .background(canvas)
             .clipToBounds()
     ) {
         // 1. Full-bleed 100vw Backdrop Image with Smooth Parallax
@@ -74,15 +77,15 @@ fun WebHeroSection(
             }
         }
 
-        // 2. Left-edge narrow feather to dissolve image boundary into black sidebar without darkening the art
+        // 2. Left-edge narrow feather to dissolve image boundary into canvas without darkening the art
         Box(
             modifier = Modifier
                 .fillMaxSize()
                 .background(
                     Brush.horizontalGradient(
                         colorStops = arrayOf(
-                            0.0f to Color.Black,
-                            0.03f to Color.Black.copy(alpha = 0.70f),
+                            0.0f to canvas,
+                            0.03f to canvas.copy(alpha = 0.70f),
                             0.08f to Color.Transparent
                         )
                     )
@@ -96,14 +99,14 @@ fun WebHeroSection(
                 .background(
                     Brush.verticalGradient(
                         colorStops = arrayOf(
-                            0.0f to Color.Black.copy(alpha = 0.25f),
+                            0.0f to canvas.copy(alpha = 0.25f),
                             0.08f to Color.Transparent
                         )
                     )
                 )
         )
 
-        // 4. Bottom Ease-in cinematic fade: top 45% completely clear, gentle fade down to pure black
+        // 4. Bottom Ease-in cinematic fade: top 45% completely clear, gentle fade down to bgCanvas
         Box(
             modifier = Modifier
                 .fillMaxSize()
@@ -112,9 +115,9 @@ fun WebHeroSection(
                         colorStops = arrayOf(
                             0.0f to Color.Transparent,
                             0.45f to Color.Transparent,
-                            0.65f to Color.Black.copy(alpha = 0.55f),
-                            0.82f to Color.Black.copy(alpha = 0.92f),
-                            1.0f to Color.Black
+                            0.65f to canvas.copy(alpha = 0.55f),
+                            0.82f to canvas.copy(alpha = 0.92f),
+                            1.0f to canvas
                         )
                     )
                 )
@@ -158,19 +161,16 @@ fun WebHeroSection(
                         Column(verticalArrangement = Arrangement.spacedBy(6.dp)) {
                             Text(
                                 text = title,
-                                fontSize = 44.sp,
-                                fontWeight = FontWeight.ExtraBold,
-                                color = Color.White,
-                                lineHeight = 50.sp,
+                                style = AvalonTheme.typography.displayHero,
+                                color = AvalonTheme.colors.textPrimary,
                                 maxLines = 2,
                                 overflow = TextOverflow.Ellipsis
                             )
                             if (originalTitle != null) {
                                 Text(
                                     text = originalTitle,
-                                    fontSize = 16.sp,
-                                    fontWeight = FontWeight.Normal,
-                                    color = Color.White.copy(alpha = 0.65f),
+                                    style = AvalonTheme.typography.metadata,
+                                    color = AvalonTheme.colors.textSecondary,
                                     maxLines = 1,
                                     overflow = TextOverflow.Ellipsis
                                 )
@@ -189,7 +189,7 @@ fun WebHeroSection(
                     onAction = onAction
                 )
 
-                // 3. Compact Description with Generous Line-Height
+                // 3. Compact Description with Generous Line-Height (max-width: 560dp)
                 Crossfade(
                     targetState = isDescriptionLoading,
                     animationSpec = tween(300, easing = FastOutSlowInEasing)
@@ -199,7 +199,7 @@ fun WebHeroSection(
                             verticalArrangement = Arrangement.spacedBy(8.dp),
                             modifier = Modifier
                                 .padding(top = 20.dp)
-                                .widthIn(max = 700.dp)
+                                .widthIn(max = 560.dp)
                                 .fillMaxWidth()
                         ) {
                             Box(
@@ -219,12 +219,11 @@ fun WebHeroSection(
                         Column(modifier = Modifier.padding(top = 20.dp)) {
                             Text(
                                 text = description,
-                                fontSize = 15.sp,
-                                color = Color.White.copy(alpha = 0.82f),
-                                lineHeight = 24.sp,
-                                maxLines = 2,
+                                style = AvalonTheme.typography.bodySynopsis,
+                                color = AvalonTheme.colors.textSecondary,
+                                maxLines = 3,
                                 overflow = TextOverflow.Ellipsis,
-                                modifier = Modifier.widthIn(max = 700.dp)
+                                modifier = Modifier.widthIn(max = 560.dp)
                             )
                         }
                     }

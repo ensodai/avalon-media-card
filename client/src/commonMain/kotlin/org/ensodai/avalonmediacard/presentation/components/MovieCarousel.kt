@@ -2,9 +2,14 @@ package org.ensodai.avalonmediacard.presentation.components
 
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.core.animateDpAsState
+import androidx.compose.animation.core.animateFloatAsState
+import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.focusGroup
-import androidx.compose.ui.focus.focusRestorer
+import androidx.compose.foundation.hoverable
+import androidx.compose.foundation.interaction.MutableInteractionSource
+import androidx.compose.foundation.interaction.collectIsHoveredAsState
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.itemsIndexed
@@ -15,28 +20,29 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.focus.focusRestorer
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalDensity
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import com.composables.icons.lucide.ChevronRight
 import com.composables.icons.lucide.Lucide
 import kotlinx.coroutines.launch
-import org.ensodai.avalonmediacard.contract.model.EntityType
-import org.ensodai.avalonmediacard.contract.ui.navigation.Screen
 import org.ensodai.avalonmediacard.contract.model.ClickstreamContext
 import org.ensodai.avalonmediacard.contract.model.ClickstreamPayload
 import org.ensodai.avalonmediacard.contract.model.ClickstreamTargetType
+import org.ensodai.avalonmediacard.contract.model.EntityType
 import org.ensodai.avalonmediacard.contract.slot.Action
 import org.ensodai.avalonmediacard.contract.slot.ActionNavigate
 import org.ensodai.avalonmediacard.contract.slot.MovieCarouselItem
 import org.ensodai.avalonmediacard.contract.slot.SlotData
+import org.ensodai.avalonmediacard.contract.ui.navigation.Screen
 import org.ensodai.avalonmediacard.presentation.core.SlotUiState
 import org.ensodai.avalonmediacard.presentation.screens.commonComponents.*
 import org.ensodai.avalonmediacard.presentation.telemetry.LocalTelemetryTracker
 import org.ensodai.avalonmediacard.presentation.telemetry.TrackCarouselImpressions
+import org.ensodai.avalonmediacard.presentation.theme.AvalonTheme
 
 @Composable
 fun MovieCarousel(
@@ -79,14 +85,13 @@ private fun MovieCarouselInternal(
     val loadMore = if (isLoading) null else component.loadMoreAction
     val triggeredActions = remember { mutableSetOf<Action>() }
 
-    // Автоматическая подгрузка (как в отзывах)
+    // Автоматическая подгрузка следующей страницы
     if (loadMore != null) {
         LaunchedEffect(scrollState, loadMore) {
             snapshotFlow { scrollState.layoutInfo }
                 .collect { layoutInfo ->
                     val totalItems = layoutInfo.totalItemsCount
                     val lastVisibleItemIndex = layoutInfo.visibleItemsInfo.lastOrNull()?.index ?: 0
-                    // Загружаем следующую страницу заранее, когда остается 15 элементов (почти целый экран)
                     if (totalItems > 0 && lastVisibleItemIndex >= totalItems - 15) {
                         if (triggeredActions.add(loadMore)) {
                             onAction(loadMore)
@@ -96,11 +101,15 @@ private fun MovieCarouselInternal(
         }
     }
 
-    // Добавляем трекинг показов карточек
+    // Трекинг показов карточек
     val context = component.telemetryContext ?: ClickstreamContext.CAROUSEL_DISCOVER
     TrackCarouselImpressions(scrollState, context)
 
-    val showForwardButton = canScrollForward || loadMore != null
+    // Кнопка вперед показывается ТОЛЬКО если лента физически может прокручиваться
+    val showForwardButton = canScrollForward && !isLoading
+
+    val carouselInteractionSource = remember { MutableInteractionSource() }
+    val isCarouselHovered by carouselInteractionSource.collectIsHoveredAsState()
 
     Column(
         modifier = modifier
@@ -108,7 +117,7 @@ private fun MovieCarouselInternal(
             .focusRestorer()
             .focusGroup()
             .logFocus("MovieCarousel_${component.title}")
-            .padding(vertical = 24.dp) // Даем больше воздуха сверху и снизу между каруселями
+            .padding(vertical = 24.dp)
     ) {
         // === ЗАГОЛОВОК КАРУСЕЛИ ===
         CarouselHeader(
@@ -116,20 +125,20 @@ private fun MovieCarouselInternal(
             titleAction = component.titleAction,
             isLoading = isLoading,
             onAction = onAction,
-            // Паддинг 88dp, чтобы заголовок визуально начинался ровно там же,
-            // где начинается первый постер (из-за боковых зон)
-            modifier = Modifier.padding(horizontal = 40.dp)
+            modifier = Modifier.padding(horizontal = 32.dp)
         )
 
         Spacer(modifier = Modifier.height(16.dp))
 
         // === САМА КАРУСЕЛЬ И ЗОНЫ СКРОЛЛА ===
         BoxWithConstraints(
-            modifier = Modifier.fillMaxWidth(),
+            modifier = Modifier
+                .fillMaxWidth()
+                .hoverable(carouselInteractionSource),
             contentAlignment = Alignment.Center
         ) {
             val targetVisibleItems = 6.25f
-            val horizontalPadding = 80.dp // 40.dp * 2
+            val horizontalPadding = 64.dp // 32.dp * 2
             val spacingTotal = 16.dp * 6
             val calculatedWidth = (maxWidth - horizontalPadding - spacingTotal) / targetVisibleItems
             val cardWidth = calculatedWidth.coerceAtLeast(90.dp)
@@ -140,7 +149,7 @@ private fun MovieCarouselInternal(
                 LazyRow(
                     state = scrollState,
                     horizontalArrangement = Arrangement.spacedBy(16.dp),
-                    contentPadding = PaddingValues(horizontal = 40.dp), // Отступы для навигационных зон!
+                    contentPadding = PaddingValues(horizontal = 32.dp),
                     modifier = Modifier.fillMaxWidth()
                 ) {
                     if (isLoading) {
@@ -170,12 +179,12 @@ private fun MovieCarouselInternal(
                 lazyRowContent()
             }
 
-            // Кнопка НАЗАД
+            // Кнопка НАЗАД (плавно проявляется при hover)
             if (canScrollBackward && !isLoading) {
-                CarouselNavigationZone(isRight = false) {
+                CarouselNavigationZone(isRight = false, isVisible = isCarouselHovered) {
                     coroutineScope.launch {
                         val layoutInfo = scrollState.layoutInfo
-                        val rightOverlayWidthPx = with(density) { 80.dp.toPx() }
+                        val rightOverlayWidthPx = with(density) { 72.dp.toPx() }
                         val visibleRightEdge = layoutInfo.viewportEndOffset - rightOverlayWidthPx
                         val visibleItemsCount = layoutInfo.visibleItemsInfo.count { it.offset < visibleRightEdge }
 
@@ -186,15 +195,15 @@ private fun MovieCarouselInternal(
                 }
             }
 
-            // Кнопка ВПЕРЕД
-            if (showForwardButton && !isLoading) {
-                CarouselNavigationZone(isRight = true) {
+            // Кнопка ВПЕРЕД (плавно проявляется при hover)
+            if (showForwardButton) {
+                CarouselNavigationZone(isRight = true, isVisible = isCarouselHovered) {
                     coroutineScope.launch {
                         val layoutInfo = scrollState.layoutInfo
                         val totalItems = layoutInfo.totalItemsCount
                         if (totalItems == 0) return@launch
 
-                        val rightOverlayWidthPx = with(density) { 80.dp.toPx() }
+                        val rightOverlayWidthPx = with(density) { 72.dp.toPx() }
                         val visibleRightEdge = layoutInfo.viewportEndOffset - rightOverlayWidthPx
 
                         val targetItem = layoutInfo.visibleItemsInfo.lastOrNull { it.offset < visibleRightEdge }
@@ -226,41 +235,45 @@ private fun CarouselHeader(
 ) {
     if (titleAction != null && !isLoading) {
         var isHeaderActive by remember { mutableStateOf(false) }
-        val headerColor by animateColorAsState(targetValue = if (isHeaderActive) Color.White else Color.White.copy(alpha = 0.6f))
-        val arrowOffset by animateDpAsState(targetValue = if (isHeaderActive) 6.dp else 0.dp)
+        val headerColor by animateColorAsState(
+            targetValue = if (isHeaderActive) AvalonTheme.colors.textPrimary else AvalonTheme.colors.textPrimary.copy(alpha = 0.85f),
+            label = "header_color"
+        )
+        val arrowOffset by animateDpAsState(
+            targetValue = if (isHeaderActive) 4.dp else 0.dp,
+            label = "arrow_offset"
+        )
 
         Row(
             modifier = modifier
                 .wrapContentSize()
                 .tvAndWebHoverEffect(
-                    shape = RoundedCornerShape(8.dp),
+                    scaleTarget = 1.0f,
                     activeBorderColor = Color.Transparent,
-                    onStateChange = { isHeaderActive = it }
-                ,
-    onClick = { onAction(titleAction) })
-                ,
+                    shape = RoundedCornerShape(8.dp),
+                    onStateChange = { isHeaderActive = it },
+                    onClick = { onAction(titleAction) }
+                ),
             verticalAlignment = Alignment.CenterVertically
         ) {
             Text(
                 text = title,
-                fontSize = 20.sp,
-                fontWeight = FontWeight.Bold,
+                style = AvalonTheme.typography.sectionTitle,
                 color = headerColor
             )
-            Spacer(modifier = Modifier.width(4.dp))
+            Spacer(modifier = Modifier.width(6.dp))
             Icon(
                 imageVector = Lucide.ChevronRight,
                 contentDescription = null,
-                tint = headerColor,
-                modifier = Modifier.size(24.dp).offset(x = arrowOffset)
+                tint = AvalonTheme.colors.textSecondary,
+                modifier = Modifier.size(18.dp).offset(x = arrowOffset)
             )
         }
     } else {
         Text(
             text = title,
-            fontSize = 20.sp,
-            fontWeight = FontWeight.Bold,
-            color = if (isLoading) Color.Transparent else Color.White.copy(alpha = 0.8f),
+            style = AvalonTheme.typography.sectionTitle,
+            color = if (isLoading) Color.Transparent else AvalonTheme.colors.textPrimary,
             modifier = modifier.shimmerPlaceholder(isLoading, RoundedCornerShape(4.dp))
         )
     }
@@ -276,31 +289,39 @@ private fun MovieCard(
     onAction: (Action) -> Unit
 ) {
     val telemetry = LocalTelemetryTracker.current
+    var isHoveredOrFocused by remember { mutableStateOf(false) }
+    val veilAlpha by animateFloatAsState(
+        targetValue = if (isHoveredOrFocused) 0.0f else 0.06f,
+        label = "veil_alpha"
+    )
+
     Box(
         modifier = Modifier
             .width(cardWidth)
             .aspectRatio(2f / 3f)
-            .tvAndWebHoverEffect(shape = RoundedCornerShape(12.dp),
-    onClick = {
-                telemetry.logClick(
-                    targetType = when (item.key.type) {
-                        EntityType.PERSON -> ClickstreamTargetType.PERSON
-                        EntityType.TV -> ClickstreamTargetType.MEDIA_TV
-                        else -> ClickstreamTargetType.MEDIA_MOVIE
-                    },
-                    targetId = item.key.id,
-                    context = carouselContext,
-                    payload = ClickstreamPayload.CarouselInteraction(positionIndex)
-                )
+            .tvAndWebHoverEffect(
+                shape = RoundedCornerShape(12.dp),
+                onStateChange = { isHoveredOrFocused = it },
+                onClick = {
+                    telemetry.logClick(
+                        targetType = when (item.key.type) {
+                            EntityType.PERSON -> ClickstreamTargetType.PERSON
+                            EntityType.TV -> ClickstreamTargetType.MEDIA_TV
+                            else -> ClickstreamTargetType.MEDIA_MOVIE
+                        },
+                        targetId = item.key.id,
+                        context = carouselContext,
+                        payload = ClickstreamPayload.CarouselInteraction(positionIndex)
+                    )
 
-                val action = if (item.key.type == EntityType.PERSON) {
-                    ActionNavigate(Screen.Person(key = item.key, personName = item.title))
-                } else {
-                    ActionNavigate(Screen.Details(key = item.key))
+                    val action = if (item.key.type == EntityType.PERSON) {
+                        ActionNavigate(Screen.Person(key = item.key, personName = item.title))
+                    } else {
+                        ActionNavigate(Screen.Details(key = item.key))
+                    }
+                    onAction(action)
                 }
-                onAction(action)
-            })
-            ,
+            ),
         contentAlignment = Alignment.Center
     ) {
         ShimmerImage(
@@ -309,6 +330,27 @@ private fun MovieCard(
             contentScale = ContentScale.Crop,
             modifier = Modifier.fillMaxSize(),
             shape = RoundedCornerShape(12.dp)
+        )
+
+        // 6% затемняющая вуаль в покое для выравнивания контраста (снимается при hover/focus)
+        if (veilAlpha > 0f) {
+            Box(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .clip(RoundedCornerShape(12.dp))
+                    .background(Color.Black.copy(alpha = veilAlpha))
+            )
+        }
+
+        // Внутренний волосковый контур 10% белого (Закон 5 Design Craft)
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
+                .border(
+                    width = 1.dp,
+                    color = Color.White.copy(alpha = 0.10f),
+                    shape = RoundedCornerShape(12.dp)
+                )
         )
     }
 }

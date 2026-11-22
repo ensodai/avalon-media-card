@@ -1,11 +1,16 @@
 package org.ensodai.avalonmediacard.presentation.screens.commonComponents
 
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.Icon
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
@@ -16,51 +21,60 @@ import androidx.compose.ui.unit.dp
 import com.composables.icons.lucide.ChevronLeft
 import com.composables.icons.lucide.ChevronRight
 import com.composables.icons.lucide.Lucide
+import org.ensodai.avalonmediacard.presentation.theme.AvalonTheme
 
 @Composable
 fun BoxScope.CarouselNavigationZone(
     isRight: Boolean,
+    isVisible: Boolean = true,
     onClick: () -> Unit
 ) {
     if (LocalDeviceTarget.current.isTv) return
 
-    val backgroundColor = MaterialTheme.colorScheme.background
+    val canvasColor = AvalonTheme.colors.bgCanvas
 
-    // Формируем градиент для плавного скрытия карточек
+    // Воздушный мягкий градиент в цвет холста (без тёмных серых коробок)
     val gradientColors = if (isRight) {
-        listOf(Color.Transparent, backgroundColor.copy(alpha = 0.8f), backgroundColor)
+        listOf(Color.Transparent, canvasColor.copy(alpha = 0.50f), canvasColor.copy(alpha = 0.85f))
     } else {
-        listOf(backgroundColor, backgroundColor.copy(alpha = 0.8f), Color.Transparent)
+        listOf(canvasColor.copy(alpha = 0.85f), canvasColor.copy(alpha = 0.50f), Color.Transparent)
     }
 
-    // 1. Внешний Box берет размеры LazyRow (matchParentSize определяет точные границы всей карусели по высоте)
-    Box(
-        modifier = Modifier
-            .matchParentSize()
+    AnimatedVisibility(
+        visible = isVisible,
+        enter = fadeIn(tween(150)),
+        exit = fadeOut(tween(150)),
+        modifier = Modifier.matchParentSize()
     ) {
-
-        // 2. Внутренний Box прижимается к краю, забирает всю высоту родителя и нужную ширину
         Box(
-            modifier = Modifier
-                .align(if (isRight) Alignment.CenterEnd else Alignment.CenterStart)
-                .fillMaxHeight() // Идеально растянет по высоте карточек
-                .width(80.dp)    // Широкая удобная зона для клика
-                .background(Brush.horizontalGradient(colors = gradientColors))
-                .clickable(onClick = onClick)
-                .pointerHoverIcon(PointerIcon.Hand),
-            contentAlignment = Alignment.Center
+            modifier = Modifier.fillMaxSize()
         ) {
-            Icon(
-                imageVector = if (isRight) Lucide.ChevronRight else Lucide.ChevronLeft,
-                contentDescription = if (isRight) "Forward" else "Back",
-                tint = MaterialTheme.colorScheme.onSurface,
+            Box(
                 modifier = Modifier
-                    .size(48.dp)
-                    .padding(
-                        start = if (isRight) 16.dp else 0.dp,
-                        end = if (isRight) 0.dp else 16.dp
+                    .align(if (isRight) Alignment.CenterEnd else Alignment.CenterStart)
+                    .fillMaxHeight()
+                    .width(72.dp)
+                    .background(Brush.horizontalGradient(colors = gradientColors))
+                    .clickable(
+                        interactionSource = remember { MutableInteractionSource() },
+                        indication = null,
+                        onClick = onClick
                     )
-            )
+                    .pointerHoverIcon(PointerIcon.Hand),
+                contentAlignment = Alignment.Center
+            ) {
+                Icon(
+                    imageVector = if (isRight) Lucide.ChevronRight else Lucide.ChevronLeft,
+                    contentDescription = if (isRight) "Forward" else "Back",
+                    tint = AvalonTheme.colors.textPrimary,
+                    modifier = Modifier
+                        .size(44.dp)
+                        .padding(
+                            start = if (isRight) 14.dp else 0.dp,
+                            end = if (isRight) 0.dp else 14.dp
+                        )
+                )
+            }
         }
     }
 }

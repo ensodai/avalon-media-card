@@ -47,6 +47,7 @@ dependencyResolutionManagement {
     }
 }
 
+include(":core:designsystem")
 include(":client")
 include(":desktopApp")
 include(":androidApp")

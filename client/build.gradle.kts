@@ -69,6 +69,7 @@ kotlin {
         val commonMain by getting {
             kotlin.srcDir(generateClientVersion.map { it.outputs.files.singleFile })
             dependencies {
+                api(project(":core:designsystem"))
                 api(libs.avalon.core.contract)
             implementation(libs.androidx.datastore.preferences.core)
             implementation(libs.androidx.datastore.core.okio)

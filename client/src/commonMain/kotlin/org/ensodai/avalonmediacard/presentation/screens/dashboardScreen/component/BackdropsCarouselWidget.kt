@@ -2,10 +2,15 @@ package org.ensodai.avalonmediacard.presentation.screens.dashboardScreen.compone
 
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.hoverable
+import androidx.compose.foundation.interaction.MutableInteractionSource
+import androidx.compose.foundation.interaction.collectIsHoveredAsState
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.itemsIndexed
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -13,15 +18,18 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.composables.icons.lucide.Lucide
 import com.composables.icons.lucide.Play
+import kotlinx.coroutines.launch
 import org.ensodai.avalonmediacard.contract.ui.navigation.Screen
 import org.ensodai.avalonmediacard.contract.slot.Action
 import org.ensodai.avalonmediacard.contract.slot.ActionNavigate
@@ -30,9 +38,11 @@ import org.ensodai.avalonmediacard.contract.slot.SlotData
 import org.ensodai.avalonmediacard.presentation.components.ShimmerImage
 import org.ensodai.avalonmediacard.presentation.components.shimmerPlaceholder
 import org.ensodai.avalonmediacard.presentation.core.SlotUiState
+import org.ensodai.avalonmediacard.presentation.screens.commonComponents.CarouselNavigationZone
 import org.ensodai.avalonmediacard.presentation.screens.commonComponents.LocalDeviceTarget
 import org.ensodai.avalonmediacard.presentation.screens.commonComponents.TvHorizontalFocusProvider
 import org.ensodai.avalonmediacard.presentation.screens.commonComponents.tvAndWebHoverEffect
+import org.ensodai.avalonmediacard.presentation.theme.AvalonTheme
 
 @Composable
 fun BackdropsCarouselWidget(
@@ -44,14 +54,15 @@ fun BackdropsCarouselWidget(
         Column(modifier = modifier.fillMaxWidth()) {
             Box(
                 modifier = Modifier
-                    .padding(start = 24.dp, bottom = 16.dp)
+                    .padding(horizontal = 32.dp)
+                    .padding(bottom = 16.dp)
                     .width(160.dp)
                     .height(24.dp)
                     .shimmerPlaceholder(isLoading = true, shape = RoundedCornerShape(4.dp))
             )
             LazyRow(
                 horizontalArrangement = Arrangement.spacedBy(16.dp),
-                contentPadding = PaddingValues(start = 24.dp, end = 24.dp)
+                contentPadding = PaddingValues(horizontal = 32.dp)
             ) {
                 items(4) {
                     Box(
@@ -68,20 +79,31 @@ fun BackdropsCarouselWidget(
 
     val data = state.data ?: return
 
+    val scrollState = rememberLazyListState()
+    val coroutineScope = rememberCoroutineScope()
+    val density = LocalDensity.current
+
+    val canScrollForward by remember { derivedStateOf { scrollState.canScrollForward } }
+    val canScrollBackward by remember { derivedStateOf { scrollState.canScrollBackward } }
+
+    val carouselInteractionSource = remember { MutableInteractionSource() }
+    val isCarouselHovered by carouselInteractionSource.collectIsHoveredAsState()
+
     Column(modifier = modifier.fillMaxWidth()) {
         Text(
             text = data.title,
-            color = Color.White,
-            style = MaterialTheme.typography.titleLarge.copy(
-                fontSize = 22.sp,
-                fontWeight = FontWeight.Bold
-            ),
-            modifier = Modifier.padding(start = 24.dp, end = 24.dp, bottom = 16.dp)
+            color = AvalonTheme.colors.textPrimary,
+            style = AvalonTheme.typography.sectionTitle,
+            modifier = Modifier.padding(horizontal = 32.dp).padding(bottom = 16.dp)
         )
 
-        BoxWithConstraints(modifier = Modifier.fillMaxWidth()) {
+        BoxWithConstraints(
+            modifier = Modifier
+                .fillMaxWidth()
+                .hoverable(carouselInteractionSource)
+        ) {
             val targetVisibleItems = 3.5f
-            val horizontalPadding = 48.dp // 24.dp * 2
+            val horizontalPadding = 64.dp // 32.dp * 2
             val spacingTotal = 16.dp * (targetVisibleItems.toInt())
             val calculatedWidth = (maxWidth - horizontalPadding - spacingTotal) / targetVisibleItems
             val cardWidth = calculatedWidth.coerceAtLeast(220.dp)
@@ -91,8 +113,9 @@ fun BackdropsCarouselWidget(
 
             val lazyRowContent: @Composable () -> Unit = {
                 LazyRow(
+                    state = scrollState,
                     horizontalArrangement = Arrangement.spacedBy(16.dp),
-                    contentPadding = PaddingValues(start = 24.dp, end = 24.dp, bottom = 8.dp)
+                    contentPadding = PaddingValues(horizontal = 32.dp, vertical = 4.dp)
                 ) {
                     itemsIndexed(data.items, key = { index, item -> "${item.key.id}_$index" }) { _, item ->
                         BackdropCard(
@@ -112,6 +135,38 @@ fun BackdropsCarouselWidget(
             } else {
                 lazyRowContent()
             }
+
+            // Кнопка НАЗАД (плавно проявляется при hover)
+            if (canScrollBackward && !state.isLoading) {
+                CarouselNavigationZone(isRight = false, isVisible = isCarouselHovered) {
+                    coroutineScope.launch {
+                        val layoutInfo = scrollState.layoutInfo
+                        val overlayWidthPx = with(density) { 72.dp.toPx() }
+                        val visibleRightEdge = layoutInfo.viewportEndOffset - overlayWidthPx
+                        val visibleItemsCount = layoutInfo.visibleItemsInfo.count { it.offset < visibleRightEdge }
+                        val itemsToScroll = (visibleItemsCount - 1).coerceAtLeast(1)
+                        val targetIndex = (scrollState.firstVisibleItemIndex - itemsToScroll).coerceAtLeast(0)
+                        scrollState.animateScrollToItem(targetIndex)
+                    }
+                }
+            }
+
+            // Кнопка ВПЕРЕД (плавно проявляется при hover)
+            if (canScrollForward && !state.isLoading) {
+                CarouselNavigationZone(isRight = true, isVisible = isCarouselHovered) {
+                    coroutineScope.launch {
+                        val layoutInfo = scrollState.layoutInfo
+                        val totalItems = layoutInfo.totalItemsCount
+                        if (totalItems == 0) return@launch
+                        val overlayWidthPx = with(density) { 72.dp.toPx() }
+                        val visibleRightEdge = layoutInfo.viewportEndOffset - overlayWidthPx
+                        val targetItem = layoutInfo.visibleItemsInfo.lastOrNull { it.offset < visibleRightEdge }
+                        val calculatedIndex = targetItem?.index ?: (scrollState.firstVisibleItemIndex + 1)
+                        val targetIndex = maxOf(scrollState.firstVisibleItemIndex + 1, calculatedIndex).coerceAtMost(totalItems - 1)
+                        scrollState.animateScrollToItem(targetIndex)
+                    }
+                }
+            }
         }
     }
 }
@@ -126,11 +181,6 @@ private fun BackdropCard(
 ) {
     var isActive by remember { mutableStateOf(false) }
 
-    val contentColor by animateColorAsState(
-        targetValue = if (isActive) MaterialTheme.colorScheme.primary else Color.White,
-        label = "Backdrop Card Title Color"
-    )
-
     Box(
         modifier = modifier
             .width(cardWidth)
@@ -140,18 +190,29 @@ private fun BackdropCard(
                 activeBorderColor = MaterialTheme.colorScheme.primary,
                 activeBorderWidth = 2.dp,
                 shape = RoundedCornerShape(12.dp),
-                onStateChange = { isActive = it }
-            ,
-    onClick = {
-                onAction(ActionNavigate(Screen.Details(item.key)))
-            })
-            
+                onStateChange = { isActive = it },
+                onClick = {
+                    onAction(ActionNavigate(Screen.Details(item.key)))
+                }
+            )
     ) {
         ShimmerImage(
             model = item.backdropUrl ?: item.posterUrl,
             contentDescription = item.title,
             contentScale = ContentScale.Crop,
+            shape = RoundedCornerShape(12.dp),
             modifier = Modifier.fillMaxSize()
+        )
+
+        // Внутренний волосковый контур 10% белого
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
+                .border(
+                    width = 1.dp,
+                    color = Color.White.copy(alpha = 0.10f),
+                    shape = RoundedCornerShape(12.dp)
+                )
         )
 
         androidx.compose.animation.AnimatedVisibility(
@@ -197,8 +258,7 @@ private fun BackdropCard(
                 Text(
                     text = item.title,
                     color = Color.White,
-                    fontSize = 14.sp,
-                    fontWeight = FontWeight.Bold,
+                    style = AvalonTheme.typography.cardTitle,
                     maxLines = 1,
                     overflow = TextOverflow.Ellipsis
                 )
@@ -210,7 +270,7 @@ private fun BackdropCard(
                 modifier = Modifier
                     .align(Alignment.BottomCenter)
                     .fillMaxWidth()
-                    .height(4.dp)
+                    .height(3.dp)
                     .background(MaterialTheme.colorScheme.primary)
             )
         }

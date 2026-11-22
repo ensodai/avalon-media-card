@@ -36,6 +36,7 @@ import org.ensodai.avalonmediacard.core.AppUpdateManager
 import org.ensodai.avalonmediacard.core.clearUrlQueryParameters
 import org.ensodai.avalonmediacard.core.getUrlQueryParameters
 import org.ensodai.avalonmediacard.data.AppSettingsStorage
+import org.ensodai.avalonmediacard.designsystem.theme.AvalonTheme
 import org.ensodai.avalonmediacard.data.TokenStorage
 import org.ensodai.avalonmediacard.data.UiModeOverride
 import org.ensodai.avalonmediacard.data.repository.GlobalManifestRepository
@@ -87,21 +88,21 @@ fun App() {
     }
 
     val customColorScheme = darkColorScheme(
-        background = AvalonColors.bgCanvas,            // #0B0B0D
-        surface = AvalonColors.bgSurface,              // #131316
-        surfaceVariant = AvalonColors.bgElevated,      // #1B1B1F
-        primary = AvalonColors.accentPrimary,          // #F2F2F4
-        onPrimary = AvalonColors.bgCanvas,             // #0B0B0D
-        primaryContainer = AvalonColors.bgElevated,    // #1B1B1F
-        onPrimaryContainer = AvalonColors.textPrimary, // #F2F2F4
-        secondary = AvalonColors.textPrimary,
-        secondaryContainer = AvalonColors.bgSurface,
-        onSecondaryContainer = AvalonColors.textSecondary,
-        onBackground = AvalonColors.textPrimary,
-        onSurface = AvalonColors.textPrimary,
-        onSurfaceVariant = AvalonColors.textSecondary,
-        outline = AvalonColors.borderSubtle,           // #232328
-        outlineVariant = AvalonColors.borderStrong     // #34343C
+        background = AvalonTheme.colors.bgCanvas,            // #0B0B0D
+        surface = AvalonTheme.colors.bgSurface,              // #131316
+        surfaceVariant = AvalonTheme.colors.bgElevated,      // #1B1B1F
+        primary = AvalonTheme.colors.accentPrimary,          // #F2F2F4
+        onPrimary = AvalonTheme.colors.bgCanvas,             // #0B0B0D
+        primaryContainer = AvalonTheme.colors.bgElevated,    // #1B1B1F
+        onPrimaryContainer = AvalonTheme.colors.textPrimary, // #F2F2F4
+        secondary = AvalonTheme.colors.textPrimary,
+        secondaryContainer = AvalonTheme.colors.bgSurface,
+        onSecondaryContainer = AvalonTheme.colors.textSecondary,
+        onBackground = AvalonTheme.colors.textPrimary,
+        onSurface = AvalonTheme.colors.textPrimary,
+        onSurfaceVariant = AvalonTheme.colors.textSecondary,
+        outline = AvalonTheme.colors.borderSubtle,           // #232328
+        outlineVariant = AvalonTheme.colors.borderStrong     // #34343C
     )
 
     key(currentLanguage) {

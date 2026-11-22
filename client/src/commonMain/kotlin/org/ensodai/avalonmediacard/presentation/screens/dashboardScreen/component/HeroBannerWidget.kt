@@ -1,7 +1,9 @@
 package org.ensodai.avalonmediacard.presentation.screens.dashboardScreen.component
 
 import androidx.compose.animation.core.animateFloatAsState
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.interaction.collectIsFocusedAsState
@@ -41,7 +43,9 @@ import org.ensodai.avalonmediacard.presentation.components.ShimmerImage
 import org.ensodai.avalonmediacard.presentation.components.shimmerPlaceholder
 import avalonmediacard.client.generated.resources.*
 import org.ensodai.avalonmediacard.presentation.core.SlotUiState
+import org.ensodai.avalonmediacard.presentation.screens.commonComponents.LocalDeviceTarget
 import org.ensodai.avalonmediacard.presentation.screens.commonComponents.tvAndWebHoverEffect
+import org.ensodai.avalonmediacard.presentation.theme.AvalonTheme
 import org.jetbrains.compose.resources.stringResource
 import kotlin.time.Duration.Companion.milliseconds
 import org.ensodai.avalonmediacard.contract.logging.AppLogging
@@ -183,47 +187,43 @@ fun HeroBannerWidget(
                         .fillMaxWidth(0.75f)
                 ) {
                     Text(
-                        text = data.title.uppercase(),
-                        color = MaterialTheme.colorScheme.primary,
-                        style = MaterialTheme.typography.labelLarge,
-                        letterSpacing = 2.sp,
-                        fontWeight = FontWeight.Bold
+                        text = data.title,
+                        color = AvalonTheme.colors.textSecondary,
+                        style = AvalonTheme.typography.uiLabel
                     )
                     Spacer(modifier = Modifier.height(8.dp))
                     Text(
                         text = currentItem.title,
-                        color = Color.White,
-                        fontSize = 40.sp,
-                        fontWeight = FontWeight.ExtraBold,
-                        lineHeight = 46.sp
+                        color = AvalonTheme.colors.textPrimary,
+                        style = AvalonTheme.typography.displayHero
                     )
                     data.subtitle?.let {
                         Spacer(modifier = Modifier.height(8.dp))
                         Text(
                             text = it,
-                            color = Color.White.copy(alpha = 0.75f),
-                            fontSize = 15.sp,
-                            fontWeight = FontWeight.Normal,
-                            lineHeight = 22.sp
+                            color = AvalonTheme.colors.textSecondary,
+                            style = AvalonTheme.typography.bodySynopsis
                         )
                     }
                 }
             }
         }
 
+        val isTv = LocalDeviceTarget.current.isTv
+
         // Кнопка навигации ВЛЕВО (<)
-        if (items.size > 1 && pagerState.currentPage > 0) {
+        if (!isTv && items.size > 1 && pagerState.currentPage > 0) {
             Box(
                 modifier = Modifier
                     .align(Alignment.CenterStart)
-                    .padding(start = 16.dp)
-                    .size(48.dp)
+                    .padding(start = 20.dp)
+                    .size(40.dp)
                     .clip(CircleShape)
-                    .background(Color.Black.copy(alpha = 0.4f))
+                    .background(AvalonTheme.colors.bgOverlay.copy(alpha = 0.85f))
+                    .border(1.dp, AvalonTheme.colors.borderStrong, CircleShape)
                     .tvAndWebHoverEffect(
-                        scaleTarget = 1.15f,
-                        activeBorderWidth = 1.dp,
-                        activeBorderColor = MaterialTheme.colorScheme.primary,
+                        scaleTarget = 1.0f,
+                        activeBorderColor = Color.Transparent,
                         shape = CircleShape,
                         onClick = {
                             scope.launch {
@@ -236,23 +236,25 @@ fun HeroBannerWidget(
                 Icon(
                     imageVector = Lucide.ChevronLeft,
                     contentDescription = stringResource(Res.string.dashboard_hero_prev_slide),
-                    tint = Color.White,
-                    modifier = Modifier.size(28.dp)
+                    tint = AvalonTheme.colors.textPrimary,
+                    modifier = Modifier.size(20.dp)
                 )
             }
+        }
 
-            // Кнопка навигации ВПРАВО (>)
+        // Кнопка навигации ВПРАВО (>)
+        if (!isTv && items.size > 1) {
             Box(
                 modifier = Modifier
                     .align(Alignment.CenterEnd)
-                    .padding(end = 16.dp)
-                    .size(48.dp)
+                    .padding(end = 20.dp)
+                    .size(40.dp)
                     .clip(CircleShape)
-                    .background(Color.Black.copy(alpha = 0.4f))
+                    .background(AvalonTheme.colors.bgOverlay.copy(alpha = 0.85f))
+                    .border(1.dp, AvalonTheme.colors.borderStrong, CircleShape)
                     .tvAndWebHoverEffect(
-                        scaleTarget = 1.15f,
-                        activeBorderWidth = 1.dp,
-                        activeBorderColor = MaterialTheme.colorScheme.primary,
+                        scaleTarget = 1.0f,
+                        activeBorderColor = Color.Transparent,
                         shape = CircleShape,
                         onClick = {
                             scope.launch {
@@ -265,8 +267,8 @@ fun HeroBannerWidget(
                 Icon(
                     imageVector = Lucide.ChevronRight,
                     contentDescription = stringResource(Res.string.dashboard_hero_next_slide),
-                    tint = Color.White,
-                    modifier = Modifier.size(28.dp)
+                    tint = AvalonTheme.colors.textPrimary,
+                    modifier = Modifier.size(20.dp)
                 )
             }
         }
@@ -283,14 +285,14 @@ fun HeroBannerWidget(
             ) {
                 // Текстовый счетчик 1 / 5
                 Surface(
-                    color = Color.Black.copy(alpha = 0.6f),
-                    shape = RoundedCornerShape(12.dp)
+                    color = AvalonTheme.colors.bgOverlay.copy(alpha = 0.85f),
+                    border = BorderStroke(1.dp, AvalonTheme.colors.borderStrong),
+                    shape = RoundedCornerShape(8.dp)
                 ) {
                     Text(
                         text = "${currentActualIndex + 1} / ${items.size}",
-                        color = Color.White,
-                        fontSize = 13.sp,
-                        fontWeight = FontWeight.Medium,
+                        color = AvalonTheme.colors.textSecondary,
+                        style = AvalonTheme.typography.metadata,
                         modifier = Modifier.padding(horizontal = 10.dp, vertical = 4.dp)
                     )
                 }
@@ -308,8 +310,8 @@ fun HeroBannerWidget(
                                 .width(if (isSelected) 18.dp else 6.dp)
                                 .clip(CircleShape)
                                 .background(
-                                    if (isSelected) MaterialTheme.colorScheme.primary
-                                    else Color.White.copy(alpha = 0.4f)
+                                    if (isSelected) AvalonTheme.colors.textPrimary
+                                    else AvalonTheme.colors.borderStrong
                                 )
                         )
                     }

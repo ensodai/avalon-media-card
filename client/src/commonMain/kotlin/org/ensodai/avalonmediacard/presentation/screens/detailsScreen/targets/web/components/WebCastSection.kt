@@ -1,14 +1,13 @@
 package org.ensodai.avalonmediacard.presentation.screens.detailsScreen.targets.web.components
 
-import androidx.compose.animation.animateColorAsState
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -16,11 +15,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalDensity
-import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import com.composables.icons.lucide.Lucide
 import com.composables.icons.lucide.User
 import kotlinx.coroutines.launch
@@ -29,10 +25,11 @@ import org.ensodai.avalonmediacard.contract.slot.ActionNavigate
 import org.ensodai.avalonmediacard.contract.slot.CastMemberItem
 import org.ensodai.avalonmediacard.contract.slot.SlotData
 import org.ensodai.avalonmediacard.contract.ui.navigation.Screen
+import org.ensodai.avalonmediacard.designsystem.components.AvalonPersonCard
+import org.ensodai.avalonmediacard.designsystem.theme.AvalonTheme
 import org.ensodai.avalonmediacard.presentation.components.ShimmerImage
 import org.ensodai.avalonmediacard.presentation.components.shimmerPlaceholder
 import org.ensodai.avalonmediacard.presentation.screens.commonComponents.CarouselNavigationZone
-import org.ensodai.avalonmediacard.presentation.screens.commonComponents.tvAndWebHoverEffect
 
 @Composable
 fun WebCastSection(
@@ -45,7 +42,6 @@ fun WebCastSection(
 
     val scrollState = rememberLazyListState()
     val coroutineScope = rememberCoroutineScope()
-    val density = LocalDensity.current
 
     val canScrollForward by remember { derivedStateOf { scrollState.canScrollForward } }
     val canScrollBackward by remember { derivedStateOf { scrollState.canScrollBackward } }
@@ -55,25 +51,12 @@ fun WebCastSection(
             .fillMaxWidth()
             .padding(vertical = 16.dp)
     ) {
-        // Section Title with Cineby style accent
-        Row(
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.spacedBy(8.dp),
-            modifier = Modifier.padding(bottom = 16.dp)
-        ) {
-            Box(
-                modifier = Modifier
-                    .width(3.dp)
-                    .height(18.dp)
-                    .background(Color.White, RoundedCornerShape(2.dp))
-            )
-            Text(
-                text = castData.title.ifBlank { "В главных ролях" },
-                fontSize = 18.sp,
-                fontWeight = FontWeight.Bold,
-                color = Color.White
-            )
-        }
+        // Section Title: clean typography without decorative bar accents
+        Text(
+            text = castData.title.ifBlank { "В главных ролях" },
+            style = AvalonTheme.typography.sectionTitle.copy(color = AvalonTheme.colors.textPrimary),
+            modifier = Modifier.padding(bottom = AvalonTheme.spacing.space16)
+        )
 
         Box(
             modifier = Modifier.fillMaxWidth(),
@@ -81,11 +64,11 @@ fun WebCastSection(
         ) {
             LazyRow(
                 state = scrollState,
-                horizontalArrangement = Arrangement.spacedBy(16.dp),
+                horizontalArrangement = Arrangement.spacedBy(12.dp),
                 modifier = Modifier.fillMaxWidth()
             ) {
                 if (isLoading) {
-                    items(6) { WebActorSkeletonCard() }
+                    items(7) { WebActorSkeletonCard() }
                 } else {
                     items(castData.members, key = { it.key.id }) { member ->
                         WebActorCard(
@@ -129,96 +112,57 @@ private fun WebActorCard(
     member: CastMemberItem,
     onAction: (Action) -> Unit
 ) {
-    var isHovered by remember { mutableStateOf(false) }
+    val photo = member.profileUrl?.takeIf { it.isNotBlank() && it != "placeholder" }
 
-    val nameColor by animateColorAsState(
-        targetValue = if (isHovered) Color.White else Color.White.copy(alpha = 0.9f)
+    AvalonPersonCard(
+        name = member.name,
+        role = member.character ?: "",
+        avatarSize = 64.dp,
+        onClick = {
+            onAction(ActionNavigate(Screen.Person(key = member.key, personName = member.name)))
+        },
+        avatarContent = if (photo != null) {
+            {
+                ShimmerImage(
+                    model = photo,
+                    contentDescription = member.name,
+                    contentScale = ContentScale.Crop,
+                    modifier = Modifier.fillMaxSize(),
+                    shape = CircleShape,
+                    errorIcon = Lucide.User,
+                    errorIconTint = AvalonTheme.colors.textMuted
+                )
+            }
+        } else null
     )
-    val roleColor by animateColorAsState(
-        targetValue = if (isHovered) Color.White.copy(alpha = 0.8f) else Color.White.copy(alpha = 0.5f)
-    )
-
-    Column(
-        modifier = Modifier.width(110.dp),
-        horizontalAlignment = Alignment.Start
-    ) {
-        Box(
-            modifier = Modifier
-                .fillMaxWidth()
-                .height(150.dp)
-                .tvAndWebHoverEffect(
-                    scaleTarget = 1.05f,
-                    activeBorderWidth = 2.dp,
-                    activeBorderColor = Color.White,
-                    shape = RoundedCornerShape(8.dp),
-                    onStateChange = { isHovered = it },
-                    onClick = {
-                        onAction(ActionNavigate(Screen.Person(key = member.key, personName = member.name)))
-                    }
-                ),
-            contentAlignment = Alignment.Center
-        ) {
-            ShimmerImage(
-                model = member.profileUrl.takeIf { !it.isNullOrEmpty() && it != "placeholder" },
-                contentDescription = member.name,
-                contentScale = ContentScale.Crop,
-                modifier = Modifier.fillMaxSize(),
-                shape = RoundedCornerShape(8.dp),
-                errorIcon = Lucide.User,
-                errorIconTint = Color.White.copy(alpha = 0.4f)
-            )
-        }
-
-        Spacer(modifier = Modifier.height(8.dp))
-
-        Text(
-            text = member.name,
-            fontSize = 13.sp,
-            maxLines = 2,
-            fontWeight = FontWeight.SemiBold,
-            color = nameColor,
-            lineHeight = 16.sp,
-            textAlign = TextAlign.Start
-        )
-
-        val role = member.character
-        if (!role.isNullOrEmpty()) {
-            Spacer(modifier = Modifier.height(2.dp))
-            Text(
-                text = role,
-                fontSize = 11.sp,
-                maxLines = 2,
-                overflow = TextOverflow.Ellipsis,
-                color = roleColor,
-                lineHeight = 14.sp,
-                textAlign = TextAlign.Start
-            )
-        }
-    }
 }
 
 @Composable
-private fun WebActorSkeletonCard() {
-    Column(modifier = Modifier.width(110.dp)) {
+private fun WebActorSkeletonCard(avatarSize: Dp = 64.dp) {
+    Column(
+        horizontalAlignment = Alignment.CenterHorizontally,
+        modifier = Modifier
+            .width(avatarSize + 48.dp)
+            .padding(AvalonTheme.spacing.space8)
+    ) {
         Box(
             modifier = Modifier
-                .fillMaxWidth()
-                .height(150.dp)
-                .shimmerPlaceholder(true, RoundedCornerShape(8.dp))
+                .size(avatarSize)
+                .shimmerPlaceholder(true, CircleShape)
         )
-        Spacer(modifier = Modifier.height(8.dp))
+        Spacer(Modifier.height(AvalonTheme.spacing.space8))
         Box(
             modifier = Modifier
-                .fillMaxWidth()
+                .width(avatarSize + 16.dp)
                 .height(14.dp)
-                .shimmerPlaceholder(true, RoundedCornerShape(4.dp))
+                .shimmerPlaceholder(true, AvalonTheme.shapes.micro)
         )
-        Spacer(modifier = Modifier.height(4.dp))
+        Spacer(Modifier.height(4.dp))
         Box(
             modifier = Modifier
-                .fillMaxWidth(0.7f)
+                .width(avatarSize)
                 .height(12.dp)
-                .shimmerPlaceholder(true, RoundedCornerShape(4.dp))
+                .shimmerPlaceholder(true, AvalonTheme.shapes.micro)
         )
     }
 }

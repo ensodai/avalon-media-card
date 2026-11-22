@@ -15,6 +15,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import org.ensodai.avalonmediacard.designsystem.components.AvalonBentoCard
 import org.ensodai.avalonmediacard.designsystem.components.AvalonIcon as Icon
 import org.ensodai.avalonmediacard.designsystem.components.AvalonSurface as Surface
 import org.ensodai.avalonmediacard.designsystem.components.AvalonText as Text
@@ -57,36 +58,20 @@ fun DecadesCard(
 
     var hoveredDecadeYear by remember { mutableStateOf<Int?>(null) }
 
-    Surface(
+    AvalonBentoCard(
+        title = stringResource(Res.string.stats_decades_title),
+        icon = {
+            Icon(
+                imageVector = Lucide.Calendar,
+                contentDescription = null,
+                tint = colors.textSecondary,
+                modifier = Modifier.size(16.dp)
+            )
+        },
         modifier = modifier.defaultMinSize(minHeight = 260.dp),
-        shape = shapes.container,
-        color = colors.bgSurface,
-        border = BorderStroke(1.dp, colors.borderSubtle)
+        contentPadding = 24.dp
     ) {
-        Column(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(24.dp)
-        ) {
-            // Заголовок категории
-            Row(verticalAlignment = Alignment.CenterVertically) {
-                Icon(
-                    imageVector = Lucide.Calendar,
-                    contentDescription = null,
-                    tint = colors.textSecondary,
-                    modifier = Modifier.size(16.dp)
-                )
-                Spacer(modifier = Modifier.width(8.dp))
-                Text(
-                    text = stringResource(Res.string.stats_decades_title),
-                    style = AvalonTheme.typography.sectionTitle,
-                    color = colors.textPrimary
-                )
-            }
-
-            Spacer(modifier = Modifier.height(20.dp))
-
-            if (decades.isEmpty() || decades.all { it.watchedCount == 0 }) {
+        if (decades.isEmpty() || decades.all { it.watchedCount == 0 }) {
                 Text(
                     text = stringResource(Res.string.stats_decades_empty),
                     style = AvalonTheme.typography.bodyMedium,
@@ -222,4 +207,3 @@ fun DecadesCard(
             }
         }
     }
-}

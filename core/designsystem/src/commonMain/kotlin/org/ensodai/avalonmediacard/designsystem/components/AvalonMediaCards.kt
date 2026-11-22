@@ -12,6 +12,7 @@ import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.text.BasicText
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -164,7 +165,45 @@ fun AvalonEpisodeCard(
 fun AvalonBentoCard(
     title: String,
     modifier: Modifier = Modifier,
+    icon: (@Composable () -> Unit)? = null,
     trailingHeader: (@Composable () -> Unit)? = null,
+    contentPadding: Dp = 20.dp,
+    content: @Composable ColumnScope.() -> Unit
+) {
+    val colors = AvalonTheme.colors
+
+    AvalonBentoCard(
+        modifier = modifier,
+        contentPadding = contentPadding
+    ) {
+        Row(
+            verticalAlignment = Alignment.CenterVertically,
+            modifier = Modifier.fillMaxWidth()
+        ) {
+            if (icon != null) {
+                icon()
+                Spacer(Modifier.width(8.dp))
+            }
+            BasicText(
+                text = title,
+                style = AvalonTheme.typography.sectionTitle.copy(color = colors.textPrimary),
+                maxLines = 1,
+                overflow = TextOverflow.Ellipsis,
+                modifier = Modifier.weight(1f)
+            )
+            trailingHeader?.invoke()
+        }
+        Spacer(Modifier.height(AvalonTheme.spacing.space16))
+        content()
+    }
+}
+
+/**
+ * Bento container without predefined header.
+ */
+@Composable
+fun AvalonBentoCard(
+    modifier: Modifier = Modifier,
     contentPadding: Dp = 20.dp,
     content: @Composable ColumnScope.() -> Unit
 ) {
@@ -178,20 +217,6 @@ fun AvalonBentoCard(
             .border(AvalonTheme.elevation.borderWidth, colors.borderSubtle, shape)
             .padding(contentPadding)
     ) {
-        Row(
-            verticalAlignment = Alignment.CenterVertically,
-            modifier = Modifier.fillMaxWidth()
-        ) {
-            BasicText(
-                text = title,
-                style = AvalonTheme.typography.sectionTitle.copy(color = colors.textPrimary),
-                maxLines = 1,
-                overflow = TextOverflow.Ellipsis,
-                modifier = Modifier.weight(1f)
-            )
-            trailingHeader?.invoke()
-        }
-        Spacer(Modifier.height(AvalonTheme.spacing.space16))
         content()
     }
 }

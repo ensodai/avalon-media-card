@@ -21,7 +21,10 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.BasicText
+import org.ensodai.avalonmediacard.designsystem.components.AvalonBentoCard
 import org.ensodai.avalonmediacard.designsystem.components.AvalonIcon as Icon
+import org.ensodai.avalonmediacard.designsystem.components.AvalonSegmentedControl
 import org.ensodai.avalonmediacard.designsystem.components.AvalonSurface as Surface
 import org.ensodai.avalonmediacard.designsystem.components.AvalonText as Text
 import androidx.compose.runtime.Composable
@@ -82,17 +85,10 @@ fun ActivityHeatmapCard(
     val colors = AvalonTheme.colors
     val shapes = AvalonTheme.shapes
 
-    Surface(
+    AvalonBentoCard(
         modifier = modifier.fillMaxWidth(),
-        shape = shapes.container,
-        color = colors.bgSurface,
-        border = BorderStroke(1.dp, colors.borderSubtle)
+        contentPadding = 24.dp
     ) {
-        Column(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(24.dp)
-        ) {
             // 1. Верхняя панель: Заголовок + компактные KPI слева, переключатель режимов справа
             Row(
                 modifier = Modifier.fillMaxWidth(),
@@ -200,24 +196,24 @@ fun ActivityHeatmapCard(
                     }
                 }
 
-                // Переключатель линз: форма control (10dp), фон bgElevated
-                Surface(
-                    shape = shapes.control,
-                    color = colors.bgElevated
-                ) {
-                    Row(modifier = Modifier.padding(2.dp)) {
-                        HeatmapTabPill(
-                            text = stringResource(Res.string.stats_heatmap_mode_volume),
-                            isSelected = lensMode == HeatmapLensMode.VOLUME,
-                            onClick = { lensMode = HeatmapLensMode.VOLUME }
-                        )
-                        HeatmapTabPill(
-                            text = stringResource(Res.string.stats_heatmap_mode_ratings),
-                            isSelected = lensMode == HeatmapLensMode.RATINGS,
-                            onClick = { lensMode = HeatmapLensMode.RATINGS }
+                // Переключатель линз: канонический концентрический AvalonSegmentedControl
+                AvalonSegmentedControl(
+                    items = listOf(HeatmapLensMode.VOLUME, HeatmapLensMode.RATINGS),
+                    selectedItem = lensMode,
+                    onItemSelected = { lensMode = it },
+                    itemLabel = { mode ->
+                        BasicText(
+                            text = when (mode) {
+                                HeatmapLensMode.VOLUME -> stringResource(Res.string.stats_heatmap_mode_volume)
+                                HeatmapLensMode.RATINGS -> stringResource(Res.string.stats_heatmap_mode_ratings)
+                            },
+                            style = AvalonTheme.typography.labelSmall.copy(
+                                color = if (mode == lensMode) AvalonTheme.colors.textPrimary else AvalonTheme.colors.textSecondary,
+                                fontWeight = if (mode == lensMode) FontWeight.SemiBold else FontWeight.Medium
+                            )
                         )
                     }
-                }
+                )
             }
 
             Spacer(modifier = Modifier.height(18.dp))
@@ -514,58 +510,6 @@ fun ActivityHeatmapCard(
             }
         }
     }
-}
-
-@Composable
-private fun HeatmapTabPill(
-    text: String,
-    isSelected: Boolean,
-    onClick: () -> Unit
-) {
-    val colors = AvalonTheme.colors
-    val shapes = AvalonTheme.shapes
-    var isHovered by remember { mutableStateOf(false) }
-
-    val animatedBg by animateColorAsState(
-        if (isSelected) {
-            colors.bgSurface
-        } else if (isHovered) {
-            colors.borderSubtle.copy(alpha = 0.4f)
-        } else {
-            Color.Transparent
-        }
-    )
-    val animatedTextColor by animateColorAsState(
-        if (isSelected || isHovered) colors.textPrimary else colors.textSecondary
-    )
-
-    Box(
-        modifier = Modifier
-            .clip(shapes.control)
-            .background(animatedBg)
-            .pointerHoverIcon(PointerIcon.Hand)
-            .pointerInput(Unit) {
-                awaitPointerEventScope {
-                    while (true) {
-                        val event = awaitPointerEvent()
-                        when (event.type) {
-                            PointerEventType.Enter, PointerEventType.Move -> isHovered = true
-                            PointerEventType.Exit -> isHovered = false
-                        }
-                    }
-                }
-            }
-            .clickable(onClick = onClick)
-            .padding(horizontal = 11.dp, vertical = 5.dp)
-    ) {
-        Text(
-            text = text,
-            style = AvalonTheme.typography.labelSmall,
-            fontWeight = if (isSelected) FontWeight.Bold else FontWeight.Medium,
-            color = animatedTextColor
-        )
-    }
-}
 
 @Composable
 private fun getMonthLabel(month: Int): String = when (month) {

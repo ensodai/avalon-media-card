@@ -12,6 +12,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import org.ensodai.avalonmediacard.designsystem.components.AvalonBentoCard
 import org.ensodai.avalonmediacard.designsystem.components.AvalonIcon as Icon
 import org.ensodai.avalonmediacard.designsystem.components.AvalonSurface as Surface
 import org.ensodai.avalonmediacard.designsystem.components.AvalonText as Text
@@ -66,96 +67,74 @@ fun ArchetypeCard(
     val colors = AvalonTheme.colors
     val shapes = AvalonTheme.shapes
 
-    Surface(
-        modifier = modifier.defaultMinSize(minHeight = 220.dp),
-        shape = shapes.container,
-        color = colors.bgSurface,
-        border = BorderStroke(1.dp, colors.borderSubtle)
-    ) {
-        Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(24.dp)
-        ) {
-            // Шапка карточки: категория + кнопка шеринга
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceBetween,
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                Row(verticalAlignment = Alignment.CenterVertically) {
-                    Icon(
-                        imageVector = Lucide.Clapperboard,
-                        contentDescription = null,
-                        tint = colors.textSecondary,
-                        modifier = Modifier.size(16.dp)
-                    )
-                    Spacer(modifier = Modifier.width(8.dp))
-                    Text(
-                        text = stringResource(Res.string.stats_archetype_badge),
-                        style = AvalonTheme.typography.sectionTitle,
-                        color = colors.textPrimary
-                    )
-                }
-
-                if (archetype != null) {
-                    Surface(
-                        onClick = onShare,
-                        shape = shapes.control,
-                        color = colors.bgElevated
+    AvalonBentoCard(
+        title = stringResource(Res.string.stats_archetype_badge),
+        icon = {
+            Icon(
+                imageVector = Lucide.Clapperboard,
+                contentDescription = null,
+                tint = colors.textSecondary,
+                modifier = Modifier.size(16.dp)
+            )
+        },
+        trailingHeader = if (archetype != null) {
+            {
+                Surface(
+                    onClick = onShare,
+                    shape = shapes.control,
+                    color = colors.bgElevated
+                ) {
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically,
+                        modifier = Modifier.padding(horizontal = 10.dp, vertical = 5.dp)
                     ) {
-                        Row(
-                            verticalAlignment = Alignment.CenterVertically,
-                            modifier = Modifier.padding(horizontal = 10.dp, vertical = 5.dp)
-                        ) {
-                            Icon(
-                                imageVector = Lucide.Share2,
-                                contentDescription = null,
-                                tint = colors.textSecondary,
-                                modifier = Modifier.size(12.dp)
-                            )
-                            Spacer(modifier = Modifier.width(6.dp))
-                            Text(
-                                text = stringResource(Res.string.stats_archetype_share),
-                                style = AvalonTheme.typography.labelSmall,
-                                fontWeight = FontWeight.SemiBold,
-                                color = colors.textPrimary
-                            )
-                        }
+                        Icon(
+                            imageVector = Lucide.Share2,
+                            contentDescription = null,
+                            tint = colors.textSecondary,
+                            modifier = Modifier.size(12.dp)
+                        )
+                        Spacer(modifier = Modifier.width(6.dp))
+                        Text(
+                            text = stringResource(Res.string.stats_archetype_share),
+                            style = AvalonTheme.typography.labelSmall,
+                            fontWeight = FontWeight.SemiBold,
+                            color = colors.textPrimary
+                        )
                     }
                 }
             }
+        } else null,
+        modifier = modifier.defaultMinSize(minHeight = 220.dp),
+        contentPadding = 24.dp
+    ) {
+        // Название архетипа
+        Text(
+            text = title,
+            style = AvalonTheme.typography.kpiTile,
+            color = colors.textPrimary
+        )
 
-            Spacer(modifier = Modifier.height(18.dp))
-
-            // Название архетипа
+        // Подзаголовок-наножанр
+        Spacer(modifier = Modifier.height(4.dp))
+        Surface(
+            shape = shapes.control,
+            color = colors.bgElevated
+        ) {
             Text(
-                text = title,
-                style = AvalonTheme.typography.kpiTile,
-                color = colors.textPrimary
-            )
-
-            // Подзаголовок-наножанр
-            Spacer(modifier = Modifier.height(4.dp))
-            Surface(
-                shape = shapes.control,
-                color = colors.bgElevated
-            ) {
-                Text(
-                    text = subtitle,
-                    style = AvalonTheme.typography.metadata,
-                    color = colors.textSecondary,
-                    modifier = Modifier.padding(horizontal = 10.dp, vertical = 4.dp)
-                )
-            }
-
-            Spacer(modifier = Modifier.height(12.dp))
-
-            Text(
-                text = description,
-                style = AvalonTheme.typography.bodySynopsis,
-                color = colors.textSecondary
+                text = subtitle,
+                style = AvalonTheme.typography.metadata,
+                color = colors.textSecondary,
+                modifier = Modifier.padding(horizontal = 10.dp, vertical = 4.dp)
             )
         }
+
+        Spacer(modifier = Modifier.height(12.dp))
+
+        Text(
+            text = description,
+            style = AvalonTheme.typography.bodySynopsis,
+            color = colors.textSecondary
+        )
     }
 }

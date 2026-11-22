@@ -15,6 +15,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import org.ensodai.avalonmediacard.designsystem.components.AvalonBentoCard
 import org.ensodai.avalonmediacard.designsystem.components.AvalonIcon as Icon
 import org.ensodai.avalonmediacard.designsystem.components.AvalonSurface as Surface
 import org.ensodai.avalonmediacard.designsystem.components.AvalonText as Text
@@ -67,63 +68,41 @@ fun RatingDistributionCard(
     val colors = AvalonTheme.colors
     val shapes = AvalonTheme.shapes
 
-    Surface(
-        modifier = modifier.defaultMinSize(minHeight = 260.dp),
-        shape = shapes.container,
-        color = colors.bgSurface,
-        border = BorderStroke(1.dp, colors.borderSubtle)
-    ) {
-        Column(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(24.dp)
-        ) {
-            // Заголовок категории и средний балл
-            Row(
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.SpaceBetween,
-                modifier = Modifier.fillMaxWidth()
-            ) {
+    AvalonBentoCard(
+        title = stringResource(Res.string.stats_ratings_title),
+        icon = {
+            Icon(
+                imageVector = Lucide.Star,
+                contentDescription = null,
+                tint = colors.accentGold,
+                modifier = Modifier.size(16.dp)
+            )
+        },
+        trailingHeader = if (avg != null) {
+            {
                 Row(verticalAlignment = Alignment.CenterVertically) {
                     Icon(
                         imageVector = Lucide.Star,
                         contentDescription = null,
                         tint = colors.accentGold,
-                        modifier = Modifier.size(16.dp)
+                        modifier = Modifier.size(14.dp)
                     )
-                    Spacer(modifier = Modifier.width(8.dp))
+                    Spacer(modifier = Modifier.width(4.dp))
                     Text(
-                        text = stringResource(Res.string.stats_ratings_title),
-                        style = AvalonTheme.typography.sectionTitle,
+                        text = ((avg * 10).toInt() / 10.0).toString(),
+                        style = AvalonTheme.typography.uiLabel.copy(
+                            fontFeatureSettings = "tnum"
+                        ),
+                        fontWeight = FontWeight.Bold,
                         color = colors.textPrimary
                     )
                 }
-
-                if (avg != null) {
-                    // Чистая типографика среднего балла: золотая звезда + число с tnum без псевдокнопки
-                    Row(verticalAlignment = Alignment.CenterVertically) {
-                        Icon(
-                            imageVector = Lucide.Star,
-                            contentDescription = null,
-                            tint = colors.accentGold,
-                            modifier = Modifier.size(14.dp)
-                        )
-                        Spacer(modifier = Modifier.width(4.dp))
-                        Text(
-                            text = ((avg * 10).toInt() / 10.0).toString(),
-                            style = AvalonTheme.typography.uiLabel.copy(
-                                fontFeatureSettings = "tnum"
-                            ),
-                            fontWeight = FontWeight.Bold,
-                            color = colors.textPrimary
-                        )
-                    }
-                }
             }
-
-            Spacer(modifier = Modifier.height(20.dp))
-
-            // Гистограмма 1..10 по Тафти: серые столбцы + один золотой пик (accentGold)
+        } else null,
+        modifier = modifier.defaultMinSize(minHeight = 260.dp),
+        contentPadding = 24.dp
+    ) {
+        // Гистограмма 1..10 по Тафти: серые столбцы + один золотой пик (accentGold)
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -259,6 +238,5 @@ fun RatingDistributionCard(
                 style = AvalonTheme.typography.bodySmall,
                 color = colors.textSecondary
             )
-        }
     }
 }

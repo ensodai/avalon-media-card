@@ -16,6 +16,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import org.ensodai.avalonmediacard.designsystem.components.AvalonBentoCard
 import org.ensodai.avalonmediacard.designsystem.components.AvalonIcon as Icon
 import org.ensodai.avalonmediacard.designsystem.components.AvalonSurface as Surface
 import org.ensodai.avalonmediacard.designsystem.components.AvalonText as Text
@@ -72,11 +73,9 @@ fun GenreDnaCard(
 
     var hoveredGenreId by remember { mutableStateOf<Int?>(null) }
 
-    Surface(
+    AvalonBentoCard(
         modifier = modifier.defaultMinSize(minHeight = 260.dp),
-        shape = shapes.container,
-        color = colors.bgSurface,
-        border = BorderStroke(1.dp, colors.borderSubtle)
+        contentPadding = 0.dp
     ) {
         Column(
             modifier = Modifier

@@ -44,6 +44,7 @@ import avalonmediacard.client.generated.resources.*
 import org.ensodai.avalonmediacard.presentation.core.SlotUiState
 import org.ensodai.avalonmediacard.presentation.screens.commonComponents.LocalDeviceTarget
 import org.ensodai.avalonmediacard.presentation.screens.commonComponents.tvAndWebHoverEffect
+import org.ensodai.avalonmediacard.designsystem.theme.AvalonGradients
 import org.ensodai.avalonmediacard.designsystem.theme.AvalonTheme
 import org.jetbrains.compose.resources.stringResource
 import kotlin.time.Duration.Companion.milliseconds
@@ -161,19 +162,14 @@ fun HeroBannerWidget(
                         }
                 )
 
-                // Темный градиент снизу для читаемости текста
+                // Obsidian Cinema Law 6: Easing Scrims с нелинейными кривыми Ларсена для растворения в bgCanvas
                 Box(
                     modifier = Modifier
                         .fillMaxSize()
                         .background(
-                            Brush.verticalGradient(
-                                colorStops = arrayOf(
-                                    0.0f to Color.Transparent,
-                                    0.3f to Color.Black.copy(alpha = 0.2f),
-                                    0.6f to Color.Black.copy(alpha = 0.7f),
-                                    0.85f to Color.Black,
-                                    1.0f to Color.Black
-                                )
+                            AvalonGradients.larsenVerticalScrim(
+                                color = AvalonTheme.colors.bgCanvas,
+                                maxAlpha = 1.0f
                             )
                         )
                 )

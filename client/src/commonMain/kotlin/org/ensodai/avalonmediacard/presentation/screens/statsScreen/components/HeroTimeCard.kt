@@ -22,6 +22,8 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import org.ensodai.avalonmediacard.designsystem.components.AvalonBentoCard
+import org.ensodai.avalonmediacard.designsystem.components.AvalonDialog
 import org.ensodai.avalonmediacard.designsystem.components.AvalonIcon as Icon
 import org.ensodai.avalonmediacard.designsystem.components.AvalonIconButton as IconButton
 import org.ensodai.avalonmediacard.designsystem.components.AvalonSurface as Surface
@@ -184,17 +186,10 @@ fun HeroTimeCard(
         label = "shows_dot_size"
     )
 
-    Surface(
+    AvalonBentoCard(
         modifier = modifier.defaultMinSize(minHeight = 220.dp),
-        shape = shapes.container,
-        color = colors.bgSurface,
-        border = BorderStroke(1.dp, colors.borderSubtle)
+        contentPadding = 24.dp
     ) {
-        Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(24.dp)
-        ) {
             // Верхний ряд: категория + интерактивный бейдж майлстоуна
             Row(
                 verticalAlignment = Alignment.CenterVertically,
@@ -430,7 +425,6 @@ fun HeroTimeCard(
                 }
             }
         }
-    }
 
     // Модальный диалог всех экранных майлстоунов
     if (isMilestonesDialogOpen) {

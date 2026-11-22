@@ -20,6 +20,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
+import org.ensodai.avalonmediacard.designsystem.components.AvalonBentoCard
 import org.ensodai.avalonmediacard.designsystem.components.AvalonIcon as Icon
 import org.ensodai.avalonmediacard.designsystem.components.AvalonSurface as Surface
 import org.ensodai.avalonmediacard.designsystem.components.AvalonText as Text
@@ -128,36 +129,20 @@ fun LibraryCountersCard(
         return "$pct%"
     }
 
-    Surface(
+    AvalonBentoCard(
+        title = stringResource(Res.string.stats_library_title),
+        icon = {
+            Icon(
+                imageVector = Lucide.Folder,
+                contentDescription = null,
+                tint = colors.textSecondary,
+                modifier = Modifier.size(16.dp)
+            )
+        },
         modifier = modifier.defaultMinSize(minHeight = 160.dp),
-        shape = shapes.container,
-        color = colors.bgSurface,
-        border = BorderStroke(1.dp, colors.borderSubtle)
+        contentPadding = 24.dp
     ) {
-        Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(24.dp)
-        ) {
-            // Заголовок категории
-            Row(verticalAlignment = Alignment.CenterVertically) {
-                Icon(
-                    imageVector = Lucide.Folder,
-                    contentDescription = null,
-                    tint = colors.textSecondary,
-                    modifier = Modifier.size(16.dp)
-                )
-                Spacer(modifier = Modifier.width(8.dp))
-                Text(
-                    text = stringResource(Res.string.stats_library_title),
-                    style = AvalonTheme.typography.sectionTitle,
-                    color = colors.textPrimary
-                )
-            }
-
-            Spacer(modifier = Modifier.height(18.dp))
-
-            // Основные KPI: Фильмы, Серии, Сериалы (Фильмы и Сериалы работают как переключатели)
+        // Основные KPI: Фильмы, Серии, Сериалы (Фильмы и Сериалы работают как переключатели)
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.spacedBy(10.dp)
@@ -357,7 +342,6 @@ fun LibraryCountersCard(
             }
         }
     }
-}
 
 @Composable
 private fun LibrarySegmentTab(

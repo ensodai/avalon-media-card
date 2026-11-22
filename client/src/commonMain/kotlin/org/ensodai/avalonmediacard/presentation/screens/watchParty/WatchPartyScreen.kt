@@ -269,7 +269,7 @@ fun WatchPartyScreen(
             }
         },
         callerFocusRequester = callerFocusRequester,
-        scrimColor = if (isTv) AvalonTheme.colors.background else Color.Black.copy(alpha = 0.85f),
+        scrimColor = if (isTv) AvalonTheme.colors.bgCanvas else AvalonTheme.colors.bgCanvas.copy(alpha = 0.85f),
     ) {
         if (state.isTestingSource && effectiveMediaKey != null) {
             PlayerScreen(

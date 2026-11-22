@@ -86,7 +86,7 @@ fun WatchPartySetupTv(
     Box(
         modifier = modifier
             .fillMaxSize()
-            .background(AvalonTheme.colors.background)
+            .background(AvalonTheme.colors.bgCanvas)
     ) {
         // Кнопка «Назад» в левом верхнем углу
         Box(

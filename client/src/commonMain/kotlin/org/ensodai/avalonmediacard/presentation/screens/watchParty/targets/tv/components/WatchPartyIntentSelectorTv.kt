@@ -93,7 +93,9 @@ fun WatchPartyIntentSelectorTv(
             verticalArrangement = Arrangement.spacedBy(8.dp)
         ) {
             val chunked = intents.chunked(3)
-            val intentShape = RoundedCornerShape(12.dp)
+            val intentShape = AvalonTheme.shapes.control
+            val activeBorderColor = AvalonTheme.colors.borderFocus
+            val accentColor = AvalonTheme.colors.accentPrimary
 
             chunked.forEach { rowIntents ->
                 Row(
@@ -102,7 +104,6 @@ fun WatchPartyIntentSelectorTv(
                 ) {
                     rowIntents.forEach { intent ->
                         val isSelected = isReady && selectedIntent == intent
-                        val activeBorderColor = AvalonTheme.colors.primary
 
                         Box(
                             modifier = Modifier
@@ -111,15 +112,15 @@ fun WatchPartyIntentSelectorTv(
                                 .tvAndWebHoverEffect(
                                     scaleTarget = 1.05f,
                                     shape = intentShape,
-                                    activeBorderWidth = 2.dp,
+                                    activeBorderWidth = AvalonTheme.elevation.focusBorderWidth,
                                     activeBorderColor = activeBorderColor,
-                                    defaultBorderWidth = if (isSelected) 1.5.dp else 1.dp,
-                                    defaultBorderColor = if (isSelected) activeBorderColor else Color.White.copy(alpha = 0.12f),
+                                    defaultBorderWidth = if (isSelected) AvalonTheme.elevation.focusBorderWidth else AvalonTheme.elevation.borderWidth,
+                                    defaultBorderColor = if (isSelected) accentColor else AvalonTheme.colors.borderSubtle,
                                     onClick = { onSelectIntent(intent) }
                                 )
                                 .background(
-                                    if (isSelected) activeBorderColor.copy(alpha = 0.25f)
-                                    else Color.White.copy(alpha = 0.05f),
+                                    if (isSelected) accentColor.copy(alpha = 0.25f)
+                                    else AvalonTheme.colors.bgElevated,
                                     intentShape
                                 )
                                 .padding(horizontal = 8.dp),

@@ -3,21 +3,19 @@ package org.ensodai.avalonmediacard.presentation.screens.watchParty.targets.web.
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.shape.RoundedCornerShape
-import org.ensodai.avalonmediacard.designsystem.components.AvalonIcon as Icon
-import org.ensodai.avalonmediacard.designsystem.components.AvalonText as Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import avalonmediacard.client.generated.resources.*
 import com.composables.icons.lucide.Check
 import com.composables.icons.lucide.Lucide
 import com.composables.icons.lucide.Users
+import org.ensodai.avalonmediacard.designsystem.components.AvalonIcon as Icon
+import org.ensodai.avalonmediacard.designsystem.components.AvalonText as Text
+import org.ensodai.avalonmediacard.designsystem.theme.AvalonTheme
 import org.jetbrains.compose.resources.stringResource
 
 @Composable
@@ -26,17 +24,23 @@ fun WatchPartyReadinessBanner(
     totalCount: Int,
     modifier: Modifier = Modifier
 ) {
+    val colors = AvalonTheme.colors
+    val shapes = AvalonTheme.shapes
+    val elevation = AvalonTheme.elevation
+    val typography = AvalonTheme.typography
+
     val isAllReady = totalCount > 0 && readyCount == totalCount
+    val statusColor = if (isAllReady) colors.statusLive else colors.statusWarn
 
     Row(
         modifier = modifier
             .fillMaxWidth()
-            .clip(RoundedCornerShape(12.dp))
-            .background(if (isAllReady) Color(0xFF4CAF50).copy(alpha = 0.12f) else Color(0xFFFFB74D).copy(alpha = 0.1f))
+            .clip(shapes.container)
+            .background(statusColor.copy(alpha = 0.12f))
             .border(
-                1.dp,
-                if (isAllReady) Color(0xFF4CAF50).copy(alpha = 0.3f) else Color(0xFFFFB74D).copy(alpha = 0.25f),
-                RoundedCornerShape(12.dp)
+                elevation.borderWidth,
+                statusColor.copy(alpha = 0.28f),
+                shapes.container
             )
             .padding(horizontal = 16.dp, vertical = 10.dp),
         verticalAlignment = Alignment.CenterVertically,
@@ -45,7 +49,7 @@ fun WatchPartyReadinessBanner(
         Icon(
             imageVector = if (isAllReady) Lucide.Check else Lucide.Users,
             contentDescription = null,
-            tint = if (isAllReady) Color(0xFF4CAF50) else Color(0xFFFFB74D),
+            tint = statusColor,
             modifier = Modifier.size(16.dp)
         )
         Text(
@@ -54,9 +58,9 @@ fun WatchPartyReadinessBanner(
             } else {
                 stringResource(Res.string.watch_party_ready_counter_waiting, readyCount, totalCount)
             },
+            style = typography.uiLabel,
             fontSize = 12.sp,
-            fontWeight = FontWeight.Medium,
-            color = if (isAllReady) Color(0xFF81C784) else Color(0xFFFFCC80)
+            color = statusColor
         )
     }
 }

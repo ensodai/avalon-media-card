@@ -87,7 +87,7 @@ fun WatchPartyLobbyTv(
     Box(
         modifier = modifier
             .fillMaxSize()
-            .background(AvalonTheme.colors.background)
+            .background(AvalonTheme.colors.bgCanvas)
     ) {
         // 1. Полноэкранный кинематографичный бэкдроп
         if (!backdropUrl.isNullOrBlank()) {
@@ -159,9 +159,9 @@ fun WatchPartyLobbyTv(
                 if (!joinPin.isNullOrBlank()) {
                     Box(
                         modifier = Modifier
-                            .clip(RoundedCornerShape(12.dp))
+                            .clip(AvalonTheme.shapes.control)
                             .background(Color.White.copy(alpha = 0.06f))
-                            .border(1.dp, AvalonTheme.colors.primary.copy(alpha = 0.5f), RoundedCornerShape(12.dp))
+                            .border(AvalonTheme.elevation.borderWidth, AvalonTheme.colors.accentPrimary.copy(alpha = 0.5f), AvalonTheme.shapes.control)
                             .padding(horizontal = 14.dp, vertical = 8.dp)
                     ) {
                         Row(
@@ -177,9 +177,10 @@ fun WatchPartyLobbyTv(
                             )
                             Text(
                                 text = "${joinPin.take(3)} ${joinPin.takeLast(3)}",
+                                style = AvalonTheme.typography.monoTech,
                                 fontSize = 18.sp,
                                 fontWeight = FontWeight.ExtraBold,
-                                color = AvalonTheme.colors.primary,
+                                color = AvalonTheme.colors.accentPrimary,
                                 letterSpacing = 2.sp
                             )
                         }
@@ -300,7 +301,7 @@ fun WatchPartyLobbyTv(
 
                 // Главная кнопка старта для хоста или переключатель готовности для участника
                 if (state.isHost) {
-                    val startShape = RoundedCornerShape(14.dp)
+                    val startShape = AvalonTheme.shapes.control
                     Row(
                         modifier = Modifier
                             .weight(1f)
@@ -308,8 +309,8 @@ fun WatchPartyLobbyTv(
                             .tvAndWebHoverEffect(
                                 scaleTarget = 1.03f,
                                 shape = startShape,
-                                activeBorderWidth = 2.dp,
-                                activeBorderColor = AvalonTheme.colors.primary,
+                                activeBorderWidth = AvalonTheme.elevation.focusBorderWidth,
+                                activeBorderColor = AvalonTheme.colors.borderFocus,
                                 onClick = actions.onStartPlayback
                             )
                             .background(Color.White, startShape),

@@ -1,12 +1,8 @@
 package org.ensodai.avalonmediacard.presentation.screens.watchParty.targets.web.components
 
-import org.ensodai.avalonmediacard.designsystem.theme.AvalonTheme
-
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.foundation.shape.RoundedCornerShape
-import org.ensodai.avalonmediacard.designsystem.components.AvalonText as Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
@@ -20,6 +16,8 @@ import avalonmediacard.client.generated.resources.*
 import org.ensodai.avalonmediacard.contract.model.WatchParticipantIntent
 import org.ensodai.avalonmediacard.contract.model.WatchRoomParticipantDto
 import org.ensodai.avalonmediacard.contract.model.WatchRoomParticipantRole
+import org.ensodai.avalonmediacard.designsystem.components.AvalonText as Text
+import org.ensodai.avalonmediacard.designsystem.theme.AvalonTheme
 import org.jetbrains.compose.resources.StringResource
 import org.jetbrains.compose.resources.stringResource
 
@@ -57,24 +55,23 @@ private fun rememberParticipantVisualState(
     isHost: Boolean,
     isReady: Boolean
 ): ParticipantVisualState {
-    val primaryColor = AvalonTheme.colors.primary
-    val successColor = Color(0xFF4CAF50)
+    val colors = AvalonTheme.colors
 
-    return remember(isOnline, isHost, isReady, primaryColor) {
+    return remember(isOnline, isHost, isReady, colors) {
         val rowAlpha = if (isOnline) 1f else 0.5f
         val avatarBg = when {
-            !isOnline -> Color.White.copy(alpha = 0.12f)
-            isHost -> primaryColor
-            else -> Color.White.copy(alpha = 0.2f)
+            !isOnline -> colors.bgElevated
+            isHost -> colors.accentPrimary
+            else -> colors.bgSurface
         }
-        val readyBg = if (isReady) successColor.copy(alpha = 0.15f) else Color.White.copy(alpha = 0.06f)
-        val readyText = if (isReady) successColor else Color.White.copy(alpha = 0.45f)
+        val readyBg = if (isReady) colors.statusLive.copy(alpha = 0.15f) else colors.bgElevated
+        val readyText = if (isReady) colors.statusLive else colors.textSecondary
 
         ParticipantVisualState(
             rowAlpha = rowAlpha,
-            rowBackground = Color.White.copy(alpha = if (isOnline) 0.04f else 0.02f),
+            rowBackground = colors.bgElevated.copy(alpha = if (isOnline) 0.6f else 0.3f),
             avatarBackground = avatarBg,
-            avatarTextColor = Color.White.copy(alpha = rowAlpha),
+            avatarTextColor = colors.textPrimary.copy(alpha = rowAlpha),
             isOnlineIndicatorVisible = isOnline,
             readyBadgeBackground = readyBg,
             readyBadgeTextColor = readyText
@@ -87,6 +84,10 @@ fun WatchPartyParticipantItem(
     participant: WatchRoomParticipantDto,
     modifier: Modifier = Modifier
 ) {
+    val colors = AvalonTheme.colors
+    val shapes = AvalonTheme.shapes
+    val typography = AvalonTheme.typography
+
     val isHost = participant.role == WatchRoomParticipantRole.HOST
     val isOnline = participant.isOnline
     val isReady = participant.isReady
@@ -96,7 +97,7 @@ fun WatchPartyParticipantItem(
     Row(
         modifier = modifier
             .fillMaxWidth()
-            .clip(RoundedCornerShape(10.dp))
+            .clip(shapes.control)
             .background(visualState.rowBackground)
             .padding(horizontal = 14.dp, vertical = 8.dp),
         verticalAlignment = Alignment.CenterVertically,
@@ -120,6 +121,7 @@ fun WatchPartyParticipantItem(
                 ) {
                     Text(
                         text = participant.username.take(1).uppercase(),
+                        style = typography.uiLabel,
                         fontSize = 12.sp,
                         fontWeight = FontWeight.Bold,
                         color = visualState.avatarTextColor
@@ -133,7 +135,7 @@ fun WatchPartyParticipantItem(
                             .align(Alignment.BottomEnd)
                             .size(8.dp)
                             .clip(CircleShape)
-                            .background(Color(0xFF4CAF50))
+                            .background(colors.statusLive)
                     )
                 }
             }
@@ -145,23 +147,22 @@ fun WatchPartyParticipantItem(
                 ) {
                     Text(
                         text = participant.username,
-                        fontSize = 13.sp,
-                        fontWeight = FontWeight.SemiBold,
-                        color = Color.White.copy(alpha = visualState.rowAlpha)
+                        style = typography.uiLabel,
+                        color = colors.textPrimary.copy(alpha = visualState.rowAlpha)
                     )
                     if (isHost) {
                         Text(
                             text = "👑 " + stringResource(Res.string.watch_party_host_badge),
-                            fontSize = 11.sp,
+                            style = typography.microCaption,
                             fontWeight = FontWeight.Bold,
-                            color = Color(0xFFFFD700)
+                            color = colors.accentGold
                         )
                     }
                     if (!isOnline) {
                         Text(
                             text = "• " + stringResource(Res.string.watch_party_participant_offline),
-                            fontSize = 11.sp,
-                            color = Color.White.copy(alpha = 0.4f)
+                            style = typography.microCaption,
+                            color = colors.textMuted
                         )
                     }
                 }
@@ -171,8 +172,9 @@ fun WatchPartyParticipantItem(
                     } else {
                         stringResource(Res.string.watch_party_participant_waiting)
                     },
+                    style = typography.metadata,
                     fontSize = 11.sp,
-                    color = Color.White.copy(alpha = if (isOnline) 0.65f else 0.35f)
+                    color = if (isOnline) colors.textSecondary else colors.textMuted
                 )
             }
         }
@@ -180,14 +182,13 @@ fun WatchPartyParticipantItem(
         // Индикатор готовности
         Box(
             modifier = Modifier
-                .clip(RoundedCornerShape(6.dp))
+                .clip(shapes.micro)
                 .background(visualState.readyBadgeBackground)
                 .padding(horizontal = 8.dp, vertical = 4.dp)
         ) {
             Text(
                 text = if (isReady) stringResource(Res.string.watch_party_ready_status_ready) else stringResource(Res.string.watch_party_ready_status_not_ready),
-                fontSize = 11.sp,
-                fontWeight = FontWeight.Medium,
+                style = typography.microCaption,
                 color = visualState.readyBadgeTextColor
             )
         }

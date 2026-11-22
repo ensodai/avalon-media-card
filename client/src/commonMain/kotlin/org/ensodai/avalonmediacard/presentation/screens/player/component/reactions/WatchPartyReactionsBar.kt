@@ -54,6 +54,9 @@ fun WatchPartyReactionsControl(
 ) {
     var isExpanded by remember { mutableStateOf(false) }
 
+    val colors = AvalonTheme.colors
+    val elevation = AvalonTheme.elevation
+
     Row(
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.spacedBy(8.dp),
@@ -64,20 +67,20 @@ fun WatchPartyReactionsControl(
                 .size(42.dp)
                 .clip(CircleShape)
                 .background(
-                    if (isExpanded) AvalonTheme.colors.primary.copy(alpha = 0.35f)
-                    else Color.Black.copy(alpha = 0.65f)
+                    if (isExpanded) colors.accentPrimary.copy(alpha = 0.35f)
+                    else colors.bgOverlay
                 )
                 .border(
-                    width = 1.dp,
-                    color = if (isExpanded) AvalonTheme.colors.primary.copy(alpha = 0.60f)
-                    else Color.White.copy(alpha = 0.10f),
+                    width = elevation.borderWidth,
+                    color = if (isExpanded) colors.accentPrimary.copy(alpha = 0.60f)
+                    else colors.borderOverlay,
                     shape = CircleShape
                 )
                 .tvAndWebHoverEffect(
                     scaleTarget = 1.08f,
                     shape = CircleShape,
-                    activeBorderColor = AvalonTheme.colors.primary,
-                    activeBorderWidth = 1.5.dp,
+                    activeBorderColor = colors.borderFocus,
+                    activeBorderWidth = elevation.borderWidth,
                     defaultBorderColor = Color.Transparent,
                     defaultBorderWidth = 0.dp,
                     onClick = { isExpanded = !isExpanded }
@@ -88,7 +91,7 @@ fun WatchPartyReactionsControl(
             Icon(
                 imageVector = Lucide.Smile,
                 contentDescription = "Reactions",
-                tint = if (isExpanded) AvalonTheme.colors.primary else Color.White,
+                tint = if (isExpanded) colors.accentPrimary else colors.textPrimary,
                 modifier = Modifier.size(20.dp)
             )
         }
@@ -113,6 +116,9 @@ fun WatchPartyReactionsBar(
     firstItemFocusRequester: FocusRequester? = null,
     onDismissRequest: (() -> Unit)? = null
 ) {
+    val colors = AvalonTheme.colors
+    val elevation = AvalonTheme.elevation
+
     AnimatedVisibility(
         visible = isVisible,
         enter = fadeIn() + scaleIn(initialScale = 0.85f),
@@ -148,8 +154,8 @@ fun WatchPartyReactionsBar(
                         .tvAndWebHoverEffect(
                             scaleTarget = 1.30f,
                             shape = CircleShape,
-                            activeBorderColor = AvalonTheme.colors.primary,
-                            activeBorderWidth = 2.dp,
+                            activeBorderColor = colors.borderFocus,
+                            activeBorderWidth = elevation.focusBorderWidth,
                             onClick = { onSendReaction(emoji) }
                         ),
                     contentAlignment = Alignment.Center

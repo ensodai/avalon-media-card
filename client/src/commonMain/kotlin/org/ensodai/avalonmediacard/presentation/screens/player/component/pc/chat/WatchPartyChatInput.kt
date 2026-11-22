@@ -84,7 +84,7 @@ fun WatchPartyChatInput(
                     color = Color.White,
                     fontSize = 13.sp
                 ),
-                cursorBrush = SolidColor(AvalonTheme.colors.primary),
+                cursorBrush = SolidColor(AvalonTheme.colors.accentPrimary),
                 maxLines = 3,
                 keyboardOptions = KeyboardOptions(imeAction = ImeAction.Send),
                 keyboardActions = KeyboardActions(onSend = { onSendMessage() }),
@@ -120,13 +120,13 @@ fun WatchPartyChatInput(
                 .size(32.dp)
                 .clip(CircleShape)
                 .background(
-                    if (canSend) AvalonTheme.colors.primary else Color.White.copy(alpha = 0.08f)
+                    if (canSend) AvalonTheme.colors.accentPrimary else AvalonTheme.colors.bgElevated
                 )
                 .tvAndWebHoverEffect(
                     scaleTarget = 1.15f,
                     shape = CircleShape,
-                    activeBorderColor = if (canSend) AvalonTheme.colors.primary else Color.White.copy(alpha = 0.20f),
-                    activeBorderWidth = 1.5.dp,
+                    activeBorderColor = if (canSend) AvalonTheme.colors.borderFocus else AvalonTheme.colors.borderSubtle,
+                    activeBorderWidth = AvalonTheme.elevation.borderWidth,
                     defaultBorderColor = Color.Transparent,
                     defaultBorderWidth = 0.dp,
                     clickEnabled = canSend,

@@ -1,20 +1,17 @@
 package org.ensodai.avalonmediacard.presentation.screens.watchParty.targets.web.components.lobby
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.foundation.shape.RoundedCornerShape
-import org.ensodai.avalonmediacard.designsystem.components.AvalonText as Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import avalonmediacard.client.generated.resources.*
+import org.ensodai.avalonmediacard.designsystem.components.AvalonText as Text
+import org.ensodai.avalonmediacard.designsystem.theme.AvalonTheme
 import org.ensodai.avalonmediacard.presentation.screens.commonComponents.tvAndWebHoverEffect
 import org.jetbrains.compose.resources.stringResource
 
@@ -24,7 +21,12 @@ fun WatchPartyReadyToggle(
     onToggleReady: () -> Unit,
     modifier: Modifier = Modifier
 ) {
-    val shape = RoundedCornerShape(12.dp)
+    val colors = AvalonTheme.colors
+    val shapes = AvalonTheme.shapes
+    val elevation = AvalonTheme.elevation
+    val typography = AvalonTheme.typography
+
+    val shape = shapes.control
     Row(
         modifier = modifier
             .fillMaxWidth()
@@ -32,12 +34,12 @@ fun WatchPartyReadyToggle(
             .tvAndWebHoverEffect(
                 scaleTarget = 1.02f,
                 shape = shape,
-                activeBorderColor = if (isReady) Color(0xFF4CAF50) else Color.White,
-                defaultBorderWidth = 1.dp,
-                defaultBorderColor = if (isReady) Color(0xFF4CAF50) else Color.White.copy(alpha = 0.12f),
+                activeBorderColor = if (isReady) colors.statusLive else colors.borderFocus,
+                defaultBorderWidth = elevation.borderWidth,
+                defaultBorderColor = if (isReady) colors.statusLive.copy(alpha = 0.6f) else colors.borderSubtle,
                 onClick = onToggleReady
             )
-            .background(if (isReady) Color(0xFF4CAF50).copy(alpha = 0.2f) else Color.White.copy(alpha = 0.06f), shape)
+            .background(if (isReady) colors.statusLive.copy(alpha = 0.2f) else colors.bgElevated, shape)
             .padding(horizontal = 16.dp),
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.SpaceBetween
@@ -50,20 +52,19 @@ fun WatchPartyReadyToggle(
                 modifier = Modifier
                     .size(12.dp)
                     .clip(CircleShape)
-                    .background(if (isReady) Color(0xFF4CAF50) else Color.White.copy(alpha = 0.3f))
+                    .background(if (isReady) colors.statusLive else colors.textMuted)
             )
             Text(
                 text = if (isReady) stringResource(Res.string.watch_party_ready_check) else stringResource(Res.string.watch_party_ready_check_hint),
-                fontSize = 14.sp,
-                fontWeight = FontWeight.SemiBold,
-                color = Color.White
+                style = typography.uiLabel,
+                color = colors.textPrimary
             )
         }
 
         Text(
             text = if (isReady) stringResource(Res.string.watch_party_ready_status_ready) else stringResource(Res.string.watch_party_ready_status_not_ready),
-            fontSize = 12.sp,
-            color = if (isReady) Color(0xFF4CAF50) else Color.White.copy(alpha = 0.5f)
+            style = typography.metadata,
+            color = if (isReady) colors.statusLive else colors.textSecondary
         )
     }
 }

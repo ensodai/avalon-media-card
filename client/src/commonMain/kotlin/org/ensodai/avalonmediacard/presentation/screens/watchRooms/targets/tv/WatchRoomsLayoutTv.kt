@@ -160,16 +160,15 @@ fun WatchRoomsLayoutTv(
                 ) {
                     Text(
                         text = stringResource(Res.string.watch_rooms_history_title),
-                        fontSize = 22.sp,
-                        fontWeight = FontWeight.SemiBold,
-                        color = AvalonTheme.colors.onBackground
+                        style = AvalonTheme.typography.sectionTitle,
+                        color = AvalonTheme.colors.textPrimary
                     )
 
                     if (state.isLoading) {
                         CircularProgressIndicator(
                             modifier = Modifier.size(20.dp),
                             strokeWidth = 2.dp,
-                            color = AvalonTheme.colors.primary
+                            color = AvalonTheme.colors.accentPrimary
                         )
                     }
                 }

@@ -7,14 +7,13 @@ import androidx.compose.animation.core.spring
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
+import org.ensodai.avalonmediacard.designsystem.theme.AvalonTheme
 import org.ensodai.avalonmediacard.presentation.screens.watchParty.action.WatchPartyActions
 import org.ensodai.avalonmediacard.presentation.screens.watchParty.targets.web.components.WatchPartyEntryStep
 import org.ensodai.avalonmediacard.presentation.screens.watchParty.targets.web.components.WatchPartyHeader
@@ -30,6 +29,10 @@ fun WatchPartyLayoutWeb(
     modifier: Modifier = Modifier,
     sourcesContent: (@Composable () -> Unit)? = null
 ) {
+    val colors = AvalonTheme.colors
+    val shapes = AvalonTheme.shapes
+    val elevation = AvalonTheme.elevation
+
     val isExpandedMode = (state.step == WatchPartyStep.SETUP || state.step == WatchPartyStep.LOBBY) && state.isSelectingSource && sourcesContent != null
     val targetMaxWidth by animateDpAsState(
         targetValue = if (isExpandedMode) 1240.dp else if (state.step == WatchPartyStep.LOBBY) 880.dp else 760.dp,
@@ -40,9 +43,9 @@ fun WatchPartyLayoutWeb(
         modifier = modifier
             .widthIn(max = targetMaxWidth)
             .fillMaxWidth()
-            .clip(RoundedCornerShape(24.dp))
-            .background(Color(0xFF141418).copy(alpha = 0.96f))
-            .border(1.dp, Color.White.copy(alpha = 0.12f), RoundedCornerShape(24.dp))
+            .clip(shapes.container)
+            .background(colors.bgSurface)
+            .border(elevation.borderWidth, colors.borderSubtle, shapes.container)
             .animateContentSize(animationSpec = spring(stiffness = Spring.StiffnessMediumLow))
             .padding(28.dp)
     ) {

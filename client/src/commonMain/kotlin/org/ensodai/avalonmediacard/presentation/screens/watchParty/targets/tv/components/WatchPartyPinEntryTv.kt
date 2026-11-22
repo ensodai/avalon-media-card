@@ -85,7 +85,7 @@ fun WatchPartyPinEntryTv(
     Box(
         modifier = modifier
             .fillMaxSize()
-            .background(AvalonTheme.colors.background)
+            .background(AvalonTheme.colors.bgCanvas)
             .onKeyEvent { event ->
                 if (event.type == KeyEventType.KeyDown) {
                     val digit = when (event.key) {
@@ -177,20 +177,20 @@ fun WatchPartyPinEntryTv(
                 horizontalArrangement = Arrangement.spacedBy(10.dp),
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                val primaryColor = AvalonTheme.colors.primary
+                val primaryColor = AvalonTheme.colors.accentPrimary
+                val cellShape = AvalonTheme.shapes.control
 
                 for (i in 0 until 6) {
                     val digitChar = state.pinInput.getOrNull(i)
                     val isActiveCell = (i == state.pinInput.length) && state.pinInput.length < 6
                     val isFilled = digitChar != null
 
-                    val cellShape = RoundedCornerShape(12.dp)
                     val borderColor = when {
                         isActiveCell -> primaryColor
                         isFilled -> Color.White.copy(alpha = 0.4f)
                         else -> Color.White.copy(alpha = 0.12f)
                     }
-                    val borderWidth = if (isActiveCell) 2.dp else 1.dp
+                    val borderWidth = if (isActiveCell) AvalonTheme.elevation.focusBorderWidth else AvalonTheme.elevation.borderWidth
 
                     Box(
                         modifier = Modifier
@@ -268,10 +268,10 @@ fun WatchPartyPinEntryTv(
                                     .tvAndWebHoverEffect(
                                         scaleTarget = 1.08f,
                                         shape = numpadShape,
-                                        activeBorderWidth = 2.dp,
-                                        activeBorderColor = AvalonTheme.colors.primary,
-                                        defaultBorderWidth = 1.dp,
-                                        defaultBorderColor = Color.White.copy(alpha = 0.08f),
+                                        activeBorderWidth = AvalonTheme.elevation.focusBorderWidth,
+                                        activeBorderColor = AvalonTheme.colors.borderFocus,
+                                        defaultBorderWidth = AvalonTheme.elevation.borderWidth,
+                                        defaultBorderColor = AvalonTheme.colors.borderSubtle,
                                         onClick = onClick
                                     )
                                     .background(
@@ -304,7 +304,7 @@ fun WatchPartyPinEntryTv(
 
             // Главная кнопка "Присоединиться"
             val isJoinEnabled = state.pinInput.length == 6 && !state.isJoining
-            val joinShape = RoundedCornerShape(14.dp)
+            val joinShape = AvalonTheme.shapes.control
 
             Box(
                 modifier = Modifier
@@ -313,13 +313,13 @@ fun WatchPartyPinEntryTv(
                     .tvAndWebHoverEffect(
                         scaleTarget = 1.04f,
                         shape = joinShape,
-                        activeBorderWidth = 2.dp,
-                        activeBorderColor = AvalonTheme.colors.primary,
+                        activeBorderWidth = AvalonTheme.elevation.focusBorderWidth,
+                        activeBorderColor = AvalonTheme.colors.borderFocus,
                         clickEnabled = isJoinEnabled,
                         onClick = actions.onJoinByPin
                     )
                     .background(
-                        if (isJoinEnabled) Color.White else Color.White.copy(alpha = 0.12f),
+                        if (isJoinEnabled) AvalonTheme.colors.textPrimary else AvalonTheme.colors.bgElevated,
                         joinShape
                     ),
                 contentAlignment = Alignment.Center

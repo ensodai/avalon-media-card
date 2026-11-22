@@ -3,23 +3,21 @@ package org.ensodai.avalonmediacard.presentation.screens.watchParty.targets.web.
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.shape.RoundedCornerShape
-import org.ensodai.avalonmediacard.designsystem.components.AvalonIcon as Icon
-import org.ensodai.avalonmediacard.designsystem.components.AvalonText as Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalClipboardManager
 import androidx.compose.ui.text.AnnotatedString
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import avalonmediacard.client.generated.resources.*
 import com.composables.icons.lucide.Check
 import com.composables.icons.lucide.Copy
 import com.composables.icons.lucide.Lucide
+import org.ensodai.avalonmediacard.designsystem.components.AvalonIcon as Icon
+import org.ensodai.avalonmediacard.designsystem.components.AvalonText as Text
+import org.ensodai.avalonmediacard.designsystem.theme.AvalonTheme
 import org.ensodai.avalonmediacard.presentation.screens.commonComponents.tvAndWebHoverEffect
 import org.jetbrains.compose.resources.stringResource
 
@@ -28,15 +26,20 @@ fun WatchPartyPinCard(
     pin: String,
     modifier: Modifier = Modifier
 ) {
+    val colors = AvalonTheme.colors
+    val shapes = AvalonTheme.shapes
+    val elevation = AvalonTheme.elevation
+    val typography = AvalonTheme.typography
+
     val clipboard = LocalClipboardManager.current
     var copied by remember { mutableStateOf(false) }
 
     Row(
         modifier = modifier
             .fillMaxWidth()
-            .clip(RoundedCornerShape(16.dp))
-            .background(Color.White.copy(alpha = 0.05f))
-            .border(1.dp, Color(0xFF6C63FF).copy(alpha = 0.3f), RoundedCornerShape(16.dp))
+            .clip(shapes.container)
+            .background(colors.bgElevated)
+            .border(elevation.borderWidth, colors.borderFocus.copy(alpha = 0.4f), shapes.container)
             .padding(horizontal = 20.dp, vertical = 14.dp),
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.SpaceBetween
@@ -44,34 +47,33 @@ fun WatchPartyPinCard(
         Column {
             Text(
                 text = stringResource(Res.string.watch_party_pin_label).uppercase(),
-                fontSize = 11.sp,
-                fontWeight = FontWeight.Bold,
-                color = Color.White.copy(alpha = 0.5f),
+                style = typography.microCaption,
+                color = colors.textSecondary,
                 letterSpacing = 1.sp
             )
             Text(
                 text = "${pin.take(3)} ${pin.takeLast(3)}",
+                style = typography.monoTech,
                 fontSize = 26.sp,
-                fontWeight = FontWeight.ExtraBold,
-                color = Color(0xFF6C63FF),
+                color = colors.accentPrimary,
                 letterSpacing = 4.sp
             )
         }
 
-        val copyBtnShape = RoundedCornerShape(10.dp)
+        val copyBtnShape = shapes.control
         Row(
             modifier = Modifier
                 .height(38.dp)
                 .tvAndWebHoverEffect(
                     scaleTarget = 1.05f,
                     shape = copyBtnShape,
-                    activeBorderColor = Color(0xFF8C82FF),
+                    activeBorderColor = colors.borderFocus,
                     onClick = {
                         clipboard.setText(AnnotatedString(pin))
                         copied = true
                     }
                 )
-                .background(Color.White.copy(alpha = 0.1f), copyBtnShape)
+                .background(colors.bgSurface, copyBtnShape)
                 .padding(horizontal = 14.dp),
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.spacedBy(6.dp)
@@ -79,14 +81,13 @@ fun WatchPartyPinCard(
             Icon(
                 imageVector = if (copied) Lucide.Check else Lucide.Copy,
                 contentDescription = null,
-                tint = Color.White,
+                tint = if (copied) colors.statusLive else colors.textPrimary,
                 modifier = Modifier.size(14.dp)
             )
             Text(
                 text = if (copied) stringResource(Res.string.watch_party_pin_copied) else stringResource(Res.string.watch_party_pin_copy),
-                fontSize = 12.sp,
-                fontWeight = FontWeight.Medium,
-                color = Color.White
+                style = typography.uiLabel,
+                color = colors.textPrimary
             )
         }
     }

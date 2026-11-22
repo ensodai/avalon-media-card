@@ -4,9 +4,6 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.foundation.shape.RoundedCornerShape
-import org.ensodai.avalonmediacard.designsystem.components.AvalonIcon as Icon
-import org.ensodai.avalonmediacard.designsystem.components.AvalonText as Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -15,10 +12,8 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalClipboardManager
 import androidx.compose.ui.text.AnnotatedString
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -29,6 +24,9 @@ import com.composables.icons.lucide.Copy
 import com.composables.icons.lucide.Lucide
 import com.composables.icons.lucide.Users
 import com.composables.icons.lucide.X
+import org.ensodai.avalonmediacard.designsystem.components.AvalonIcon as Icon
+import org.ensodai.avalonmediacard.designsystem.components.AvalonText as Text
+import org.ensodai.avalonmediacard.designsystem.theme.AvalonTheme
 import org.ensodai.avalonmediacard.presentation.screens.commonComponents.tvAndWebHoverEffect
 import org.ensodai.avalonmediacard.presentation.screens.watchParty.viewState.WatchPartyStep
 import org.jetbrains.compose.resources.stringResource
@@ -44,6 +42,11 @@ fun WatchPartyHeader(
     isHost: Boolean = false,
     joinPin: String? = null
 ) {
+    val colors = AvalonTheme.colors
+    val shapes = AvalonTheme.shapes
+    val elevation = AvalonTheme.elevation
+    val typography = AvalonTheme.typography
+
     Row(
         modifier = modifier.fillMaxWidth(),
         verticalAlignment = Alignment.CenterVertically,
@@ -52,9 +55,8 @@ fun WatchPartyHeader(
         if (step == WatchPartyStep.LOBBY) {
             Text(
                 text = roomTitle.ifBlank { mediaTitle },
-                fontSize = 20.sp,
-                fontWeight = FontWeight.Bold,
-                color = Color.White,
+                style = typography.titleLarge,
+                color = colors.textPrimary,
                 maxLines = 1,
                 overflow = TextOverflow.Ellipsis,
                 modifier = Modifier.weight(1f, fill = false)
@@ -72,16 +74,16 @@ fun WatchPartyHeader(
                             .tvAndWebHoverEffect(
                                 scaleTarget = 1.08f,
                                 shape = backShape,
-                                activeBorderColor = Color.White,
+                                activeBorderColor = colors.borderFocus,
                                 onClick = onBack
                             )
-                            .background(Color.White.copy(alpha = 0.08f), backShape),
+                            .background(colors.bgElevated, backShape),
                         contentAlignment = Alignment.Center
                     ) {
                         Icon(
                             imageVector = Lucide.ArrowLeft,
                             contentDescription = stringResource(Res.string.common_previous),
-                            tint = Color.White,
+                            tint = colors.textPrimary,
                             modifier = Modifier.size(18.dp)
                         )
                     }
@@ -90,13 +92,13 @@ fun WatchPartyHeader(
                         modifier = Modifier
                             .size(36.dp)
                             .clip(CircleShape)
-                            .background(Color.White.copy(alpha = 0.08f)),
+                            .background(colors.bgElevated),
                         contentAlignment = Alignment.Center
                     ) {
                         Icon(
                             imageVector = Lucide.Users,
                             contentDescription = null,
-                            tint = Color(0xFF6C63FF),
+                            tint = colors.accentPrimary,
                             modifier = Modifier.size(20.dp)
                         )
                     }
@@ -109,15 +111,14 @@ fun WatchPartyHeader(
                             WatchPartyStep.SETUP -> stringResource(Res.string.watch_party_step_setup)
                             WatchPartyStep.LOBBY -> roomTitle.ifBlank { mediaTitle }
                         },
-                        fontSize = 20.sp,
-                        fontWeight = FontWeight.Bold,
-                        color = Color.White
+                        style = typography.titleLarge,
+                        color = colors.textPrimary
                     )
                     if (mediaTitle.isNotBlank()) {
                         Text(
                             text = mediaTitle,
-                            fontSize = 13.sp,
-                            color = Color.White.copy(alpha = 0.6f),
+                            style = typography.metadata,
+                            color = colors.textSecondary,
                             maxLines = 1,
                             overflow = TextOverflow.Ellipsis
                         )
@@ -135,43 +136,42 @@ fun WatchPartyHeader(
                 var copied by remember { mutableStateOf(false) }
                 val formattedPin = if (joinPin.length == 6) "${joinPin.take(3)} ${joinPin.takeLast(3)}" else joinPin
 
-                val pinShape = RoundedCornerShape(10.dp)
+                val pinShape = shapes.control
                 Row(
                     modifier = Modifier
                         .height(34.dp)
                         .tvAndWebHoverEffect(
                             scaleTarget = 1.05f,
                             shape = pinShape,
-                            activeBorderColor = Color(0xFF8C82FF),
-                            defaultBorderWidth = 1.dp,
-                            defaultBorderColor = Color(0xFF6C63FF).copy(alpha = 0.40f),
+                            activeBorderColor = colors.borderFocus,
+                            defaultBorderWidth = elevation.borderWidth,
+                            defaultBorderColor = colors.accentPrimary.copy(alpha = 0.40f),
                             onClick = {
                                 clipboard.setText(AnnotatedString(joinPin))
                                 copied = true
                             }
                         )
-                        .background(Color(0xFF6C63FF).copy(alpha = 0.15f), pinShape)
+                        .background(colors.accentPrimary.copy(alpha = 0.15f), pinShape)
                         .padding(horizontal = 10.dp),
                     verticalAlignment = Alignment.CenterVertically,
                     horizontalArrangement = Arrangement.spacedBy(6.dp)
                 ) {
                     Text(
                         text = "PIN:",
-                        fontSize = 11.sp,
-                        fontWeight = FontWeight.Bold,
-                        color = Color.White.copy(alpha = 0.6f)
+                        style = typography.microCaption,
+                        color = colors.textSecondary
                     )
                     Text(
                         text = formattedPin,
+                        style = typography.monoTech,
                         fontSize = 13.sp,
-                        fontWeight = FontWeight.ExtraBold,
                         letterSpacing = 1.sp,
-                        color = Color(0xFF8C82FF)
+                        color = colors.accentPrimary
                     )
                     Icon(
                         imageVector = if (copied) Lucide.Check else Lucide.Copy,
                         contentDescription = null,
-                        tint = if (copied) Color(0xFF4CAF50) else Color.White.copy(alpha = 0.7f),
+                        tint = if (copied) colors.statusLive else colors.textSecondary,
                         modifier = Modifier.size(13.dp)
                     )
                 }
@@ -184,16 +184,16 @@ fun WatchPartyHeader(
                     .tvAndWebHoverEffect(
                         scaleTarget = 1.08f,
                         shape = closeShape,
-                        activeBorderColor = Color.White,
+                        activeBorderColor = colors.borderFocus,
                         onClick = onClose
                     )
-                    .background(Color.White.copy(alpha = 0.08f), closeShape),
+                    .background(colors.bgElevated, closeShape),
                 contentAlignment = Alignment.Center
             ) {
                 Icon(
                     imageVector = Lucide.X,
                     contentDescription = stringResource(Res.string.common_close),
-                    tint = Color.White.copy(alpha = 0.8f),
+                    tint = colors.textSecondary,
                     modifier = Modifier.size(18.dp)
                 )
             }

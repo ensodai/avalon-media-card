@@ -69,15 +69,15 @@ fun WatchRoomSummaryCard(
             .height(210.dp)
             .tvAndWebHoverEffect(
                 scaleTarget = 1.02f,
-                defaultBorderWidth = 1.dp,
-                defaultBorderColor = AvalonTheme.colors.outlineVariant.copy(alpha = 0.20f),
-                activeBorderWidth = 2.dp,
-                activeBorderColor = AvalonTheme.colors.primary,
-                shape = RoundedCornerShape(14.dp),
+                defaultBorderWidth = AvalonTheme.elevation.borderWidth,
+                defaultBorderColor = AvalonTheme.colors.borderSubtle,
+                activeBorderWidth = AvalonTheme.elevation.focusBorderWidth,
+                activeBorderColor = AvalonTheme.colors.borderFocus,
+                shape = AvalonTheme.shapes.media,
                 tiltEnabled = false,
                 onClick = onClick
             )
-            .background(AvalonTheme.colors.surfaceVariant.copy(alpha = 0.25f))
+            .background(AvalonTheme.colors.bgElevated)
     ) {
         // 1. Подложка арта (Backdrop)
         if (!room.backdropUrl.isNullOrBlank()) {
@@ -85,7 +85,7 @@ fun WatchRoomSummaryCard(
                 model = room.backdropUrl,
                 contentDescription = null,
                 contentScale = ContentScale.Crop,
-                shape = RoundedCornerShape(14.dp),
+                shape = AvalonTheme.shapes.media,
                 modifier = Modifier.fillMaxSize()
             )
 
@@ -111,8 +111,8 @@ fun WatchRoomSummaryCard(
                     .background(
                         Brush.verticalGradient(
                             listOf(
-                                AvalonTheme.colors.surfaceVariant.copy(alpha = 0.35f),
-                                AvalonTheme.colors.surface.copy(alpha = 0.65f)
+                                AvalonTheme.colors.bgElevated,
+                                AvalonTheme.colors.bgSurface
                             )
                         )
                     )
@@ -211,16 +211,16 @@ fun WatchRoomSummaryCard(
                 if (room.isHost) {
                     Box(
                         modifier = Modifier
-                            .clip(RoundedCornerShape(6.dp))
-                            .background(AvalonTheme.colors.primary.copy(alpha = 0.25f))
-                            .border(1.dp, AvalonTheme.colors.primary.copy(alpha = 0.50f), RoundedCornerShape(6.dp))
+                            .clip(AvalonTheme.shapes.micro)
+                            .background(AvalonTheme.colors.accentPrimary.copy(alpha = 0.25f))
+                            .border(AvalonTheme.elevation.borderWidth, AvalonTheme.colors.accentPrimary.copy(alpha = 0.50f), AvalonTheme.shapes.micro)
                             .padding(horizontal = 7.dp, vertical = 3.dp)
                     ) {
                         Text(
                             text = stringResource(Res.string.watch_party_host_badge),
-                            fontSize = 10.sp,
+                            style = AvalonTheme.typography.microCaption,
                             fontWeight = FontWeight.Bold,
-                            color = AvalonTheme.colors.primary
+                            color = AvalonTheme.colors.accentPrimary
                         )
                     }
                 }
@@ -290,7 +290,7 @@ fun WatchRoomSummaryCard(
                                         .size(24.dp)
                                         .clip(CircleShape)
                                         .background(Color.White.copy(alpha = 0.20f))
-                                        .border(1.5.dp, AvalonTheme.colors.background, CircleShape),
+                                        .border(1.5.dp, AvalonTheme.colors.bgCanvas, CircleShape),
                                     contentAlignment = Alignment.Center
                                 ) {
                                     Text(
@@ -311,7 +311,7 @@ fun WatchRoomSummaryCard(
                             "● " + stringResource(Res.string.watch_party_online_watching, room.onlineParticipantsCount) to Color(0xFF81C784)
                         }
                         hasOnline -> {
-                            "● " + stringResource(Res.string.watch_party_participants_count, room.onlineParticipantsCount) to AvalonTheme.colors.primary
+                            "● " + stringResource(Res.string.watch_party_participants_count, room.onlineParticipantsCount) to AvalonTheme.colors.accentPrimary
                         }
                         else -> {
                             formatParticipantsCount(room.participantsCount) to Color.White.copy(alpha = 0.65f)
@@ -350,10 +350,10 @@ private fun ParticipantMiniAvatar(
                     when {
                         !isOnline -> Color.White.copy(alpha = 0.10f)
                         isHost -> Color(0xFF64B5F6).copy(alpha = 0.35f)
-                        else -> AvalonTheme.colors.primary.copy(alpha = 0.35f)
+                        else -> AvalonTheme.colors.accentPrimary.copy(alpha = 0.35f)
                     }
                 )
-                .border(1.5.dp, AvalonTheme.colors.background, CircleShape),
+                .border(1.5.dp, AvalonTheme.colors.bgCanvas, CircleShape),
             contentAlignment = Alignment.Center
         ) {
             Text(
@@ -373,8 +373,8 @@ private fun ParticipantMiniAvatar(
                 .align(Alignment.BottomEnd)
                 .size(7.dp)
                 .clip(CircleShape)
-                .background(if (isOnline) Color(0xFF4CAF50) else Color.Gray.copy(alpha = 0.6f))
-                .border(1.dp, AvalonTheme.colors.background, CircleShape)
+                .background(if (isOnline) AvalonTheme.colors.statusLive else Color.Gray.copy(alpha = 0.6f))
+                .border(1.dp, AvalonTheme.colors.bgCanvas, CircleShape)
         )
     }
 }

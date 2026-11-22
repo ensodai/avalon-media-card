@@ -1,7 +1,5 @@
 package org.ensodai.avalonmediacard.presentation.screens.watchRooms.components
 
-import org.ensodai.avalonmediacard.designsystem.theme.AvalonTheme
-
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
@@ -15,12 +13,12 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.unit.dp
+import org.ensodai.avalonmediacard.designsystem.theme.AvalonTheme
 import org.ensodai.avalonmediacard.presentation.components.shimmerPlaceholder
 
 /**
@@ -28,7 +26,7 @@ import org.ensodai.avalonmediacard.presentation.components.shimmerPlaceholder
  *
  * Точно повторяет геометрию [WatchRoomSummaryCard]:
  * - Высота: 210 dp
- * - Скругление: RoundedCornerShape(14.dp)
+ * - Скругление: shapes.media
  * - Верхний ряд: плашка статуса (76.dp x 22.dp)
  * - Нижний блок: заголовок (fillMaxWidth(0.65f) x 18.dp), подзаголовок (fillMaxWidth(0.40f) x 14.dp), социальная строка с аватарками
  */
@@ -36,16 +34,20 @@ import org.ensodai.avalonmediacard.presentation.components.shimmerPlaceholder
 fun WatchRoomSummaryCardSkeleton(
     modifier: Modifier = Modifier
 ) {
+    val colors = AvalonTheme.colors
+    val shapes = AvalonTheme.shapes
+    val elevation = AvalonTheme.elevation
+
     Box(
         modifier = modifier
             .fillMaxWidth()
             .height(210.dp)
-            .clip(RoundedCornerShape(14.dp))
-            .background(AvalonTheme.colors.surfaceVariant.copy(alpha = 0.25f))
+            .clip(shapes.media)
+            .background(colors.bgElevated.copy(alpha = 0.5f))
             .border(
-                width = 1.dp,
-                color = AvalonTheme.colors.outlineVariant.copy(alpha = 0.20f),
-                shape = RoundedCornerShape(14.dp)
+                width = elevation.borderWidth,
+                color = colors.borderSubtle,
+                shape = shapes.media
             )
             .padding(16.dp)
     ) {
@@ -62,15 +64,15 @@ fun WatchRoomSummaryCardSkeleton(
                 Box(
                     modifier = Modifier
                         .size(width = 76.dp, height = 22.dp)
-                        .clip(RoundedCornerShape(6.dp))
-                        .shimmerPlaceholder(isLoading = true, shape = RoundedCornerShape(6.dp))
+                        .clip(shapes.micro)
+                        .shimmerPlaceholder(isLoading = true, shape = shapes.micro)
                 )
 
                 Box(
                     modifier = Modifier
                         .size(width = 52.dp, height = 20.dp)
-                        .clip(RoundedCornerShape(6.dp))
-                        .shimmerPlaceholder(isLoading = true, shape = RoundedCornerShape(6.dp))
+                        .clip(shapes.micro)
+                        .shimmerPlaceholder(isLoading = true, shape = shapes.micro)
                 )
             }
 
@@ -81,8 +83,8 @@ fun WatchRoomSummaryCardSkeleton(
                     modifier = Modifier
                         .fillMaxWidth(0.65f)
                         .height(18.dp)
-                        .clip(RoundedCornerShape(4.dp))
-                        .shimmerPlaceholder(isLoading = true, shape = RoundedCornerShape(4.dp))
+                        .clip(shapes.micro)
+                        .shimmerPlaceholder(isLoading = true, shape = shapes.micro)
                 )
 
                 // Подзаголовок: Тайтл фильма/сериала + сезон/эпизод
@@ -90,8 +92,8 @@ fun WatchRoomSummaryCardSkeleton(
                     modifier = Modifier
                         .fillMaxWidth(0.40f)
                         .height(14.dp)
-                        .clip(RoundedCornerShape(4.dp))
-                        .shimmerPlaceholder(isLoading = true, shape = RoundedCornerShape(4.dp))
+                        .clip(shapes.micro)
+                        .shimmerPlaceholder(isLoading = true, shape = shapes.micro)
                 )
 
                 Spacer(modifier = Modifier.height(2.dp))
@@ -116,8 +118,8 @@ fun WatchRoomSummaryCardSkeleton(
                     Box(
                         modifier = Modifier
                             .size(width = 60.dp, height = 12.dp)
-                            .clip(RoundedCornerShape(4.dp))
-                            .shimmerPlaceholder(isLoading = true, shape = RoundedCornerShape(4.dp))
+                            .clip(shapes.micro)
+                            .shimmerPlaceholder(isLoading = true, shape = shapes.micro)
                     )
                 }
             }

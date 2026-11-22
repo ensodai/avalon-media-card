@@ -78,8 +78,8 @@ fun WatchPartyChatPanel(
     }
 
     val panelShape = if (isExpanded) RoundedCornerShape(20.dp) else RoundedCornerShape(22.dp)
-    val panelBg = if (isExpanded) Color.Black.copy(alpha = 0.70f) else Color.Black.copy(alpha = 0.65f)
-    val panelBorderColor = if (isExpanded) Color.White.copy(alpha = 0.10f) else Color.White.copy(alpha = 0.08f)
+    val panelBg = AvalonTheme.colors.bgOverlay
+    val panelBorderColor = AvalonTheme.colors.borderOverlay
 
     BoxWithConstraints(
         modifier = modifier
@@ -95,7 +95,7 @@ fun WatchPartyChatPanel(
             )
             .clip(panelShape)
             .background(panelBg)
-            .border(1.dp, panelBorderColor, panelShape)
+            .border(AvalonTheme.elevation.borderWidth, panelBorderColor, panelShape)
     ) {
         val maxAvailableHeight = maxHeight
         // Динамический потолок для высоты сообщений: занимает всю доступную высоту до нижнего бара плеера
@@ -122,8 +122,8 @@ fun WatchPartyChatPanel(
                     .tvAndWebHoverEffect(
                         scaleTarget = if (isExpanded) 1.0f else 1.08f,
                         shape = headerShape,
-                        activeBorderColor = AvalonTheme.colors.primary,
-                        activeBorderWidth = if (isExpanded) 1.5.dp else 2.dp,
+                        activeBorderColor = AvalonTheme.colors.borderFocus,
+                        activeBorderWidth = if (isExpanded) AvalonTheme.elevation.borderWidth else AvalonTheme.elevation.focusBorderWidth,
                         defaultBorderColor = Color.Transparent,
                         defaultBorderWidth = 0.dp,
                         onClick = { actions.onToggleChatVisibility() }

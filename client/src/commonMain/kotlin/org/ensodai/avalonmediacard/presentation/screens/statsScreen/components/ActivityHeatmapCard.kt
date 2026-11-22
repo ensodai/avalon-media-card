@@ -586,7 +586,7 @@ private fun getMonthLabel(month: Int): String = when (month) {
 private fun getHeatmapCellColor(
     day: HeatmapDayDto,
     mode: HeatmapLensMode,
-    colors: org.ensodai.avalonmediacard.presentation.theme.AvalonColors
+    colors: org.ensodai.avalonmediacard.designsystem.theme.AvalonColors
 ): Color {
     if (day.minutes <= 0 && day.count <= 0) {
         return colors.chartTrack

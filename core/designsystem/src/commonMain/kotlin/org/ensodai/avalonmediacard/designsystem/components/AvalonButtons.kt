@@ -261,8 +261,8 @@ private fun AvalonButtonCore(
 @Composable
 fun AvalonIconButton(
     onClick: () -> Unit,
-    contentDescription: String,
     modifier: Modifier = Modifier,
+    contentDescription: String? = null,
     variant: AvalonButtonVariant = AvalonButtonVariant.Secondary,
     size: AvalonButtonSize = AvalonButtonSize.Standard,
     enabled: Boolean = true,
@@ -283,7 +283,11 @@ fun AvalonIconButton(
         contentAlignment = Alignment.Center,
         modifier = modifier
             .size(metrics.height) // Exact square: 44 / 40 / 32 dp
-            .semantics { this.contentDescription = contentDescription }
+            .then(
+                if (contentDescription != null) {
+                    Modifier.semantics { this.contentDescription = contentDescription }
+                } else Modifier
+            )
             .avalonInteractive(
                 role = AvalonInteractiveRole.Control,
                 shape = shape,

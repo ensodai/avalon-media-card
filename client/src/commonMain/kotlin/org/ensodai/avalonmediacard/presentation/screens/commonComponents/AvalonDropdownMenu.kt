@@ -13,15 +13,11 @@ import androidx.compose.ui.window.PopupPositionProvider
 import org.ensodai.avalonmediacard.designsystem.components.AvalonDropdownMenu as CoreAvalonDropdownMenu
 import org.ensodai.avalonmediacard.designsystem.components.AvalonDropdownMenuItem as CoreAvalonDropdownMenuItem
 import org.ensodai.avalonmediacard.designsystem.components.AvalonPopupAnchorSide
-import org.ensodai.avalonmediacard.designsystem.components.AvalonSideAnchorPopupPositionProvider
 import org.ensodai.avalonmediacard.designsystem.components.rememberAvalonSideAnchorPopupPositionProvider
-
-typealias PopupAnchorSide = AvalonPopupAnchorSide
-typealias SideAnchorPopupPositionProvider = AvalonSideAnchorPopupPositionProvider
 
 @Composable
 fun rememberSideAnchorPopupPositionProvider(
-    preferredSide: PopupAnchorSide = PopupAnchorSide.RIGHT,
+    preferredSide: AvalonPopupAnchorSide = AvalonPopupAnchorSide.RIGHT,
     horizontalMargin: Dp = 12.dp,
     verticalMargin: Dp = 8.dp,
     screenPadding: Dp = 16.dp

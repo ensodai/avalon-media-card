@@ -33,8 +33,8 @@ fun SlotErrorCard(
     Box(
         modifier = modifier
             .clip(RoundedCornerShape(12.dp))
-            .background(AvalonTheme.colors.errorContainer.copy(alpha = 0.12f))
-            .border(1.dp, AvalonTheme.colors.error.copy(alpha = 0.25f), RoundedCornerShape(12.dp))
+            .background(AvalonTheme.colors.statusDanger.copy(alpha = 0.12f))
+            .border(1.dp, AvalonTheme.colors.statusDanger.copy(alpha = 0.25f), RoundedCornerShape(12.dp))
             .padding(16.dp)
     ) {
         Row(

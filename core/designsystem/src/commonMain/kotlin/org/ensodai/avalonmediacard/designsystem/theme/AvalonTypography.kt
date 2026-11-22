@@ -45,12 +45,6 @@ data class AvalonTypography(
     val titleLarge: TextStyle get() = pageTitle
     val titleMedium: TextStyle get() = sectionTitle
     val titleSmall: TextStyle get() = cardTitle
-    val headlineLarge: TextStyle get() = displayHero
-    val headlineMedium: TextStyle get() = pageTitle
-    val headlineSmall: TextStyle get() = sectionTitle
-    val displayLarge: TextStyle get() = displayHero
-    val displayMedium: TextStyle get() = displayHero
-    val displaySmall: TextStyle get() = kpiHero
 }
 
 val LocalAvalonTypography = staticCompositionLocalOf { AvalonTypographyDesktop }

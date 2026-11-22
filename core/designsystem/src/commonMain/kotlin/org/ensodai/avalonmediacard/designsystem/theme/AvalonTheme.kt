@@ -95,14 +95,7 @@ data class AvalonColors(
     val outlineVariant: Color get() = borderStrong
     val primaryContainer: Color get() = bgElevated
     val onPrimaryContainer: Color get() = textPrimary
-    val secondary: Color get() = textPrimary
-    val onSecondary: Color get() = bgCanvas
-    val secondaryContainer: Color get() = bgSurface
-    val onSecondaryContainer: Color get() = textSecondary
     val error: Color get() = statusDanger
-    val onError: Color get() = textPrimary
-    val errorContainer: Color get() = statusDanger.copy(alpha = 0.2f)
-    val onErrorContainer: Color get() = textPrimary
 }
 
 val ObsidianCinemaDarkColors = AvalonColors(

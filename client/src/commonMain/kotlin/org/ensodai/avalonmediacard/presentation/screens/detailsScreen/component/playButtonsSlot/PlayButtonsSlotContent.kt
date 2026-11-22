@@ -2,6 +2,7 @@ package org.ensodai.avalonmediacard.presentation.screens.detailsScreen.component
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.size
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -13,6 +14,10 @@ import org.ensodai.avalonmediacard.contract.slot.Action
 import org.ensodai.avalonmediacard.contract.slot.ButtonItem
 import org.ensodai.avalonmediacard.contract.slot.IconType
 import org.ensodai.avalonmediacard.contract.slot.SlotData
+import org.ensodai.avalonmediacard.designsystem.components.AvalonButton
+import org.ensodai.avalonmediacard.designsystem.components.AvalonButtonSize
+import org.ensodai.avalonmediacard.designsystem.components.AvalonButtonVariant
+import org.ensodai.avalonmediacard.designsystem.components.AvalonIcon
 import org.jetbrains.compose.resources.stringResource
 
 @Composable
@@ -39,12 +44,20 @@ fun PlayButtonsSlotContent(
             data.buttons
         }
 
-        buttonsToRender.forEach { btn ->
-            PrimaryActionButton(
+        buttonsToRender.forEachIndexed { index, btn ->
+            AvalonButton(
                 text = btn.label,
-                icon = Lucide.Play,
-                isLoading = isLoading,
-                onClick = { btn.action?.let { onAction(it) } }
+                onClick = { btn.action?.let { onAction(it) } },
+                variant = if (index == 0) AvalonButtonVariant.Primary else AvalonButtonVariant.Secondary,
+                size = AvalonButtonSize.Standard,
+                enabled = !isLoading,
+                leadingIcon = {
+                    AvalonIcon(
+                        imageVector = Lucide.Play,
+                        contentDescription = null,
+                        modifier = Modifier.size(18.dp)
+                    )
+                }
             )
         }
     }

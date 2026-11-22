@@ -84,15 +84,14 @@ fun EpisodesNotificationsHeader(
                 Column {
                     Text(
                         text = stringResource(Res.string.episodes_notifications_title),
-                        style = AvalonTheme.typography.headlineMedium.copy(
-                            fontWeight = FontWeight.Bold,
-                            color = AvalonTheme.colors.onSurface
+                        style = AvalonTheme.typography.pageTitle.copy(
+                            color = AvalonTheme.colors.textPrimary
                         )
                     )
                     Text(
                         text = stringResource(Res.string.episodes_notifications_subtitle),
-                        style = AvalonTheme.typography.bodyMedium.copy(
-                            color = AvalonTheme.colors.onSurfaceVariant
+                        style = AvalonTheme.typography.bodySynopsis.copy(
+                            color = AvalonTheme.colors.textSecondary
                         )
                     )
                 }

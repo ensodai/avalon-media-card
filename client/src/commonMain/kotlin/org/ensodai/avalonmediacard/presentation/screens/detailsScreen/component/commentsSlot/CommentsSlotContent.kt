@@ -375,8 +375,8 @@ private fun CommentCard(comment: CommentItem) {
                 modifier = Modifier
                     .fillMaxWidth()
                     .weight(1f, fill = false)
-                    .background(AvalonTheme.colors.errorContainer.copy(alpha = 0.15f), RoundedCornerShape(8.dp))
-                    .border(1.dp, AvalonTheme.colors.error.copy(alpha = 0.2f), RoundedCornerShape(8.dp))
+                    .background(AvalonTheme.colors.statusDanger.copy(alpha = 0.15f), RoundedCornerShape(8.dp))
+                    .border(1.dp, AvalonTheme.colors.statusDanger.copy(alpha = 0.2f), RoundedCornerShape(8.dp))
                     .padding(horizontal = 12.dp, vertical = 8.dp),
                 verticalAlignment = Alignment.CenterVertically
             ) {
@@ -390,7 +390,7 @@ private fun CommentCard(comment: CommentItem) {
                 Text(
                     text = stringResource(Res.string.details_comments_spoilers),
                     fontSize = 12.sp,
-                    color = AvalonTheme.colors.onErrorContainer,
+                    color = AvalonTheme.colors.statusDanger,
                     fontWeight = FontWeight.Medium,
                     maxLines = 1,
                     overflow = TextOverflow.Ellipsis

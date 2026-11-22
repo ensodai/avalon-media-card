@@ -106,7 +106,7 @@ fun MainAppContent(
     val canGoBackState = remember { mutableStateOf(false) }
     val activePopActionState = remember { mutableStateOf<(() -> Unit)?>(null) }
     val isSidebarExpandedState = remember { mutableStateOf(false) }
-    val tvDrawerState = remember { TvDrawerState() }
+    val tvDrawerState = remember { TvDrawerNavigator() }
     val tabNavControllers = remember { mutableMapOf<String, AvalonNavController<ScreenKey>>() }
     val contentFocusRequester = remember { FocusRequester() }
     val sidebarFocusRequester = remember { FocusRequester() }

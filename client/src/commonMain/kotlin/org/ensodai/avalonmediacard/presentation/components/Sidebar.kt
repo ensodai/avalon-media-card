@@ -30,7 +30,7 @@ import org.ensodai.avalonmediacard.designsystem.components.AvalonIcon
 import org.ensodai.avalonmediacard.designsystem.components.AvalonText
 import org.ensodai.avalonmediacard.presentation.screens.commonComponents.AvalonDropdownMenu
 import org.ensodai.avalonmediacard.presentation.screens.commonComponents.AvalonDropdownMenuItem
-import org.ensodai.avalonmediacard.presentation.screens.commonComponents.PopupAnchorSide
+import org.ensodai.avalonmediacard.designsystem.components.AvalonPopupAnchorSide
 import org.ensodai.avalonmediacard.presentation.screens.commonComponents.rememberSideAnchorPopupPositionProvider
 import org.ensodai.avalonmediacard.presentation.screens.commonComponents.tvDrawer.TvDrawerEffect
 import org.ensodai.avalonmediacard.presentation.screens.commonComponents.tvDrawer.AvalonTvDrawerItem
@@ -156,7 +156,7 @@ fun Sidebar(
                     val deviceTarget = LocalDeviceTarget.current
 
                     if (!deviceTarget.isTv) {
-                        val positionProvider = rememberSideAnchorPopupPositionProvider(preferredSide = PopupAnchorSide.RIGHT)
+                        val positionProvider = rememberSideAnchorPopupPositionProvider(preferredSide = AvalonPopupAnchorSide.RIGHT)
                         AvalonDropdownMenu(
                             expanded = isProfileMenuExpanded,
                             onDismissRequest = { isProfileMenuExpanded = false },

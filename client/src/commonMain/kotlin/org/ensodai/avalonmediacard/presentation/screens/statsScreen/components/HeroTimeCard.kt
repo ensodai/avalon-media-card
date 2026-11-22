@@ -261,10 +261,9 @@ fun HeroTimeCard(
             // Крупное отображение времени
             Text(
                 text = formattedTotalTime,
-                style = AvalonTheme.typography.displayMedium.copy(
+                style = AvalonTheme.typography.kpiHero.copy(
                     fontFeatureSettings = "tnum"
                 ),
-                fontWeight = FontWeight.Black,
                 color = colors.textPrimary
             )
 

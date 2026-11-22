@@ -5,7 +5,7 @@ import org.ensodai.avalonmediacard.designsystem.components.AvalonButton as Butto
 import org.ensodai.avalonmediacard.designsystem.components.AvalonText as Text
 import org.ensodai.avalonmediacard.designsystem.components.AvalonCircularProgressIndicator
 import org.ensodai.avalonmediacard.designsystem.components.ButtonDefaults
-import org.ensodai.avalonmediacard.designsystem.components.ButtonColors
+import org.ensodai.avalonmediacard.designsystem.components.AvalonButtonColors
 import org.ensodai.avalonmediacard.designsystem.components.AvalonSwitch as Switch
 
 import androidx.compose.animation.animateColorAsState
@@ -225,7 +225,7 @@ private fun IntegrationCardInternal(
 @Composable
 private fun StatusBadge(status: ValidationStatus) {
     val statusText: String
-    val badgeColors: ButtonColors
+    val badgeColors: AvalonButtonColors
 
     when (status) {
         ValidationStatus.Success -> {

@@ -11,9 +11,6 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.graphics.vector.ImageVector
 
-typealias TvDrawerEntry = TvDrawerScreen
-typealias TvDrawerState = TvDrawerNavigator
-
 val LocalTvDrawerState = LocalTvDrawerNavigator
 
 /**

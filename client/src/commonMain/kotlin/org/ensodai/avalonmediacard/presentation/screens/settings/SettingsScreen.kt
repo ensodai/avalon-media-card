@@ -35,7 +35,7 @@ import org.ensodai.avalonmediacard.presentation.screens.commonComponents.AvalonD
 import org.ensodai.avalonmediacard.presentation.screens.commonComponents.AvalonDropdownMenuItem
 import org.ensodai.avalonmediacard.presentation.screens.commonComponents.AvalonTextField
 import org.ensodai.avalonmediacard.presentation.screens.commonComponents.LocalDeviceTarget
-import org.ensodai.avalonmediacard.presentation.screens.commonComponents.PopupAnchorSide
+import org.ensodai.avalonmediacard.designsystem.components.AvalonPopupAnchorSide
 import org.ensodai.avalonmediacard.presentation.screens.commonComponents.rememberSideAnchorPopupPositionProvider
 import org.ensodai.avalonmediacard.presentation.screens.commonComponents.tvAndWebHoverEffect
 import org.ensodai.avalonmediacard.presentation.screens.commonComponents.tvDrawer.LocalTvDrawerState
@@ -561,7 +561,7 @@ private fun SettingsLanguageDropdown(
     onSelected: (String) -> Unit
 ) {
     if (!expanded) return
-    val positionProvider = rememberSideAnchorPopupPositionProvider(preferredSide = PopupAnchorSide.RIGHT)
+    val positionProvider = rememberSideAnchorPopupPositionProvider(preferredSide = AvalonPopupAnchorSide.RIGHT)
     AvalonDropdownMenu(
         expanded = true,
         popupPositionProvider = positionProvider,

@@ -35,8 +35,7 @@ fun StatsHeader(
         Column {
             Text(
                 text = stringResource(Res.string.stats_screen_title),
-                style = AvalonTheme.typography.headlineMedium,
-                fontWeight = FontWeight.Bold,
+                style = AvalonTheme.typography.pageTitle,
                 color = colors.textPrimary
             )
             Text(

@@ -43,8 +43,8 @@ import org.ensodai.avalonmediacard.core.PlaybackController
 import org.ensodai.avalonmediacard.core.PlaybackState
 import org.ensodai.avalonmediacard.presentation.screens.commonComponents.DeviceTarget
 import org.ensodai.avalonmediacard.presentation.screens.commonComponents.LocalDeviceTarget
-import org.ensodai.avalonmediacard.presentation.screens.commonComponents.tvDrawer.LocalTvDrawerState
-import org.ensodai.avalonmediacard.presentation.screens.commonComponents.tvDrawer.TvDrawerState
+import org.ensodai.avalonmediacard.presentation.screens.commonComponents.tvDrawer.LocalTvDrawerNavigator
+import org.ensodai.avalonmediacard.presentation.screens.commonComponents.tvDrawer.TvDrawerNavigator
 import org.ensodai.avalonmediacard.presentation.screens.player.action.PlayerActions
 import org.ensodai.avalonmediacard.presentation.screens.player.component.UnifiedVideoPlayer
 import org.ensodai.avalonmediacard.presentation.screens.player.component.tv.TvPlayerLayout
@@ -304,12 +304,12 @@ fun PlayerPreviewTheme(
     deviceTarget: DeviceTarget = DeviceTarget.ANDROID_TV,
     content: @Composable () -> Unit
 ) {
-    val drawerState = remember { TvDrawerState() }
+    val drawerState = remember { TvDrawerNavigator() }
 
     AvalonDesignSystemTheme(isTv = deviceTarget.isTv) {
         CompositionLocalProvider(
             LocalDeviceTarget provides deviceTarget,
-            LocalTvDrawerState provides drawerState
+            LocalTvDrawerNavigator provides drawerState
         ) {
             content()
         }

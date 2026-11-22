@@ -63,7 +63,7 @@ fun StatusAndRatingSlotContent(
             modifier = Modifier
                 .width(1.dp)
                 .height(16.dp)
-                .background(if (isLoading) Color.Transparent else Color.White.copy(alpha = 0.2f))
+                .background(if (isLoading) Color.Transparent else AvalonTheme.colors.borderSubtle)
         )
 
         RatingDropdownButton(component, isLoading, onAction)
@@ -84,7 +84,7 @@ fun StatusDropdownButton(
     } else {
         stringResource(Res.string.details_status_add)
     }
-    val iconTint = if (currentStatusOption != null) AvalonTheme.colors.primary else Color.White.copy(alpha = 0.7f)
+    val iconTint = if (currentStatusOption != null) AvalonTheme.colors.accentPrimary else AvalonTheme.colors.textSecondary
 
     fun safeDismiss() {
         expanded = false
@@ -96,10 +96,10 @@ fun StatusDropdownButton(
         Row(
             modifier = Modifier
                 .focusRequester(buttonFocusRequester)
-                .shimmerPlaceholder(isLoading, RoundedCornerShape(8.dp))
+                .shimmerPlaceholder(isLoading, AvalonTheme.shapes.control)
                 .tvAndWebHoverEffect(
                     scaleTarget = 1.04f,
-                    shape = RoundedCornerShape(8.dp),
+                    shape = AvalonTheme.shapes.control,
                     clickEnabled = !isLoading,
                     onClick = { expanded = true }
                 )
@@ -116,7 +116,7 @@ fun StatusDropdownButton(
             Spacer(modifier = Modifier.width(6.dp))
             Text(
                 text = label,
-                color = if (isLoading) Color.Transparent else Color.White,
+                color = if (isLoading) Color.Transparent else AvalonTheme.colors.textPrimary,
                 fontSize = 14.sp,
                 fontWeight = FontWeight.Medium
             )
@@ -125,7 +125,7 @@ fun StatusDropdownButton(
                 Icon(
                     Lucide.ChevronDown,
                     contentDescription = null,
-                    tint = if (isLoading) Color.Transparent else Color.White.copy(alpha = 0.5f),
+                    tint = if (isLoading) Color.Transparent else AvalonTheme.colors.textMuted,
                     modifier = Modifier.size(14.dp)
                 )
             }
@@ -184,8 +184,8 @@ fun StatusDropdownButton(
                         AvalonDropdownMenuItem(
                             text = optionLabel,
                             icon = if (isSelected) Lucide.Check else null,
-                            textColor = if (isSelected) AvalonTheme.colors.primary else Color.White,
-                            iconColor = if (isSelected) AvalonTheme.colors.primary else Color.White,
+                            textColor = if (isSelected) AvalonTheme.colors.accentPrimary else AvalonTheme.colors.textPrimary,
+                            iconColor = if (isSelected) AvalonTheme.colors.accentPrimary else AvalonTheme.colors.textPrimary,
                             onClick = {
                                 val newStatus = if (isSelected) MediaStatus.NONE else option.status
                                 val action = component.statusOptions[newStatus]
@@ -216,7 +216,7 @@ fun RatingDropdownButton(
     } else {
         stringResource(Res.string.details_rating_rate)
     }
-    val iconTint = if (currentRating != null) Color(0xFFFFC107) else Color.White.copy(alpha = 0.7f)
+    val iconTint = if (currentRating != null) AvalonTheme.colors.accentGold else AvalonTheme.colors.textSecondary
 
     fun safeDismiss() {
         expanded = false
@@ -228,10 +228,10 @@ fun RatingDropdownButton(
         Row(
             modifier = Modifier
                 .focusRequester(buttonFocusRequester)
-                .shimmerPlaceholder(isLoading, RoundedCornerShape(8.dp))
+                .shimmerPlaceholder(isLoading, AvalonTheme.shapes.control)
                 .tvAndWebHoverEffect(
                     scaleTarget = 1.04f,
-                    shape = RoundedCornerShape(8.dp),
+                    shape = AvalonTheme.shapes.control,
                     clickEnabled = !isLoading,
                     onClick = { expanded = true }
                 )
@@ -248,7 +248,7 @@ fun RatingDropdownButton(
             Spacer(modifier = Modifier.width(6.dp))
             Text(
                 text = label,
-                color = if (isLoading) Color.Transparent else Color.White,
+                color = if (isLoading) Color.Transparent else AvalonTheme.colors.textPrimary,
                 fontSize = 14.sp,
                 fontWeight = FontWeight.Medium
             )
@@ -257,7 +257,7 @@ fun RatingDropdownButton(
                 Icon(
                     Lucide.ChevronDown,
                     contentDescription = null,
-                    tint = if (isLoading) Color.Transparent else Color.White.copy(alpha = 0.5f),
+                    tint = if (isLoading) Color.Transparent else AvalonTheme.colors.textMuted,
                     modifier = Modifier.size(14.dp)
                 )
             }

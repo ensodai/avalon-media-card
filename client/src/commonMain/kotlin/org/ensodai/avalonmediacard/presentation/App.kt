@@ -49,7 +49,6 @@ import org.ensodai.avalonmediacard.presentation.screens.commonComponents.Provide
 import org.ensodai.avalonmediacard.presentation.screens.login.LoginScreen
 import org.ensodai.avalonmediacard.presentation.telemetry.LocalTelemetryTracker
 import org.ensodai.avalonmediacard.presentation.telemetry.TelemetryTracker
-import org.ensodai.avalonmediacard.presentation.theme.AvalonColors
 import org.jetbrains.compose.resources.getString
 import org.koin.compose.koinInject
 

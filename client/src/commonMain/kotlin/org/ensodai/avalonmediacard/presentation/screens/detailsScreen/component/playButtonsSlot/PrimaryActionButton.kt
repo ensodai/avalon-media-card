@@ -1,26 +1,16 @@
 package org.ensodai.avalonmediacard.presentation.screens.detailsScreen.component.playButtonsSlot
 
-import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.shape.RoundedCornerShape
-
-import org.ensodai.avalonmediacard.designsystem.components.AvalonIcon as Icon
-import org.ensodai.avalonmediacard.designsystem.components.AvalonText as Text
+import androidx.compose.foundation.layout.size
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.focus.onFocusChanged
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
-import org.ensodai.avalonmediacard.contract.logging.AppLogging
-import org.ensodai.avalonmediacard.presentation.components.shimmerPlaceholder
-import org.ensodai.avalonmediacard.presentation.screens.commonComponents.tvAndWebHoverEffect
+import org.ensodai.avalonmediacard.designsystem.components.AvalonButton
+import org.ensodai.avalonmediacard.designsystem.components.AvalonButtonSize
+import org.ensodai.avalonmediacard.designsystem.components.AvalonButtonVariant
+import org.ensodai.avalonmediacard.designsystem.components.AvalonIcon
 
-private val logger = AppLogging.logger("PrimaryActionButton")
-
+@Deprecated("Migrated to AvalonButton in :core:designsystem")
 @Composable
 fun PrimaryActionButton(
     text: String,
@@ -29,38 +19,19 @@ fun PrimaryActionButton(
     isLoading: Boolean = false,
     onClick: () -> Unit
 ) {
-
-    Row(
-        verticalAlignment = Alignment.CenterVertically,
-        modifier = modifier
-            .height(46.dp)
-            .shimmerPlaceholder(isLoading, RoundedCornerShape(24.dp))
-            .onFocusChanged {
-                if (it.isFocused) {
-                    logger.d { "[FOCUS_DEBUG] PrimaryActionButton text='$text' GOT FOCUS!" }
-                }
-            }
-            .tvAndWebHoverEffect(
-                scaleTarget = 1.04f,
-                shape = RoundedCornerShape(24.dp),
-                clickEnabled = !isLoading,
-                onClick = { onClick() }
+    AvalonButton(
+        text = text,
+        onClick = onClick,
+        modifier = modifier,
+        variant = AvalonButtonVariant.Primary,
+        size = AvalonButtonSize.Standard,
+        enabled = !isLoading,
+        leadingIcon = {
+            AvalonIcon(
+                imageVector = icon,
+                contentDescription = null,
+                modifier = Modifier.size(18.dp)
             )
-            .background(if (isLoading) Color.Transparent else Color.White, RoundedCornerShape(24.dp))
-            .padding(horizontal = 24.dp)
-    ) {
-        Icon(
-            imageVector = icon,
-            contentDescription = null,
-            modifier = Modifier.size(18.dp),
-            tint = if (isLoading) Color.Transparent else Color.Black
-        )
-        Spacer(modifier = Modifier.width(8.dp))
-        Text(
-            text = text,
-            fontSize = 14.sp,
-            fontWeight = FontWeight.Bold,
-            color = if (isLoading) Color.Transparent else Color.Black
-        )
-    }
+        }
+    )
 }

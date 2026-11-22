@@ -13,6 +13,7 @@ import com.composables.icons.lucide.Lucide
 import org.ensodai.avalonmediacard.contract.slot.Action
 import org.ensodai.avalonmediacard.contract.slot.IconType
 import org.ensodai.avalonmediacard.contract.slot.SlotData
+import org.ensodai.avalonmediacard.designsystem.theme.AvalonTheme
 import org.ensodai.avalonmediacard.presentation.components.IconManager
 
 @Composable
@@ -34,7 +35,7 @@ fun CollectionButtonsSlotContent(
                     } else {
                         SecondaryActionButton(
                             icon = IconManager.getIcon(btn.icon),
-                            tint = if (btn.icon == IconType.HEART_FILLED) Color(0xFFE91E63) else Color.White,
+                            tint = if (btn.icon == IconType.HEART_FILLED) AvalonTheme.colors.statusDanger else AvalonTheme.colors.textPrimary,
                             isLoading = false,
                             onClick = { btn.action?.let { onAction(it) } }
                         )

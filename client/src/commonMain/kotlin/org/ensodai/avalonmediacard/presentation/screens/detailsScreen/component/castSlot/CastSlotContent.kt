@@ -1,6 +1,9 @@
 package org.ensodai.avalonmediacard.presentation.screens.detailsScreen.component.castSlot
 
 import org.ensodai.avalonmediacard.designsystem.theme.AvalonTheme
+import org.ensodai.avalonmediacard.designsystem.components.AvalonPersonCard
+import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.ui.unit.Dp
 
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.foundation.clickable
@@ -147,107 +150,60 @@ fun CastSlotContent(
 
 @Composable
 private fun ActorCard(
-    member: CastMemberItem, // Замените на ваш класс модели
+    member: CastMemberItem,
     onAction: (Action) -> Unit
 ) {
-    // Состояние, которое сообщит нам, наведен ли фокус на фото
-    var isActive by remember { mutableStateOf(false) }
+    val photo = member.profileUrl?.takeIf { it.isNotBlank() && it != "placeholder" }
 
-    // Анимированные цвета текста, зависящие от фокуса на фотографии!
-    val nameColor by animateColorAsState(
-        targetValue = if (isActive) Color.White else AvalonTheme.colors.onSurface
+    AvalonPersonCard(
+        name = member.name,
+        role = member.character ?: "",
+        avatarSize = 64.dp,
+        onClick = {
+            onAction(ActionNavigate(Screen.Person(key = member.key, personName = member.name)))
+        },
+        avatarContent = if (photo != null) {
+            {
+                ShimmerImage(
+                    model = photo,
+                    contentDescription = member.name,
+                    contentScale = ContentScale.Crop,
+                    modifier = Modifier.fillMaxSize(),
+                    shape = CircleShape,
+                    errorIcon = Lucide.User,
+                    errorIconTint = AvalonTheme.colors.textMuted
+                )
+            }
+        } else null
     )
-    val roleColor by animateColorAsState(
-        targetValue = if (isActive) Color.White.copy(alpha = 0.8f) else AvalonTheme.colors.onSurfaceVariant
-    )
-
-    Column(
-        modifier = Modifier.width(110.dp),
-        horizontalAlignment = Alignment.Start
-    ) {
-        // === ИНТЕРАКТИВНАЯ ЗОНА (ФОТО) ===
-        // Фокус, рамка и кликабельность вешаются именно на фото,
-        // чтобы на ТВ выделялась картинка, а не весь текстовый блок.
-        Box(
-            modifier = Modifier
-                .fillMaxWidth()
-                .height(150.dp)
-                // ПРИМЕНЯЕМ НАШ ЭКСТЕНШЕН
-                .tvAndWebHoverEffect(
-                    scaleTarget = 1.06f, // Для актеров 1.06 отлично подходит
-                    activeBorderWidth = 2.dp,
-                    activeBorderColor = Color.White.copy(alpha = 0.8f),
-                    shape = RoundedCornerShape(8.dp),
-                    onStateChange = { isActive = it } // Передаем статус активности наружу
-                ,
-    onClick = {
-                    onAction(ActionNavigate(Screen.Person(key = member.key, personName = member.name)))
-                })
-                ,
-            contentAlignment = Alignment.Center
-        ) {
-            ShimmerImage(
-                model = member.profileUrl.takeIf { !it.isNullOrEmpty() && it != "placeholder" },
-                contentDescription = member.name,
-                contentScale = ContentScale.Crop,
-                modifier = Modifier.fillMaxSize(),
-                shape = RoundedCornerShape(8.dp),
-                errorIcon = Lucide.User,
-                errorIconTint = AvalonTheme.colors.onSurfaceVariant.copy(alpha = 0.5f)
-            )
-        }
-
-        Spacer(modifier = Modifier.height(8.dp))
-
-        // === ТЕКСТОВАЯ ЗОНА ===
-        Text(
-            text = member.name,
-            fontSize = 13.sp,
-            maxLines = 2,
-            fontWeight = FontWeight.Bold,
-            color = nameColor, // Используем анимированный цвет!
-            lineHeight = 16.sp,
-            textAlign = TextAlign.Start
-        )
-
-        val role = member.character
-        if (!role.isNullOrEmpty()) {
-            Spacer(modifier = Modifier.height(2.dp))
-            Text(
-                text = role,
-                fontSize = 11.sp,
-                maxLines = 2,
-                overflow = TextOverflow.Ellipsis,
-                color = roleColor, // Используем анимированный цвет!
-                lineHeight = 14.sp,
-                textAlign = TextAlign.Start
-            )
-        }
-    }
 }
 
 @Composable
-private fun ActorSkeletonCard() {
-    Column(modifier = Modifier.width(110.dp)) {
+private fun ActorSkeletonCard(avatarSize: Dp = 64.dp) {
+    Column(
+        horizontalAlignment = Alignment.CenterHorizontally,
+        modifier = Modifier
+            .width(avatarSize + 48.dp)
+            .padding(AvalonTheme.spacing.space8)
+    ) {
         Box(
             modifier = Modifier
-                .fillMaxWidth()
-                .height(150.dp)
-                .shimmerPlaceholder(true, RoundedCornerShape(8.dp))
+                .size(avatarSize)
+                .shimmerPlaceholder(true, CircleShape)
         )
-        Spacer(modifier = Modifier.height(8.dp))
+        Spacer(Modifier.height(AvalonTheme.spacing.space8))
         Box(
             modifier = Modifier
-                .fillMaxWidth()
+                .width(avatarSize + 16.dp)
                 .height(14.dp)
-                .shimmerPlaceholder(true, RoundedCornerShape(4.dp))
+                .shimmerPlaceholder(true, AvalonTheme.shapes.micro)
         )
-        Spacer(modifier = Modifier.height(4.dp))
+        Spacer(Modifier.height(4.dp))
         Box(
             modifier = Modifier
-                .fillMaxWidth(0.7f)
+                .width(avatarSize)
                 .height(12.dp)
-                .shimmerPlaceholder(true, RoundedCornerShape(4.dp))
+                .shimmerPlaceholder(true, AvalonTheme.shapes.micro)
         )
     }
 }

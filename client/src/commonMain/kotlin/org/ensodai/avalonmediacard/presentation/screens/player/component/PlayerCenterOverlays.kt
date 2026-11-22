@@ -313,13 +313,13 @@ fun PlayerCenterOverlays(
 
         if (playbackError != null) {
             Card(
-                colors = CardDefaults.cardColors(containerColor = AvalonTheme.colors.errorContainer),
+                colors = CardDefaults.cardColors(containerColor = AvalonTheme.colors.statusDanger.copy(alpha = 0.2f)),
                 modifier = Modifier.align(Alignment.Center).padding(24.dp)
             ) {
                 Column(modifier = Modifier.padding(16.dp), horizontalAlignment = Alignment.CenterHorizontally) {
                     Text(
                         text = playbackError,
-                        color = AvalonTheme.colors.onErrorContainer,
+                        color = AvalonTheme.colors.textPrimary,
                         fontWeight = FontWeight.Bold
                     )
                     Spacer(modifier = Modifier.height(12.dp))

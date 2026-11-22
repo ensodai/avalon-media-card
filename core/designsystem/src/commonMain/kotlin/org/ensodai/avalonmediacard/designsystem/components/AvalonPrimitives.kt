@@ -322,9 +322,6 @@ fun AvalonSurface(
 @Immutable
 data class AvalonCardColors(val containerColor: Color, val contentColor: Color)
 
-typealias CardColors = AvalonCardColors
-typealias ButtonColors = AvalonButtonColors
-
 object CardDefaults {
     @Composable
     fun cardColors(
@@ -429,51 +426,6 @@ fun AvalonButton(
     }
 }
 
-/**
- * Avalon Foundation IconButton (slot overload):
- * Replaces Material 3 IconButton(onClick = ...) { ... } with Foundation implementation.
- */
-@Composable
-fun AvalonIconButton(
-    onClick: () -> Unit,
-    modifier: Modifier = Modifier,
-    enabled: Boolean = true,
-    contentDescription: String? = null,
-    content: @Composable () -> Unit
-) {
-    val shape = RoundedCornerShape(10.dp)
-    val colors = AvalonButtonDefaults.colors(AvalonButtonVariant.Ghost)
-    val activeSurface = if (enabled) {
-        colors.surface
-    } else {
-        AvalonSurfaceColors(default = colors.disabledContainerColor)
-    }
-
-    Box(
-        modifier = modifier
-            .size(40.dp)
-            .then(
-                if (contentDescription != null) {
-                    Modifier.semantics { this.contentDescription = contentDescription }
-                } else Modifier
-            )
-            .avalonInteractive(
-                role = AvalonInteractiveRole.Control,
-                shape = shape,
-                enabled = enabled,
-                semanticRole = Role.Button,
-                surfaceColors = activeSurface,
-                onClick = onClick
-            ),
-        contentAlignment = Alignment.Center
-    ) {
-        CompositionLocalProvider(
-            LocalAvalonContentColor provides if (enabled) colors.contentColor else colors.disabledContentColor
-        ) {
-            content()
-        }
-    }
-}
 
 /**
  * Avalon Foundation Switch:

@@ -9,7 +9,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import org.ensodai.avalonmediacard.contract.slot.MediaRatingItem
 import org.ensodai.avalonmediacard.contract.slot.SlotData
-
+import org.ensodai.avalonmediacard.designsystem.theme.AvalonTheme
 
 @Composable
 fun CriticsRatingsSlotContent(
@@ -46,9 +46,10 @@ fun CriticsRatingsSlotContent(
     }
 }
 
+@Composable
 fun getRatingColor(source: String, value: String): Color {
     val cleanValue = value.replace("%", "").replace(",", ".").trim()
-    val num = cleanValue.toDoubleOrNull() ?: return Color(0xFFFFC107)
+    val num = cleanValue.toDoubleOrNull() ?: return AvalonTheme.colors.accentGold
 
     val is100Scale = value.contains("%") ||
             source.equals("Rotten Tomatoes", ignoreCase = true) ||
@@ -57,8 +58,8 @@ fun getRatingColor(source: String, value: String): Color {
     val normalized = if (is100Scale) num / 10.0 else num
 
     return when {
-        normalized >= 7.0 -> Color(0xFF4CAF50)
-        normalized >= 5.0 -> Color(0xFFFFC107)
-        else -> Color(0xFFF44336)
+        normalized >= 7.0 -> AvalonTheme.colors.statusLive
+        normalized >= 5.0 -> AvalonTheme.colors.accentGold
+        else -> AvalonTheme.colors.statusDanger
     }
 }

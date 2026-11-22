@@ -187,7 +187,7 @@ fun WebActionToolbar(
                 }
 
                 // Divider between main player actions and tracking actions
-                if (userActions != null || onRequestOtherSource != null) {
+                if (userActions != null || onOpenWatchParty != null || onRequestOtherSource != null) {
                     Box(
                         modifier = Modifier
                             .padding(horizontal = 4.dp)
@@ -211,27 +211,11 @@ fun WebActionToolbar(
                     )
                 }
 
-                // 6. Optional Sources Button
-                if (onRequestOtherSource != null) {
-                    AvalonButton(
-                        text = stringResource(Res.string.details_sources_select),
-                        onClick = onRequestOtherSource,
-                        variant = AvalonButtonVariant.Secondary,
-                        size = AvalonButtonSize.Standard,
-                        leadingIcon = {
-                            AvalonIcon(
-                                imageVector = Lucide.HardDrive,
-                                contentDescription = null,
-                                modifier = Modifier.size(18.dp)
-                            )
-                        }
-                    )
-                }
-
-                // 7. Settings Dropdown (Шестеренка: совместный просмотр и др.)
-                if (onOpenWatchParty != null) {
+                // 6. Settings Dropdown (Шестеренка: совместный просмотр, выбор источника и др.)
+                if (onOpenWatchParty != null || onRequestOtherSource != null) {
                     WebSettingsMenuButton(
-                        onOpenWatchParty = onOpenWatchParty
+                        onOpenWatchParty = onOpenWatchParty,
+                        onRequestOtherSource = onRequestOtherSource
                     )
                 }
             }
@@ -241,7 +225,8 @@ fun WebActionToolbar(
 
 @Composable
 private fun WebSettingsMenuButton(
-    onOpenWatchParty: () -> Unit
+    onOpenWatchParty: (() -> Unit)?,
+    onRequestOtherSource: (() -> Unit)?
 ) {
     var expanded by remember { mutableStateOf(false) }
     val density = LocalDensity.current
@@ -268,16 +253,31 @@ private fun WebSettingsMenuButton(
                 offset = IntOffset(0, with(density) { 46.dp.roundToPx() }),
                 onDismissRequest = { expanded = false }
             ) {
-                AvalonDropdownMenuItem(
-                    text = stringResource(Res.string.watch_party_title),
-                    icon = Lucide.Users,
-                    textColor = Color.White,
-                    iconColor = AvalonTheme.colors.accentPrimary,
-                    onClick = {
-                        expanded = false
-                        onOpenWatchParty()
-                    }
-                )
+                if (onOpenWatchParty != null) {
+                    AvalonDropdownMenuItem(
+                        text = stringResource(Res.string.watch_party_title),
+                        icon = Lucide.Users,
+                        textColor = AvalonTheme.colors.textPrimary,
+                        iconColor = AvalonTheme.colors.accentPrimary,
+                        onClick = {
+                            expanded = false
+                            onOpenWatchParty()
+                        }
+                    )
+                }
+
+                if (onRequestOtherSource != null) {
+                    AvalonDropdownMenuItem(
+                        text = stringResource(Res.string.details_sources_select),
+                        icon = Lucide.HardDrive,
+                        textColor = AvalonTheme.colors.textPrimary,
+                        iconColor = AvalonTheme.colors.accentPrimary,
+                        onClick = {
+                            expanded = false
+                            onRequestOtherSource()
+                        }
+                    )
+                }
             }
         }
     }

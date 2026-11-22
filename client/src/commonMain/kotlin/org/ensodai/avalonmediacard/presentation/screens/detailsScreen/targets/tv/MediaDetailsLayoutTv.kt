@@ -360,7 +360,7 @@ fun MediaDetailsLayoutTv(
                 }
                 Spacer(modifier = Modifier.height(24.dp))
                 Box(modifier = Modifier.focusGroup().onFocusChanged { if (it.hasFocus) focusZone.value = TvFocusZone.BOTTOM }) {
-                    CarouselsSlot(state = state.carousels, onAction = onAction)
+                    CarouselsSlot(state = state.carousels, onAction = onAction, horizontalPadding = 32.dp)
                 }
             }
         }

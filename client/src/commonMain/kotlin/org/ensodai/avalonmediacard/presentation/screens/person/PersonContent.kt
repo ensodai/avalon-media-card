@@ -461,7 +461,8 @@ private fun PersonCreditsSection(
         credits.forEach { carousel ->
             MovieCarousel(
                 state = carousel.state,
-                onAction = onAction
+                onAction = onAction,
+                horizontalPadding = 0.dp
             )
         }
     }

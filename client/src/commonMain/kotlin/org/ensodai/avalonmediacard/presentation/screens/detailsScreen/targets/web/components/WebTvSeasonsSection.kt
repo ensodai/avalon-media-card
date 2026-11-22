@@ -642,126 +642,104 @@ private fun WebEpisodeGridCard(
                 var isRatingHovered by remember { mutableStateOf(false) }
 
                 val isWatched = episode.isWatched
-                val watchColor = if (isWatched) colors.statusLive else colors.textPrimary
-                val currentWatchBg by animateColorAsState(
-                    targetValue = if (isWatched) {
-                        colors.statusLive.copy(alpha = if (isWatchHovered) 0.35f else 0.18f)
-                    } else {
-                        colors.bgElevated.copy(alpha = if (isWatchHovered) 0.8f else 0.4f)
-                    },
-                    label = "WatchBg"
-                )
-                val currentWatchBorder by animateColorAsState(
-                    targetValue = if (isWatched) {
-                        colors.statusLive.copy(alpha = if (isWatchHovered) 0.7f else 0.4f)
-                    } else {
-                        colors.borderStrong.copy(alpha = if (isWatchHovered) 0.6f else 0.3f)
-                    },
-                    label = "WatchBorder"
-                )
-
                 val userRating = episode.userRating
                 val hasRating = userRating != null && userRating > 0
-                val ratingColor = if (hasRating) colors.accentGold else colors.textPrimary
-                val currentRatingBg by animateColorAsState(
-                    targetValue = if (hasRating) {
-                        colors.accentGold.copy(alpha = if (isRatingHovered) 0.35f else 0.18f)
-                    } else {
-                        colors.bgElevated.copy(alpha = if (isRatingHovered) 0.8f else 0.4f)
-                    },
-                    label = "RatingBg"
-                )
-                val currentRatingBorder by animateColorAsState(
-                    targetValue = if (hasRating) {
-                        colors.accentGold.copy(alpha = if (isRatingHovered) 0.7f else 0.4f)
-                    } else {
-                        colors.borderStrong.copy(alpha = if (isRatingHovered) 0.6f else 0.3f)
-                    },
-                    label = "RatingBorder"
-                )
 
+                // Monolithic Glass Pill Container (Obsidian Cinema Level 3)
                 Row(
                     modifier = Modifier
-                        .shadow(10.dp, RoundedCornerShape(20.dp))
-                        .background(colors.bgOverlay.copy(alpha = 0.96f), RoundedCornerShape(20.dp))
-                        .border(1.dp, colors.borderOverlay, RoundedCornerShape(20.dp))
-                        .padding(horizontal = 6.dp, vertical = 4.dp),
+                        .shadow(8.dp, CircleShape)
+                        .background(colors.bgOverlay.copy(alpha = 0.88f), CircleShape)
+                        .border(1.dp, colors.borderOverlay, CircleShape)
+                        .padding(horizontal = 4.dp, vertical = 3.dp),
                     verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.spacedBy(6.dp)
+                    horizontalArrangement = Arrangement.spacedBy(3.dp)
                 ) {
-                    // Watch Status Button
+                    // 1. Watch Status Button (Ghost icon with soft halo on hover)
+                    val watchIconTint = if (isWatched) colors.statusLive else if (isWatchHovered) colors.textPrimary else colors.textSecondary
+                    val watchHoverBg by animateColorAsState(
+                        targetValue = if (isWatchHovered) {
+                            if (isWatched) colors.statusLive.copy(alpha = 0.20f) else colors.stateLayerHover
+                        } else Color.Transparent,
+                        label = "WatchHoverBg"
+                    )
+
                     Box(
                         modifier = Modifier
-                            .size(34.dp)
+                            .size(28.dp)
+                            .clip(CircleShape)
+                            .background(watchHoverBg)
                             .pointerHoverIcon(PointerIcon.Hand)
                             .tvAndWebHoverEffect(
-                                scaleTarget = 1.08f,
+                                scaleTarget = 1.0f,
                                 shape = CircleShape,
-                                activeBorderWidth = 1.5.dp,
-                                activeBorderColor = currentWatchBorder,
-                                defaultBorderWidth = 1.dp,
-                                defaultBorderColor = currentWatchBorder,
+                                activeBorderColor = Color.Transparent,
+                                defaultBorderColor = Color.Transparent,
                                 tiltEnabled = false,
                                 onStateChange = { isWatchHovered = it },
                                 onClick = onToggleWatch
-                            )
-                            .background(currentWatchBg, CircleShape),
+                            ),
                         contentAlignment = Alignment.Center
                     ) {
                         AvalonIcon(
                             imageVector = if (isWatched) Lucide.CheckCheck else Lucide.Eye,
                             contentDescription = if (isWatched) "Просмотрено" else "Отметить",
-                            tint = watchColor,
-                            modifier = Modifier.size(18.dp)
+                            tint = watchIconTint,
+                            modifier = Modifier.size(16.dp)
                         )
                     }
 
-                    // Divider
+                    // 2. Subtle Divider
                     Box(
                         modifier = Modifier
                             .width(1.dp)
-                            .height(18.dp)
+                            .height(14.dp)
                             .background(colors.borderSubtle)
                     )
 
-                    // Rating Button (34dp height)
+                    // 3. Rating Button (Ghost button with soft gold halo on hover)
+                    val ratingIconTint = if (hasRating || isRatingHovered) colors.accentGold else colors.textSecondary
+                    val ratingHoverBg by animateColorAsState(
+                        targetValue = if (isRatingHovered) colors.accentGold.copy(alpha = 0.16f) else Color.Transparent,
+                        label = "RatingHoverBg"
+                    )
+
                     Box(contentAlignment = Alignment.Center) {
                         Row(
                             modifier = Modifier
-                                .height(34.dp)
+                                .height(28.dp)
                                 .then(
-                                    if (hasRating) Modifier.padding(horizontal = 8.dp)
-                                    else Modifier.size(34.dp)
+                                    if (hasRating) Modifier.padding(horizontal = 7.dp)
+                                    else Modifier.size(28.dp)
                                 )
+                                .clip(CircleShape)
+                                .background(ratingHoverBg)
                                 .pointerHoverIcon(PointerIcon.Hand)
                                 .tvAndWebHoverEffect(
-                                    scaleTarget = 1.06f,
-                                    shape = if (hasRating) RoundedCornerShape(17.dp) else CircleShape,
-                                    activeBorderWidth = 1.5.dp,
-                                    activeBorderColor = currentRatingBorder,
-                                    defaultBorderWidth = 1.dp,
-                                    defaultBorderColor = currentRatingBorder,
+                                    scaleTarget = 1.0f,
+                                    shape = CircleShape,
+                                    activeBorderColor = Color.Transparent,
+                                    defaultBorderColor = Color.Transparent,
                                     tiltEnabled = false,
                                     onStateChange = { isRatingHovered = it },
                                     onClick = { isRatingPopupOpen = true }
-                                )
-                                .background(currentRatingBg, if (hasRating) RoundedCornerShape(17.dp) else CircleShape),
+                                ),
                             verticalAlignment = Alignment.CenterVertically,
                             horizontalArrangement = Arrangement.Center
                         ) {
                             AvalonIcon(
                                 imageVector = Lucide.Star,
                                 contentDescription = if (hasRating) "$userRating" else null,
-                                tint = ratingColor,
-                                modifier = Modifier.size(16.dp)
+                                tint = ratingIconTint,
+                                modifier = Modifier.size(15.dp)
                             )
                             if (hasRating) {
-                                Spacer(modifier = Modifier.width(4.dp))
+                                Spacer(modifier = Modifier.width(3.dp))
                                 AvalonText(
                                     text = "$userRating",
                                     fontSize = 12.sp,
                                     fontWeight = FontWeight.Bold,
-                                    color = ratingColor
+                                    color = colors.accentGold
                                 )
                             }
                         }
@@ -770,7 +748,7 @@ private fun WebEpisodeGridCard(
                             EpisodeRatingPopup(
                                 currentRating = userRating,
                                 alignment = Alignment.TopEnd,
-                                offset = IntOffset(0, -60),
+                                offset = IntOffset(0, -50),
                                 onDismiss = { isRatingPopupOpen = false },
                                 onRate = { rating ->
                                     isRatingPopupOpen = false
@@ -791,7 +769,7 @@ private fun WebEpisodeGridCard(
                     modifier = Modifier
                         .align(Alignment.BottomCenter)
                         .fillMaxWidth()
-                        .height(3.dp)
+                        .height(2.dp)
                         .background(colors.statusLive)
                 )
             }
@@ -847,8 +825,37 @@ private fun WebEpisodeGridCard(
                         )
                     }
 
+                    // User Rating (always visible in card metadata if set)
+                    val userRating = episode.userRating
+                    if (userRating != null && userRating > 0) {
+                        if (!airDate.isNullOrEmpty()) {
+                            AvalonText(
+                                text = "•",
+                                color = colors.textSecondary.copy(alpha = 0.5f),
+                                fontSize = 12.sp
+                            )
+                        }
+                        Row(
+                            verticalAlignment = Alignment.CenterVertically,
+                            horizontalArrangement = Arrangement.spacedBy(3.dp)
+                        ) {
+                            AvalonIcon(
+                                imageVector = Lucide.Star,
+                                contentDescription = null,
+                                tint = colors.accentGold,
+                                modifier = Modifier.size(12.dp)
+                            )
+                            AvalonText(
+                                text = "$userRating",
+                                style = AvalonTheme.typography.metadata,
+                                color = colors.accentGold,
+                                fontWeight = FontWeight.SemiBold
+                            )
+                        }
+                    }
+
                     val rating = episode.voteAverage
-                    if (rating != null && rating > 0.0) {
+                    if (rating != null && rating > 0.0 && (userRating == null || userRating <= 0)) {
                         val formattedRating = ((rating * 10).toInt() / 10.0).toString()
                         if (!airDate.isNullOrEmpty()) {
                             AvalonText(
@@ -864,13 +871,13 @@ private fun WebEpisodeGridCard(
                             AvalonIcon(
                                 imageVector = Lucide.Star,
                                 contentDescription = null,
-                                tint = colors.accentGold,
+                                tint = colors.textSecondary,
                                 modifier = Modifier.size(12.dp)
                             )
                             AvalonText(
                                 text = formattedRating,
                                 style = AvalonTheme.typography.metadata,
-                                color = colors.accentGold
+                                color = colors.textSecondary
                             )
                         }
                     }

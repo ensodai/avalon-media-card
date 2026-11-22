@@ -163,7 +163,7 @@ fun MediaDetailsLayoutMobile(
             Spacer(modifier = Modifier.height(16.dp))
 
             // Carousels
-            CarouselsSlot(state = state.carousels, onAction = onAction)
+            CarouselsSlot(state = state.carousels, onAction = onAction, horizontalPadding = 16.dp)
         }
 
         if (isPlayerOpen) {

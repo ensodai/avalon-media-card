@@ -8,9 +8,12 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.drawWithContent
+import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Popup
+import androidx.compose.ui.window.PopupProperties
 import org.ensodai.avalonmediacard.designsystem.components.AvalonStarRating
 import org.ensodai.avalonmediacard.designsystem.theme.AvalonTheme
 
@@ -29,19 +32,29 @@ fun EpisodeRatingPopup(
     Popup(
         alignment = alignment,
         offset = offset,
-        onDismissRequest = onDismiss
+        onDismissRequest = onDismiss,
+        properties = PopupProperties(focusable = true)
     ) {
         Box(
             modifier = Modifier
                 .clip(shapes.control)
                 .background(colors.bgOverlay)
                 .border(1.dp, colors.borderOverlay, shapes.control)
-                .padding(horizontal = 14.dp, vertical = 10.dp)
+                .drawWithContent {
+                    drawContent()
+                    drawLine(
+                        color = colors.borderOverlayHighlight,
+                        start = Offset(10.dp.toPx(), 1.dp.toPx()),
+                        end = Offset(size.width - 10.dp.toPx(), 1.dp.toPx()),
+                        strokeWidth = 1.dp.toPx()
+                    )
+                }
+                .padding(horizontal = 12.dp, vertical = 8.dp)
         ) {
             AvalonStarRating(
                 rating = currentRating ?: 0,
                 maxRating = maxRating,
-                starSize = 22.dp,
+                starSize = 20.dp,
                 showValueLabel = true,
                 onRatingSelected = onRate
             )

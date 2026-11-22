@@ -199,22 +199,31 @@ fun AvalonStarRating(
 
         for (i in 1..maxRating) {
             val isFilled = i <= effectiveRating
-            val starTint = if (isFilled) colors.accentGold else colors.chartTrack
+            val targetTint = if (isFilled) colors.accentGold else colors.textMutedOnOverlay.copy(alpha = 0.55f)
+            val starTint by animateColorAsState(
+                targetValue = targetTint,
+                label = "star_tint_$i"
+            )
 
             Box(
                 modifier = if (isInteractive) {
                     Modifier
-                        .size(starSize + 8.dp)
+                        .size(starSize + 6.dp)
                         .clip(CircleShape)
                         .avalonInteractive(
                             role = AvalonInteractiveRole.Control,
                             shape = CircleShape,
                             surfaceColors = AvalonSurfaceColors(
                                 default = Color.Transparent,
-                                hover = colors.bgElevated
+                                hover = colors.accentGold.copy(alpha = 0.15f),
+                                pressed = colors.accentGold.copy(alpha = 0.25f)
                             ),
                             onStateChange = { isHovered ->
-                                hoveredRating = if (isHovered) i else null
+                                if (isHovered) {
+                                    hoveredRating = i
+                                } else if (hoveredRating == i) {
+                                    hoveredRating = null
+                                }
                             },
                             onClick = { onRatingSelected(i) }
                         )
@@ -232,15 +241,29 @@ fun AvalonStarRating(
             }
         }
 
-        if (showValueLabel && effectiveRating > 0) {
-            Spacer(Modifier.width(6.dp))
-            BasicText(
-                text = "$effectiveRating",
-                style = AvalonTheme.typography.uiLabel.copy(
-                    color = colors.accentGold,
-                    fontWeight = FontWeight.Bold
-                )
-            )
+        if (showValueLabel) {
+            Spacer(Modifier.width(8.dp))
+            Box(
+                modifier = Modifier.width(32.dp),
+                contentAlignment = Alignment.CenterStart
+            ) {
+                if (effectiveRating > 0) {
+                    BasicText(
+                        text = "$effectiveRating",
+                        style = AvalonTheme.typography.uiLabel.copy(
+                            color = colors.accentGold,
+                            fontWeight = FontWeight.Bold
+                        )
+                    )
+                } else {
+                    BasicText(
+                        text = "—",
+                        style = AvalonTheme.typography.uiLabel.copy(
+                            color = colors.textMutedOnOverlay.copy(alpha = 0.70f)
+                        )
+                    )
+                }
+            }
         }
     }
 }

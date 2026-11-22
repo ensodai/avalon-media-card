@@ -25,6 +25,7 @@ import androidx.compose.ui.focus.focusRestorer
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.composables.icons.lucide.ChevronRight
 import com.composables.icons.lucide.Lucide
@@ -48,7 +49,8 @@ import org.ensodai.avalonmediacard.designsystem.theme.AvalonTheme
 fun MovieCarousel(
     state: SlotUiState<SlotData.Carousel>,
     onAction: (Action) -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    horizontalPadding: Dp = 32.dp
 ) {
     if (state.hasError && state.error != null) {
         SlotErrorCard(
@@ -65,7 +67,8 @@ fun MovieCarousel(
         component = component,
         isLoading = state.isInitialLoading,
         onAction = onAction,
-        modifier = modifier
+        modifier = modifier,
+        horizontalPadding = horizontalPadding
     )
 }
 
@@ -74,7 +77,8 @@ private fun MovieCarouselInternal(
     component: SlotData.Carousel,
     isLoading: Boolean,
     onAction: (Action) -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    horizontalPadding: Dp = 32.dp
 ) {
     val scrollState = rememberLazyListState()
     val coroutineScope = rememberCoroutineScope()
@@ -125,7 +129,7 @@ private fun MovieCarouselInternal(
             titleAction = component.titleAction,
             isLoading = isLoading,
             onAction = onAction,
-            modifier = Modifier.padding(horizontal = 32.dp)
+            modifier = Modifier.padding(horizontal = horizontalPadding)
         )
 
         Spacer(modifier = Modifier.height(16.dp))
@@ -138,9 +142,9 @@ private fun MovieCarouselInternal(
             contentAlignment = Alignment.Center
         ) {
             val targetVisibleItems = 6.25f
-            val horizontalPadding = 64.dp // 32.dp * 2
+            val horizontalPaddingTotal = horizontalPadding * 2
             val spacingTotal = 16.dp * 6
-            val calculatedWidth = (maxWidth - horizontalPadding - spacingTotal) / targetVisibleItems
+            val calculatedWidth = (maxWidth - horizontalPaddingTotal - spacingTotal) / targetVisibleItems
             val cardWidth = calculatedWidth.coerceAtLeast(90.dp)
 
             val deviceTarget = LocalDeviceTarget.current
@@ -149,7 +153,7 @@ private fun MovieCarouselInternal(
                 LazyRow(
                     state = scrollState,
                     horizontalArrangement = Arrangement.spacedBy(16.dp),
-                    contentPadding = PaddingValues(horizontal = 32.dp),
+                    contentPadding = PaddingValues(horizontal = horizontalPadding),
                     modifier = Modifier.fillMaxWidth()
                 ) {
                     if (isLoading) {

@@ -5,10 +5,15 @@ import org.ensodai.avalonmediacard.designsystem.theme.AvalonTheme
 import androidx.compose.animation.*
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.core.animateFloatAsState
+import androidx.compose.animation.core.spring
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.hoverable
+import androidx.compose.foundation.interaction.MutableInteractionSource
+import androidx.compose.foundation.interaction.collectIsHoveredAsState
+import androidx.compose.foundation.interaction.collectIsPressedAsState
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -19,8 +24,15 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
+import org.ensodai.avalonmediacard.designsystem.components.AvalonButton
+import org.ensodai.avalonmediacard.designsystem.components.AvalonButtonSize
+import org.ensodai.avalonmediacard.designsystem.components.AvalonButtonVariant
 import org.ensodai.avalonmediacard.designsystem.components.AvalonIcon
+import org.ensodai.avalonmediacard.designsystem.components.AvalonIconButton
 import org.ensodai.avalonmediacard.designsystem.components.AvalonText
+import org.ensodai.avalonmediacard.designsystem.interaction.AvalonInteractiveRole
+import org.ensodai.avalonmediacard.designsystem.interaction.AvalonSurfaceColors
+import org.ensodai.avalonmediacard.designsystem.interaction.avalonInteractive
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -29,12 +41,13 @@ import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
+import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.input.pointer.PointerIcon
+import androidx.compose.ui.input.pointer.pointerHoverIcon
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.layout.onGloballyPositioned
-import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
-import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -102,14 +115,23 @@ fun WebTvSeasonsSection(
     val episodes = activeSeasonContent?.episodes.orEmpty()
 
     // Native HorizontalPager State
-    val totalPages = remember(episodes) {
-        if (episodes.isNotEmpty()) {
-            (episodes.size + EPISODES_PAGE_SIZE - 1) / EPISODES_PAGE_SIZE
+    val expectedEpisodesCount = selectedSeason?.episodeCount ?: episodes.size
+    val totalPages = remember(episodes, expectedEpisodesCount) {
+        val count = if (episodes.isNotEmpty()) episodes.size else expectedEpisodesCount
+        if (count > 0) {
+            (count + EPISODES_PAGE_SIZE - 1) / EPISODES_PAGE_SIZE
         } else 1
     }
 
     val pagerState = rememberPagerState(initialPage = 0) { totalPages }
     val coroutineScope = rememberCoroutineScope()
+
+    // Reset pager page to 0 when season changes
+    LaunchedEffect(component.selectedSeasonNumber) {
+        if (pagerState.currentPage != 0) {
+            pagerState.scrollToPage(0)
+        }
+    }
 
     val deviceTarget = LocalDeviceTarget.current
     val isTouch = deviceTarget.isTouch
@@ -121,18 +143,18 @@ fun WebTvSeasonsSection(
         activeTouchEpisodeId = null
     }
 
-    val density = LocalDensity.current
-    var rightSectionHeightDp by remember { mutableStateOf<Dp?>(null) }
-
     val seasonsScrollState = rememberLazyListState()
 
-    // Auto-scroll sidebar to the selected season when selected season changes
+    // Auto-scroll sidebar only if selected season is not already in the visible range
     val selectedSeasonIndex = remember(component.selectedSeasonNumber, component.seasons) {
         component.seasons.indexOfFirst { it.seasonNumber == component.selectedSeasonNumber }
     }
     LaunchedEffect(selectedSeasonIndex) {
         if (selectedSeasonIndex >= 0) {
-            seasonsScrollState.animateScrollToItem(selectedSeasonIndex)
+            val visible = seasonsScrollState.layoutInfo.visibleItemsInfo.map { it.index }
+            if (visible.isNotEmpty() && selectedSeasonIndex !in visible) {
+                seasonsScrollState.animateScrollToItem(selectedSeasonIndex)
+            }
         }
     }
 
@@ -197,79 +219,64 @@ fun WebTvSeasonsSection(
                 }
 
                 // Page Navigation Arrows (Top Right)
-                if (!isEpisodesLoading && episodes.size > EPISODES_PAGE_SIZE) {
+                if (totalPages > 1 || episodes.size > EPISODES_PAGE_SIZE) {
+                    val count = if (episodes.isNotEmpty()) episodes.size else expectedEpisodesCount
                     val startIndex = pagerState.currentPage * EPISODES_PAGE_SIZE + 1
-                    val endIndex = ((pagerState.currentPage + 1) * EPISODES_PAGE_SIZE).coerceAtMost(episodes.size)
+                    val endIndex = ((pagerState.currentPage + 1) * EPISODES_PAGE_SIZE).coerceAtMost(count.coerceAtLeast(1))
 
                     Row(
                         verticalAlignment = Alignment.CenterVertically,
-                        horizontalArrangement = Arrangement.spacedBy(12.dp)
+                        horizontalArrangement = Arrangement.spacedBy(10.dp)
                     ) {
-                        AvalonText(
-                            text = stringResource(Res.string.details_seasons_page_range_fmt, startIndex, endIndex, episodes.size),
-                            style = AvalonTheme.typography.labelSmall,
-                            color = AvalonTheme.colors.textSecondary
+                        if (count > 0) {
+                            AvalonText(
+                                text = stringResource(Res.string.details_seasons_page_range_fmt, startIndex, endIndex, count),
+                                style = AvalonTheme.typography.labelSmall,
+                                color = AvalonTheme.colors.textSecondary
+                            )
+                        }
+
+                        val canGoPrev = !isEpisodesLoading && pagerState.currentPage > 0
+                        AvalonIconButton(
+                            icon = {
+                                AvalonIcon(
+                                    imageVector = Lucide.ChevronLeft,
+                                    contentDescription = "Назад",
+                                    modifier = Modifier.size(16.dp)
+                                )
+                            },
+                            onClick = {
+                                if (canGoPrev) {
+                                    coroutineScope.launch {
+                                        pagerState.animateScrollToPage(pagerState.currentPage - 1)
+                                    }
+                                }
+                            },
+                            variant = AvalonButtonVariant.Secondary,
+                            size = AvalonButtonSize.Compact,
+                            enabled = canGoPrev
                         )
 
-                        // Previous Page Button
-                        val canGoPrev = pagerState.currentPage > 0
-                        Box(
-                            modifier = Modifier
-                                .size(38.dp)
-                                .clip(CircleShape)
-                                .background(if (canGoPrev) AvalonTheme.colors.bgElevated else AvalonTheme.colors.bgSurface.copy(alpha = 0.5f))
-                                .border(1.dp, if (canGoPrev) AvalonTheme.colors.borderStrong else AvalonTheme.colors.borderSubtle, CircleShape)
-                                .tvAndWebHoverEffect(
-                                    scaleTarget = if (canGoPrev) 1.08f else 1f,
-                                    shape = CircleShape,
-                                    tiltEnabled = false,
-                                    onClick = {
-                                        if (canGoPrev) {
-                                            coroutineScope.launch {
-                                                pagerState.animateScrollToPage(pagerState.currentPage - 1)
-                                            }
-                                        }
+                        val canGoNext = !isEpisodesLoading && pagerState.currentPage < totalPages - 1
+                        AvalonIconButton(
+                            icon = {
+                                AvalonIcon(
+                                    imageVector = Lucide.ChevronRight,
+                                    contentDescription = "Вперед",
+                                    modifier = Modifier.size(16.dp)
+                                )
+                            },
+                            onClick = {
+                                if (canGoNext) {
+                                    coroutineScope.launch {
+                                        pagerState.animateScrollToPage(pagerState.currentPage + 1)
                                     }
-                                ),
-                            contentAlignment = Alignment.Center
-                        ) {
-                            AvalonIcon(
-                                imageVector = Lucide.ChevronLeft,
-                                contentDescription = "Назад",
-                                tint = if (canGoPrev) AvalonTheme.colors.textPrimary else AvalonTheme.colors.textSecondary.copy(alpha = 0.35f),
-                                modifier = Modifier.size(18.dp)
-                            )
-                        }
-
-                        // Next Page Button
-                        val canGoNext = pagerState.currentPage < totalPages - 1
-                        Box(
-                            modifier = Modifier
-                                .size(38.dp)
-                                .clip(CircleShape)
-                                .background(if (canGoNext) AvalonTheme.colors.bgElevated else AvalonTheme.colors.bgSurface.copy(alpha = 0.5f))
-                                .border(1.dp, if (canGoNext) AvalonTheme.colors.borderStrong else AvalonTheme.colors.borderSubtle, CircleShape)
-                                .tvAndWebHoverEffect(
-                                    scaleTarget = if (canGoNext) 1.08f else 1f,
-                                    shape = CircleShape,
-                                    tiltEnabled = false,
-                                    onClick = {
-                                        if (canGoNext) {
-                                            coroutineScope.launch {
-                                                pagerState.animateScrollToPage(pagerState.currentPage + 1)
-                                            }
-                                        }
-                                    }
-                                ),
-                            contentAlignment = Alignment.Center
-                        ) {
-                            AvalonIcon(
-                                imageVector = Lucide.ChevronRight,
-                                contentDescription = "Вперед",
-                                tint = if (canGoNext) AvalonTheme.colors.textPrimary else AvalonTheme.colors.textSecondary.copy(alpha = 0.35f),
-                                modifier = Modifier.size(18.dp)
-                            )
-                        }
+                                }
+                            },
+                            variant = AvalonButtonVariant.Secondary,
+                            size = AvalonButtonSize.Compact,
+                            enabled = canGoNext
+                        )
                     }
                 }
             }
@@ -277,32 +284,43 @@ fun WebTvSeasonsSection(
             Spacer(modifier = Modifier.height(20.dp))
 
             // === TWO-COLUMN BODY ===
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.spacedBy(24.dp),
-                verticalAlignment = Alignment.Top
-            ) {
-                // --- LEFT COLUMN: SEASONS SIDEBAR (~240dp) ---
-                Column(
+            BoxWithConstraints(modifier = Modifier.fillMaxWidth()) {
+                val availableWidth = maxWidth
+                // 3 cards in right column:
+                // sidebarWidth = 240.dp, dividerWidth = 1.dp, gaps = 24.dp * 2 = 48.dp
+                // rightColumnWidth = availableWidth - 289.dp
+                // inner grid padding = 8.dp * 2 = 16.dp -> gridWidth = availableWidth - 305.dp
+                // 3 cards with 2 * 16.dp gaps = 32.dp -> (availableWidth - 337.dp) / 3
+                val cardWidth = ((availableWidth - 337.dp) / 3).coerceAtLeast(160.dp)
+                val thumbnailHeight = cardWidth * (9f / 16f)
+                val singleCardHeight = thumbnailHeight + 112.dp + 8.dp
+                val exactGridHeight = (singleCardHeight * 2 + 16.dp + 12.dp).coerceAtLeast(460.dp)
+
+                Row(
                     modifier = Modifier
-                        .width(240.dp)
-                        .then(
-                            if (rightSectionHeightDp != null) Modifier.height(rightSectionHeightDp!!)
-                            else Modifier.heightIn(min = 320.dp, max = 560.dp)
-                        ),
-                    verticalArrangement = Arrangement.spacedBy(8.dp)
+                        .fillMaxWidth()
+                        .height(exactGridHeight),
+                    horizontalArrangement = Arrangement.spacedBy(24.dp),
+                    verticalAlignment = Alignment.Top
                 ) {
-                    if (isLoading) {
+                    // --- LEFT COLUMN: SEASONS SIDEBAR (~240dp) ---
+                    Column(
+                        modifier = Modifier
+                            .width(240.dp)
+                            .fillMaxHeight(),
+                        verticalArrangement = Arrangement.SpaceBetween
+                    ) {
+                    if (isLoading && component.seasons.isEmpty()) {
                         repeat(5) {
                             Box(
                                 modifier = Modifier
                                     .fillMaxWidth()
                                     .height(40.dp)
-                                    .shimmerPlaceholder(true, RoundedCornerShape(10.dp))
+                                    .shimmerPlaceholder(true, AvalonTheme.shapes.control)
                             )
                         }
                     } else {
-                        // Scrollable seasons list container
+                        // Scrollable seasons list container (fills available height above button)
                         Box(
                             modifier = Modifier
                                 .weight(1f)
@@ -311,6 +329,7 @@ fun WebTvSeasonsSection(
                             LazyColumn(
                                 state = seasonsScrollState,
                                 modifier = Modifier.fillMaxSize(),
+                                contentPadding = PaddingValues(vertical = 4.dp),
                                 verticalArrangement = Arrangement.spacedBy(6.dp)
                             ) {
                                 items(
@@ -340,7 +359,7 @@ fun WebTvSeasonsSection(
                                         .background(
                                             Brush.verticalGradient(
                                                 colors = listOf(
-                                                    Color(0xFF141418).copy(alpha = 0.95f),
+                                                    AvalonTheme.colors.bgCanvas,
                                                     Color.Transparent
                                                 )
                                             )
@@ -359,7 +378,7 @@ fun WebTvSeasonsSection(
                                             Brush.verticalGradient(
                                                 colors = listOf(
                                                     Color.Transparent,
-                                                    Color(0xFF141418).copy(alpha = 0.95f)
+                                                    AvalonTheme.colors.bgCanvas
                                                 )
                                             )
                                         )
@@ -367,8 +386,9 @@ fun WebTvSeasonsSection(
                             }
                         }
 
-                        // Mark season watched action button (pinned at bottom of sidebar)
+                        // Mark season watched action button (pinned at the bottom of the sidebar)
                         if (selectedSeason != null) {
+                            Spacer(modifier = Modifier.height(10.dp))
                             WebMarkSeasonButton(
                                 season = selectedSeason,
                                 onAction = onAction
@@ -381,42 +401,33 @@ fun WebTvSeasonsSection(
                 Box(
                     modifier = Modifier
                         .width(1.dp)
-                        .then(
-                            if (rightSectionHeightDp != null) Modifier.height(rightSectionHeightDp!!)
-                            else Modifier.height(400.dp)
-                        )
-                        .background(Color.White.copy(alpha = 0.08f))
+                        .fillMaxHeight()
+                        .background(AvalonTheme.colors.borderSubtle)
                 )
 
-                // --- RIGHT COLUMN: NATIVE HORIZONTAL PAGER ---
-                Column(
+                // --- RIGHT COLUMN: EPISODES CONTENT (FIXED HEIGHT, TOP-ALIGNED) ---
+                Box(
                     modifier = Modifier
                         .weight(1f)
-                        .onGloballyPositioned { coordinates ->
-                            val heightDp = with(density) { coordinates.size.height.toDp() }
-                            if (rightSectionHeightDp != heightDp) {
-                                rightSectionHeightDp = heightDp
-                            }
-                        },
-                    verticalArrangement = Arrangement.spacedBy(20.dp)
+                        .fillMaxHeight(),
+                    contentAlignment = Alignment.TopStart
                 ) {
                     Crossfade(
                         targetState = isEpisodesLoading,
-                        animationSpec = tween(durationMillis = 250),
-                        label = "WebEpisodesCrossfade"
+                        animationSpec = tween(durationMillis = 200),
+                        label = "WebEpisodesCrossfade",
+                        modifier = Modifier.fillMaxSize()
                     ) { loading ->
                         if (loading) {
-                            WebEpisodesGridSkeleton()
+                            WebEpisodesGridSkeleton(modifier = Modifier.fillMaxWidth())
                         } else if (episodes.isEmpty()) {
                             Box(
-                                modifier = Modifier
-                                    .fillMaxWidth()
-                                    .height(320.dp),
+                                modifier = Modifier.fillMaxSize(),
                                 contentAlignment = Alignment.Center
                             ) {
                                 AvalonText(
                                     text = stringResource(Res.string.details_seasons_not_available),
-                                    color = Color.White.copy(alpha = 0.5f),
+                                    color = AvalonTheme.colors.textSecondary,
                                     fontSize = 14.sp
                                 )
                             }
@@ -426,7 +437,7 @@ fun WebTvSeasonsSection(
                                 beyondViewportPageCount = 1,
                                 pageSpacing = 16.dp,
                                 contentPadding = PaddingValues(horizontal = 8.dp, vertical = 6.dp),
-                                modifier = Modifier.fillMaxWidth(),
+                                modifier = Modifier.fillMaxSize(),
                                 verticalAlignment = Alignment.Top
                             ) { page ->
                                 val start = page * EPISODES_PAGE_SIZE
@@ -500,9 +511,10 @@ fun WebTvSeasonsSection(
             }
         }
     }
+}
 
 // ============================================================================
-// EPISODE CARD (WITH COMFORTABLE ACTION PILL & PLAY BUTTON)
+// EPISODE CARD (CLICK TO OPEN DETAILS POPUP, DIRECT WATCH & RATE ACTIONS)
 // ============================================================================
 
 @Composable
@@ -518,7 +530,6 @@ private fun WebEpisodeGridCard(
 ) {
     val isTouch = LocalDeviceTarget.current.isTouch
     var isHovered by remember { mutableStateOf(false) }
-    var isPlayHovered by remember { mutableStateOf(false) }
     var isRatingPopupOpen by remember { mutableStateOf(false) }
     var isDetailsDialogOpen by remember { mutableStateOf(false) }
 
@@ -530,24 +541,45 @@ private fun WebEpisodeGridCard(
         targetValue = if (isControlsVisible) colors.bgElevated else colors.bgSurface,
         label = "CardBgColor"
     )
+    val cardBorderColor by animateColorAsState(
+        targetValue = if (isControlsVisible) colors.borderStrong else colors.borderSubtle,
+        label = "CardBorderColor"
+    )
+
+    val interactionSource = remember { MutableInteractionSource() }
+    val isPressed by interactionSource.collectIsPressedAsState()
+    val isCardHovered by interactionSource.collectIsHoveredAsState()
+
+    LaunchedEffect(isCardHovered) {
+        if (!isTouch) isHovered = isCardHovered
+    }
+
+    val scale by animateFloatAsState(
+        targetValue = if (isPressed) 0.98f else 1.0f,
+        animationSpec = if (isPressed) tween(50) else spring(),
+        label = "CardScale"
+    )
 
     Column(
         modifier = modifier
             .fillMaxWidth()
             .padding(vertical = 4.dp)
-            .tvAndWebHoverEffect(
-                scaleTarget = if (isTouch) 1f else 1.02f,
-                activeBorderWidth = 1.5.dp,
-                activeBorderColor = colors.borderStrong,
-                defaultBorderWidth = 1.dp,
-                defaultBorderColor = if (isSelectedOnTouch) colors.borderStrong else colors.borderSubtle,
-                shape = shapes.media,
-                tiltEnabled = false,
-                clickEnabled = isTouch,
-                onClick = if (isTouch) onTouchSelect else null,
-                onStateChange = { if (!isTouch) isHovered = it }
-            )
+            .graphicsLayer {
+                scaleX = scale
+                scaleY = scale
+            }
+            .border(1.dp, cardBorderColor, shapes.media)
+            .clip(shapes.media)
             .background(cardBgColor, shapes.media)
+            .pointerHoverIcon(PointerIcon.Hand)
+            .hoverable(interactionSource = interactionSource, enabled = !isTouch)
+            .clickable(
+                interactionSource = interactionSource,
+                indication = null,
+                onClick = {
+                    if (isTouch) onTouchSelect() else isDetailsDialogOpen = true
+                }
+            )
     ) {
         // 1. Thumbnail Container 16:9
         Box(
@@ -573,59 +605,9 @@ private fun WebEpisodeGridCard(
                 AvalonIcon(
                     imageVector = Lucide.Film,
                     contentDescription = null,
-                    tint = Color.White.copy(alpha = 0.2f),
+                    tint = colors.textSecondary.copy(alpha = 0.35f),
                     modifier = Modifier.size(28.dp)
                 )
-            }
-
-            // Hover / Touch Scrim Overlay
-            androidx.compose.animation.AnimatedVisibility(
-                visible = isControlsVisible,
-                enter = fadeIn(),
-                exit = fadeOut()
-            ) {
-                Box(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .background(colors.bgCanvas.copy(alpha = 0.55f)),
-                    contentAlignment = Alignment.Center
-                ) {
-                    // Center Play Button (High Contrast, Hand Cursor on Play)
-                    val playBg by animateColorAsState(
-                        targetValue = if (isPlayHovered) colors.accentPrimary else colors.bgElevated,
-                        label = "PlayBg"
-                    )
-                    val playIconTint by animateColorAsState(
-                        targetValue = if (isPlayHovered) Color(0xFF0B0B0D) else colors.textPrimary,
-                        label = "PlayIconTint"
-                    )
-
-                    Box(
-                        modifier = Modifier
-                            .size(52.dp)
-                            .shadow(8.dp, CircleShape)
-                            .tvAndWebHoverEffect(
-                                scaleTarget = 1.12f,
-                                shape = CircleShape,
-                                activeBorderWidth = 2.dp,
-                                activeBorderColor = colors.accentPrimary,
-                                defaultBorderWidth = 1.5.dp,
-                                defaultBorderColor = colors.borderStrong,
-                                tiltEnabled = false,
-                                onStateChange = { isPlayHovered = it },
-                                onClick = onPlay
-                            )
-                            .background(playBg, CircleShape),
-                        contentAlignment = Alignment.Center
-                    ) {
-                        AvalonIcon(
-                            imageVector = Lucide.Play,
-                            contentDescription = "Смотреть серию",
-                            tint = playIconTint,
-                            modifier = Modifier.size(24.dp).offset(x = 1.5.dp)
-                        )
-                    }
-                }
             }
 
             // Runtime Duration Badge (bottom-left)
@@ -647,7 +629,7 @@ private fun WebEpisodeGridCard(
                 }
             }
 
-            // Top-Right Action Pill (Large 34-36dp Buttons)
+            // Top-Right Action Pill (Watch Status & Rating Buttons with Hand Cursor)
             androidx.compose.animation.AnimatedVisibility(
                 visible = isControlsVisible,
                 enter = fadeIn() + slideInVertically { -it / 2 },
@@ -711,6 +693,7 @@ private fun WebEpisodeGridCard(
                     Box(
                         modifier = Modifier
                             .size(34.dp)
+                            .pointerHoverIcon(PointerIcon.Hand)
                             .tvAndWebHoverEffect(
                                 scaleTarget = 1.08f,
                                 shape = CircleShape,
@@ -750,6 +733,7 @@ private fun WebEpisodeGridCard(
                                     if (hasRating) Modifier.padding(horizontal = 8.dp)
                                     else Modifier.size(34.dp)
                                 )
+                                .pointerHoverIcon(PointerIcon.Hand)
                                 .tvAndWebHoverEffect(
                                     scaleTarget = 1.06f,
                                     shape = if (hasRating) RoundedCornerShape(17.dp) else CircleShape,
@@ -813,105 +797,96 @@ private fun WebEpisodeGridCard(
             }
         }
 
-        // 2. Card Content (Title, Meta, Synopsis)
+        // 2. Card Content (Title, Meta, Synopsis) with fixed 112dp height
         Column(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(14.dp)
+                .height(112.dp)
+                .padding(horizontal = 14.dp, vertical = 12.dp),
+            verticalArrangement = Arrangement.SpaceBetween
         ) {
-            // Title Row with Watched Indicator
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.spacedBy(6.dp)
-            ) {
-                if (episode.isWatched) {
-                    AvalonIcon(
-                        imageVector = Lucide.CheckCheck,
-                        contentDescription = "Просмотрено",
-                        tint = colors.statusLive,
-                        modifier = Modifier.size(15.dp)
-                    )
-                }
-
-                AvalonText(
-                    text = "${episode.episodeNumber}. ${episode.name}",
-                    style = AvalonTheme.typography.cardTitle,
-                    color = colors.textPrimary,
-                    maxLines = 1,
-                    overflow = TextOverflow.Ellipsis,
-                    modifier = Modifier.weight(1f, fill = false)
-                )
-            }
-
-            Spacer(modifier = Modifier.height(4.dp))
-
-            // Metadata Row: Air Date & Rating
-            Row(
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.spacedBy(6.dp)
-            ) {
-                val airDate = episode.airDate
-                if (!airDate.isNullOrEmpty()) {
-                    AvalonText(
-                        text = airDate,
-                        style = AvalonTheme.typography.metadata,
-                        color = colors.textSecondary
-                    )
-                }
-
-                val rating = episode.voteAverage
-                if (rating != null && rating > 0.0) {
-                    val formattedRating = ((rating * 10).toInt() / 10.0).toString()
-                    AvalonText(
-                        text = "•",
-                        color = colors.textSecondary.copy(alpha = 0.5f),
-                        fontSize = 12.sp
-                    )
-                    Row(
-                        verticalAlignment = Alignment.CenterVertically,
-                        horizontalArrangement = Arrangement.spacedBy(2.dp)
-                    ) {
+            Column {
+                // Title Row with Watched Indicator
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.spacedBy(6.dp)
+                ) {
+                    if (episode.isWatched) {
                         AvalonIcon(
-                            imageVector = Lucide.Star,
-                            contentDescription = null,
-                            tint = colors.accentGold,
-                            modifier = Modifier.size(12.dp)
+                            imageVector = Lucide.CheckCheck,
+                            contentDescription = "Просмотрено",
+                            tint = colors.statusLive,
+                            modifier = Modifier.size(15.dp)
                         )
+                    }
+
+                    AvalonText(
+                        text = "${episode.episodeNumber}. ${episode.name}",
+                        style = AvalonTheme.typography.cardTitle,
+                        color = colors.textPrimary,
+                        maxLines = 1,
+                        overflow = TextOverflow.Ellipsis,
+                        modifier = Modifier.weight(1f, fill = false)
+                    )
+                }
+
+                Spacer(modifier = Modifier.height(4.dp))
+
+                // Metadata Row: Air Date & Rating
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.spacedBy(6.dp)
+                ) {
+                    val airDate = episode.airDate
+                    if (!airDate.isNullOrEmpty()) {
                         AvalonText(
-                            text = formattedRating,
+                            text = airDate,
                             style = AvalonTheme.typography.metadata,
-                            color = colors.accentGold
+                            color = colors.textSecondary
                         )
+                    }
+
+                    val rating = episode.voteAverage
+                    if (rating != null && rating > 0.0) {
+                        val formattedRating = ((rating * 10).toInt() / 10.0).toString()
+                        if (!airDate.isNullOrEmpty()) {
+                            AvalonText(
+                                text = "•",
+                                color = colors.textSecondary.copy(alpha = 0.5f),
+                                fontSize = 12.sp
+                            )
+                        }
+                        Row(
+                            verticalAlignment = Alignment.CenterVertically,
+                            horizontalArrangement = Arrangement.spacedBy(2.dp)
+                        ) {
+                            AvalonIcon(
+                                imageVector = Lucide.Star,
+                                contentDescription = null,
+                                tint = colors.accentGold,
+                                modifier = Modifier.size(12.dp)
+                            )
+                            AvalonText(
+                                text = formattedRating,
+                                style = AvalonTheme.typography.metadata,
+                                color = colors.accentGold
+                            )
+                        }
                     }
                 }
             }
 
-            // Overview Synopsis (2 lines) with Clickable "Подробнее"
+            // Overview Synopsis (2 lines max, graceful fallback if empty)
             val overview = episode.overview?.trim()
-            if (!overview.isNullOrEmpty()) {
-                Spacer(modifier = Modifier.height(6.dp))
-                Row(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .tvAndWebHoverEffect(
-                            scaleTarget = 1.0f,
-                            shape = shapes.micro,
-                            tiltEnabled = false,
-                            onClick = { isDetailsDialogOpen = true }
-                        ),
-                    verticalAlignment = Alignment.Bottom
-                ) {
-                    AvalonText(
-                        text = overview,
-                        style = AvalonTheme.typography.metadata,
-                        color = if (isHovered) colors.textPrimary.copy(alpha = 0.9f) else colors.textSecondary,
-                        maxLines = 2,
-                        overflow = TextOverflow.Ellipsis,
-                        modifier = Modifier.weight(1f)
-                    )
-                }
-            }
+            AvalonText(
+                text = overview.orEmpty(),
+                style = AvalonTheme.typography.metadata,
+                color = colors.textSecondary.copy(alpha = 0.85f),
+                maxLines = 2,
+                overflow = TextOverflow.Ellipsis,
+                modifier = Modifier.fillMaxWidth()
+            )
         }
     }
 
@@ -930,8 +905,6 @@ private fun WebEpisodeGridCard(
     }
 }
 
-
-
 // ============================================================================
 // SIDEBAR & SUBCOMPONENTS
 // ============================================================================
@@ -942,92 +915,99 @@ private fun WebSeasonSidebarItem(
     isSelected: Boolean,
     onClick: () -> Unit
 ) {
-    var isHovered by remember { mutableStateOf(false) }
     val colors = AvalonTheme.colors
-    val shape = AvalonTheme.shapes.control // 10.dp
+    val shapes = AvalonTheme.shapes
+    val shape = shapes.control // 10.dp
 
-    val bgColor by animateColorAsState(
-        targetValue = when {
-            isSelected -> colors.bgElevated
-            isHovered -> colors.bgSurface
-            else -> Color.Transparent
-        },
-        label = "SidebarBg"
-    )
-    val borderColor by animateColorAsState(
-        targetValue = when {
-            isSelected -> colors.borderStrong
-            isHovered -> colors.borderSubtle
-            else -> Color.Transparent
-        },
-        label = "SidebarBorder"
-    )
-    val textColor by animateColorAsState(
-        targetValue = when {
-            isSelected -> colors.textPrimary
-            isHovered -> colors.textPrimary.copy(alpha = 0.95f)
-            else -> colors.textSecondary
-        },
-        label = "SidebarText"
-    )
+    val surfaceColors = if (isSelected) {
+        AvalonSurfaceColors(
+            default = colors.bgElevated,
+            hover = colors.bgElevated,
+            pressed = colors.bgElevated
+        )
+    } else {
+        AvalonSurfaceColors(
+            default = Color.Transparent,
+            hover = colors.bgSurface,
+            pressed = colors.bgElevated
+        )
+    }
 
-    Row(
+    Box(
         modifier = Modifier
             .fillMaxWidth()
-            .tvAndWebHoverEffect(
-                scaleTarget = 1.01f,
+            .avalonInteractive(
+                role = AvalonInteractiveRole.NavItem,
                 shape = shape,
-                activeBorderWidth = 1.dp,
-                activeBorderColor = borderColor,
-                defaultBorderWidth = 1.dp,
-                defaultBorderColor = borderColor,
-                tiltEnabled = false,
-                onStateChange = { isHovered = it },
+                surfaceColors = surfaceColors,
                 onClick = onClick
             )
-            .background(bgColor, shape)
-            .padding(horizontal = 12.dp, vertical = 10.dp),
-        verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.SpaceBetween
     ) {
-        Row(
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.spacedBy(8.dp),
-            modifier = Modifier.weight(1f, fill = false)
-        ) {
-            if (season.isFullyWatched) {
-                AvalonIcon(
-                    imageVector = Lucide.CheckCheck,
-                    contentDescription = stringResource(Res.string.details_seasons_completed),
-                    tint = colors.statusLive,
-                    modifier = Modifier.size(15.dp)
-                )
-            } else if (season.isWatching) {
-                AvalonIcon(
-                    imageVector = Lucide.Eye,
-                    contentDescription = stringResource(Res.string.details_seasons_watching),
-                    tint = colors.accentPrimary,
-                    modifier = Modifier.size(15.dp)
-                )
-            }
-
-            AvalonText(
-                text = getSeasonDisplayName(season),
-                color = textColor,
-                fontSize = 13.sp,
-                fontWeight = if (isSelected) FontWeight.Bold else FontWeight.Medium,
-                maxLines = 1,
-                overflow = TextOverflow.Ellipsis
+        // Subtle accent edge indicator for selected season (pinned flush to the left edge)
+        if (isSelected) {
+            Box(
+                modifier = Modifier
+                    .width(3.dp)
+                    .height(20.dp)
+                    .align(Alignment.CenterStart)
+                    .clip(RoundedCornerShape(topEnd = 2.dp, bottomEnd = 2.dp))
+                    .background(colors.accentPrimary)
             )
         }
 
-        if (season.episodeCount > 0) {
-            AvalonText(
-                text = "${season.episodeCount}",
-                color = textColor.copy(alpha = 0.5f),
-                fontSize = 11.sp,
-                fontWeight = FontWeight.Normal
-            )
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 14.dp, vertical = 10.dp),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.SpaceBetween
+        ) {
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.spacedBy(8.dp),
+                modifier = Modifier.weight(1f, fill = false)
+            ) {
+                if (season.isFullyWatched) {
+                    AvalonIcon(
+                        imageVector = Lucide.CheckCheck,
+                        contentDescription = stringResource(Res.string.details_seasons_completed),
+                        tint = colors.statusLive,
+                        modifier = Modifier.size(15.dp)
+                    )
+                } else if (season.isWatching) {
+                    AvalonIcon(
+                        imageVector = Lucide.Eye,
+                        contentDescription = stringResource(Res.string.details_seasons_watching),
+                        tint = colors.accentPrimary,
+                        modifier = Modifier.size(15.dp)
+                    )
+                }
+
+                AvalonText(
+                    text = getSeasonDisplayName(season),
+                    color = if (isSelected) colors.textPrimary else colors.textSecondary,
+                    fontSize = 13.sp,
+                    fontWeight = if (isSelected) FontWeight.SemiBold else FontWeight.Medium,
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis
+                )
+            }
+
+            if (season.episodeCount > 0) {
+                Box(
+                    modifier = Modifier
+                        .clip(shapes.micro)
+                        .background(if (isSelected) colors.bgSurface else Color.Transparent)
+                        .padding(horizontal = 6.dp, vertical = 2.dp)
+                ) {
+                    AvalonText(
+                        text = "${season.episodeCount}",
+                        color = if (isSelected) colors.textPrimary else colors.textSecondary.copy(alpha = 0.6f),
+                        fontSize = 11.sp,
+                        fontWeight = if (isSelected) FontWeight.SemiBold else FontWeight.Normal
+                    )
+                }
+            }
         }
     }
 }
@@ -1037,63 +1017,23 @@ private fun WebMarkSeasonButton(
     season: SeasonItem,
     onAction: (Action) -> Unit
 ) {
-    var isHovered by remember { mutableStateOf(false) }
-    val colors = AvalonTheme.colors
-    val shapes = AvalonTheme.shapes
-
     val isWatched = season.isFullyWatched
-    val buttonBgColor by animateColorAsState(
-        targetValue = if (isWatched) {
-            colors.statusLive.copy(alpha = if (isHovered) 0.25f else 0.15f)
-        } else {
-            if (isHovered) colors.bgElevated else colors.bgSurface
-        },
-        label = "MarkSeasonBg"
-    )
-    val buttonBorderColor by animateColorAsState(
-        targetValue = if (isWatched) {
-            colors.statusLive.copy(alpha = if (isHovered) 0.6f else 0.35f)
-        } else {
-            if (isHovered) colors.borderStrong else colors.borderSubtle
-        },
-        label = "MarkSeasonBorder"
-    )
-    val buttonContentColor = if (isWatched) colors.statusLive else colors.textPrimary
-
-    Row(
-        modifier = Modifier
-            .fillMaxWidth()
-            .tvAndWebHoverEffect(
-                scaleTarget = 1.02f,
-                shape = shapes.control,
-                activeBorderWidth = 1.dp,
-                activeBorderColor = buttonBorderColor,
-                defaultBorderWidth = 1.dp,
-                defaultBorderColor = buttonBorderColor,
-                tiltEnabled = false,
-                onStateChange = { isHovered = it },
-                onClick = {
-                    season.markWatchedAction?.let(onAction)
-                }
+    AvalonButton(
+        text = if (isWatched) stringResource(Res.string.details_seasons_unmark_btn) else stringResource(Res.string.details_seasons_mark_btn),
+        leadingIcon = {
+            AvalonIcon(
+                imageVector = if (isWatched) Lucide.CheckCheck else Lucide.Check,
+                contentDescription = null,
+                modifier = Modifier.size(16.dp)
             )
-            .background(buttonBgColor, shapes.control)
-            .padding(horizontal = 12.dp, vertical = 10.dp),
-        verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.Center
-    ) {
-        AvalonIcon(
-            imageVector = if (isWatched) Lucide.CheckCheck else Lucide.Check,
-            contentDescription = null,
-            tint = buttonContentColor,
-            modifier = Modifier.size(15.dp)
-        )
-        Spacer(modifier = Modifier.width(6.dp))
-        AvalonText(
-            text = if (isWatched) stringResource(Res.string.details_seasons_unmark_btn) else stringResource(Res.string.details_seasons_mark_btn),
-            color = buttonContentColor,
-            style = AvalonTheme.typography.labelSmall
-        )
-    }
+        },
+        onClick = {
+            season.markWatchedAction?.let(onAction)
+        },
+        variant = AvalonButtonVariant.Secondary,
+        size = AvalonButtonSize.Compact,
+        modifier = Modifier.fillMaxWidth()
+    )
 }
 
 @Composable
@@ -1140,44 +1080,46 @@ private fun WebEpisodeGridSkeletonCard(modifier: Modifier = Modifier) {
                 .shimmerPlaceholder(true, RoundedCornerShape(topStart = 12.dp, topEnd = 12.dp))
         )
 
-        // 2. Card Content (Title, Meta, Synopsis)
+        // 2. Card Content (Matching exact 112dp height with WebEpisodeGridCard)
         Column(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(14.dp)
+                .height(112.dp)
+                .padding(horizontal = 14.dp, vertical = 12.dp),
+            verticalArrangement = Arrangement.SpaceBetween
         ) {
-            // Title Shimmer
-            Box(
-                modifier = Modifier
-                    .fillMaxWidth(0.75f)
-                    .height(18.dp)
-                    .shimmerPlaceholder(true, RoundedCornerShape(4.dp))
-            )
+            Column {
+                // Title Shimmer
+                Box(
+                    modifier = Modifier
+                        .fillMaxWidth(0.75f)
+                        .height(16.dp)
+                        .shimmerPlaceholder(true, RoundedCornerShape(4.dp))
+                )
 
-            Spacer(modifier = Modifier.height(4.dp))
+                Spacer(modifier = Modifier.height(6.dp))
 
-            // Metadata Shimmer (Air Date & Rating)
-            Box(
-                modifier = Modifier
-                    .fillMaxWidth(0.40f)
-                    .height(14.dp)
-                    .shimmerPlaceholder(true, RoundedCornerShape(4.dp))
-            )
-
-            Spacer(modifier = Modifier.height(6.dp))
+                // Metadata Shimmer (Air Date & Rating)
+                Box(
+                    modifier = Modifier
+                        .fillMaxWidth(0.40f)
+                        .height(12.dp)
+                        .shimmerPlaceholder(true, RoundedCornerShape(4.dp))
+                )
+            }
 
             // Synopsis Shimmer (2 lines)
             Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
                 Box(
                     modifier = Modifier
                         .fillMaxWidth(0.95f)
-                        .height(12.dp)
+                        .height(10.dp)
                         .shimmerPlaceholder(true, RoundedCornerShape(4.dp))
                 )
                 Box(
                     modifier = Modifier
                         .fillMaxWidth(0.60f)
-                        .height(12.dp)
+                        .height(10.dp)
                         .shimmerPlaceholder(true, RoundedCornerShape(4.dp))
                 )
             }

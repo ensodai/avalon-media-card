@@ -1,7 +1,5 @@
 package org.ensodai.avalonmediacard.presentation.screens.trendsScreen
 
-import org.ensodai.avalonmediacard.designsystem.theme.AvalonTheme
-
 import androidx.compose.foundation.background
 import androidx.compose.foundation.focusGroup
 import androidx.compose.foundation.layout.Box
@@ -17,6 +15,7 @@ import androidx.compose.ui.focus.focusRestorer
 import androidx.compose.ui.unit.dp
 import org.ensodai.avalonmediacard.contract.model.ClickstreamContext
 import org.ensodai.avalonmediacard.contract.slot.Action
+import org.ensodai.avalonmediacard.designsystem.theme.AvalonTheme
 import org.ensodai.avalonmediacard.presentation.components.MovieCarousel
 import org.ensodai.avalonmediacard.presentation.components.OnboardingBannerWidget
 import org.ensodai.avalonmediacard.presentation.screens.commonComponents.initialFocus
@@ -45,7 +44,7 @@ fun TrendsContent(
     Box(
         modifier = Modifier
             .fillMaxSize()
-            .background(AvalonTheme.colors.background)
+            .background(AvalonTheme.colors.bgCanvas)
     ) {
         LazyColumn(
             state = listState,

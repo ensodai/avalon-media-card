@@ -1,19 +1,17 @@
 package org.ensodai.avalonmediacard.presentation.screens.search
 
-import org.ensodai.avalonmediacard.designsystem.theme.AvalonTheme
-
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
-import org.ensodai.avalonmediacard.designsystem.components.AvalonIcon as Icon
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import avalonmediacard.client.generated.resources.*
 import com.composables.icons.lucide.Lucide
 import com.composables.icons.lucide.Search
 import org.ensodai.avalonmediacard.contract.slot.Action
+import org.ensodai.avalonmediacard.designsystem.components.AvalonIcon as Icon
+import org.ensodai.avalonmediacard.designsystem.theme.AvalonTheme
 import org.ensodai.avalonmediacard.presentation.components.mediaGridSlot.MediaGridSlot
 import org.ensodai.avalonmediacard.presentation.screens.commonComponents.AvalonTextField
 import org.ensodai.avalonmediacard.presentation.screens.search.viewState.SearchViewState
@@ -31,7 +29,7 @@ fun SearchContent(
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .background(AvalonTheme.colors.background)
+            .background(AvalonTheme.colors.bgCanvas)
     ) {
         // Search Input Header
         Row(
@@ -52,7 +50,7 @@ fun SearchContent(
                     Icon(
                         Lucide.Search,
                         contentDescription = stringResource(Res.string.search_btn),
-                        tint = AvalonTheme.colors.onSurfaceVariant,
+                        tint = AvalonTheme.colors.textSecondary,
                         modifier = Modifier.size(28.dp)
                     )
                 },
@@ -60,7 +58,12 @@ fun SearchContent(
             )
         }
 
-        Spacer(modifier = Modifier.height(1.dp).fillMaxWidth().background(Color.White.copy(alpha = 0.05f)))
+        Spacer(
+            modifier = Modifier
+                .height(AvalonTheme.elevation.borderWidth)
+                .fillMaxWidth()
+                .background(AvalonTheme.colors.borderSubtle)
+        )
 
         val gridUpdate = state.resultsGrid
         if (gridUpdate != null) {

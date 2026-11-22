@@ -6,28 +6,25 @@ import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.shape.RoundedCornerShape
-import org.ensodai.avalonmediacard.designsystem.components.AvalonText as Text
 import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import kotlinx.coroutines.delay
 import org.ensodai.avalonmediacard.contract.model.EntityType
 import org.ensodai.avalonmediacard.contract.slot.Action
 import org.ensodai.avalonmediacard.contract.slot.ActionNavigate
 import org.ensodai.avalonmediacard.contract.slot.MovieCarouselItem
 import org.ensodai.avalonmediacard.contract.ui.navigation.Screen
+import org.ensodai.avalonmediacard.designsystem.components.AvalonText as Text
+import org.ensodai.avalonmediacard.designsystem.theme.AvalonTheme
 import org.ensodai.avalonmediacard.presentation.screens.commonComponents.tvAndWebHoverEffect
 import kotlin.time.Duration.Companion.milliseconds
 
@@ -39,6 +36,12 @@ fun MediaGridCard(
     modifier: Modifier = Modifier,
     index: Int = 0
 ) {
+    val colors = AvalonTheme.colors
+    val shapes = AvalonTheme.shapes
+    val elevation = AvalonTheme.elevation
+    val typography = AvalonTheme.typography
+    val spacing = AvalonTheme.spacing
+
     var isVisible by rememberSaveable { mutableStateOf(isLoading) }
     LaunchedEffect(isLoading) {
         if (!isLoading) {
@@ -65,9 +68,9 @@ fun MediaGridCard(
             .padding(4.dp)
             .tvAndWebHoverEffect(
                 scaleTarget = 1.05f,
-                activeBorderWidth = 2.dp,
-                activeBorderColor = Color.White,
-                shape = RoundedCornerShape(12.dp),
+                activeBorderWidth = elevation.focusBorderWidth,
+                activeBorderColor = colors.borderFocus,
+                shape = shapes.media,
                 clickEnabled = !isLoading,
                 onClick = {
                     val action = if (item.key.type == EntityType.PERSON) {
@@ -89,8 +92,8 @@ fun MediaGridCard(
             val posterModifier = Modifier
                 .fillMaxWidth()
                 .aspectRatio(2f / 3f)
-                .clip(RoundedCornerShape(8.dp))
-                .shimmerPlaceholder(isLoading, RoundedCornerShape(8.dp))
+                .clip(shapes.media)
+                .shimmerPlaceholder(isLoading, shapes.media)
 
             if (!isLoading) {
                 ShimmerImage(
@@ -98,7 +101,7 @@ fun MediaGridCard(
                     contentDescription = item.title,
                     contentScale = ContentScale.Crop,
                     modifier = posterModifier,
-                    shape = RoundedCornerShape(8.dp)
+                    shape = shapes.media
                 )
             } else {
                 Box(
@@ -118,19 +121,22 @@ fun MediaGridCard(
                     item.badges.forEach { badge ->
                         Box(
                             modifier = Modifier
-                                .shadow(2.dp, RoundedCornerShape(4.dp))
                                 .background(
-                                    Brush.linearGradient(listOf(Color(0xFFE50914), Color(0xFFB00710))),
-                                    RoundedCornerShape(4.dp)
+                                    Brush.linearGradient(
+                                        listOf(
+                                            colors.statusDanger,
+                                            colors.statusDanger.copy(alpha = 0.85f)
+                                        )
+                                    ),
+                                    shapes.micro
                                 )
-                                .border(1.dp, Color.White.copy(alpha = 0.2f), RoundedCornerShape(4.dp))
+                                .border(elevation.borderWidth, colors.borderSubtle, shapes.micro)
                                 .padding(horizontal = 6.dp, vertical = 2.dp)
                         ) {
                             Text(
                                 text = badge.uppercase(),
-                                color = Color.White,
-                                fontSize = 9.sp,
-                                fontWeight = FontWeight.Bold
+                                color = colors.textPrimary,
+                                style = typography.microCaption
                             )
                         }
                     }
@@ -138,19 +144,18 @@ fun MediaGridCard(
             }
         }
 
-        Spacer(modifier = Modifier.height(8.dp))
+        Spacer(modifier = Modifier.height(spacing.space8))
 
         Text(
             text = if (isLoading) "" else item.title,
-            fontSize = 13.sp,
-            fontWeight = FontWeight.Medium,
+            style = typography.cardTitle,
             maxLines = 2,
             overflow = TextOverflow.Ellipsis,
-            color = if (isLoading) Color.Transparent else Color.White.copy(alpha = 0.9f),
+            color = if (isLoading) Color.Transparent else colors.textPrimary,
             modifier = Modifier
                 .fillMaxWidth()
                 .height(36.dp)
-                .shimmerPlaceholder(isLoading, RoundedCornerShape(4.dp))
+                .shimmerPlaceholder(isLoading, shapes.micro)
         )
     }
 }

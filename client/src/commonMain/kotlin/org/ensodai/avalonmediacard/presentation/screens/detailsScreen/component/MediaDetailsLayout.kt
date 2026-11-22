@@ -1,5 +1,7 @@
 package org.ensodai.avalonmediacard.presentation.screens.detailsScreen.component
 
+import org.ensodai.avalonmediacard.designsystem.theme.AvalonTheme
+
 import androidx.compose.foundation.background
 import androidx.compose.foundation.focusGroup
 import androidx.compose.foundation.layout.*
@@ -131,7 +133,7 @@ fun MediaDetailsLayoutTv(
     modifier: Modifier = Modifier
 ) {
     val scrollState = rememberScrollState()
-    val backgroundColor = androidx.compose.material3.MaterialTheme.colorScheme.background
+    val backgroundColor = AvalonTheme.colors.background
     val buttonsFocusRequester = remember { FocusRequester() }
     val headerFocusState = remember { mutableStateOf(true) }
 

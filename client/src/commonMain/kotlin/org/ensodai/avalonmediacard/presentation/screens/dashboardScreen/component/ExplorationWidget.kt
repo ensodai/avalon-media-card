@@ -8,9 +8,8 @@ import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyHorizontalGrid
 import androidx.compose.foundation.lazy.grid.itemsIndexed
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
 import androidx.compose.runtime.*
+import org.ensodai.avalonmediacard.designsystem.components.AvalonText as Text
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
@@ -31,7 +30,7 @@ import org.ensodai.avalonmediacard.presentation.core.SlotUiState
 import org.ensodai.avalonmediacard.presentation.screens.commonComponents.LocalDeviceTarget
 import org.ensodai.avalonmediacard.presentation.screens.commonComponents.TvHorizontalFocusProvider
 import org.ensodai.avalonmediacard.presentation.screens.commonComponents.tvAndWebHoverEffect
-import org.ensodai.avalonmediacard.presentation.theme.AvalonTheme
+import org.ensodai.avalonmediacard.designsystem.theme.AvalonTheme
 
 @Composable
 fun ExplorationWidget(
@@ -137,7 +136,7 @@ private fun ExplorationCard(
             .size(tileSize)
             .tvAndWebHoverEffect(
                 scaleTarget = 1.05f,
-                activeBorderColor = MaterialTheme.colorScheme.secondary,
+                activeBorderColor = AvalonTheme.colors.accentPrimary,
                 activeBorderWidth = 2.dp,
                 shape = RoundedCornerShape(16.dp),
                 onStateChange = { isActive = it },

@@ -1,5 +1,7 @@
 package org.ensodai.avalonmediacard.presentation.screens.episodesNotificationsScreen.targets.tv.components
 
+import org.ensodai.avalonmediacard.designsystem.theme.AvalonTheme
+
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.focusGroup
@@ -16,9 +18,8 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.Icon
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
+import org.ensodai.avalonmediacard.designsystem.components.AvalonIcon as Icon
+import org.ensodai.avalonmediacard.designsystem.components.AvalonText as Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -59,10 +60,10 @@ fun TvMissedRollupCard(
         modifier = modifier
             .fillMaxWidth()
             .clip(RoundedCornerShape(16.dp))
-            .background(MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.2f))
+            .background(AvalonTheme.colors.surfaceVariant.copy(alpha = 0.2f))
             .border(
                 width = 1.dp,
-                color = MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.3f),
+                color = AvalonTheme.colors.outlineVariant.copy(alpha = 0.3f),
                 shape = RoundedCornerShape(16.dp)
             )
             .padding(12.dp)
@@ -75,7 +76,7 @@ fun TvMissedRollupCard(
                 .width(56.dp)
                 .aspectRatio(2f / 3f)
                 .clip(RoundedCornerShape(8.dp))
-                .background(MaterialTheme.colorScheme.surfaceVariant)
+                .background(AvalonTheme.colors.surfaceVariant)
         ) {
             ShimmerImage(
                 model = rollup.showPosterUrl,
@@ -96,7 +97,7 @@ fun TvMissedRollupCard(
                 Icon(
                     imageVector = Lucide.Folder,
                     contentDescription = null,
-                    tint = MaterialTheme.colorScheme.primary,
+                    tint = AvalonTheme.colors.primary,
                     modifier = Modifier.size(16.dp)
                 )
                 Spacer(modifier = Modifier.width(6.dp))
@@ -104,7 +105,7 @@ fun TvMissedRollupCard(
                     text = rollup.showTitle,
                     fontSize = 16.sp,
                     fontWeight = FontWeight.Bold,
-                    color = MaterialTheme.colorScheme.onSurface,
+                    color = AvalonTheme.colors.onSurface,
                     maxLines = 1,
                     overflow = TextOverflow.Ellipsis
                 )
@@ -122,7 +123,7 @@ fun TvMissedRollupCard(
                     rollup.endEpisode
                 ),
                 fontSize = 12.sp,
-                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                color = AvalonTheme.colors.onSurfaceVariant,
                 maxLines = 1,
                 overflow = TextOverflow.Ellipsis
             )
@@ -148,7 +149,7 @@ fun TvMissedRollupCard(
                             onClick = { onAction(continueAction) }
                         )
                         .clip(RoundedCornerShape(8.dp))
-                        .background(MaterialTheme.colorScheme.primary)
+                        .background(AvalonTheme.colors.primary)
                         .padding(horizontal = 14.dp, vertical = 8.dp),
                     verticalAlignment = Alignment.CenterVertically,
                     horizontalArrangement = Arrangement.Center
@@ -156,7 +157,7 @@ fun TvMissedRollupCard(
                     Icon(
                         imageVector = Lucide.Play,
                         contentDescription = null,
-                        tint = MaterialTheme.colorScheme.onPrimary,
+                        tint = AvalonTheme.colors.onPrimary,
                         modifier = Modifier.size(14.dp)
                     )
                     Spacer(modifier = Modifier.width(6.dp))
@@ -166,7 +167,7 @@ fun TvMissedRollupCard(
                             rollup.startSeason,
                             rollup.startEpisode
                         ),
-                        color = MaterialTheme.colorScheme.onPrimary,
+                        color = AvalonTheme.colors.onPrimary,
                         fontSize = 12.sp,
                         fontWeight = FontWeight.SemiBold
                     )
@@ -179,22 +180,22 @@ fun TvMissedRollupCard(
                         .tvAndWebHoverEffect(
                             scaleTarget = 1.04f,
                             activeBorderWidth = 1.5.dp,
-                            activeBorderColor = MaterialTheme.colorScheme.primary,
+                            activeBorderColor = AvalonTheme.colors.primary,
                             defaultBorderWidth = 1.dp,
-                            defaultBorderColor = MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.3f),
+                            defaultBorderColor = AvalonTheme.colors.outlineVariant.copy(alpha = 0.3f),
                             shape = RoundedCornerShape(8.dp),
                             tiltEnabled = false,
                             onClick = { onAction(openDetailsAction) }
                         )
                         .clip(RoundedCornerShape(8.dp))
-                        .background(MaterialTheme.colorScheme.surface.copy(alpha = 0.6f))
+                        .background(AvalonTheme.colors.surface.copy(alpha = 0.6f))
                         .padding(horizontal = 12.dp, vertical = 8.dp),
                     verticalAlignment = Alignment.CenterVertically,
                     horizontalArrangement = Arrangement.Center
                 ) {
                     Text(
                         text = stringResource(Res.string.episodes_notifications_about_show),
-                        color = MaterialTheme.colorScheme.onSurface,
+                        color = AvalonTheme.colors.onSurface,
                         fontSize = 12.sp,
                         fontWeight = FontWeight.Medium
                     )
@@ -202,7 +203,7 @@ fun TvMissedRollupCard(
                     Icon(
                         imageVector = Lucide.ChevronRight,
                         contentDescription = null,
-                        tint = MaterialTheme.colorScheme.onSurfaceVariant,
+                        tint = AvalonTheme.colors.onSurfaceVariant,
                         modifier = Modifier.size(14.dp)
                     )
                 }

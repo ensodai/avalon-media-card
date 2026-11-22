@@ -6,7 +6,7 @@ import androidx.compose.animation.core.LinearEasing
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.material3.Text
+import org.ensodai.avalonmediacard.designsystem.components.AvalonText as Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.key

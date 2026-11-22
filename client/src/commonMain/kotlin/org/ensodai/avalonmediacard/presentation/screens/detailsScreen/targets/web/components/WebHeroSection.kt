@@ -1,12 +1,13 @@
 package org.ensodai.avalonmediacard.presentation.screens.detailsScreen.targets.web.components
 
+import org.ensodai.avalonmediacard.designsystem.theme.AvalonTheme
+
 import androidx.compose.animation.Crossfade
 import androidx.compose.animation.core.FastOutSlowInEasing
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -22,7 +23,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import org.ensodai.avalonmediacard.contract.slot.Action
 import org.ensodai.avalonmediacard.contract.slot.SlotData
-import org.ensodai.avalonmediacard.designsystem.theme.AvalonTheme
+import org.ensodai.avalonmediacard.designsystem.components.AvalonText
 import org.ensodai.avalonmediacard.presentation.components.ShimmerImage
 import org.ensodai.avalonmediacard.presentation.components.shimmerPlaceholder
 
@@ -159,7 +160,7 @@ fun WebHeroSection(
                         }
                     } else if (title.isNotBlank()) {
                         Column(verticalArrangement = Arrangement.spacedBy(6.dp)) {
-                            Text(
+                            AvalonText(
                                 text = title,
                                 style = AvalonTheme.typography.displayHero,
                                 color = AvalonTheme.colors.textPrimary,
@@ -167,7 +168,7 @@ fun WebHeroSection(
                                 overflow = TextOverflow.Ellipsis
                             )
                             if (originalTitle != null) {
-                                Text(
+                                AvalonText(
                                     text = originalTitle,
                                     style = AvalonTheme.typography.metadata,
                                     color = AvalonTheme.colors.textSecondary,
@@ -217,7 +218,7 @@ fun WebHeroSection(
                         }
                     } else if (description.isNotBlank()) {
                         Column(modifier = Modifier.padding(top = 20.dp)) {
-                            Text(
+                            AvalonText(
                                 text = description,
                                 style = AvalonTheme.typography.bodySynopsis,
                                 color = AvalonTheme.colors.textSecondary,

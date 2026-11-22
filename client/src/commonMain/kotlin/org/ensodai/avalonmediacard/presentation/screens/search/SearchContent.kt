@@ -1,9 +1,10 @@
 package org.ensodai.avalonmediacard.presentation.screens.search
 
+import org.ensodai.avalonmediacard.designsystem.theme.AvalonTheme
+
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
-import androidx.compose.material3.Icon
-import androidx.compose.material3.MaterialTheme
+import org.ensodai.avalonmediacard.designsystem.components.AvalonIcon as Icon
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -30,7 +31,7 @@ fun SearchContent(
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .background(MaterialTheme.colorScheme.background)
+            .background(AvalonTheme.colors.background)
     ) {
         // Search Input Header
         Row(
@@ -51,7 +52,7 @@ fun SearchContent(
                     Icon(
                         Lucide.Search,
                         contentDescription = stringResource(Res.string.search_btn),
-                        tint = MaterialTheme.colorScheme.onSurfaceVariant,
+                        tint = AvalonTheme.colors.onSurfaceVariant,
                         modifier = Modifier.size(28.dp)
                     )
                 },

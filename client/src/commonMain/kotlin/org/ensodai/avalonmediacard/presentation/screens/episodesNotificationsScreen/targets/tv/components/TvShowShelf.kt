@@ -1,5 +1,7 @@
 package org.ensodai.avalonmediacard.presentation.screens.episodesNotificationsScreen.targets.tv.components
 
+import org.ensodai.avalonmediacard.designsystem.theme.AvalonTheme
+
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
@@ -16,9 +18,8 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.Icon
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
+import org.ensodai.avalonmediacard.designsystem.components.AvalonIcon as Icon
+import org.ensodai.avalonmediacard.designsystem.components.AvalonText as Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -96,7 +97,7 @@ fun TvShowShelf(
                         .width(34.dp)
                         .height(48.dp)
                         .clip(RoundedCornerShape(6.dp))
-                        .background(MaterialTheme.colorScheme.surfaceVariant)
+                        .background(AvalonTheme.colors.surfaceVariant)
                 ) {
                     ShimmerImage(
                         model = showPosterUrl,
@@ -113,7 +114,7 @@ fun TvShowShelf(
                         text = showTitle,
                         fontSize = 16.sp,
                         fontWeight = FontWeight.Bold,
-                        color = MaterialTheme.colorScheme.onSurface,
+                        color = AvalonTheme.colors.onSurface,
                         maxLines = 1,
                         overflow = TextOverflow.Ellipsis
                     )
@@ -134,24 +135,24 @@ fun TvShowShelf(
                         Text(
                             text = countText,
                             fontSize = 12.sp,
-                            color = MaterialTheme.colorScheme.onSurfaceVariant
+                            color = AvalonTheme.colors.onSurfaceVariant
                         )
 
                         if (newCount > 0) {
                             Box(
                                 modifier = Modifier
                                     .clip(RoundedCornerShape(4.dp))
-                                    .background(MaterialTheme.colorScheme.primary.copy(alpha = 0.2f))
+                                    .background(AvalonTheme.colors.primary.copy(alpha = 0.2f))
                                     .border(
                                         1.dp,
-                                        MaterialTheme.colorScheme.primary.copy(alpha = 0.5f),
+                                        AvalonTheme.colors.primary.copy(alpha = 0.5f),
                                         RoundedCornerShape(4.dp)
                                     )
                                     .padding(horizontal = 6.dp, vertical = 1.5.dp)
                             ) {
                                 Text(
                                     text = stringResource(Res.string.episodes_notifications_new_count, newCount),
-                                    color = MaterialTheme.colorScheme.primary,
+                                    color = AvalonTheme.colors.primary,
                                     fontSize = 10.sp,
                                     fontWeight = FontWeight.Bold
                                 )
@@ -169,15 +170,15 @@ fun TvShowShelf(
                         .tvAndWebHoverEffect(
                             scaleTarget = 1.04f,
                             activeBorderWidth = 1.5.dp,
-                            activeBorderColor = MaterialTheme.colorScheme.primary,
+                            activeBorderColor = AvalonTheme.colors.primary,
                             defaultBorderWidth = 1.dp,
-                            defaultBorderColor = MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.3f),
+                            defaultBorderColor = AvalonTheme.colors.outlineVariant.copy(alpha = 0.3f),
                             shape = RoundedCornerShape(8.dp),
                             tiltEnabled = false,
                             onClick = { onAction(openDetailsAction) }
                         )
                         .clip(RoundedCornerShape(8.dp))
-                        .background(MaterialTheme.colorScheme.surface.copy(alpha = 0.6f))
+                        .background(AvalonTheme.colors.surface.copy(alpha = 0.6f))
                         .padding(horizontal = 12.dp, vertical = 6.dp),
                     verticalAlignment = Alignment.CenterVertically
                 ) {
@@ -185,14 +186,14 @@ fun TvShowShelf(
                         text = stringResource(Res.string.episodes_notifications_to_show),
                         fontSize = 12.sp,
                         fontWeight = FontWeight.Medium,
-                        color = MaterialTheme.colorScheme.onSurface
+                        color = AvalonTheme.colors.onSurface
                     )
                     Spacer(modifier = Modifier.width(4.dp))
                     Icon(
                         imageVector = Lucide.ChevronRight,
                         contentDescription = null,
                         modifier = Modifier.size(14.dp),
-                        tint = MaterialTheme.colorScheme.onSurfaceVariant
+                        tint = AvalonTheme.colors.onSurfaceVariant
                     )
                 }
             }

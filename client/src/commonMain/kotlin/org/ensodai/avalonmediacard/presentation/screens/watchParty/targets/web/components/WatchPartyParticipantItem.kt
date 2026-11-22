@@ -1,11 +1,12 @@
 package org.ensodai.avalonmediacard.presentation.screens.watchParty.targets.web.components
 
+import org.ensodai.avalonmediacard.designsystem.theme.AvalonTheme
+
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
+import org.ensodai.avalonmediacard.designsystem.components.AvalonText as Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
@@ -56,7 +57,7 @@ private fun rememberParticipantVisualState(
     isHost: Boolean,
     isReady: Boolean
 ): ParticipantVisualState {
-    val primaryColor = MaterialTheme.colorScheme.primary
+    val primaryColor = AvalonTheme.colors.primary
     val successColor = Color(0xFF4CAF50)
 
     return remember(isOnline, isHost, isReady, primaryColor) {

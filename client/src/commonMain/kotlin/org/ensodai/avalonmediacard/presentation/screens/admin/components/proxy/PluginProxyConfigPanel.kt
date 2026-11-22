@@ -1,14 +1,15 @@
 package org.ensodai.avalonmediacard.presentation.screens.admin.components.proxy
 
+import org.ensodai.avalonmediacard.designsystem.theme.AvalonTheme
+
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Switch
-import androidx.compose.material3.Text
+import org.ensodai.avalonmediacard.designsystem.components.AvalonSwitch as Switch
+import org.ensodai.avalonmediacard.designsystem.components.AvalonText as Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -36,8 +37,8 @@ fun PluginProxyConfigPanel(
         modifier = modifier
             .fillMaxHeight()
             .clip(RoundedCornerShape(16.dp))
-            .background(MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.2f))
-            .border(1.dp, MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.25f), RoundedCornerShape(16.dp))
+            .background(AvalonTheme.colors.surfaceVariant.copy(alpha = 0.2f))
+            .border(1.dp, AvalonTheme.colors.outlineVariant.copy(alpha = 0.25f), RoundedCornerShape(16.dp))
             .verticalScroll(rememberScrollState())
             .padding(20.dp),
         verticalArrangement = Arrangement.spacedBy(16.dp)
@@ -53,13 +54,13 @@ fun PluginProxyConfigPanel(
                     text = selectedPlugin.pluginName,
                     fontSize = 17.sp,
                     fontWeight = FontWeight.Bold,
-                    color = MaterialTheme.colorScheme.onSurface
+                    color = AvalonTheme.colors.onSurface
                 )
                 Spacer(modifier = Modifier.height(2.dp))
                 Text(
                     text = "ID: ${selectedPlugin.pluginId} • v${selectedPlugin.pluginVersion}",
                     fontSize = 12.sp,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                    color = AvalonTheme.colors.onSurfaceVariant
                 )
             }
 
@@ -85,7 +86,7 @@ fun PluginProxyConfigPanel(
             text = stringResource(Res.string.admin_plugin_proxy_enable_switch),
             fontSize = 13.sp,
             fontWeight = FontWeight.Medium,
-            color = if (state.editProxyEnabled) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onSurfaceVariant
+            color = if (state.editProxyEnabled) AvalonTheme.colors.primary else AvalonTheme.colors.onSurfaceVariant
         )
 
         if (!state.editProxyEnabled) {
@@ -121,8 +122,8 @@ fun PluginProxyConfigPanel(
                     onClick = actions.onTestPluginProxy,
                     isLoading = state.isPluginProxyTesting,
                     enabled = state.editProxyHost.isNotBlank(),
-                    containerColor = MaterialTheme.colorScheme.surfaceVariant,
-                    contentColor = MaterialTheme.colorScheme.onSurfaceVariant,
+                    containerColor = AvalonTheme.colors.surfaceVariant,
+                    contentColor = AvalonTheme.colors.onSurfaceVariant,
                     height = 44.dp,
                     fontSize = 14.sp,
                     shape = RoundedCornerShape(12.dp),

@@ -1,5 +1,7 @@
 package org.ensodai.avalonmediacard.presentation.screens.player.component.tv
 
+import org.ensodai.avalonmediacard.designsystem.theme.AvalonTheme
+
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.focusGroup
@@ -9,9 +11,8 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.Icon
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
+import org.ensodai.avalonmediacard.designsystem.components.AvalonIcon as Icon
+import org.ensodai.avalonmediacard.designsystem.components.AvalonText as Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -158,9 +159,9 @@ fun TvBottomEpisodeShelf(
                                     .tvAndWebHoverEffect(
                                         scaleTarget = 1.08f,
                                         activeBorderWidth = 2.dp,
-                                        activeBorderColor = MaterialTheme.colorScheme.primary,
+                                        activeBorderColor = AvalonTheme.colors.primary,
                                         defaultBorderWidth = 1.dp,
-                                        defaultBorderColor = if (isSelected) MaterialTheme.colorScheme.primary else Color.White.copy(alpha = 0.12f),
+                                        defaultBorderColor = if (isSelected) AvalonTheme.colors.primary else Color.White.copy(alpha = 0.12f),
                                         shape = RoundedCornerShape(14.dp),
                                         onClick = {
                                             coroutineScope.launch {
@@ -173,7 +174,7 @@ fun TvBottomEpisodeShelf(
                                     )
                                     .clip(RoundedCornerShape(14.dp))
                                     .background(
-                                        if (isSelected) MaterialTheme.colorScheme.primary.copy(alpha = 0.2f)
+                                        if (isSelected) AvalonTheme.colors.primary.copy(alpha = 0.2f)
                                         else Color.White.copy(alpha = 0.08f)
                                     )
                                     .padding(horizontal = 16.dp, vertical = 6.dp),
@@ -181,7 +182,7 @@ fun TvBottomEpisodeShelf(
                             ) {
                                 Text(
                                     text = stringResource(Res.string.player_season_fmt, seasonNum),
-                                    color = if (isSelected) MaterialTheme.colorScheme.primary else Color.White.copy(alpha = 0.7f),
+                                    color = if (isSelected) AvalonTheme.colors.primary else Color.White.copy(alpha = 0.7f),
                                     fontSize = 12.5.sp,
                                     fontWeight = if (isSelected) FontWeight.Bold else FontWeight.Medium
                                 )
@@ -260,7 +261,7 @@ private fun SeasonDividerCard(seasonNumber: Int) {
             Spacer(modifier = Modifier.height(4.dp))
             Text(
                 text = "$seasonNumber",
-                color = MaterialTheme.colorScheme.primary,
+                color = AvalonTheme.colors.primary,
                 fontSize = 26.sp,
                 fontWeight = FontWeight.Black
             )
@@ -282,14 +283,14 @@ private fun TvEpisodeCard(
             .width(235.dp)
             .tvAndWebHoverEffect(
                 scaleTarget = 1.04f,
-                activeBorderColor = MaterialTheme.colorScheme.primary,
+                activeBorderColor = AvalonTheme.colors.primary,
                 shape = RoundedCornerShape(12.dp),
                 onClick = onClick
             )
             .clip(RoundedCornerShape(12.dp))
             .background(Color.White.copy(alpha = 0.05f))
             .then(
-                if (isPlaying) Modifier.border(1.5.dp, MaterialTheme.colorScheme.primary, RoundedCornerShape(12.dp))
+                if (isPlaying) Modifier.border(1.5.dp, AvalonTheme.colors.primary, RoundedCornerShape(12.dp))
                 else Modifier.border(1.dp, Color.White.copy(alpha = 0.08f), RoundedCornerShape(12.dp))
             )
             .padding(5.dp)
@@ -331,7 +332,7 @@ private fun TvEpisodeCard(
                     Box(
                         modifier = Modifier
                             .size(36.dp)
-                            .background(MaterialTheme.colorScheme.primary, CircleShape),
+                            .background(AvalonTheme.colors.primary, CircleShape),
                         contentAlignment = Alignment.Center
                     ) {
                         Icon(
@@ -380,7 +381,7 @@ private fun TvEpisodeCard(
                         modifier = Modifier
                             .fillMaxHeight()
                             .fillMaxWidth(fraction)
-                            .background(MaterialTheme.colorScheme.primary)
+                            .background(AvalonTheme.colors.primary)
                     )
                 }
             }
@@ -400,7 +401,7 @@ private fun TvEpisodeCard(
 
             Text(
                 text = primaryText,
-                color = if (isPlaying) MaterialTheme.colorScheme.primary else Color.White.copy(alpha = 0.95f),
+                color = if (isPlaying) AvalonTheme.colors.primary else Color.White.copy(alpha = 0.95f),
                 fontSize = 12.5.sp,
                 fontWeight = if (isPlaying) FontWeight.Bold else FontWeight.Medium,
                 maxLines = 3,

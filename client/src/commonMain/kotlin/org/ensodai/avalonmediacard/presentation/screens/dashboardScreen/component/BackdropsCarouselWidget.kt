@@ -12,10 +12,9 @@ import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.Icon
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
 import androidx.compose.runtime.*
+import org.ensodai.avalonmediacard.designsystem.components.AvalonIcon as Icon
+import org.ensodai.avalonmediacard.designsystem.components.AvalonText as Text
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -42,7 +41,7 @@ import org.ensodai.avalonmediacard.presentation.screens.commonComponents.Carouse
 import org.ensodai.avalonmediacard.presentation.screens.commonComponents.LocalDeviceTarget
 import org.ensodai.avalonmediacard.presentation.screens.commonComponents.TvHorizontalFocusProvider
 import org.ensodai.avalonmediacard.presentation.screens.commonComponents.tvAndWebHoverEffect
-import org.ensodai.avalonmediacard.presentation.theme.AvalonTheme
+import org.ensodai.avalonmediacard.designsystem.theme.AvalonTheme
 
 @Composable
 fun BackdropsCarouselWidget(
@@ -187,7 +186,7 @@ private fun BackdropCard(
             .height(cardHeight)
             .tvAndWebHoverEffect(
                 scaleTarget = 1.05f,
-                activeBorderColor = MaterialTheme.colorScheme.primary,
+                activeBorderColor = AvalonTheme.colors.accentPrimary,
                 activeBorderWidth = 2.dp,
                 shape = RoundedCornerShape(12.dp),
                 onStateChange = { isActive = it },
@@ -252,7 +251,7 @@ private fun BackdropCard(
                 Icon(
                     imageVector = Lucide.Play,
                     contentDescription = null,
-                    tint = MaterialTheme.colorScheme.primary,
+                    tint = AvalonTheme.colors.accentPrimary,
                     modifier = Modifier.size(14.dp)
                 )
                 Text(
@@ -271,7 +270,7 @@ private fun BackdropCard(
                     .align(Alignment.BottomCenter)
                     .fillMaxWidth()
                     .height(3.dp)
-                    .background(MaterialTheme.colorScheme.primary)
+                    .background(AvalonTheme.colors.accentPrimary)
             )
         }
     }

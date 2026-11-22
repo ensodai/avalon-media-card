@@ -15,8 +15,8 @@ import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.Icon
-import androidx.compose.material3.Text
+import org.ensodai.avalonmediacard.designsystem.components.AvalonIcon as Icon
+import org.ensodai.avalonmediacard.designsystem.components.AvalonText as Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -42,7 +42,7 @@ import org.ensodai.avalonmediacard.presentation.core.SlotUiState
 import org.ensodai.avalonmediacard.presentation.screens.commonComponents.*
 import org.ensodai.avalonmediacard.presentation.telemetry.LocalTelemetryTracker
 import org.ensodai.avalonmediacard.presentation.telemetry.TrackCarouselImpressions
-import org.ensodai.avalonmediacard.presentation.theme.AvalonTheme
+import org.ensodai.avalonmediacard.designsystem.theme.AvalonTheme
 
 @Composable
 fun MovieCarousel(

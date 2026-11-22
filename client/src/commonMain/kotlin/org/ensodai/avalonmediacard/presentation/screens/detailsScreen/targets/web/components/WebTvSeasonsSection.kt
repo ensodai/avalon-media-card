@@ -1,5 +1,7 @@
 package org.ensodai.avalonmediacard.presentation.screens.detailsScreen.targets.web.components
 
+import org.ensodai.avalonmediacard.designsystem.theme.AvalonTheme
+
 import androidx.compose.animation.*
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.core.animateFloatAsState
@@ -17,9 +19,8 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material3.Icon
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
+import org.ensodai.avalonmediacard.designsystem.components.AvalonIcon as Icon
+import org.ensodai.avalonmediacard.designsystem.components.AvalonText as Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -1012,7 +1013,7 @@ private fun WebSeasonSidebarItem(
                 Icon(
                     imageVector = Lucide.Eye,
                     contentDescription = stringResource(Res.string.details_seasons_watching),
-                    tint = MaterialTheme.colorScheme.primary,
+                    tint = AvalonTheme.colors.accentPrimary,
                     modifier = Modifier.size(15.dp)
                 )
             }

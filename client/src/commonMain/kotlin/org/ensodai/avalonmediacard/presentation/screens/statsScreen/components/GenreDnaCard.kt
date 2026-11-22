@@ -16,10 +16,9 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
-import androidx.compose.material3.Icon
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Surface
-import androidx.compose.material3.Text
+import org.ensodai.avalonmediacard.designsystem.components.AvalonIcon as Icon
+import org.ensodai.avalonmediacard.designsystem.components.AvalonSurface as Surface
+import org.ensodai.avalonmediacard.designsystem.components.AvalonText as Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -45,7 +44,7 @@ import org.ensodai.avalonmediacard.contract.model.GenreStatDto
 import org.ensodai.avalonmediacard.contract.model.UserMediaFilter
 import org.ensodai.avalonmediacard.contract.ui.navigation.Screen
 import org.ensodai.avalonmediacard.presentation.navigation.LocalNavigation
-import org.ensodai.avalonmediacard.presentation.theme.AvalonTheme
+import org.ensodai.avalonmediacard.designsystem.theme.AvalonTheme
 import org.jetbrains.compose.resources.stringResource
 
 @Composable
@@ -110,7 +109,7 @@ fun GenreDnaCard(
                 if (totalHits > 0) {
                     Text(
                         text = stringResource(Res.string.stats_genres_total_fmt, totalHits),
-                        style = MaterialTheme.typography.labelSmall.copy(
+                        style = AvalonTheme.typography.labelSmall.copy(
                             fontFeatureSettings = "tnum"
                         ),
                         fontWeight = FontWeight.Medium,
@@ -125,7 +124,7 @@ fun GenreDnaCard(
                 Box(modifier = Modifier.padding(horizontal = 24.dp)) {
                     Text(
                         text = stringResource(Res.string.stats_genres_empty),
-                        style = MaterialTheme.typography.bodyMedium,
+                        style = AvalonTheme.typography.bodyMedium,
                         color = colors.textSecondary
                     )
                 }
@@ -264,7 +263,7 @@ private fun GenreRow(
             ) {
                 Text(
                     text = name,
-                    style = MaterialTheme.typography.bodyMedium,
+                    style = AvalonTheme.typography.bodyMedium,
                     fontWeight = if (isHovered || isLeader) FontWeight.SemiBold else FontWeight.Medium,
                     color = animatedNameColor
                 )
@@ -272,7 +271,7 @@ private fun GenreRow(
                 Row(verticalAlignment = Alignment.CenterVertically) {
                     Text(
                         text = stringResource(Res.string.stats_genres_count_fmt, count),
-                        style = MaterialTheme.typography.labelSmall.copy(
+                        style = AvalonTheme.typography.labelSmall.copy(
                             fontFeatureSettings = "tnum"
                         ),
                         color = animatedCountColor
@@ -280,7 +279,7 @@ private fun GenreRow(
                     Spacer(modifier = Modifier.width(8.dp))
                     Text(
                         text = "${percentage.roundToInt()}%",
-                        style = MaterialTheme.typography.labelMedium.copy(
+                        style = AvalonTheme.typography.labelMedium.copy(
                             fontFeatureSettings = "tnum"
                         ),
                         fontWeight = FontWeight.Bold,

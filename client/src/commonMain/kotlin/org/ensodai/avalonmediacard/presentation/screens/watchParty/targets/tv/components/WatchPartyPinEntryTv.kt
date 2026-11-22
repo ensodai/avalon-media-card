@@ -1,5 +1,7 @@
 package org.ensodai.avalonmediacard.presentation.screens.watchParty.targets.tv.components
 
+import org.ensodai.avalonmediacard.designsystem.theme.AvalonTheme
+
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
@@ -15,10 +17,9 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.CircularProgressIndicator
-import androidx.compose.material3.Icon
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
+import org.ensodai.avalonmediacard.designsystem.components.AvalonCircularProgressIndicator as CircularProgressIndicator
+import org.ensodai.avalonmediacard.designsystem.components.AvalonIcon as Icon
+import org.ensodai.avalonmediacard.designsystem.components.AvalonText as Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.remember
@@ -84,7 +85,7 @@ fun WatchPartyPinEntryTv(
     Box(
         modifier = modifier
             .fillMaxSize()
-            .background(MaterialTheme.colorScheme.background)
+            .background(AvalonTheme.colors.background)
             .onKeyEvent { event ->
                 if (event.type == KeyEventType.KeyDown) {
                     val digit = when (event.key) {
@@ -176,7 +177,7 @@ fun WatchPartyPinEntryTv(
                 horizontalArrangement = Arrangement.spacedBy(10.dp),
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                val primaryColor = MaterialTheme.colorScheme.primary
+                val primaryColor = AvalonTheme.colors.primary
 
                 for (i in 0 until 6) {
                     val digitChar = state.pinInput.getOrNull(i)
@@ -268,7 +269,7 @@ fun WatchPartyPinEntryTv(
                                         scaleTarget = 1.08f,
                                         shape = numpadShape,
                                         activeBorderWidth = 2.dp,
-                                        activeBorderColor = MaterialTheme.colorScheme.primary,
+                                        activeBorderColor = AvalonTheme.colors.primary,
                                         defaultBorderWidth = 1.dp,
                                         defaultBorderColor = Color.White.copy(alpha = 0.08f),
                                         onClick = onClick
@@ -313,7 +314,7 @@ fun WatchPartyPinEntryTv(
                         scaleTarget = 1.04f,
                         shape = joinShape,
                         activeBorderWidth = 2.dp,
-                        activeBorderColor = MaterialTheme.colorScheme.primary,
+                        activeBorderColor = AvalonTheme.colors.primary,
                         clickEnabled = isJoinEnabled,
                         onClick = actions.onJoinByPin
                     )

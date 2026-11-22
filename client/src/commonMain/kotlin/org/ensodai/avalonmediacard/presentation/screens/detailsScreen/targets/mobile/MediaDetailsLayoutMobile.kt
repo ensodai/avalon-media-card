@@ -1,10 +1,11 @@
 package org.ensodai.avalonmediacard.presentation.screens.detailsScreen.targets.mobile
 
+import org.ensodai.avalonmediacard.designsystem.theme.AvalonTheme
+
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -44,7 +45,7 @@ fun MediaDetailsLayoutMobile(
 ) {
     val isPlayerOpen = state.playerState !is DetailsViewState.PlayerState.Idle
     val scrollState = rememberScrollState()
-    val backgroundColor = MaterialTheme.colorScheme.background
+    val backgroundColor = AvalonTheme.colors.background
 
     Box(
         modifier = modifier

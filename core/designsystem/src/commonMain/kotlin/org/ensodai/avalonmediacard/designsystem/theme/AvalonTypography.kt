@@ -35,7 +35,23 @@ data class AvalonTypography(
     val microCaption: TextStyle,
     /** Technical tags (4K HDR10), duration on frame ("58 мин"), player timecodes */
     val monoTech: TextStyle
-)
+) {
+    val bodyLarge: TextStyle get() = bodySynopsis
+    val bodyMedium: TextStyle get() = cardTitle
+    val bodySmall: TextStyle get() = metadata
+    val labelLarge: TextStyle get() = uiLabel
+    val labelMedium: TextStyle get() = uiLabel
+    val labelSmall: TextStyle get() = microCaption
+    val titleLarge: TextStyle get() = pageTitle
+    val titleMedium: TextStyle get() = sectionTitle
+    val titleSmall: TextStyle get() = cardTitle
+    val headlineLarge: TextStyle get() = displayHero
+    val headlineMedium: TextStyle get() = pageTitle
+    val headlineSmall: TextStyle get() = sectionTitle
+    val displayLarge: TextStyle get() = displayHero
+    val displayMedium: TextStyle get() = displayHero
+    val displaySmall: TextStyle get() = kpiHero
+}
 
 val LocalAvalonTypography = staticCompositionLocalOf { AvalonTypographyDesktop }
 
@@ -202,3 +218,4 @@ val AvalonTypographyTv = AvalonTypography(
         fontFeatureSettings = "tnum, case"
     )
 )
+

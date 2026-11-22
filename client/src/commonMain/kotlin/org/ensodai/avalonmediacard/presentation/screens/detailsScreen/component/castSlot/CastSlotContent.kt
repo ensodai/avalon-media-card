@@ -1,5 +1,7 @@
 package org.ensodai.avalonmediacard.presentation.screens.detailsScreen.component.castSlot
 
+import org.ensodai.avalonmediacard.designsystem.theme.AvalonTheme
+
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
@@ -7,8 +9,7 @@ import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
+import org.ensodai.avalonmediacard.designsystem.components.AvalonText as Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -61,7 +62,7 @@ fun CastSlotContent(
             text = component.title,
             fontSize = 18.sp,
             fontWeight = FontWeight.SemiBold,
-            color = if (isLoading) Color.Transparent else MaterialTheme.colorScheme.onSurface,
+            color = if (isLoading) Color.Transparent else AvalonTheme.colors.onSurface,
             modifier = Modifier
                 .padding(horizontal = 40.dp, vertical = 4.dp)
                 .shimmerPlaceholder(isLoading, RoundedCornerShape(4.dp))
@@ -154,10 +155,10 @@ private fun ActorCard(
 
     // Анимированные цвета текста, зависящие от фокуса на фотографии!
     val nameColor by animateColorAsState(
-        targetValue = if (isActive) Color.White else MaterialTheme.colorScheme.onSurface
+        targetValue = if (isActive) Color.White else AvalonTheme.colors.onSurface
     )
     val roleColor by animateColorAsState(
-        targetValue = if (isActive) Color.White.copy(alpha = 0.8f) else MaterialTheme.colorScheme.onSurfaceVariant
+        targetValue = if (isActive) Color.White.copy(alpha = 0.8f) else AvalonTheme.colors.onSurfaceVariant
     )
 
     Column(
@@ -192,7 +193,7 @@ private fun ActorCard(
                 modifier = Modifier.fillMaxSize(),
                 shape = RoundedCornerShape(8.dp),
                 errorIcon = Lucide.User,
-                errorIconTint = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.5f)
+                errorIconTint = AvalonTheme.colors.onSurfaceVariant.copy(alpha = 0.5f)
             )
         }
 

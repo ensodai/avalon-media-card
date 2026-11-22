@@ -1,5 +1,7 @@
 package org.ensodai.avalonmediacard.presentation.screens.episodesNotificationsScreen.component
 
+import org.ensodai.avalonmediacard.designsystem.theme.AvalonTheme
+
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.core.animateFloatAsState
@@ -25,9 +27,8 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.Icon
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
+import org.ensodai.avalonmediacard.designsystem.components.AvalonIcon as Icon
+import org.ensodai.avalonmediacard.designsystem.components.AvalonText as Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -201,12 +202,12 @@ fun EpisodeCard(
                             .align(Alignment.TopStart)
                             .padding(6.dp)
                             .clip(RoundedCornerShape(4.dp))
-                            .background(MaterialTheme.colorScheme.primary)
+                            .background(AvalonTheme.colors.primary)
                             .padding(horizontal = 6.dp, vertical = 2.dp)
                     ) {
                         Text(
                             text = stringResource(Res.string.episodes_notifications_badge_new),
-                            color = MaterialTheme.colorScheme.onPrimary,
+                            color = AvalonTheme.colors.onPrimary,
                             fontSize = 10.sp,
                             fontWeight = FontWeight.Bold
                         )
@@ -493,9 +494,9 @@ fun EpisodeCard(
 
                 Text(
                     text = if (epCode.isNotEmpty()) "$epCode • $epTitle" else epTitle,
-                    style = MaterialTheme.typography.titleSmall.copy(
+                    style = AvalonTheme.typography.titleSmall.copy(
                         fontWeight = FontWeight.SemiBold,
-                        color = MaterialTheme.colorScheme.onSurface
+                        color = AvalonTheme.colors.onSurface
                     ),
                     maxLines = 1,
                     overflow = TextOverflow.Ellipsis,
@@ -516,7 +517,7 @@ fun EpisodeCard(
                         Text(
                             text = formattedDate,
                             fontSize = 11.sp,
-                            color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.7f)
+                            color = AvalonTheme.colors.onSurfaceVariant.copy(alpha = 0.7f)
                         )
                     }
 
@@ -525,7 +526,7 @@ fun EpisodeCard(
                             Text(
                                 text = "•",
                                 fontSize = 11.sp,
-                                color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.4f)
+                                color = AvalonTheme.colors.onSurfaceVariant.copy(alpha = 0.4f)
                             )
                         }
                         Row(
@@ -567,8 +568,8 @@ fun EpisodeCard(
                 ) {
                     Text(
                         text = overview,
-                        style = MaterialTheme.typography.bodySmall.copy(
-                            color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = if (isHovered) 0.9f else 0.75f),
+                        style = AvalonTheme.typography.bodySmall.copy(
+                            color = AvalonTheme.colors.onSurfaceVariant.copy(alpha = if (isHovered) 0.9f else 0.75f),
                             lineHeight = 15.sp
                         ),
                         maxLines = 2,

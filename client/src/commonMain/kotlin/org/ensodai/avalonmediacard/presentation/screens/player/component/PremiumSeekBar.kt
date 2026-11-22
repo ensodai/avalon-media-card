@@ -1,5 +1,7 @@
 package org.ensodai.avalonmediacard.presentation.screens.player.component
 
+import org.ensodai.avalonmediacard.designsystem.theme.AvalonTheme
+
 import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.foundation.Canvas
@@ -11,8 +13,7 @@ import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.interaction.collectIsHoveredAsState
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
+import org.ensodai.avalonmediacard.designsystem.components.AvalonText as Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.onFocusChanged
@@ -78,7 +79,7 @@ fun PremiumSeekBar(
         else -> progress
     }
 
-    val primaryColor = MaterialTheme.colorScheme.primary
+    val primaryColor = AvalonTheme.colors.primary
 
     BoxWithConstraints(modifier = modifier) {
         val widthPx = constraints.maxWidth.toFloat()

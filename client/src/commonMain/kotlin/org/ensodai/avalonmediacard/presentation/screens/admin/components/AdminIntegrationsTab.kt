@@ -1,16 +1,17 @@
 package org.ensodai.avalonmediacard.presentation.screens.admin.components
 
+import org.ensodai.avalonmediacard.designsystem.theme.AvalonTheme
+
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material3.CircularProgressIndicator
-import androidx.compose.material3.Icon
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Switch
-import androidx.compose.material3.Text
+import org.ensodai.avalonmediacard.designsystem.components.AvalonCircularProgressIndicator as CircularProgressIndicator
+import org.ensodai.avalonmediacard.designsystem.components.AvalonIcon as Icon
+import org.ensodai.avalonmediacard.designsystem.components.AvalonSwitch as Switch
+import org.ensodai.avalonmediacard.designsystem.components.AvalonText as Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
@@ -43,7 +44,7 @@ fun AdminIntegrationsTab(
             modifier = Modifier.fillMaxSize(),
             contentAlignment = Alignment.Center
         ) {
-            CircularProgressIndicator(color = MaterialTheme.colorScheme.primary)
+            CircularProgressIndicator(color = AvalonTheme.colors.primary)
         }
         return
     }
@@ -60,8 +61,8 @@ fun AdminIntegrationsTab(
             modifier = Modifier
                 .fillMaxWidth()
                 .clip(RoundedCornerShape(16.dp))
-                .background(MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.2f))
-                .border(1.dp, MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.3f), RoundedCornerShape(16.dp))
+                .background(AvalonTheme.colors.surfaceVariant.copy(alpha = 0.2f))
+                .border(1.dp, AvalonTheme.colors.outlineVariant.copy(alpha = 0.3f), RoundedCornerShape(16.dp))
                 .padding(20.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
@@ -70,13 +71,13 @@ fun AdminIntegrationsTab(
                     text = stringResource(Res.string.admin_integrations_shared_providers),
                     fontSize = 18.sp,
                     fontWeight = FontWeight.Bold,
-                    color = MaterialTheme.colorScheme.onSurface
+                    color = AvalonTheme.colors.onSurface
                 )
                 Spacer(modifier = Modifier.height(4.dp))
                 Text(
                     text = stringResource(Res.string.admin_integrations_shared_desc),
                     fontSize = 13.sp,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                    color = AvalonTheme.colors.onSurfaceVariant
                 )
             }
         }
@@ -86,8 +87,8 @@ fun AdminIntegrationsTab(
             modifier = Modifier
                 .fillMaxWidth()
                 .clip(RoundedCornerShape(16.dp))
-                .background(MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.2f))
-                .border(1.dp, MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.3f), RoundedCornerShape(16.dp))
+                .background(AvalonTheme.colors.surfaceVariant.copy(alpha = 0.2f))
+                .border(1.dp, AvalonTheme.colors.outlineVariant.copy(alpha = 0.3f), RoundedCornerShape(16.dp))
                 .padding(24.dp),
             verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
@@ -103,14 +104,14 @@ fun AdminIntegrationsTab(
                     Icon(
                         imageVector = Lucide.Film,
                         contentDescription = null,
-                        tint = MaterialTheme.colorScheme.primary,
+                        tint = AvalonTheme.colors.primary,
                         modifier = Modifier.size(24.dp)
                     )
                     Text(
                         text = "TMDB (The Movie Database)",
                         fontSize = 18.sp,
                         fontWeight = FontWeight.Bold,
-                        color = MaterialTheme.colorScheme.onSurface
+                        color = AvalonTheme.colors.onSurface
                     )
                 }
 
@@ -120,12 +121,12 @@ fun AdminIntegrationsTab(
                         .clip(RoundedCornerShape(6.dp))
                         .background(
                             if (isTmdbConfigured) Color(0xFF10B981).copy(alpha = 0.15f)
-                            else MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.5f)
+                            else AvalonTheme.colors.surfaceVariant.copy(alpha = 0.5f)
                         )
                         .border(
                             1.dp,
                             if (isTmdbConfigured) Color(0xFF10B981).copy(alpha = 0.4f)
-                            else MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.3f),
+                            else AvalonTheme.colors.outlineVariant.copy(alpha = 0.3f),
                             RoundedCornerShape(6.dp)
                         )
                         .padding(horizontal = 8.dp, vertical = 4.dp)
@@ -134,7 +135,7 @@ fun AdminIntegrationsTab(
                         text = if (isTmdbConfigured) stringResource(Res.string.admin_integrations_configured) else stringResource(Res.string.admin_integrations_not_set),
                         fontSize = 12.sp,
                         fontWeight = FontWeight.SemiBold,
-                        color = if (isTmdbConfigured) Color(0xFF10B981) else MaterialTheme.colorScheme.onSurfaceVariant
+                        color = if (isTmdbConfigured) Color(0xFF10B981) else AvalonTheme.colors.onSurfaceVariant
                     )
                 }
             }
@@ -142,7 +143,7 @@ fun AdminIntegrationsTab(
             Text(
                 text = stringResource(Res.string.admin_integrations_tmdb_desc),
                 fontSize = 13.sp,
-                color = MaterialTheme.colorScheme.onSurfaceVariant
+                color = AvalonTheme.colors.onSurfaceVariant
             )
 
             AvalonTextField(
@@ -153,7 +154,7 @@ fun AdminIntegrationsTab(
                     Icon(
                         imageVector = Lucide.Key,
                         contentDescription = null,
-                        tint = MaterialTheme.colorScheme.onSurfaceVariant,
+                        tint = AvalonTheme.colors.onSurfaceVariant,
                         modifier = Modifier.size(20.dp)
                     )
                 },
@@ -165,8 +166,8 @@ fun AdminIntegrationsTab(
                 modifier = Modifier
                     .fillMaxWidth()
                     .clip(RoundedCornerShape(12.dp))
-                    .background(MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.25f))
-                    .border(1.dp, MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.2f), RoundedCornerShape(12.dp))
+                    .background(AvalonTheme.colors.surfaceVariant.copy(alpha = 0.25f))
+                    .border(1.dp, AvalonTheme.colors.outlineVariant.copy(alpha = 0.2f), RoundedCornerShape(12.dp))
                     .padding(horizontal = 16.dp, vertical = 12.dp),
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.SpaceBetween
@@ -176,13 +177,13 @@ fun AdminIntegrationsTab(
                         text = stringResource(Res.string.admin_integrations_provide_all),
                         fontSize = 14.sp,
                         fontWeight = FontWeight.SemiBold,
-                        color = MaterialTheme.colorScheme.onSurface
+                        color = AvalonTheme.colors.onSurface
                     )
                     Spacer(modifier = Modifier.height(2.dp))
                     Text(
                         text = stringResource(Res.string.admin_integrations_tmdb_fallback_hint),
                         fontSize = 12.sp,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                        color = AvalonTheme.colors.onSurfaceVariant
                     )
                 }
                 Switch(
@@ -234,8 +235,8 @@ fun AdminIntegrationsTab(
                         text = stringResource(Res.string.admin_integrations_test_connection),
                         onClick = actions.onTestTmdbConnection,
                         isLoading = state.isTmdbTesting,
-                        containerColor = MaterialTheme.colorScheme.surfaceVariant,
-                        contentColor = MaterialTheme.colorScheme.onSurface
+                        containerColor = AvalonTheme.colors.surfaceVariant,
+                        contentColor = AvalonTheme.colors.onSurface
                     )
                     AvalonButton(
                         text = stringResource(Res.string.admin_integrations_btn_save),
@@ -251,8 +252,8 @@ fun AdminIntegrationsTab(
             modifier = Modifier
                 .fillMaxWidth()
                 .clip(RoundedCornerShape(16.dp))
-                .background(MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.2f))
-                .border(1.dp, MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.3f), RoundedCornerShape(16.dp))
+                .background(AvalonTheme.colors.surfaceVariant.copy(alpha = 0.2f))
+                .border(1.dp, AvalonTheme.colors.outlineVariant.copy(alpha = 0.3f), RoundedCornerShape(16.dp))
                 .padding(24.dp),
             verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
@@ -268,14 +269,14 @@ fun AdminIntegrationsTab(
                     Icon(
                         imageVector = Lucide.Server,
                         contentDescription = null,
-                        tint = MaterialTheme.colorScheme.primary,
+                        tint = AvalonTheme.colors.primary,
                         modifier = Modifier.size(24.dp)
                     )
                     Text(
                         text = "TorrServer",
                         fontSize = 18.sp,
                         fontWeight = FontWeight.Bold,
-                        color = MaterialTheme.colorScheme.onSurface
+                        color = AvalonTheme.colors.onSurface
                     )
                 }
 
@@ -285,12 +286,12 @@ fun AdminIntegrationsTab(
                         .clip(RoundedCornerShape(6.dp))
                         .background(
                             if (isTorrServerConfigured) Color(0xFF10B981).copy(alpha = 0.15f)
-                            else MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.5f)
+                            else AvalonTheme.colors.surfaceVariant.copy(alpha = 0.5f)
                         )
                         .border(
                             1.dp,
                             if (isTorrServerConfigured) Color(0xFF10B981).copy(alpha = 0.4f)
-                            else MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.3f),
+                            else AvalonTheme.colors.outlineVariant.copy(alpha = 0.3f),
                             RoundedCornerShape(6.dp)
                         )
                         .padding(horizontal = 8.dp, vertical = 4.dp)
@@ -299,7 +300,7 @@ fun AdminIntegrationsTab(
                         text = if (isTorrServerConfigured) stringResource(Res.string.admin_integrations_configured) else stringResource(Res.string.admin_integrations_not_set),
                         fontSize = 12.sp,
                         fontWeight = FontWeight.SemiBold,
-                        color = if (isTorrServerConfigured) Color(0xFF10B981) else MaterialTheme.colorScheme.onSurfaceVariant
+                        color = if (isTorrServerConfigured) Color(0xFF10B981) else AvalonTheme.colors.onSurfaceVariant
                     )
                 }
             }
@@ -307,7 +308,7 @@ fun AdminIntegrationsTab(
             Text(
                 text = stringResource(Res.string.admin_integrations_torrserver_desc),
                 fontSize = 13.sp,
-                color = MaterialTheme.colorScheme.onSurfaceVariant
+                color = AvalonTheme.colors.onSurfaceVariant
             )
 
             AvalonTextField(
@@ -318,7 +319,7 @@ fun AdminIntegrationsTab(
                     Icon(
                         imageVector = Lucide.Globe,
                         contentDescription = null,
-                        tint = MaterialTheme.colorScheme.onSurfaceVariant,
+                        tint = AvalonTheme.colors.onSurfaceVariant,
                         modifier = Modifier.size(20.dp)
                     )
                 },
@@ -337,7 +338,7 @@ fun AdminIntegrationsTab(
                         Icon(
                             imageVector = Lucide.User,
                             contentDescription = null,
-                            tint = MaterialTheme.colorScheme.onSurfaceVariant,
+                            tint = AvalonTheme.colors.onSurfaceVariant,
                             modifier = Modifier.size(20.dp)
                         )
                     },
@@ -353,7 +354,7 @@ fun AdminIntegrationsTab(
                         Icon(
                             imageVector = Lucide.Lock,
                             contentDescription = null,
-                            tint = MaterialTheme.colorScheme.onSurfaceVariant,
+                            tint = AvalonTheme.colors.onSurfaceVariant,
                             modifier = Modifier.size(20.dp)
                         )
                     },
@@ -366,8 +367,8 @@ fun AdminIntegrationsTab(
                 modifier = Modifier
                     .fillMaxWidth()
                     .clip(RoundedCornerShape(12.dp))
-                    .background(MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.25f))
-                    .border(1.dp, MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.2f), RoundedCornerShape(12.dp))
+                    .background(AvalonTheme.colors.surfaceVariant.copy(alpha = 0.25f))
+                    .border(1.dp, AvalonTheme.colors.outlineVariant.copy(alpha = 0.2f), RoundedCornerShape(12.dp))
                     .padding(horizontal = 16.dp, vertical = 12.dp),
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.SpaceBetween
@@ -377,13 +378,13 @@ fun AdminIntegrationsTab(
                         text = stringResource(Res.string.admin_integrations_provide_all),
                         fontSize = 14.sp,
                         fontWeight = FontWeight.SemiBold,
-                        color = MaterialTheme.colorScheme.onSurface
+                        color = AvalonTheme.colors.onSurface
                     )
                     Spacer(modifier = Modifier.height(2.dp))
                     Text(
                         text = stringResource(Res.string.admin_integrations_torrserver_provide_all),
                         fontSize = 12.sp,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                        color = AvalonTheme.colors.onSurfaceVariant
                     )
                 }
                 Switch(
@@ -397,8 +398,8 @@ fun AdminIntegrationsTab(
                 modifier = Modifier
                     .fillMaxWidth()
                     .clip(RoundedCornerShape(12.dp))
-                    .background(MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.25f))
-                    .border(1.dp, MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.2f), RoundedCornerShape(12.dp))
+                    .background(AvalonTheme.colors.surfaceVariant.copy(alpha = 0.25f))
+                    .border(1.dp, AvalonTheme.colors.outlineVariant.copy(alpha = 0.2f), RoundedCornerShape(12.dp))
                     .padding(horizontal = 16.dp, vertical = 12.dp),
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.SpaceBetween
@@ -408,13 +409,13 @@ fun AdminIntegrationsTab(
                         text = stringResource(Res.string.admin_integrations_torrserver_gst),
                         fontSize = 14.sp,
                         fontWeight = FontWeight.SemiBold,
-                        color = MaterialTheme.colorScheme.onSurface
+                        color = AvalonTheme.colors.onSurface
                     )
                     Spacer(modifier = Modifier.height(2.dp))
                     Text(
                         text = stringResource(Res.string.admin_integrations_torrserver_gst_desc),
                         fontSize = 12.sp,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                        color = AvalonTheme.colors.onSurfaceVariant
                     )
                 }
                 Switch(
@@ -466,8 +467,8 @@ fun AdminIntegrationsTab(
                         text = stringResource(Res.string.admin_integrations_test_connection),
                         onClick = actions.onTestTorrServerConnection,
                         isLoading = state.isTorrServerTesting,
-                        containerColor = MaterialTheme.colorScheme.surfaceVariant,
-                        contentColor = MaterialTheme.colorScheme.onSurface
+                        containerColor = AvalonTheme.colors.surfaceVariant,
+                        contentColor = AvalonTheme.colors.onSurface
                     )
                     AvalonButton(
                         text = stringResource(Res.string.admin_integrations_btn_save),
@@ -483,8 +484,8 @@ fun AdminIntegrationsTab(
             modifier = Modifier
                 .fillMaxWidth()
                 .clip(RoundedCornerShape(12.dp))
-                .background(MaterialTheme.colorScheme.surface)
-                .border(1.dp, MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.5f), RoundedCornerShape(12.dp))
+                .background(AvalonTheme.colors.surface)
+                .border(1.dp, AvalonTheme.colors.outlineVariant.copy(alpha = 0.5f), RoundedCornerShape(12.dp))
                 .padding(20.dp),
             verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
@@ -500,14 +501,14 @@ fun AdminIntegrationsTab(
                     Icon(
                         imageVector = Lucide.Search,
                         contentDescription = null,
-                        tint = MaterialTheme.colorScheme.primary,
+                        tint = AvalonTheme.colors.primary,
                         modifier = Modifier.size(24.dp)
                     )
                     Text(
                         text = "Prowlarr",
                         fontSize = 18.sp,
                         fontWeight = FontWeight.Bold,
-                        color = MaterialTheme.colorScheme.onSurface
+                        color = AvalonTheme.colors.onSurface
                     )
                 }
 
@@ -517,12 +518,12 @@ fun AdminIntegrationsTab(
                         .clip(RoundedCornerShape(6.dp))
                         .background(
                             if (isProwlarrConfigured) Color(0xFF10B981).copy(alpha = 0.15f)
-                            else MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.5f)
+                            else AvalonTheme.colors.surfaceVariant.copy(alpha = 0.5f)
                         )
                         .border(
                             1.dp,
                             if (isProwlarrConfigured) Color(0xFF10B981).copy(alpha = 0.4f)
-                            else MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.3f),
+                            else AvalonTheme.colors.outlineVariant.copy(alpha = 0.3f),
                             RoundedCornerShape(6.dp)
                         )
                         .padding(horizontal = 8.dp, vertical = 4.dp)
@@ -531,7 +532,7 @@ fun AdminIntegrationsTab(
                         text = if (isProwlarrConfigured) stringResource(Res.string.admin_integrations_configured) else stringResource(Res.string.admin_integrations_not_set),
                         fontSize = 12.sp,
                         fontWeight = FontWeight.SemiBold,
-                        color = if (isProwlarrConfigured) Color(0xFF10B981) else MaterialTheme.colorScheme.onSurfaceVariant
+                        color = if (isProwlarrConfigured) Color(0xFF10B981) else AvalonTheme.colors.onSurfaceVariant
                     )
                 }
             }
@@ -539,7 +540,7 @@ fun AdminIntegrationsTab(
             Text(
                 text = stringResource(Res.string.admin_integrations_prowlarr_desc),
                 fontSize = 13.sp,
-                color = MaterialTheme.colorScheme.onSurfaceVariant
+                color = AvalonTheme.colors.onSurfaceVariant
             )
 
             AvalonTextField(
@@ -550,7 +551,7 @@ fun AdminIntegrationsTab(
                     Icon(
                         imageVector = Lucide.Globe,
                         contentDescription = null,
-                        tint = MaterialTheme.colorScheme.onSurfaceVariant,
+                        tint = AvalonTheme.colors.onSurfaceVariant,
                         modifier = Modifier.size(20.dp)
                     )
                 },
@@ -566,7 +567,7 @@ fun AdminIntegrationsTab(
                     Icon(
                         imageVector = Lucide.KeyRound,
                         contentDescription = null,
-                        tint = MaterialTheme.colorScheme.onSurfaceVariant,
+                        tint = AvalonTheme.colors.onSurfaceVariant,
                         modifier = Modifier.size(20.dp)
                     )
                 },
@@ -578,7 +579,7 @@ fun AdminIntegrationsTab(
                 modifier = Modifier
                     .fillMaxWidth()
                     .clip(RoundedCornerShape(8.dp))
-                    .background(MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.3f))
+                    .background(AvalonTheme.colors.surfaceVariant.copy(alpha = 0.3f))
                     .padding(horizontal = 16.dp, vertical = 12.dp),
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.SpaceBetween
@@ -588,13 +589,13 @@ fun AdminIntegrationsTab(
                         text = stringResource(Res.string.admin_integrations_prowlarr_provide_all),
                         fontSize = 14.sp,
                         fontWeight = FontWeight.SemiBold,
-                        color = MaterialTheme.colorScheme.onSurface
+                        color = AvalonTheme.colors.onSurface
                     )
                     Spacer(modifier = Modifier.height(2.dp))
                     Text(
                         text = stringResource(Res.string.admin_integrations_prowlarr_provide_desc),
                         fontSize = 12.sp,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                        color = AvalonTheme.colors.onSurfaceVariant
                     )
                 }
                 Switch(
@@ -646,8 +647,8 @@ fun AdminIntegrationsTab(
                         text = stringResource(Res.string.admin_integrations_test_connection),
                         onClick = actions.onTestProwlarrConnection,
                         isLoading = state.isProwlarrTesting,
-                        containerColor = MaterialTheme.colorScheme.surfaceVariant,
-                        contentColor = MaterialTheme.colorScheme.onSurface
+                        containerColor = AvalonTheme.colors.surfaceVariant,
+                        contentColor = AvalonTheme.colors.onSurface
                     )
                     AvalonButton(
                         text = stringResource(Res.string.admin_integrations_btn_save),
@@ -663,8 +664,8 @@ fun AdminIntegrationsTab(
             modifier = Modifier
                 .fillMaxWidth()
                 .clip(RoundedCornerShape(12.dp))
-                .background(MaterialTheme.colorScheme.surface)
-                .border(1.dp, MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.5f), RoundedCornerShape(12.dp))
+                .background(AvalonTheme.colors.surface)
+                .border(1.dp, AvalonTheme.colors.outlineVariant.copy(alpha = 0.5f), RoundedCornerShape(12.dp))
                 .padding(20.dp),
             verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
@@ -680,14 +681,14 @@ fun AdminIntegrationsTab(
                     Icon(
                         imageVector = Lucide.Layers,
                         contentDescription = null,
-                        tint = MaterialTheme.colorScheme.primary,
+                        tint = AvalonTheme.colors.primary,
                         modifier = Modifier.size(24.dp)
                     )
                     Text(
                         text = "Jackett",
                         fontSize = 18.sp,
                         fontWeight = FontWeight.Bold,
-                        color = MaterialTheme.colorScheme.onSurface
+                        color = AvalonTheme.colors.onSurface
                     )
                 }
 
@@ -697,12 +698,12 @@ fun AdminIntegrationsTab(
                         .clip(RoundedCornerShape(6.dp))
                         .background(
                             if (isJackettConfigured) Color(0xFF10B981).copy(alpha = 0.15f)
-                            else MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.5f)
+                            else AvalonTheme.colors.surfaceVariant.copy(alpha = 0.5f)
                         )
                         .border(
                             1.dp,
                             if (isJackettConfigured) Color(0xFF10B981).copy(alpha = 0.4f)
-                            else MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.3f),
+                            else AvalonTheme.colors.outlineVariant.copy(alpha = 0.3f),
                             RoundedCornerShape(6.dp)
                         )
                         .padding(horizontal = 8.dp, vertical = 4.dp)
@@ -711,7 +712,7 @@ fun AdminIntegrationsTab(
                         text = if (isJackettConfigured) stringResource(Res.string.admin_integrations_configured) else stringResource(Res.string.admin_integrations_not_set),
                         fontSize = 12.sp,
                         fontWeight = FontWeight.SemiBold,
-                        color = if (isJackettConfigured) Color(0xFF10B981) else MaterialTheme.colorScheme.onSurfaceVariant
+                        color = if (isJackettConfigured) Color(0xFF10B981) else AvalonTheme.colors.onSurfaceVariant
                     )
                 }
             }
@@ -719,7 +720,7 @@ fun AdminIntegrationsTab(
             Text(
                 text = stringResource(Res.string.admin_integrations_jackett_desc),
                 fontSize = 13.sp,
-                color = MaterialTheme.colorScheme.onSurfaceVariant
+                color = AvalonTheme.colors.onSurfaceVariant
             )
 
             AvalonTextField(
@@ -730,7 +731,7 @@ fun AdminIntegrationsTab(
                     Icon(
                         imageVector = Lucide.Globe,
                         contentDescription = null,
-                        tint = MaterialTheme.colorScheme.onSurfaceVariant,
+                        tint = AvalonTheme.colors.onSurfaceVariant,
                         modifier = Modifier.size(20.dp)
                     )
                 },
@@ -746,7 +747,7 @@ fun AdminIntegrationsTab(
                     Icon(
                         imageVector = Lucide.KeyRound,
                         contentDescription = null,
-                        tint = MaterialTheme.colorScheme.onSurfaceVariant,
+                        tint = AvalonTheme.colors.onSurfaceVariant,
                         modifier = Modifier.size(20.dp)
                     )
                 },
@@ -758,7 +759,7 @@ fun AdminIntegrationsTab(
                 modifier = Modifier
                     .fillMaxWidth()
                     .clip(RoundedCornerShape(8.dp))
-                    .background(MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.3f))
+                    .background(AvalonTheme.colors.surfaceVariant.copy(alpha = 0.3f))
                     .padding(horizontal = 16.dp, vertical = 12.dp),
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.SpaceBetween
@@ -768,13 +769,13 @@ fun AdminIntegrationsTab(
                         text = stringResource(Res.string.admin_integrations_jackett_provide_all),
                         fontSize = 14.sp,
                         fontWeight = FontWeight.SemiBold,
-                        color = MaterialTheme.colorScheme.onSurface
+                        color = AvalonTheme.colors.onSurface
                     )
                     Spacer(modifier = Modifier.height(2.dp))
                     Text(
                         text = stringResource(Res.string.admin_integrations_jackett_provide_desc),
                         fontSize = 12.sp,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                        color = AvalonTheme.colors.onSurfaceVariant
                     )
                 }
                 Switch(
@@ -826,8 +827,8 @@ fun AdminIntegrationsTab(
                         text = stringResource(Res.string.admin_integrations_test_connection),
                         onClick = actions.onTestJackettConnection,
                         isLoading = state.isJackettTesting,
-                        containerColor = MaterialTheme.colorScheme.surfaceVariant,
-                        contentColor = MaterialTheme.colorScheme.onSurface
+                        containerColor = AvalonTheme.colors.surfaceVariant,
+                        contentColor = AvalonTheme.colors.onSurface
                     )
                     AvalonButton(
                         text = stringResource(Res.string.admin_integrations_btn_save),

@@ -15,11 +15,10 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.material3.CircularProgressIndicator
-import androidx.compose.material3.Icon
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Surface
-import androidx.compose.material3.Text
+import org.ensodai.avalonmediacard.designsystem.components.AvalonCircularProgressIndicator as CircularProgressIndicator
+import org.ensodai.avalonmediacard.designsystem.components.AvalonIcon as Icon
+import org.ensodai.avalonmediacard.designsystem.components.AvalonSurface as Surface
+import org.ensodai.avalonmediacard.designsystem.components.AvalonText as Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.LaunchedEffect
@@ -52,7 +51,7 @@ import org.ensodai.avalonmediacard.presentation.components.ShimmerImage
 import org.ensodai.avalonmediacard.presentation.navigation.LocalNavigation
 import org.ensodai.avalonmediacard.presentation.screens.commonComponents.tvDrawer.TvDrawerNavigator
 import org.ensodai.avalonmediacard.presentation.screens.commonComponents.tvDrawer.TvDrawerScreen
-import org.ensodai.avalonmediacard.presentation.theme.AvalonTheme
+import org.ensodai.avalonmediacard.designsystem.theme.AvalonTheme
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.koinInject
 
@@ -121,7 +120,7 @@ class DayActivityDrawerScreen(
                     ) {
                         Text(
                             text = error ?: stringResource(Res.string.stats_loading_error),
-                            style = MaterialTheme.typography.bodyMedium,
+                            style = AvalonTheme.typography.bodyMedium,
                             color = colors.textSecondary
                         )
                     }
@@ -138,7 +137,7 @@ class DayActivityDrawerScreen(
                         ) {
                             Text(
                                 text = stringResource(Res.string.stats_day_activity_empty),
-                                style = MaterialTheme.typography.bodyMedium,
+                                style = AvalonTheme.typography.bodyMedium,
                                 color = colors.textSecondary
                             )
                         }
@@ -203,13 +202,13 @@ private fun DaySummaryCard(
             Column {
                 Text(
                     text = timeFormatted,
-                    style = MaterialTheme.typography.titleMedium.copy(fontFeatureSettings = "tnum"),
+                    style = AvalonTheme.typography.titleMedium.copy(fontFeatureSettings = "tnum"),
                     fontWeight = FontWeight.Bold,
                     color = colors.textPrimary
                 )
                 Text(
                     text = "${activity.items.size} ${pluralizeTitles(activity.items.size)}",
-                    style = MaterialTheme.typography.bodySmall,
+                    style = AvalonTheme.typography.bodySmall,
                     color = colors.textSecondary
                 )
             }
@@ -232,7 +231,7 @@ private fun DaySummaryCard(
                         )
                         Text(
                             text = activity.averageRating.toString(),
-                            style = MaterialTheme.typography.labelSmall.copy(fontFeatureSettings = "tnum"),
+                            style = AvalonTheme.typography.labelSmall.copy(fontFeatureSettings = "tnum"),
                             fontWeight = FontWeight.Bold,
                             color = colors.accentGold
                         )
@@ -290,7 +289,7 @@ private fun DayActivityItemCard(
             ) {
                 Text(
                     text = item.title,
-                    style = MaterialTheme.typography.bodyMedium,
+                    style = AvalonTheme.typography.bodyMedium,
                     fontWeight = FontWeight.SemiBold,
                     color = colors.textPrimary,
                     maxLines = 2,
@@ -306,7 +305,7 @@ private fun DayActivityItemCard(
                     }
                     Text(
                         text = epText,
-                        style = MaterialTheme.typography.labelSmall,
+                        style = AvalonTheme.typography.labelSmall,
                         color = colors.textSecondary,
                         maxLines = 1,
                         overflow = TextOverflow.Ellipsis
@@ -327,7 +326,7 @@ private fun DayActivityItemCard(
                         )
                         Text(
                             text = stringResource(Res.string.stats_day_activity_completed),
-                            style = MaterialTheme.typography.labelSmall,
+                            style = AvalonTheme.typography.labelSmall,
                             color = colors.textSecondary
                         )
                     } else {
@@ -348,7 +347,7 @@ private fun DayActivityItemCard(
                         }
                         Text(
                             text = watchedStr,
-                            style = MaterialTheme.typography.labelSmall.copy(fontFeatureSettings = "tnum"),
+                            style = AvalonTheme.typography.labelSmall.copy(fontFeatureSettings = "tnum"),
                             color = colors.textSecondary
                         )
                     }
@@ -367,7 +366,7 @@ private fun DayActivityItemCard(
                             )
                             Text(
                                 text = item.userRating.toString(),
-                                style = MaterialTheme.typography.labelSmall.copy(fontFeatureSettings = "tnum"),
+                                style = AvalonTheme.typography.labelSmall.copy(fontFeatureSettings = "tnum"),
                                 fontWeight = FontWeight.Bold,
                                 color = colors.accentGold
                             )

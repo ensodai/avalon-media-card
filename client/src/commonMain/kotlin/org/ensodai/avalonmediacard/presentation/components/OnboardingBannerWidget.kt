@@ -1,14 +1,15 @@
 package org.ensodai.avalonmediacard.presentation.components
 
+import org.ensodai.avalonmediacard.designsystem.theme.AvalonTheme
+
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonDefaults
-import androidx.compose.material3.Icon
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
+import org.ensodai.avalonmediacard.designsystem.components.AvalonButton as Button
+import org.ensodai.avalonmediacard.designsystem.components.ButtonDefaults
+import org.ensodai.avalonmediacard.designsystem.components.AvalonIcon as Icon
+import org.ensodai.avalonmediacard.designsystem.components.AvalonText as Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -36,8 +37,8 @@ fun OnboardingBannerWidget(
 
     val gradientBackground = Brush.linearGradient(
         colors = listOf(
-            MaterialTheme.colorScheme.primaryContainer.copy(alpha = 0.45f),
-            MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.7f)
+            AvalonTheme.colors.primaryContainer.copy(alpha = 0.45f),
+            AvalonTheme.colors.surfaceVariant.copy(alpha = 0.7f)
         )
     )
 
@@ -49,7 +50,7 @@ fun OnboardingBannerWidget(
             .background(gradientBackground)
             .border(
                 width = 1.dp,
-                color = MaterialTheme.colorScheme.primary.copy(alpha = 0.3f),
+                color = AvalonTheme.colors.primary.copy(alpha = 0.3f),
                 shape = RoundedCornerShape(20.dp)
             )
             .padding(32.dp)
@@ -66,14 +67,14 @@ fun OnboardingBannerWidget(
                     modifier = Modifier
                         .size(48.dp)
                         .clip(RoundedCornerShape(12.dp))
-                        .background(MaterialTheme.colorScheme.primary.copy(alpha = 0.2f)),
+                        .background(AvalonTheme.colors.primary.copy(alpha = 0.2f)),
                     contentAlignment = Alignment.Center
                 ) {
                     Icon(
                         imageVector = if (data.iconName == "settings") Lucide.Settings else Lucide.Sparkles,
                         contentDescription = null,
                         modifier = Modifier.size(26.dp),
-                        tint = MaterialTheme.colorScheme.primary
+                        tint = AvalonTheme.colors.primary
                     )
                 }
 
@@ -81,7 +82,7 @@ fun OnboardingBannerWidget(
                     text = data.title,
                     fontSize = 22.sp,
                     fontWeight = FontWeight.Bold,
-                    color = MaterialTheme.colorScheme.onSurface
+                    color = AvalonTheme.colors.onSurface
                 )
             }
 
@@ -91,7 +92,7 @@ fun OnboardingBannerWidget(
                 text = data.description,
                 fontSize = 15.sp,
                 lineHeight = 22.sp,
-                color = MaterialTheme.colorScheme.onSurfaceVariant
+                color = AvalonTheme.colors.onSurfaceVariant
             )
 
             val action = data.primaryAction
@@ -103,8 +104,8 @@ fun OnboardingBannerWidget(
                     onClick = { onAction(action) },
                     shape = RoundedCornerShape(12.dp),
                     colors = ButtonDefaults.buttonColors(
-                        containerColor = MaterialTheme.colorScheme.primary,
-                        contentColor = MaterialTheme.colorScheme.onPrimary
+                        containerColor = AvalonTheme.colors.primary,
+                        contentColor = AvalonTheme.colors.onPrimary
                     ),
                     modifier = Modifier.tvAndWebHoverEffect(
                         shape = RoundedCornerShape(12.dp),

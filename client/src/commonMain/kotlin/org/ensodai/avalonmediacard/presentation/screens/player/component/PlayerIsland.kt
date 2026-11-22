@@ -1,5 +1,7 @@
 package org.ensodai.avalonmediacard.presentation.screens.player.component
 
+import org.ensodai.avalonmediacard.designsystem.theme.AvalonTheme
+
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
@@ -14,9 +16,8 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.Icon
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
+import org.ensodai.avalonmediacard.designsystem.components.AvalonIcon as Icon
+import org.ensodai.avalonmediacard.designsystem.components.AvalonText as Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -79,7 +80,7 @@ fun PlayerIslandIconButton(
             .tvAndWebHoverEffect(
                 scaleTarget = 1.12f,
                 shape = shape,
-                activeBorderColor = MaterialTheme.colorScheme.primary,
+                activeBorderColor = AvalonTheme.colors.primary,
                 activeBorderWidth = 2.dp,
                 defaultBorderColor = borderColor,
                 defaultBorderWidth = 1.dp,
@@ -159,7 +160,7 @@ fun PlayerIslandActionButton(
             .tvAndWebHoverEffect(
                 scaleTarget = 1.08f,
                 shape = shape,
-                activeBorderColor = MaterialTheme.colorScheme.primary,
+                activeBorderColor = AvalonTheme.colors.primary,
                 activeBorderWidth = 2.dp,
                 defaultBorderColor = borderColor,
                 defaultBorderWidth = 1.dp,
@@ -224,7 +225,7 @@ fun PlayerIslandDynamicButton(
             .tvAndWebHoverEffect(
                 scaleTarget = 1.08f,
                 shape = finalShape,
-                activeBorderColor = MaterialTheme.colorScheme.primary,
+                activeBorderColor = AvalonTheme.colors.primary,
                 activeBorderWidth = 2.dp,
                 defaultBorderColor = borderColor,
                 defaultBorderWidth = 1.dp,

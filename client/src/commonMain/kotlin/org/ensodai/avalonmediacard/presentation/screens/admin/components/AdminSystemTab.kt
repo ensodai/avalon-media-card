@@ -1,5 +1,7 @@
 package org.ensodai.avalonmediacard.presentation.screens.admin.components
 
+import org.ensodai.avalonmediacard.designsystem.theme.AvalonTheme
+
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -8,10 +10,9 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material3.CircularProgressIndicator
-import androidx.compose.material3.Icon
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
+import org.ensodai.avalonmediacard.designsystem.components.AvalonCircularProgressIndicator as CircularProgressIndicator
+import org.ensodai.avalonmediacard.designsystem.components.AvalonIcon as Icon
+import org.ensodai.avalonmediacard.designsystem.components.AvalonText as Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
@@ -54,8 +55,8 @@ fun AdminSystemTab(
             modifier = Modifier
                 .fillMaxWidth()
                 .clip(RoundedCornerShape(16.dp))
-                .background(MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.2f))
-                .border(1.dp, MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.3f), RoundedCornerShape(16.dp))
+                .background(AvalonTheme.colors.surfaceVariant.copy(alpha = 0.2f))
+                .border(1.dp, AvalonTheme.colors.outlineVariant.copy(alpha = 0.3f), RoundedCornerShape(16.dp))
                 .padding(20.dp),
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.SpaceBetween
@@ -65,21 +66,21 @@ fun AdminSystemTab(
                     text = stringResource(Res.string.admin_system_title),
                     fontSize = 18.sp,
                     fontWeight = FontWeight.Bold,
-                    color = MaterialTheme.colorScheme.onSurface
+                    color = AvalonTheme.colors.onSurface
                 )
                 Spacer(modifier = Modifier.height(4.dp))
                 Text(
                     text = stringResource(Res.string.admin_system_subtitle),
                     fontSize = 13.sp,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                    color = AvalonTheme.colors.onSurfaceVariant
                 )
             }
 
             Box(
                 modifier = Modifier
                     .clip(RoundedCornerShape(10.dp))
-                    .background(MaterialTheme.colorScheme.surface.copy(alpha = 0.6f))
-                    .border(1.dp, MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.3f), RoundedCornerShape(10.dp))
+                    .background(AvalonTheme.colors.surface.copy(alpha = 0.6f))
+                    .border(1.dp, AvalonTheme.colors.outlineVariant.copy(alpha = 0.3f), RoundedCornerShape(10.dp))
                     .tvAndWebHoverEffect(shape = RoundedCornerShape(10.dp))
                     .clickable(enabled = !state.isSystemLoading) { actions.loadSystemInfo() }
                     .padding(horizontal = 14.dp, vertical = 10.dp),
@@ -89,7 +90,7 @@ fun AdminSystemTab(
                     CircularProgressIndicator(
                         modifier = Modifier.size(18.dp),
                         strokeWidth = 2.dp,
-                        color = MaterialTheme.colorScheme.primary
+                        color = AvalonTheme.colors.primary
                     )
                 } else {
                     Row(
@@ -99,14 +100,14 @@ fun AdminSystemTab(
                         Icon(
                             imageVector = Lucide.RefreshCw,
                             contentDescription = stringResource(Res.string.admin_system_btn_refresh),
-                            tint = MaterialTheme.colorScheme.primary,
+                            tint = AvalonTheme.colors.primary,
                             modifier = Modifier.size(16.dp)
                         )
                         Text(
                             text = stringResource(Res.string.admin_system_btn_refresh),
                             fontSize = 13.sp,
                             fontWeight = FontWeight.Medium,
-                            color = MaterialTheme.colorScheme.onSurface
+                            color = AvalonTheme.colors.onSurface
                         )
                     }
                 }
@@ -118,8 +119,8 @@ fun AdminSystemTab(
             modifier = Modifier
                 .fillMaxWidth()
                 .clip(RoundedCornerShape(16.dp))
-                .background(MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.2f))
-                .border(1.dp, MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.3f), RoundedCornerShape(16.dp))
+                .background(AvalonTheme.colors.surfaceVariant.copy(alpha = 0.2f))
+                .border(1.dp, AvalonTheme.colors.outlineVariant.copy(alpha = 0.3f), RoundedCornerShape(16.dp))
                 .padding(24.dp),
             verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
@@ -130,14 +131,14 @@ fun AdminSystemTab(
                 Icon(
                     imageVector = Lucide.Server,
                     contentDescription = null,
-                    tint = MaterialTheme.colorScheme.primary,
+                    tint = AvalonTheme.colors.primary,
                     modifier = Modifier.size(24.dp)
                 )
                 Text(
                     text = stringResource(Res.string.admin_system_server_status),
                     fontSize = 18.sp,
                     fontWeight = FontWeight.Bold,
-                    color = MaterialTheme.colorScheme.onSurface
+                    color = AvalonTheme.colors.onSurface
                 )
             }
 
@@ -145,8 +146,8 @@ fun AdminSystemTab(
                 modifier = Modifier
                     .fillMaxWidth()
                     .clip(RoundedCornerShape(12.dp))
-                    .background(MaterialTheme.colorScheme.surface.copy(alpha = 0.5f))
-                    .border(1.dp, MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.2f), RoundedCornerShape(12.dp))
+                    .background(AvalonTheme.colors.surface.copy(alpha = 0.5f))
+                    .border(1.dp, AvalonTheme.colors.outlineVariant.copy(alpha = 0.2f), RoundedCornerShape(12.dp))
                     .padding(16.dp),
                 verticalArrangement = Arrangement.spacedBy(12.dp)
             ) {
@@ -155,7 +156,7 @@ fun AdminSystemTab(
                     horizontalArrangement = Arrangement.SpaceBetween,
                     verticalAlignment = Alignment.CenterVertically
                 ) {
-                    Text(text = stringResource(Res.string.admin_system_status_label), fontSize = 14.sp, color = MaterialTheme.colorScheme.onSurfaceVariant)
+                    Text(text = stringResource(Res.string.admin_system_status_label), fontSize = 14.sp, color = AvalonTheme.colors.onSurfaceVariant)
                     Row(
                         verticalAlignment = Alignment.CenterVertically,
                         horizontalArrangement = Arrangement.spacedBy(6.dp)
@@ -170,12 +171,12 @@ fun AdminSystemTab(
                     horizontalArrangement = Arrangement.SpaceBetween,
                     verticalAlignment = Alignment.CenterVertically
                 ) {
-                    Text(text = stringResource(Res.string.admin_system_uptime_label), fontSize = 14.sp, color = MaterialTheme.colorScheme.onSurfaceVariant)
+                    Text(text = stringResource(Res.string.admin_system_uptime_label), fontSize = 14.sp, color = AvalonTheme.colors.onSurfaceVariant)
                     Text(
                         text = info?.let { formatUptime(it.uptimeSeconds) } ?: stringResource(Res.string.common_loading),
                         fontSize = 13.sp,
                         fontWeight = FontWeight.Medium,
-                        color = MaterialTheme.colorScheme.onSurface
+                        color = AvalonTheme.colors.onSurface
                     )
                 }
 
@@ -184,12 +185,12 @@ fun AdminSystemTab(
                     horizontalArrangement = Arrangement.SpaceBetween,
                     verticalAlignment = Alignment.CenterVertically
                 ) {
-                    Text(text = "Core Version", fontSize = 14.sp, color = MaterialTheme.colorScheme.onSurfaceVariant)
+                    Text(text = "Core Version", fontSize = 14.sp, color = AvalonTheme.colors.onSurfaceVariant)
                     Text(
                         text = info?.coreVersion ?: "Avalon Media Card Core",
                         fontSize = 13.sp,
                         fontWeight = FontWeight.SemiBold,
-                        color = MaterialTheme.colorScheme.primary
+                        color = AvalonTheme.colors.primary
                     )
                 }
 
@@ -198,12 +199,12 @@ fun AdminSystemTab(
                     horizontalArrangement = Arrangement.SpaceBetween,
                     verticalAlignment = Alignment.CenterVertically
                 ) {
-                    Text(text = "Client Version", fontSize = 14.sp, color = MaterialTheme.colorScheme.onSurfaceVariant)
+                    Text(text = "Client Version", fontSize = 14.sp, color = AvalonTheme.colors.onSurfaceVariant)
                     Text(
                         text = AppVersion.displayVersion,
                         fontSize = 13.sp,
                         fontWeight = FontWeight.SemiBold,
-                        color = MaterialTheme.colorScheme.primary
+                        color = AvalonTheme.colors.primary
                     )
                 }
 
@@ -212,12 +213,12 @@ fun AdminSystemTab(
                     horizontalArrangement = Arrangement.SpaceBetween,
                     verticalAlignment = Alignment.CenterVertically
                 ) {
-                    Text(text = stringResource(Res.string.admin_system_db_label), fontSize = 14.sp, color = MaterialTheme.colorScheme.onSurfaceVariant)
+                    Text(text = stringResource(Res.string.admin_system_db_label), fontSize = 14.sp, color = AvalonTheme.colors.onSurfaceVariant)
                     Text(
                         text = info?.databaseType ?: "SQLite",
                         fontSize = 13.sp,
                         fontWeight = FontWeight.Medium,
-                        color = MaterialTheme.colorScheme.onSurface
+                        color = AvalonTheme.colors.onSurface
                     )
                 }
 
@@ -226,12 +227,12 @@ fun AdminSystemTab(
                     horizontalArrangement = Arrangement.SpaceBetween,
                     verticalAlignment = Alignment.CenterVertically
                 ) {
-                    Text(text = stringResource(Res.string.admin_system_runtime_label), fontSize = 14.sp, color = MaterialTheme.colorScheme.onSurfaceVariant)
+                    Text(text = stringResource(Res.string.admin_system_runtime_label), fontSize = 14.sp, color = AvalonTheme.colors.onSurfaceVariant)
                     Text(
                         text = if (info != null) "${info.osName} • Java ${info.javaVersion}" else "...",
                         fontSize = 13.sp,
                         fontWeight = FontWeight.Normal,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                        color = AvalonTheme.colors.onSurfaceVariant
                     )
                 }
             }
@@ -242,8 +243,8 @@ fun AdminSystemTab(
             modifier = Modifier
                 .fillMaxWidth()
                 .clip(RoundedCornerShape(16.dp))
-                .background(MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.2f))
-                .border(1.dp, MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.3f), RoundedCornerShape(16.dp))
+                .background(AvalonTheme.colors.surfaceVariant.copy(alpha = 0.2f))
+                .border(1.dp, AvalonTheme.colors.outlineVariant.copy(alpha = 0.3f), RoundedCornerShape(16.dp))
                 .padding(24.dp),
             verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
@@ -254,14 +255,14 @@ fun AdminSystemTab(
                 Icon(
                     imageVector = Lucide.Layers,
                     contentDescription = null,
-                    tint = MaterialTheme.colorScheme.primary,
+                    tint = AvalonTheme.colors.primary,
                     modifier = Modifier.size(24.dp)
                 )
                 Text(
                     text = stringResource(Res.string.admin_system_metrics_title),
                     fontSize = 18.sp,
                     fontWeight = FontWeight.Bold,
-                    color = MaterialTheme.colorScheme.onSurface
+                    color = AvalonTheme.colors.onSurface
                 )
             }
 
@@ -318,8 +319,8 @@ fun AdminSystemTab(
             modifier = Modifier
                 .fillMaxWidth()
                 .clip(RoundedCornerShape(16.dp))
-                .background(MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.2f))
-                .border(1.dp, MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.3f), RoundedCornerShape(16.dp))
+                .background(AvalonTheme.colors.surfaceVariant.copy(alpha = 0.2f))
+                .border(1.dp, AvalonTheme.colors.outlineVariant.copy(alpha = 0.3f), RoundedCornerShape(16.dp))
                 .padding(24.dp),
             verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
@@ -330,21 +331,21 @@ fun AdminSystemTab(
                 Icon(
                     imageVector = Lucide.HardDrive,
                     contentDescription = null,
-                    tint = MaterialTheme.colorScheme.primary,
+                    tint = AvalonTheme.colors.primary,
                     modifier = Modifier.size(24.dp)
                 )
                 Text(
                     text = stringResource(Res.string.admin_system_maintenance_title),
                     fontSize = 18.sp,
                     fontWeight = FontWeight.Bold,
-                    color = MaterialTheme.colorScheme.onSurface
+                    color = AvalonTheme.colors.onSurface
                 )
             }
 
             Text(
                 text = stringResource(Res.string.admin_system_maintenance_desc),
                 fontSize = 13.sp,
-                color = MaterialTheme.colorScheme.onSurfaceVariant
+                color = AvalonTheme.colors.onSurfaceVariant
             )
 
             if (state.systemActionMessage != null) {
@@ -352,8 +353,8 @@ fun AdminSystemTab(
                     modifier = Modifier
                         .fillMaxWidth()
                         .clip(RoundedCornerShape(10.dp))
-                        .background(MaterialTheme.colorScheme.primary.copy(alpha = 0.1f))
-                        .border(1.dp, MaterialTheme.colorScheme.primary.copy(alpha = 0.3f), RoundedCornerShape(10.dp))
+                        .background(AvalonTheme.colors.primary.copy(alpha = 0.1f))
+                        .border(1.dp, AvalonTheme.colors.primary.copy(alpha = 0.3f), RoundedCornerShape(10.dp))
                         .padding(14.dp),
                     verticalAlignment = Alignment.CenterVertically,
                     horizontalArrangement = Arrangement.spacedBy(10.dp)
@@ -361,12 +362,12 @@ fun AdminSystemTab(
                     Icon(
                         imageVector = Lucide.Check,
                         contentDescription = null,
-                        tint = MaterialTheme.colorScheme.primary,
+                        tint = AvalonTheme.colors.primary,
                         modifier = Modifier.size(18.dp)
                     )
                     Text(
                         text = state.systemActionMessage,
-                        color = MaterialTheme.colorScheme.primary,
+                        color = AvalonTheme.colors.primary,
                         fontSize = 13.sp,
                         fontWeight = FontWeight.Medium
                     )
@@ -413,8 +414,8 @@ fun AdminSystemTab(
             modifier = Modifier
                 .fillMaxWidth()
                 .clip(RoundedCornerShape(16.dp))
-                .background(MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.2f))
-                .border(1.dp, MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.3f), RoundedCornerShape(16.dp))
+                .background(AvalonTheme.colors.surfaceVariant.copy(alpha = 0.2f))
+                .border(1.dp, AvalonTheme.colors.outlineVariant.copy(alpha = 0.3f), RoundedCornerShape(16.dp))
                 .padding(24.dp),
             verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
@@ -431,7 +432,7 @@ fun AdminSystemTab(
                     Icon(
                         imageVector = Lucide.Globe,
                         contentDescription = null,
-                        tint = MaterialTheme.colorScheme.primary,
+                        tint = AvalonTheme.colors.primary,
                         modifier = Modifier.size(24.dp)
                     )
                     Column {
@@ -439,13 +440,13 @@ fun AdminSystemTab(
                             text = stringResource(Res.string.admin_plugin_proxy_title),
                             fontSize = 18.sp,
                             fontWeight = FontWeight.Bold,
-                            color = MaterialTheme.colorScheme.onSurface
+                            color = AvalonTheme.colors.onSurface
                         )
                         Spacer(modifier = Modifier.height(2.dp))
                         Text(
                             text = stringResource(Res.string.admin_plugin_proxy_subtitle),
                             fontSize = 13.sp,
-                            color = MaterialTheme.colorScheme.onSurfaceVariant
+                            color = AvalonTheme.colors.onSurfaceVariant
                         )
                     }
                 }
@@ -477,8 +478,8 @@ private fun MetricCard(
     Column(
         modifier = modifier
             .clip(RoundedCornerShape(12.dp))
-            .background(MaterialTheme.colorScheme.surface.copy(alpha = 0.5f))
-            .border(1.dp, MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.2f), RoundedCornerShape(12.dp))
+            .background(AvalonTheme.colors.surface.copy(alpha = 0.5f))
+            .border(1.dp, AvalonTheme.colors.outlineVariant.copy(alpha = 0.2f), RoundedCornerShape(12.dp))
             .padding(16.dp),
         verticalArrangement = Arrangement.spacedBy(8.dp)
     ) {
@@ -489,14 +490,14 @@ private fun MetricCard(
             Icon(
                 imageVector = icon,
                 contentDescription = null,
-                tint = MaterialTheme.colorScheme.primary,
+                tint = AvalonTheme.colors.primary,
                 modifier = Modifier.size(18.dp)
             )
             Text(
                 text = title,
                 fontSize = 13.sp,
                 fontWeight = FontWeight.Medium,
-                color = MaterialTheme.colorScheme.onSurfaceVariant
+                color = AvalonTheme.colors.onSurfaceVariant
             )
         }
 
@@ -504,13 +505,13 @@ private fun MetricCard(
             text = value,
             fontSize = 20.sp,
             fontWeight = FontWeight.Bold,
-            color = MaterialTheme.colorScheme.onSurface
+            color = AvalonTheme.colors.onSurface
         )
 
         Text(
             text = subtitle,
             fontSize = 11.sp,
-            color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.8f)
+            color = AvalonTheme.colors.onSurfaceVariant.copy(alpha = 0.8f)
         )
     }
 }

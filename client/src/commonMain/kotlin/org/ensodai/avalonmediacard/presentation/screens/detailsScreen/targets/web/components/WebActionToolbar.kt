@@ -1,5 +1,7 @@
 package org.ensodai.avalonmediacard.presentation.screens.detailsScreen.targets.web.components
 
+import org.ensodai.avalonmediacard.designsystem.theme.AvalonTheme
+
 import androidx.compose.animation.Crossfade
 import androidx.compose.animation.core.FastOutSlowInEasing
 import androidx.compose.animation.core.tween
@@ -14,9 +16,6 @@ import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material3.Icon
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -44,8 +43,9 @@ import org.ensodai.avalonmediacard.contract.model.MediaStatus
 import org.ensodai.avalonmediacard.designsystem.components.AvalonButton
 import org.ensodai.avalonmediacard.designsystem.components.AvalonButtonSize
 import org.ensodai.avalonmediacard.designsystem.components.AvalonButtonVariant
+import org.ensodai.avalonmediacard.designsystem.components.AvalonIcon
 import org.ensodai.avalonmediacard.designsystem.components.AvalonIconButton
-import org.ensodai.avalonmediacard.designsystem.theme.AvalonTheme
+import org.ensodai.avalonmediacard.designsystem.components.AvalonText
 import org.ensodai.avalonmediacard.contract.slot.Action
 import org.ensodai.avalonmediacard.contract.slot.ButtonItem
 import org.ensodai.avalonmediacard.contract.slot.IconType
@@ -148,7 +148,7 @@ fun WebActionToolbar(
                     variant = AvalonButtonVariant.Primary,
                     size = AvalonButtonSize.Hero,
                     leadingIcon = {
-                        Icon(
+                        AvalonIcon(
                             imageVector = Lucide.Play,
                             contentDescription = null,
                             modifier = Modifier.size(18.dp)
@@ -177,7 +177,7 @@ fun WebActionToolbar(
                         variant = AvalonButtonVariant.Secondary,
                         size = AvalonButtonSize.Standard
                     ) {
-                        Icon(
+                        AvalonIcon(
                             imageVector = icon,
                             contentDescription = null,
                             tint = tint,
@@ -219,7 +219,7 @@ fun WebActionToolbar(
                         variant = AvalonButtonVariant.Secondary,
                         size = AvalonButtonSize.Standard,
                         leadingIcon = {
-                            Icon(
+                            AvalonIcon(
                                 imageVector = Lucide.HardDrive,
                                 contentDescription = null,
                                 modifier = Modifier.size(18.dp)
@@ -253,7 +253,7 @@ private fun WebSettingsMenuButton(
             variant = AvalonButtonVariant.Secondary,
             size = AvalonButtonSize.Standard
         ) {
-            Icon(
+            AvalonIcon(
                 imageVector = Lucide.Settings,
                 contentDescription = null,
                 tint = if (expanded) AvalonTheme.colors.textPrimary else AvalonTheme.colors.textSecondary,
@@ -272,7 +272,7 @@ private fun WebSettingsMenuButton(
                     text = stringResource(Res.string.watch_party_title),
                     icon = Lucide.Users,
                     textColor = Color.White,
-                    iconColor = MaterialTheme.colorScheme.primary,
+                    iconColor = AvalonTheme.colors.accentPrimary,
                     onClick = {
                         expanded = false
                         onOpenWatchParty()
@@ -315,14 +315,14 @@ private fun WebCustomListButton(
             onClick = { expanded = true },
             text = stringResource(Res.string.details_custom_lists),
             leadingIcon = {
-                Icon(
+                AvalonIcon(
                     imageVector = Lucide.Plus,
                     contentDescription = null,
                     modifier = Modifier.size(16.dp)
                 )
             },
             trailingIcon = {
-                Icon(
+                AvalonIcon(
                     imageVector = Lucide.ChevronDown,
                     contentDescription = null,
                     modifier = Modifier.size(14.dp),
@@ -374,17 +374,17 @@ private fun WebCustomListButton(
                             verticalAlignment = Alignment.CenterVertically,
                             horizontalArrangement = Arrangement.SpaceBetween
                         ) {
-                            Text(
+                            AvalonText(
                                 text = list.name,
                                 color = if (list.isAdded) Color.White else Color.White.copy(alpha = 0.8f),
                                 fontSize = 14.sp,
                                 fontWeight = if (list.isAdded) FontWeight.Bold else FontWeight.Normal
                             )
                             if (list.isAdded) {
-                                Icon(
+                                AvalonIcon(
                                     imageVector = Lucide.Check,
                                     contentDescription = "Added",
-                                    tint = MaterialTheme.colorScheme.primary,
+                                    tint = AvalonTheme.colors.accentPrimary,
                                     modifier = Modifier.size(18.dp)
                                 )
                             }
@@ -416,7 +416,7 @@ private fun WebCustomListButton(
                                 onValueChange = { listName = it },
                                 textStyle = TextStyle(color = Color.White, fontSize = 14.sp),
                                 singleLine = true,
-                                cursorBrush = SolidColor(MaterialTheme.colorScheme.primary),
+                                cursorBrush = SolidColor(AvalonTheme.colors.accentPrimary),
                                 keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done),
                                 keyboardActions = KeyboardActions(onDone = { submitNewList() }),
                                 modifier = Modifier
@@ -435,13 +435,13 @@ private fun WebCustomListButton(
                                     )
                                     .border(
                                         width = 1.dp,
-                                        color = if (isInputFocused) MaterialTheme.colorScheme.primary else Color.Transparent,
+                                        color = if (isInputFocused) AvalonTheme.colors.accentPrimary else Color.Transparent,
                                         shape = RoundedCornerShape(6.dp)
                                     )
                                     .padding(horizontal = 12.dp, vertical = 10.dp),
                                 decorationBox = { innerTextField ->
                                     if (listName.isEmpty()) {
-                                        Text(
+                                        AvalonText(
                                             stringResource(Res.string.details_custom_list_name_placeholder),
                                             color = Color.White.copy(alpha = 0.5f),
                                             fontSize = 14.sp
@@ -451,17 +451,17 @@ private fun WebCustomListButton(
                                 }
                             )
                             Spacer(modifier = Modifier.width(8.dp))
-                            Icon(
+                            AvalonIcon(
                                 imageVector = Lucide.Check,
                                 contentDescription = stringResource(Res.string.common_save),
-                                tint = if (listName.isNotBlank()) MaterialTheme.colorScheme.primary else Color.White.copy(alpha = 0.3f),
+                                tint = if (listName.isNotBlank()) AvalonTheme.colors.accentPrimary else Color.White.copy(alpha = 0.3f),
                                 modifier = Modifier
                                     .size(24.dp)
                                     .pointerHoverIcon(if (listName.isNotBlank()) PointerIcon.Hand else PointerIcon.Default)
                                     .clickable(enabled = listName.isNotBlank()) { submitNewList() }
                             )
                             Spacer(modifier = Modifier.width(8.dp))
-                            Icon(
+                            AvalonIcon(
                                 imageVector = Lucide.X,
                                 contentDescription = stringResource(Res.string.common_cancel),
                                 tint = Color.White.copy(alpha = 0.5f),
@@ -483,14 +483,14 @@ private fun WebCustomListButton(
                                 .padding(horizontal = 16.dp, vertical = 12.dp),
                             verticalAlignment = Alignment.CenterVertically
                         ) {
-                            Icon(
+                            AvalonIcon(
                                 imageVector = Lucide.Plus,
                                 contentDescription = null,
                                 tint = Color.White.copy(alpha = 0.7f),
                                 modifier = Modifier.size(16.dp)
                             )
                             Spacer(modifier = Modifier.width(12.dp))
-                            Text(
+                            AvalonText(
                                 text = stringResource(Res.string.details_custom_list_create),
                                 color = Color.White.copy(alpha = 0.7f),
                                 fontSize = 14.sp
@@ -515,14 +515,14 @@ private fun WebStatusDropdown(
     } else {
         stringResource(Res.string.details_status_add)
     }
-    val iconTint = if (currentStatusOption != null) MaterialTheme.colorScheme.primary else Color.White.copy(alpha = 0.7f)
+    val iconTint = if (currentStatusOption != null) AvalonTheme.colors.accentPrimary else Color.White.copy(alpha = 0.7f)
 
     Box {
         AvalonButton(
             onClick = { expanded = true },
             text = label,
             leadingIcon = {
-                Icon(
+                AvalonIcon(
                     imageVector = Lucide.Eye,
                     contentDescription = null,
                     tint = iconTint,
@@ -530,7 +530,7 @@ private fun WebStatusDropdown(
                 )
             },
             trailingIcon = {
-                Icon(
+                AvalonIcon(
                     imageVector = Lucide.ChevronDown,
                     contentDescription = null,
                     tint = AvalonTheme.colors.textMuted,
@@ -555,8 +555,8 @@ private fun WebStatusDropdown(
                     AvalonDropdownMenuItem(
                         text = optionLabel,
                         icon = if (isSelected) Lucide.Check else null,
-                        textColor = if (isSelected) MaterialTheme.colorScheme.primary else Color.White,
-                        iconColor = if (isSelected) MaterialTheme.colorScheme.primary else Color.White,
+                        textColor = if (isSelected) AvalonTheme.colors.accentPrimary else Color.White,
+                        iconColor = if (isSelected) AvalonTheme.colors.accentPrimary else Color.White,
                         onClick = {
                             val newStatus = if (isSelected) MediaStatus.NONE else option.status
                             val action = userActions.statusOptions[newStatus]
@@ -589,7 +589,7 @@ private fun WebRatingDropdown(
             onClick = { expanded = true },
             text = label,
             leadingIcon = {
-                Icon(
+                AvalonIcon(
                     imageVector = Lucide.Star,
                     contentDescription = null,
                     tint = iconTint,
@@ -597,7 +597,7 @@ private fun WebRatingDropdown(
                 )
             },
             trailingIcon = {
-                Icon(
+                AvalonIcon(
                     imageVector = Lucide.ChevronDown,
                     contentDescription = null,
                     tint = AvalonTheme.colors.textMuted,

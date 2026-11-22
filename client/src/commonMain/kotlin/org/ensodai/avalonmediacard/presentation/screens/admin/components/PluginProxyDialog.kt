@@ -1,5 +1,7 @@
 package org.ensodai.avalonmediacard.presentation.screens.admin.components
 
+import org.ensodai.avalonmediacard.designsystem.theme.AvalonTheme
+
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
@@ -7,10 +9,9 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.CircularProgressIndicator
-import androidx.compose.material3.Icon
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
+import org.ensodai.avalonmediacard.designsystem.components.AvalonCircularProgressIndicator as CircularProgressIndicator
+import org.ensodai.avalonmediacard.designsystem.components.AvalonIcon as Icon
+import org.ensodai.avalonmediacard.designsystem.components.AvalonText as Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -53,8 +54,8 @@ fun PluginProxyDialog(
                     .fillMaxWidth()
                     .fillMaxHeight(0.92f)
                     .clip(RoundedCornerShape(20.dp))
-                    .background(MaterialTheme.colorScheme.surface)
-                    .border(1.dp, MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.3f), RoundedCornerShape(20.dp))
+                    .background(AvalonTheme.colors.surface)
+                    .border(1.dp, AvalonTheme.colors.outlineVariant.copy(alpha = 0.3f), RoundedCornerShape(20.dp))
                     .padding(24.dp)
             ) {
                 // Header
@@ -71,13 +72,13 @@ fun PluginProxyDialog(
                             modifier = Modifier
                                 .size(40.dp)
                                 .clip(RoundedCornerShape(10.dp))
-                                .background(MaterialTheme.colorScheme.primary.copy(alpha = 0.15f)),
+                                .background(AvalonTheme.colors.primary.copy(alpha = 0.15f)),
                             contentAlignment = Alignment.Center
                         ) {
                             Icon(
                                 imageVector = Lucide.Globe,
                                 contentDescription = null,
-                                tint = MaterialTheme.colorScheme.primary,
+                                tint = AvalonTheme.colors.primary,
                                 modifier = Modifier.size(22.dp)
                             )
                         }
@@ -86,13 +87,13 @@ fun PluginProxyDialog(
                                 text = stringResource(Res.string.admin_plugin_proxy_dialog_title),
                                 fontSize = 20.sp,
                                 fontWeight = FontWeight.Bold,
-                                color = MaterialTheme.colorScheme.onSurface
+                                color = AvalonTheme.colors.onSurface
                             )
                             Spacer(modifier = Modifier.height(2.dp))
                             Text(
                                 text = stringResource(Res.string.admin_plugin_proxy_dialog_subtitle),
                                 fontSize = 13.sp,
-                                color = MaterialTheme.colorScheme.onSurfaceVariant
+                                color = AvalonTheme.colors.onSurfaceVariant
                             )
                         }
                     }
@@ -109,13 +110,13 @@ fun PluginProxyDialog(
                                 activeBorderWidth = 1.5.dp
                             )
                             .clip(CircleShape)
-                            .background(MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.4f)),
+                            .background(AvalonTheme.colors.surfaceVariant.copy(alpha = 0.4f)),
                         contentAlignment = Alignment.Center
                     ) {
                         Icon(
                             imageVector = Lucide.X,
                             contentDescription = stringResource(Res.string.admin_plugin_proxy_close),
-                            tint = MaterialTheme.colorScheme.onSurface,
+                            tint = AvalonTheme.colors.onSurface,
                             modifier = Modifier.size(18.dp)
                         )
                     }
@@ -132,7 +133,7 @@ fun PluginProxyDialog(
                         contentAlignment = Alignment.Center
                     ) {
                         CircularProgressIndicator(
-                            color = MaterialTheme.colorScheme.primary,
+                            color = AvalonTheme.colors.primary,
                             modifier = Modifier.size(36.dp)
                         )
                     }
@@ -146,7 +147,7 @@ fun PluginProxyDialog(
                         Text(
                             text = stringResource(Res.string.admin_plugin_proxy_no_plugins),
                             fontSize = 15.sp,
-                            color = MaterialTheme.colorScheme.onSurfaceVariant
+                            color = AvalonTheme.colors.onSurfaceVariant
                         )
                     }
                 } else {

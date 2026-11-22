@@ -22,11 +22,10 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Surface
-import androidx.compose.material3.Text
+import org.ensodai.avalonmediacard.designsystem.components.AvalonIcon as Icon
+import org.ensodai.avalonmediacard.designsystem.components.AvalonIconButton as IconButton
+import org.ensodai.avalonmediacard.designsystem.components.AvalonSurface as Surface
+import org.ensodai.avalonmediacard.designsystem.components.AvalonText as Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -56,7 +55,7 @@ import org.ensodai.avalonmediacard.contract.model.TimeMilestoneType
 import org.ensodai.avalonmediacard.contract.model.TimeStatsDto
 import org.ensodai.avalonmediacard.presentation.overlay.TvModalSurface
 import org.ensodai.avalonmediacard.presentation.screens.commonComponents.tvAndWebHoverEffect
-import org.ensodai.avalonmediacard.presentation.theme.AvalonTheme
+import org.ensodai.avalonmediacard.designsystem.theme.AvalonTheme
 import org.jetbrains.compose.resources.stringResource
 
 private enum class SplitSection {
@@ -243,7 +242,7 @@ fun HeroTimeCard(
                     Spacer(modifier = Modifier.width(6.dp))
                     Text(
                         text = milestoneTitle,
-                        style = MaterialTheme.typography.labelSmall,
+                        style = AvalonTheme.typography.labelSmall,
                         fontWeight = if (isMilestoneHovered) FontWeight.Bold else FontWeight.SemiBold,
                         color = milestoneTextColor
                     )
@@ -262,7 +261,7 @@ fun HeroTimeCard(
             // Крупное отображение времени
             Text(
                 text = formattedTotalTime,
-                style = MaterialTheme.typography.displayMedium.copy(
+                style = AvalonTheme.typography.displayMedium.copy(
                     fontFeatureSettings = "tnum"
                 ),
                 fontWeight = FontWeight.Black,
@@ -271,7 +270,7 @@ fun HeroTimeCard(
 
             Text(
                 text = milestoneDesc,
-                style = MaterialTheme.typography.bodyMedium,
+                style = AvalonTheme.typography.bodyMedium,
                 color = colors.textSecondary,
                 modifier = Modifier.padding(top = 4.dp, bottom = 12.dp)
             )
@@ -393,7 +392,7 @@ fun HeroTimeCard(
                     Spacer(modifier = Modifier.width(7.dp))
                     Text(
                         text = stringResource(Res.string.stats_hero_time_movies_fmt, moviesHours, moviesShare),
-                        style = MaterialTheme.typography.bodySmall.copy(
+                        style = AvalonTheme.typography.bodySmall.copy(
                             fontSize = if (isMoviesHovered) 13.5.sp else 13.sp,
                             fontFeatureSettings = "tnum"
                         ),
@@ -422,7 +421,7 @@ fun HeroTimeCard(
                     Spacer(modifier = Modifier.width(7.dp))
                     Text(
                         text = stringResource(Res.string.stats_hero_time_shows_fmt, showsHours, showsShare),
-                        style = MaterialTheme.typography.bodySmall.copy(
+                        style = AvalonTheme.typography.bodySmall.copy(
                             fontSize = if (isShowsHovered) 13.5.sp else 13.sp,
                             fontFeatureSettings = "tnum"
                         ),
@@ -536,7 +535,7 @@ private fun MilestonesDialog(
                             Spacer(modifier = Modifier.width(10.dp))
                             Text(
                                 text = "Шкала экранных вех",
-                                style = MaterialTheme.typography.titleMedium,
+                                style = AvalonTheme.typography.titleMedium,
                                 fontWeight = FontWeight.Bold,
                                 color = colors.textPrimary
                             )
@@ -556,7 +555,7 @@ private fun MilestonesDialog(
 
                     Text(
                         text = "Каждая веха отмечает масштаб просмотренного контента и сопоставляет его с историческими экспедициями и рекордами человечества.",
-                        style = MaterialTheme.typography.bodySmall,
+                        style = AvalonTheme.typography.bodySmall,
                         color = colors.textSecondary,
                         lineHeight = 18.sp
                     )
@@ -622,7 +621,7 @@ private fun MilestonesDialog(
                                         ) {
                                             Text(
                                                 text = step.title,
-                                                style = MaterialTheme.typography.bodyMedium,
+                                                style = AvalonTheme.typography.bodyMedium,
                                                 fontWeight = if (isCurrent) FontWeight.Bold else FontWeight.Medium,
                                                 color = if (isCurrent) colors.textPrimary else if (isCompleted) colors.textSecondary else colors.textSecondary.copy(alpha = 0.5f)
                                             )
@@ -633,7 +632,7 @@ private fun MilestonesDialog(
                                                 ) {
                                                     Text(
                                                         text = "Текущий",
-                                                        style = MaterialTheme.typography.labelSmall.copy(fontSize = 9.sp),
+                                                        style = AvalonTheme.typography.labelSmall.copy(fontSize = 9.sp),
                                                         fontWeight = FontWeight.Bold,
                                                         color = colors.bgSurface,
                                                         modifier = Modifier.padding(horizontal = 6.dp, vertical = 2.dp)
@@ -643,7 +642,7 @@ private fun MilestonesDialog(
                                         }
                                         Text(
                                             text = step.subtitle,
-                                            style = MaterialTheme.typography.bodySmall.copy(fontSize = 11.sp),
+                                            style = AvalonTheme.typography.bodySmall.copy(fontSize = 11.sp),
                                             color = colors.textSecondary.copy(alpha = if (isCurrent) 0.9f else 0.6f),
                                             modifier = Modifier.padding(top = 2.dp)
                                         )
@@ -675,7 +674,7 @@ private fun MilestonesDialog(
                         ) {
                             Text(
                                 text = "Понятно",
-                                style = MaterialTheme.typography.labelMedium,
+                                style = AvalonTheme.typography.labelMedium,
                                 fontWeight = FontWeight.Bold,
                                 color = colors.textPrimary
                             )

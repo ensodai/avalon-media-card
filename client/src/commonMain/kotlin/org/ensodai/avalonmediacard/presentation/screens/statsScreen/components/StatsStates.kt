@@ -1,5 +1,7 @@
 package org.ensodai.avalonmediacard.presentation.screens.statsScreen.components
 
+import org.ensodai.avalonmediacard.designsystem.theme.AvalonTheme
+
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -7,10 +9,9 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.CircularProgressIndicator
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.OutlinedButton
-import androidx.compose.material3.Text
+import org.ensodai.avalonmediacard.designsystem.components.AvalonCircularProgressIndicator as CircularProgressIndicator
+import org.ensodai.avalonmediacard.designsystem.components.AvalonButton as OutlinedButton
+import org.ensodai.avalonmediacard.designsystem.components.AvalonText as Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -29,7 +30,7 @@ fun StatsLoadingState(
         contentAlignment = Alignment.Center
     ) {
         CircularProgressIndicator(
-            color = MaterialTheme.colorScheme.primary,
+            color = AvalonTheme.colors.primary,
             modifier = Modifier.size(44.dp)
         )
     }
@@ -50,8 +51,8 @@ fun StatsErrorState(
         Column(horizontalAlignment = Alignment.CenterHorizontally) {
             Text(
                 text = errorMessage,
-                style = MaterialTheme.typography.bodyLarge,
-                color = MaterialTheme.colorScheme.error
+                style = AvalonTheme.typography.bodyLarge,
+                color = AvalonTheme.colors.error
             )
             Spacer(modifier = Modifier.height(16.dp))
             OutlinedButton(

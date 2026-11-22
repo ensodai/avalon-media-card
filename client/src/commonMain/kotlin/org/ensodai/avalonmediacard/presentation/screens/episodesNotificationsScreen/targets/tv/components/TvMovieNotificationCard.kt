@@ -1,5 +1,7 @@
 package org.ensodai.avalonmediacard.presentation.screens.episodesNotificationsScreen.targets.tv.components
 
+import org.ensodai.avalonmediacard.designsystem.theme.AvalonTheme
+
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.background
@@ -21,9 +23,8 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.Icon
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
+import org.ensodai.avalonmediacard.designsystem.components.AvalonIcon as Icon
+import org.ensodai.avalonmediacard.designsystem.components.AvalonText as Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -81,10 +82,10 @@ fun TvMovieNotificationCard(
         modifier = modifier
             .fillMaxWidth()
             .clip(RoundedCornerShape(16.dp))
-            .background(MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.2f))
+            .background(AvalonTheme.colors.surfaceVariant.copy(alpha = 0.2f))
             .border(
                 width = 1.dp,
-                color = MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.3f),
+                color = AvalonTheme.colors.outlineVariant.copy(alpha = 0.3f),
                 shape = RoundedCornerShape(16.dp)
             )
             .padding(14.dp)
@@ -101,7 +102,7 @@ fun TvMovieNotificationCard(
                     activeBorderWidth = 2.dp,
                     activeBorderColor = Color.White,
                     defaultBorderWidth = 1.dp,
-                    defaultBorderColor = MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.25f),
+                    defaultBorderColor = AvalonTheme.colors.outlineVariant.copy(alpha = 0.25f),
                     shape = RoundedCornerShape(12.dp),
                     tiltEnabled = false,
                     onStateChange = { isPosterFocused = it },
@@ -136,13 +137,13 @@ fun TvMovieNotificationCard(
                     .align(Alignment.TopStart)
                     .padding(8.dp)
                     .clip(RoundedCornerShape(4.dp))
-                    .background(MaterialTheme.colorScheme.primary)
+                    .background(AvalonTheme.colors.primary)
                     .padding(horizontal = 7.dp, vertical = 3.dp)
             ) {
                 Text(
                     text = if (item.isNew) stringResource(Res.string.episodes_notifications_badge_movie_new)
                     else stringResource(Res.string.episodes_notifications_badge_movie),
-                    color = MaterialTheme.colorScheme.onPrimary,
+                    color = AvalonTheme.colors.onPrimary,
                     fontSize = 10.sp,
                     fontWeight = FontWeight.Bold
                 )
@@ -236,7 +237,7 @@ fun TvMovieNotificationCard(
                         text = item.showTitle,
                         fontSize = 18.sp,
                         fontWeight = FontWeight.Bold,
-                        color = MaterialTheme.colorScheme.onSurface,
+                        color = AvalonTheme.colors.onSurface,
                         maxLines = 1,
                         overflow = TextOverflow.Ellipsis,
                         modifier = Modifier.clickable(enabled = openDetailsAction != null) {
@@ -248,7 +249,7 @@ fun TvMovieNotificationCard(
                         Text(
                             text = formattedDate,
                             fontSize = 12.sp,
-                            color = MaterialTheme.colorScheme.onSurfaceVariant,
+                            color = AvalonTheme.colors.onSurfaceVariant,
                             fontWeight = FontWeight.Medium
                         )
                     }
@@ -261,7 +262,7 @@ fun TvMovieNotificationCard(
                     text = tagText,
                     fontSize = 12.sp,
                     fontWeight = FontWeight.SemiBold,
-                    color = MaterialTheme.colorScheme.primary,
+                    color = AvalonTheme.colors.primary,
                     maxLines = 1,
                     overflow = TextOverflow.Ellipsis
                 )
@@ -273,7 +274,7 @@ fun TvMovieNotificationCard(
                         text = overview,
                         fontSize = 12.sp,
                         lineHeight = 17.sp,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant,
+                        color = AvalonTheme.colors.onSurfaceVariant,
                         maxLines = 3,
                         overflow = TextOverflow.Ellipsis
                     )
@@ -300,7 +301,7 @@ fun TvMovieNotificationCard(
                                 onClick = { onAction(playAction) }
                             )
                             .clip(RoundedCornerShape(8.dp))
-                            .background(MaterialTheme.colorScheme.primary)
+                            .background(AvalonTheme.colors.primary)
                             .padding(horizontal = 14.dp, vertical = 8.dp),
                         verticalAlignment = Alignment.CenterVertically,
                         horizontalArrangement = Arrangement.Center
@@ -308,13 +309,13 @@ fun TvMovieNotificationCard(
                         Icon(
                             imageVector = Lucide.Play,
                             contentDescription = null,
-                            tint = MaterialTheme.colorScheme.onPrimary,
+                            tint = AvalonTheme.colors.onPrimary,
                             modifier = Modifier.size(15.dp)
                         )
                         Spacer(modifier = Modifier.width(6.dp))
                         Text(
                             text = stringResource(Res.string.episodes_notifications_watch_episode),
-                            color = MaterialTheme.colorScheme.onPrimary,
+                            color = AvalonTheme.colors.onPrimary,
                             fontSize = 12.sp,
                             fontWeight = FontWeight.SemiBold
                         )
@@ -327,15 +328,15 @@ fun TvMovieNotificationCard(
                             .tvAndWebHoverEffect(
                                 scaleTarget = 1.04f,
                                 activeBorderWidth = 1.5.dp,
-                                activeBorderColor = MaterialTheme.colorScheme.primary,
+                                activeBorderColor = AvalonTheme.colors.primary,
                                 defaultBorderWidth = 1.dp,
-                                defaultBorderColor = MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.3f),
+                                defaultBorderColor = AvalonTheme.colors.outlineVariant.copy(alpha = 0.3f),
                                 shape = RoundedCornerShape(8.dp),
                                 tiltEnabled = false,
                                 onClick = { onAction(markWatchedAction) }
                             )
                             .clip(RoundedCornerShape(8.dp))
-                            .background(MaterialTheme.colorScheme.surface.copy(alpha = 0.6f))
+                            .background(AvalonTheme.colors.surface.copy(alpha = 0.6f))
                             .padding(horizontal = 12.dp, vertical = 8.dp),
                         verticalAlignment = Alignment.CenterVertically,
                         horizontalArrangement = Arrangement.Center
@@ -343,13 +344,13 @@ fun TvMovieNotificationCard(
                         Icon(
                             imageVector = Lucide.Check,
                             contentDescription = null,
-                            tint = MaterialTheme.colorScheme.onSurface,
+                            tint = AvalonTheme.colors.onSurface,
                             modifier = Modifier.size(15.dp)
                         )
                         Spacer(modifier = Modifier.width(6.dp))
                         Text(
                             text = stringResource(Res.string.episodes_notifications_mark_watched),
-                            color = MaterialTheme.colorScheme.onSurface,
+                            color = AvalonTheme.colors.onSurface,
                             fontSize = 12.sp,
                             fontWeight = FontWeight.Medium
                         )
@@ -362,22 +363,22 @@ fun TvMovieNotificationCard(
                             .tvAndWebHoverEffect(
                                 scaleTarget = 1.04f,
                                 activeBorderWidth = 1.5.dp,
-                                activeBorderColor = MaterialTheme.colorScheme.primary,
+                                activeBorderColor = AvalonTheme.colors.primary,
                                 defaultBorderWidth = 1.dp,
-                                defaultBorderColor = MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.3f),
+                                defaultBorderColor = AvalonTheme.colors.outlineVariant.copy(alpha = 0.3f),
                                 shape = RoundedCornerShape(8.dp),
                                 tiltEnabled = false,
                                 onClick = { onAction(openDetailsAction) }
                             )
                             .clip(RoundedCornerShape(8.dp))
-                            .background(MaterialTheme.colorScheme.surface.copy(alpha = 0.6f))
+                            .background(AvalonTheme.colors.surface.copy(alpha = 0.6f))
                             .padding(horizontal = 12.dp, vertical = 8.dp),
                         verticalAlignment = Alignment.CenterVertically,
                         horizontalArrangement = Arrangement.Center
                     ) {
                         Text(
                             text = stringResource(Res.string.episodes_notifications_about_movie),
-                            color = MaterialTheme.colorScheme.onSurface,
+                            color = AvalonTheme.colors.onSurface,
                             fontSize = 12.sp,
                             fontWeight = FontWeight.Medium
                         )
@@ -385,7 +386,7 @@ fun TvMovieNotificationCard(
                         Icon(
                             imageVector = Lucide.ChevronRight,
                             contentDescription = null,
-                            tint = MaterialTheme.colorScheme.onSurfaceVariant,
+                            tint = AvalonTheme.colors.onSurfaceVariant,
                             modifier = Modifier.size(15.dp)
                         )
                     }

@@ -1,5 +1,7 @@
 package org.ensodai.avalonmediacard.presentation.screens.commonComponents
 
+import org.ensodai.avalonmediacard.designsystem.theme.AvalonTheme
+
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -17,9 +19,8 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material3.Icon
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
+import org.ensodai.avalonmediacard.designsystem.components.AvalonIcon as Icon
+import org.ensodai.avalonmediacard.designsystem.components.AvalonText as Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -101,7 +102,7 @@ fun EpisodeDetailsDialog(
                                 text = headerText,
                                 fontSize = 13.sp,
                                 fontWeight = FontWeight.Bold,
-                                color = MaterialTheme.colorScheme.primary
+                                color = AvalonTheme.colors.primary
                             )
                         }
 

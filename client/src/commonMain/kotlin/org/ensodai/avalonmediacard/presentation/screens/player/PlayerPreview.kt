@@ -13,10 +13,9 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.Icon
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
-import androidx.compose.material3.darkColorScheme
+import org.ensodai.avalonmediacard.designsystem.components.AvalonIcon as Icon
+import org.ensodai.avalonmediacard.designsystem.components.AvalonText as Text
+import org.ensodai.avalonmediacard.designsystem.theme.AvalonDesignSystemTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.getValue
@@ -305,27 +304,9 @@ fun PlayerPreviewTheme(
     deviceTarget: DeviceTarget = DeviceTarget.ANDROID_TV,
     content: @Composable () -> Unit
 ) {
-    val customColorScheme = darkColorScheme(
-        background = Color(0xFF000000),
-        surface = Color(0xFF0A0A0A),
-        surfaceVariant = Color(0xFF141414),
-        primary = Color.White,
-        onPrimary = Color(0xFF000000),
-        primaryContainer = Color(0xFF1F1F1F),
-        onPrimaryContainer = Color.White,
-        secondary = Color.White,
-        secondaryContainer = Color(0xFF141414),
-        onSecondaryContainer = Color(0xFFA1A1AA),
-        onBackground = Color(0xFFFFFFFF),
-        onSurface = Color(0xFFFFFFFF),
-        onSurfaceVariant = Color(0xFFA1A1AA),
-        outline = Color(0xFF27272A),
-        outlineVariant = Color(0xFF3F3F46)
-    )
-
     val drawerState = remember { TvDrawerState() }
 
-    MaterialTheme(colorScheme = customColorScheme) {
+    AvalonDesignSystemTheme(isTv = deviceTarget.isTv) {
         CompositionLocalProvider(
             LocalDeviceTarget provides deviceTarget,
             LocalTvDrawerState provides drawerState

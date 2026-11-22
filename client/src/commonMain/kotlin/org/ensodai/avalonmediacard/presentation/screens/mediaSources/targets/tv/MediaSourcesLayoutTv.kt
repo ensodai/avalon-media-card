@@ -1,5 +1,7 @@
 package org.ensodai.avalonmediacard.presentation.screens.mediaSources.targets.tv
 
+import org.ensodai.avalonmediacard.designsystem.theme.AvalonTheme
+
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
@@ -21,10 +23,9 @@ import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.CircularProgressIndicator
-import androidx.compose.material3.Icon
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
+import org.ensodai.avalonmediacard.designsystem.components.AvalonCircularProgressIndicator as CircularProgressIndicator
+import org.ensodai.avalonmediacard.designsystem.components.AvalonIcon as Icon
+import org.ensodai.avalonmediacard.designsystem.components.AvalonText as Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
@@ -80,7 +81,7 @@ fun MediaSourcesLayoutTv(
     Box(
         modifier = modifier
             .fillMaxSize()
-            .background(MaterialTheme.colorScheme.background)
+            .background(AvalonTheme.colors.background)
     ) {
         Column(
             modifier = Modifier.fillMaxSize()
@@ -116,7 +117,7 @@ fun MediaSourcesLayoutTv(
                         Icon(
                             Lucide.FileUp,
                             contentDescription = null,
-                            tint = MaterialTheme.colorScheme.primary,
+                            tint = AvalonTheme.colors.primary,
                             modifier = Modifier.size(28.dp)
                         )
                         Spacer(modifier = Modifier.width(12.dp))
@@ -162,7 +163,7 @@ fun MediaSourcesLayoutTv(
                         ) {
                             CircularProgressIndicator(
                                 modifier = Modifier.size(48.dp),
-                                color = MaterialTheme.colorScheme.primary
+                                color = AvalonTheme.colors.primary
                             )
                             Text(
                                 text = stringResource(Res.string.details_sources_torrent_processing),
@@ -173,7 +174,7 @@ fun MediaSourcesLayoutTv(
                             state.uploadingFileName?.let { name ->
                                 Text(
                                     text = name,
-                                    color = MaterialTheme.colorScheme.primary,
+                                    color = AvalonTheme.colors.primary,
                                     fontSize = 15.sp,
                                     fontWeight = FontWeight.Medium,
                                     maxLines = 2,
@@ -196,13 +197,13 @@ fun MediaSourcesLayoutTv(
                             Box(
                                 modifier = Modifier
                                     .size(64.dp)
-                                    .background(MaterialTheme.colorScheme.primary.copy(alpha = 0.1f), CircleShape),
+                                    .background(AvalonTheme.colors.primary.copy(alpha = 0.1f), CircleShape),
                                 contentAlignment = Alignment.Center
                             ) {
                                 Icon(
                                     Lucide.FileUp,
                                     contentDescription = null,
-                                    tint = MaterialTheme.colorScheme.primary,
+                                    tint = AvalonTheme.colors.primary,
                                     modifier = Modifier.size(32.dp)
                                 )
                             }
@@ -220,7 +221,7 @@ fun MediaSourcesLayoutTv(
                             state.uploadErrorMessage?.let { err ->
                                 Text(
                                     text = err,
-                                    color = MaterialTheme.colorScheme.error,
+                                    color = AvalonTheme.colors.error,
                                     fontSize = 13.sp,
                                     textAlign = TextAlign.Center
                                 )
@@ -229,12 +230,12 @@ fun MediaSourcesLayoutTv(
                                 modifier = Modifier
                                     .tvAndWebHoverEffect(scaleTarget = 1.05f, shape = RoundedCornerShape(8.dp), onClick = actions.onPickTorrentFile)
                                     .clip(RoundedCornerShape(8.dp))
-                                    .background(MaterialTheme.colorScheme.primary)
+                                    .background(AvalonTheme.colors.primary)
                                     .padding(horizontal = 24.dp, vertical = 12.dp)
                             ) {
                                 Text(
                                     text = stringResource(Res.string.details_sources_select_file),
-                                    color = MaterialTheme.colorScheme.onPrimary,
+                                    color = AvalonTheme.colors.onPrimary,
                                     fontWeight = FontWeight.Bold,
                                     fontSize = 16.sp
                                 )

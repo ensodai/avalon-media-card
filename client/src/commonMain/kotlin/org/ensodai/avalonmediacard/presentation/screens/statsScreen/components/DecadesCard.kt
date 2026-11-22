@@ -15,10 +15,9 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
-import androidx.compose.material3.Icon
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Surface
-import androidx.compose.material3.Text
+import org.ensodai.avalonmediacard.designsystem.components.AvalonIcon as Icon
+import org.ensodai.avalonmediacard.designsystem.components.AvalonSurface as Surface
+import org.ensodai.avalonmediacard.designsystem.components.AvalonText as Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -42,7 +41,7 @@ import org.ensodai.avalonmediacard.contract.model.DecadeStatDto
 import org.ensodai.avalonmediacard.contract.model.UserMediaFilter
 import org.ensodai.avalonmediacard.contract.ui.navigation.Screen
 import org.ensodai.avalonmediacard.presentation.navigation.LocalNavigation
-import org.ensodai.avalonmediacard.presentation.theme.AvalonTheme
+import org.ensodai.avalonmediacard.designsystem.theme.AvalonTheme
 import org.jetbrains.compose.resources.stringResource
 
 @Composable
@@ -90,7 +89,7 @@ fun DecadesCard(
             if (decades.isEmpty() || decades.all { it.watchedCount == 0 }) {
                 Text(
                     text = stringResource(Res.string.stats_decades_empty),
-                    style = MaterialTheme.typography.bodyMedium,
+                    style = AvalonTheme.typography.bodyMedium,
                     color = colors.textSecondary
                 )
             } else {
@@ -188,7 +187,7 @@ fun DecadesCard(
                             ) {
                                 Text(
                                     text = if (decade.watchedCount > 0) decade.watchedCount.toString() else "",
-                                    style = MaterialTheme.typography.labelSmall.copy(
+                                    style = AvalonTheme.typography.labelSmall.copy(
                                         fontSize = 10.sp,
                                         fontFeatureSettings = "tnum"
                                     ),
@@ -210,7 +209,7 @@ fun DecadesCard(
 
                                 Text(
                                     text = label,
-                                    style = MaterialTheme.typography.labelSmall.copy(
+                                    style = AvalonTheme.typography.labelSmall.copy(
                                         fontFeatureSettings = "tnum"
                                     ),
                                     fontWeight = if (isHovered || isPeak) FontWeight.Bold else FontWeight.Medium,

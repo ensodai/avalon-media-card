@@ -20,10 +20,9 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.material3.Icon
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Surface
-import androidx.compose.material3.Text
+import org.ensodai.avalonmediacard.designsystem.components.AvalonIcon as Icon
+import org.ensodai.avalonmediacard.designsystem.components.AvalonSurface as Surface
+import org.ensodai.avalonmediacard.designsystem.components.AvalonText as Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -54,7 +53,7 @@ import org.ensodai.avalonmediacard.contract.model.MediaType
 import org.ensodai.avalonmediacard.contract.model.UserMediaFilter
 import org.ensodai.avalonmediacard.contract.ui.navigation.Screen
 import org.ensodai.avalonmediacard.presentation.navigation.LocalNavigation
-import org.ensodai.avalonmediacard.presentation.theme.AvalonTheme
+import org.ensodai.avalonmediacard.designsystem.theme.AvalonTheme
 import org.jetbrains.compose.resources.stringResource
 
 private enum class LibraryStatsMode {
@@ -404,7 +403,7 @@ private fun LibrarySegmentTab(
     ) {
         Text(
             text = text,
-            style = MaterialTheme.typography.labelSmall.copy(fontSize = 11.sp),
+            style = AvalonTheme.typography.labelSmall.copy(fontSize = 11.sp),
             fontWeight = if (isSelected) FontWeight.Bold else FontWeight.Medium,
             color = animatedTextColor
         )

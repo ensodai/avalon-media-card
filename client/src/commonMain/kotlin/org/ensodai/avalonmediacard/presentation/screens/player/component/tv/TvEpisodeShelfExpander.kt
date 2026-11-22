@@ -1,5 +1,7 @@
 package org.ensodai.avalonmediacard.presentation.screens.player.component.tv
 
+import org.ensodai.avalonmediacard.designsystem.theme.AvalonTheme
+
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -12,9 +14,8 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.Icon
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
+import org.ensodai.avalonmediacard.designsystem.components.AvalonIcon as Icon
+import org.ensodai.avalonmediacard.designsystem.components.AvalonText as Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
@@ -55,7 +56,7 @@ fun TvEpisodeShelfExpander(
                 .tvAndWebHoverEffect(
                     scaleTarget = 1.06f,
                     shape = shape,
-                    activeBorderColor = MaterialTheme.colorScheme.primary,
+                    activeBorderColor = AvalonTheme.colors.primary,
                     activeBorderWidth = 2.dp,
                     defaultBorderColor = Color.White.copy(alpha = 0.08f),
                     defaultBorderWidth = 1.dp,
@@ -80,7 +81,7 @@ fun TvEpisodeShelfExpander(
                 Icon(
                     imageVector = Lucide.ChevronDown,
                     contentDescription = stringResource(Res.string.player_episodes_title),
-                    tint = MaterialTheme.colorScheme.primary,
+                    tint = AvalonTheme.colors.primary,
                     modifier = Modifier
                         .size(16.dp)
                         .rotate(rotation)

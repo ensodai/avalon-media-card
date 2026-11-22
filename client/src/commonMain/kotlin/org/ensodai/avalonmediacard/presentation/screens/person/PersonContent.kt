@@ -1,5 +1,7 @@
 package org.ensodai.avalonmediacard.presentation.screens.person
 
+import org.ensodai.avalonmediacard.designsystem.theme.AvalonTheme
+
 import androidx.compose.animation.Crossfade
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.core.FastOutSlowInEasing
@@ -11,9 +13,8 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Surface
-import androidx.compose.material3.Text
+import org.ensodai.avalonmediacard.designsystem.components.AvalonSurface as Surface
+import org.ensodai.avalonmediacard.designsystem.components.AvalonText as Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -61,7 +62,7 @@ fun PersonContent(
     Box(
         modifier = modifier
             .fillMaxSize()
-            .background(MaterialTheme.colorScheme.background)
+            .background(AvalonTheme.colors.background)
     ) {
         Column(
             modifier = Modifier
@@ -135,7 +136,7 @@ private fun PersonHeaderDesktop(
                 .width(220.dp)
                 .aspectRatio(2f / 3f)
                 .clip(RoundedCornerShape(16.dp))
-                .border(1.dp, MaterialTheme.colorScheme.outline.copy(alpha = 0.5f), RoundedCornerShape(16.dp))
+                .border(1.dp, AvalonTheme.colors.outline.copy(alpha = 0.5f), RoundedCornerShape(16.dp))
                 .shimmerPlaceholder(isLoading, RoundedCornerShape(16.dp)),
             contentAlignment = Alignment.Center
         ) {
@@ -147,7 +148,7 @@ private fun PersonHeaderDesktop(
                     modifier = Modifier.fillMaxSize(),
                     shape = RoundedCornerShape(16.dp),
                     errorIcon = Lucide.User,
-                    errorIconTint = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.5f)
+                    errorIconTint = AvalonTheme.colors.onSurfaceVariant.copy(alpha = 0.5f)
                 )
             }
         }
@@ -195,11 +196,11 @@ private fun PersonHeaderDesktop(
                 )
             } else if (!department.isNullOrBlank()) {
                 Surface(
-                    color = MaterialTheme.colorScheme.surfaceVariant,
+                    color = AvalonTheme.colors.surfaceVariant,
                     shape = RoundedCornerShape(6.dp),
                     border = androidx.compose.foundation.BorderStroke(
                         1.dp,
-                        MaterialTheme.colorScheme.outline.copy(alpha = 0.6f)
+                        AvalonTheme.colors.outline.copy(alpha = 0.6f)
                     )
                 ) {
                     Text(
@@ -224,7 +225,7 @@ private fun PersonHeaderDesktop(
                 Text(
                     text = tagline,
                     fontSize = 15.sp,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                    color = AvalonTheme.colors.onSurfaceVariant,
                     lineHeight = 22.sp
                 )
             }
@@ -256,7 +257,7 @@ private fun PersonHeaderMobile(
                 .width(160.dp)
                 .aspectRatio(2f / 3f)
                 .clip(RoundedCornerShape(14.dp))
-                .border(1.dp, MaterialTheme.colorScheme.outline.copy(alpha = 0.5f), RoundedCornerShape(14.dp))
+                .border(1.dp, AvalonTheme.colors.outline.copy(alpha = 0.5f), RoundedCornerShape(14.dp))
                 .shimmerPlaceholder(isLoading, RoundedCornerShape(14.dp)),
             contentAlignment = Alignment.Center
         ) {
@@ -268,7 +269,7 @@ private fun PersonHeaderMobile(
                     modifier = Modifier.fillMaxSize(),
                     shape = RoundedCornerShape(14.dp),
                     errorIcon = Lucide.User,
-                    errorIconTint = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.5f)
+                    errorIconTint = AvalonTheme.colors.onSurfaceVariant.copy(alpha = 0.5f)
                 )
             }
         }
@@ -295,11 +296,11 @@ private fun PersonHeaderMobile(
         // Амплуа
         if (!isLoading && !department.isNullOrBlank()) {
             Surface(
-                color = MaterialTheme.colorScheme.surfaceVariant,
+                color = AvalonTheme.colors.surfaceVariant,
                 shape = RoundedCornerShape(6.dp),
                 border = androidx.compose.foundation.BorderStroke(
                     1.dp,
-                    MaterialTheme.colorScheme.outline.copy(alpha = 0.6f)
+                    AvalonTheme.colors.outline.copy(alpha = 0.6f)
                 )
             ) {
                 Text(
@@ -317,7 +318,7 @@ private fun PersonHeaderMobile(
             Text(
                 text = tagline,
                 fontSize = 13.sp,
-                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                color = AvalonTheme.colors.onSurfaceVariant,
                 textAlign = TextAlign.Center,
                 lineHeight = 18.sp
             )
@@ -439,7 +440,7 @@ private fun PersonBioSection(
                         },
                         fontSize = 14.sp,
                         fontWeight = FontWeight.Bold,
-                        color = MaterialTheme.colorScheme.primary.copy(alpha = if (isHovered) 1f else 0.85f)
+                        color = AvalonTheme.colors.primary.copy(alpha = if (isHovered) 1f else 0.85f)
                     )
                 }
             }

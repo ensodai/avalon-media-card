@@ -1,11 +1,12 @@
 package org.ensodai.avalonmediacard.presentation.screens.commonComponents
 
+import org.ensodai.avalonmediacard.designsystem.theme.AvalonTheme
+
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.CircularProgressIndicator
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
+import org.ensodai.avalonmediacard.designsystem.components.AvalonCircularProgressIndicator as CircularProgressIndicator
+import org.ensodai.avalonmediacard.designsystem.components.AvalonText as Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -25,8 +26,8 @@ fun AvalonButton(
     modifier: Modifier = Modifier,
     isLoading: Boolean = false,
     enabled: Boolean = true,
-    containerColor: Color = MaterialTheme.colorScheme.primary,
-    contentColor: Color = MaterialTheme.colorScheme.onPrimary,
+    containerColor: Color = AvalonTheme.colors.primary,
+    contentColor: Color = AvalonTheme.colors.onPrimary,
     height: Dp = 56.dp,
     fontSize: TextUnit = 18.sp,
     shape: Shape = RoundedCornerShape(24.dp)

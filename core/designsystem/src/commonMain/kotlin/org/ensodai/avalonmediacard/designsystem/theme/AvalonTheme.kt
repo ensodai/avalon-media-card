@@ -82,7 +82,28 @@ data class AvalonColors(
     val chartTrack: Color,            // #232328 — progress track & monogram background
     val chartBarDefault: Color,       // #6E6E78 — default chart bars
     val chartBarPeak: Color           // #F2F2F4 — #1 leader bar
-)
+) {
+    val primary: Color get() = accentPrimary
+    val onPrimary: Color get() = onAccentPrimary
+    val surface: Color get() = bgSurface
+    val onSurface: Color get() = textPrimary
+    val surfaceVariant: Color get() = bgElevated
+    val onSurfaceVariant: Color get() = textSecondary
+    val background: Color get() = bgCanvas
+    val onBackground: Color get() = textPrimary
+    val outline: Color get() = borderSubtle
+    val outlineVariant: Color get() = borderStrong
+    val primaryContainer: Color get() = bgElevated
+    val onPrimaryContainer: Color get() = textPrimary
+    val secondary: Color get() = textPrimary
+    val onSecondary: Color get() = bgCanvas
+    val secondaryContainer: Color get() = bgSurface
+    val onSecondaryContainer: Color get() = textSecondary
+    val error: Color get() = statusDanger
+    val onError: Color get() = textPrimary
+    val errorContainer: Color get() = statusDanger.copy(alpha = 0.2f)
+    val onErrorContainer: Color get() = textPrimary
+}
 
 val ObsidianCinemaDarkColors = AvalonColors(
     bgPureCinema = AvalonPalette.PureBlack,

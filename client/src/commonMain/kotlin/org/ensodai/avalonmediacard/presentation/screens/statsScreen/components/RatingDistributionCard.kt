@@ -15,10 +15,9 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
-import androidx.compose.material3.Icon
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Surface
-import androidx.compose.material3.Text
+import org.ensodai.avalonmediacard.designsystem.components.AvalonIcon as Icon
+import org.ensodai.avalonmediacard.designsystem.components.AvalonSurface as Surface
+import org.ensodai.avalonmediacard.designsystem.components.AvalonText as Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -43,7 +42,7 @@ import org.ensodai.avalonmediacard.contract.model.RatingDistributionDto
 import org.ensodai.avalonmediacard.contract.model.UserMediaFilter
 import org.ensodai.avalonmediacard.contract.ui.navigation.Screen
 import org.ensodai.avalonmediacard.presentation.navigation.LocalNavigation
-import org.ensodai.avalonmediacard.presentation.theme.AvalonTheme
+import org.ensodai.avalonmediacard.designsystem.theme.AvalonTheme
 import org.jetbrains.compose.resources.stringResource
 
 @Composable
@@ -219,7 +218,7 @@ fun RatingDistributionCard(
                         ) {
                             Text(
                                 text = if (count > 0) count.toString() else "",
-                                style = MaterialTheme.typography.labelSmall.copy(
+                                style = AvalonTheme.typography.labelSmall.copy(
                                     fontSize = 10.sp,
                                     fontFeatureSettings = "tnum"
                                 ),
@@ -241,7 +240,7 @@ fun RatingDistributionCard(
 
                             Text(
                                 text = rating.toString(),
-                                style = MaterialTheme.typography.labelSmall.copy(
+                                style = AvalonTheme.typography.labelSmall.copy(
                                     fontFeatureSettings = "tnum"
                                 ),
                                 fontWeight = if (isHovered || isPeak) FontWeight.Bold else FontWeight.Medium,
@@ -257,7 +256,7 @@ fun RatingDistributionCard(
             // Вердикт критика
             Text(
                 text = verdict,
-                style = MaterialTheme.typography.bodySmall,
+                style = AvalonTheme.typography.bodySmall,
                 color = colors.textSecondary
             )
         }

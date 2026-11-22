@@ -4,9 +4,8 @@ package org.ensodai.avalonmediacard.presentation
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.material3.CircularProgressIndicator
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.darkColorScheme
+import org.ensodai.avalonmediacard.designsystem.components.AvalonCircularProgressIndicator
+import org.ensodai.avalonmediacard.designsystem.theme.AvalonDesignSystemTheme
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -87,23 +86,14 @@ fun App() {
         setAppLocale(currentLanguage)
     }
 
-    val customColorScheme = darkColorScheme(
-        background = AvalonTheme.colors.bgCanvas,            // #0B0B0D
-        surface = AvalonTheme.colors.bgSurface,              // #131316
-        surfaceVariant = AvalonTheme.colors.bgElevated,      // #1B1B1F
-        primary = AvalonTheme.colors.accentPrimary,          // #F2F2F4
-        onPrimary = AvalonTheme.colors.bgCanvas,             // #0B0B0D
-        primaryContainer = AvalonTheme.colors.bgElevated,    // #1B1B1F
-        onPrimaryContainer = AvalonTheme.colors.textPrimary, // #F2F2F4
-        secondary = AvalonTheme.colors.textPrimary,
-        secondaryContainer = AvalonTheme.colors.bgSurface,
-        onSecondaryContainer = AvalonTheme.colors.textSecondary,
-        onBackground = AvalonTheme.colors.textPrimary,
-        onSurface = AvalonTheme.colors.textPrimary,
-        onSurfaceVariant = AvalonTheme.colors.textSecondary,
-        outline = AvalonTheme.colors.borderSubtle,           // #232328
-        outlineVariant = AvalonTheme.colors.borderStrong     // #34343C
-    )
+    val uiModeOverride by appSettingsStorage.uiModeOverride.collectAsState()
+    val baseTarget = LocalDeviceTarget.current
+
+    val finalTarget = when (uiModeOverride) {
+        UiModeOverride.AUTO -> baseTarget
+        UiModeOverride.TV -> if (baseTarget == DeviceTarget.ANDROID_MOBILE || baseTarget == DeviceTarget.ANDROID_TV) DeviceTarget.ANDROID_TV else DeviceTarget.TV_WEB
+        UiModeOverride.PC -> DeviceTarget.DESKTOP_WEB
+    }
 
     key(currentLanguage) {
         Box(
@@ -117,7 +107,7 @@ fun App() {
                     )
                 }
         ) {
-            MaterialTheme(colorScheme = customColorScheme) {
+            AvalonDesignSystemTheme(isTv = finalTarget.isTv) {
                 val scope = rememberCoroutineScope()
                 var sidebarItems by remember { mutableStateOf<List<SidebarItem>>(emptyList()) }
                 var isSidebarLoaded by remember { mutableStateOf(false) }
@@ -133,9 +123,9 @@ fun App() {
                             .background(Color.Black),
                         contentAlignment = Alignment.Center
                     ) {
-                        CircularProgressIndicator(color = Color.White)
+                        AvalonCircularProgressIndicator(color = Color.White)
                     }
-                    return@MaterialTheme
+                    return@AvalonDesignSystemTheme
                 }
 
                 if (tokenState == null) {
@@ -182,7 +172,7 @@ fun App() {
                             }
                         }
                     )
-                    return@MaterialTheme
+                    return@AvalonDesignSystemTheme
                 }
 
                 val manifestRepository = koinInject<GlobalManifestRepository>()
@@ -271,9 +261,9 @@ fun App() {
                             .background(Color.Black),
                         contentAlignment = Alignment.Center
                     ) {
-                        CircularProgressIndicator(color = Color.White)
+                        AvalonCircularProgressIndicator(color = Color.White)
                     }
-                    return@MaterialTheme
+                    return@AvalonDesignSystemTheme
                 }
 
                 val configuration = remember {
@@ -284,15 +274,6 @@ fun App() {
                             }
                         }
                     }
-                }
-
-                val uiModeOverride by appSettingsStorage.uiModeOverride.collectAsState()
-                val baseTarget = LocalDeviceTarget.current
-
-                val finalTarget = when (uiModeOverride) {
-                    UiModeOverride.AUTO -> baseTarget
-                    UiModeOverride.TV -> if (baseTarget == DeviceTarget.ANDROID_MOBILE || baseTarget == DeviceTarget.ANDROID_TV) DeviceTarget.ANDROID_TV else DeviceTarget.TV_WEB
-                    UiModeOverride.PC -> DeviceTarget.DESKTOP_WEB
                 }
 
                 ProvideAdaptiveTvDensity(isTv = finalTarget.isTv) {

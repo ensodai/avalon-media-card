@@ -1,10 +1,9 @@
 package org.ensodai.avalonmediacard.presentation.components
 
+import org.ensodai.avalonmediacard.designsystem.theme.AvalonTheme
+
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
-import androidx.compose.material3.Icon
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -15,6 +14,8 @@ import com.composables.icons.lucide.*
 import org.ensodai.avalonmediacard.contract.model.SidebarItem
 import org.ensodai.avalonmediacard.contract.slot.Action
 import org.ensodai.avalonmediacard.contract.slot.ActionNavigate
+import org.ensodai.avalonmediacard.designsystem.components.AvalonIcon
+import org.ensodai.avalonmediacard.designsystem.components.AvalonText
 
 @Composable
 fun SidebarItemView(
@@ -45,19 +46,19 @@ fun SidebarItemView(
             else -> null
         }
         if (icon != null) {
-            Icon(
+            AvalonIcon(
                 imageVector = icon,
                 contentDescription = null,
                 modifier = Modifier.size(20.dp),
-                tint = MaterialTheme.colorScheme.onSurfaceVariant
+                tint = AvalonTheme.colors.textSecondary
             )
             Spacer(modifier = Modifier.width(12.dp))
         }
-        Text(
+        AvalonText(
             text = getLocalizedSidebarTitle(component),
             fontSize = 16.sp,
             fontWeight = FontWeight.Normal,
-            color = MaterialTheme.colorScheme.onSurfaceVariant
+            color = AvalonTheme.colors.textSecondary
         )
     }
 }

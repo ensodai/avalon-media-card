@@ -1,17 +1,17 @@
 package org.ensodai.avalonmediacard.presentation.screens.detailsScreen.targets.web
 
+import org.ensodai.avalonmediacard.designsystem.theme.AvalonTheme
+
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import org.ensodai.avalonmediacard.contract.slot.Action
-import org.ensodai.avalonmediacard.designsystem.theme.AvalonTheme
 import org.ensodai.avalonmediacard.presentation.screens.commonComponents.LocalRootOverlay
 import org.ensodai.avalonmediacard.presentation.screens.detailsScreen.component.carouselsSlot.CarouselsSlot
 import org.ensodai.avalonmediacard.presentation.screens.detailsScreen.component.commentsSlot.CommentsSlot

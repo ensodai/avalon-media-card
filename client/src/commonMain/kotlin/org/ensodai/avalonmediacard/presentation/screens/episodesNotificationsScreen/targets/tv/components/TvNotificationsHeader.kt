@@ -1,5 +1,7 @@
 package org.ensodai.avalonmediacard.presentation.screens.episodesNotificationsScreen.targets.tv.components
 
+import org.ensodai.avalonmediacard.designsystem.theme.AvalonTheme
+
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.foundation.background
 import androidx.compose.foundation.focusGroup
@@ -13,9 +15,8 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.Icon
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
+import org.ensodai.avalonmediacard.designsystem.components.AvalonIcon as Icon
+import org.ensodai.avalonmediacard.designsystem.components.AvalonText as Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -76,13 +77,13 @@ fun TvNotificationsHeader(
                 modifier = Modifier
                     .size(38.dp)
                     .clip(CircleShape)
-                    .background(MaterialTheme.colorScheme.primaryContainer),
+                    .background(AvalonTheme.colors.primaryContainer),
                 contentAlignment = Alignment.Center
             ) {
                 Icon(
                     imageVector = Lucide.Bell,
                     contentDescription = null,
-                    tint = MaterialTheme.colorScheme.onPrimaryContainer,
+                    tint = AvalonTheme.colors.onPrimaryContainer,
                     modifier = Modifier.size(20.dp)
                 )
             }
@@ -91,7 +92,7 @@ fun TvNotificationsHeader(
                 text = stringResource(Res.string.episodes_notifications_title),
                 fontSize = 20.sp,
                 fontWeight = FontWeight.Bold,
-                color = MaterialTheme.colorScheme.onSurface
+                color = AvalonTheme.colors.onSurface
             )
 
             Spacer(modifier = Modifier.width(6.dp))
@@ -125,27 +126,27 @@ fun TvNotificationsHeader(
                     .tvAndWebHoverEffect(
                         scaleTarget = 1.04f,
                         activeBorderWidth = 1.5.dp,
-                        activeBorderColor = MaterialTheme.colorScheme.primary,
+                        activeBorderColor = AvalonTheme.colors.primary,
                         defaultBorderWidth = 1.dp,
-                        defaultBorderColor = MaterialTheme.colorScheme.primary.copy(alpha = 0.35f),
+                        defaultBorderColor = AvalonTheme.colors.primary.copy(alpha = 0.35f),
                         shape = RoundedCornerShape(10.dp),
                         tiltEnabled = false,
                         onClick = onMarkAllReadClicked
                     )
                     .clip(RoundedCornerShape(10.dp))
-                    .background(MaterialTheme.colorScheme.primary.copy(alpha = 0.12f))
+                    .background(AvalonTheme.colors.primary.copy(alpha = 0.12f))
                     .padding(horizontal = 14.dp, vertical = 7.dp)
             ) {
                 Icon(
                     imageVector = Lucide.CheckCheck,
                     contentDescription = null,
-                    tint = MaterialTheme.colorScheme.primary,
+                    tint = AvalonTheme.colors.primary,
                     modifier = Modifier.size(16.dp)
                 )
                 Spacer(modifier = Modifier.width(6.dp))
                 Text(
                     text = stringResource(Res.string.episodes_notifications_mark_all_read),
-                    color = MaterialTheme.colorScheme.primary,
+                    color = AvalonTheme.colors.primary,
                     fontSize = 12.sp,
                     fontWeight = FontWeight.SemiBold
                 )
@@ -163,20 +164,20 @@ private fun TvFilterTab(
     modifier: Modifier = Modifier
 ) {
     val animatedBgColor by animateColorAsState(
-        if (isSelected) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.35f)
+        if (isSelected) AvalonTheme.colors.primary else AvalonTheme.colors.surfaceVariant.copy(alpha = 0.35f)
     )
     val animatedTextColor by animateColorAsState(
-        if (isSelected) MaterialTheme.colorScheme.onPrimary else MaterialTheme.colorScheme.onSurface
+        if (isSelected) AvalonTheme.colors.onPrimary else AvalonTheme.colors.onSurface
     )
     val badgeBgColor = if (isSelected) {
-        MaterialTheme.colorScheme.onPrimary.copy(alpha = 0.25f)
+        AvalonTheme.colors.onPrimary.copy(alpha = 0.25f)
     } else {
-        MaterialTheme.colorScheme.onSurface.copy(alpha = 0.08f)
+        AvalonTheme.colors.onSurface.copy(alpha = 0.08f)
     }
     val badgeTextColor = if (isSelected) {
-        MaterialTheme.colorScheme.onPrimary
+        AvalonTheme.colors.onPrimary
     } else {
-        MaterialTheme.colorScheme.onSurfaceVariant
+        AvalonTheme.colors.onSurfaceVariant
     }
 
     Row(
@@ -184,9 +185,9 @@ private fun TvFilterTab(
             .tvAndWebHoverEffect(
                 scaleTarget = 1.05f,
                 activeBorderWidth = 2.dp,
-                activeBorderColor = if (isSelected) MaterialTheme.colorScheme.onPrimary else MaterialTheme.colorScheme.primary,
+                activeBorderColor = if (isSelected) AvalonTheme.colors.onPrimary else AvalonTheme.colors.primary,
                 defaultBorderWidth = 1.dp,
-                defaultBorderColor = if (isSelected) Color.Transparent else MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.25f),
+                defaultBorderColor = if (isSelected) Color.Transparent else AvalonTheme.colors.outlineVariant.copy(alpha = 0.25f),
                 shape = RoundedCornerShape(20.dp),
                 tiltEnabled = false,
                 onClick = onClick

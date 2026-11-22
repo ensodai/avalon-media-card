@@ -1,5 +1,7 @@
 package org.ensodai.avalonmediacard.presentation.screens.watchParty.targets.tv
 
+import org.ensodai.avalonmediacard.designsystem.theme.AvalonTheme
+
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -10,8 +12,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.Icon
-import androidx.compose.material3.MaterialTheme
+import org.ensodai.avalonmediacard.designsystem.components.AvalonIcon as Icon
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -35,7 +36,7 @@ fun WatchPartyLayoutTv(
     Box(
         modifier = modifier
             .fillMaxSize()
-            .background(MaterialTheme.colorScheme.background)
+            .background(AvalonTheme.colors.background)
     ) {
         // Если открыт полноэкранный выбор источников для ТВ
         if (state.isSelectingSource && sourcesContent != null) {

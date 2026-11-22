@@ -1,13 +1,14 @@
 package org.ensodai.avalonmediacard.presentation.screens.admin.components.proxy
 
+import org.ensodai.avalonmediacard.designsystem.theme.AvalonTheme
+
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
+import org.ensodai.avalonmediacard.designsystem.components.AvalonText as Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
@@ -29,10 +30,10 @@ fun PluginProxyListItem(
 ) {
     val shape = RoundedCornerShape(12.dp)
     val borderColor by animateColorAsState(
-        targetValue = if (isSelected) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.25f)
+        targetValue = if (isSelected) AvalonTheme.colors.primary else AvalonTheme.colors.outlineVariant.copy(alpha = 0.25f)
     )
     val bgColor by animateColorAsState(
-        targetValue = if (isSelected) MaterialTheme.colorScheme.primary.copy(alpha = 0.12f) else MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.2f)
+        targetValue = if (isSelected) AvalonTheme.colors.primary.copy(alpha = 0.12f) else AvalonTheme.colors.surfaceVariant.copy(alpha = 0.2f)
     )
 
     Column(
@@ -61,7 +62,7 @@ fun PluginProxyListItem(
                 text = plugin.pluginName,
                 fontSize = 14.sp,
                 fontWeight = FontWeight.Bold,
-                color = MaterialTheme.colorScheme.onSurface,
+                color = AvalonTheme.colors.onSurface,
                 modifier = Modifier.weight(1f, fill = false).padding(end = 8.dp)
             )
 
@@ -93,7 +94,7 @@ fun PluginProxyListItem(
                     modifier = Modifier
                         .size(8.dp)
                         .clip(CircleShape)
-                        .background(MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.5f))
+                        .background(AvalonTheme.colors.outlineVariant.copy(alpha = 0.5f))
                 )
             }
         }
@@ -106,7 +107,7 @@ fun PluginProxyListItem(
             Text(
                 text = "ID: ${plugin.pluginId} • v${plugin.pluginVersion}",
                 fontSize = 11.sp,
-                color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.8f)
+                color = AvalonTheme.colors.onSurfaceVariant.copy(alpha = 0.8f)
             )
 
             if (plugin.isEnabled && plugin.host.isNotBlank()) {

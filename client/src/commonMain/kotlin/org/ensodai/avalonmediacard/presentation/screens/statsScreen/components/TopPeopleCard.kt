@@ -17,10 +17,9 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.material3.Icon
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Surface
-import androidx.compose.material3.Text
+import org.ensodai.avalonmediacard.designsystem.components.AvalonIcon as Icon
+import org.ensodai.avalonmediacard.designsystem.components.AvalonSurface as Surface
+import org.ensodai.avalonmediacard.designsystem.components.AvalonText as Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -47,7 +46,7 @@ import org.ensodai.avalonmediacard.contract.model.PersonStatDto
 import org.ensodai.avalonmediacard.contract.model.TopPeopleStatsDto
 import org.ensodai.avalonmediacard.contract.utils.toProxyImageUrl
 import org.ensodai.avalonmediacard.presentation.components.ShimmerImage
-import org.ensodai.avalonmediacard.presentation.theme.AvalonTheme
+import org.ensodai.avalonmediacard.designsystem.theme.AvalonTheme
 import org.jetbrains.compose.resources.stringResource
 
 @Composable
@@ -187,7 +186,7 @@ private fun TabPill(
     ) {
         Text(
             text = text,
-            style = MaterialTheme.typography.labelSmall,
+            style = AvalonTheme.typography.labelSmall,
             fontWeight = if (isSelected) FontWeight.Bold else FontWeight.Medium,
             color = if (isSelected) colors.textPrimary else colors.textSecondary
         )
@@ -206,7 +205,7 @@ private fun PeopleList(
         val emptyRes = if (isDirector) Res.string.stats_people_empty_directors else Res.string.stats_people_empty_actors
         Text(
             text = stringResource(emptyRes),
-            style = MaterialTheme.typography.bodySmall,
+            style = AvalonTheme.typography.bodySmall,
             color = colors.textSecondary,
             modifier = Modifier.padding(vertical = 12.dp)
         )
@@ -270,7 +269,7 @@ private fun PersonRow(
             // Ранг по Тафти
             Text(
                 text = "$rank",
-                style = MaterialTheme.typography.labelMedium.copy(
+                style = AvalonTheme.typography.labelMedium.copy(
                     fontFeatureSettings = "tnum"
                 ),
                 fontWeight = FontWeight.Bold,
@@ -299,7 +298,7 @@ private fun PersonRow(
                 ) {
                     Text(
                         text = person.name.firstOrNull()?.uppercase() ?: "?",
-                        style = MaterialTheme.typography.labelMedium,
+                        style = AvalonTheme.typography.labelMedium,
                         fontWeight = FontWeight.Bold,
                         color = colors.textSecondary
                     )
@@ -312,13 +311,13 @@ private fun PersonRow(
             Column(modifier = Modifier.weight(1f)) {
                 Text(
                     text = person.name,
-                    style = MaterialTheme.typography.bodyMedium,
+                    style = AvalonTheme.typography.bodyMedium,
                     fontWeight = FontWeight.SemiBold,
                     color = colors.textPrimary
                 )
                 Text(
                     text = formatWatchedWorks(person.watchedCount),
-                    style = MaterialTheme.typography.labelSmall.copy(
+                    style = AvalonTheme.typography.labelSmall.copy(
                         fontFeatureSettings = "tnum"
                     ),
                     color = colors.textSecondary
@@ -338,7 +337,7 @@ private fun PersonRow(
                     Spacer(modifier = Modifier.width(4.dp))
                     Text(
                         text = ((avg * 10).toInt() / 10.0).toString(),
-                        style = MaterialTheme.typography.labelSmall.copy(
+                        style = AvalonTheme.typography.labelSmall.copy(
                             fontFeatureSettings = "tnum"
                         ),
                         fontWeight = FontWeight.Bold,

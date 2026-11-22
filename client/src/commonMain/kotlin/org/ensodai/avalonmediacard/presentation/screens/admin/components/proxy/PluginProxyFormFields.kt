@@ -1,10 +1,11 @@
 package org.ensodai.avalonmediacard.presentation.screens.admin.components.proxy
 
+import org.ensodai.avalonmediacard.designsystem.theme.AvalonTheme
+
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.Icon
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
+import org.ensodai.avalonmediacard.designsystem.components.AvalonIcon as Icon
+import org.ensodai.avalonmediacard.designsystem.components.AvalonText as Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -46,7 +47,7 @@ fun PluginProxyFormFields(
                     text = stringResource(Res.string.admin_plugin_proxy_type_label),
                     fontSize = 12.sp,
                     fontWeight = FontWeight.Medium,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                    color = AvalonTheme.colors.onSurfaceVariant
                 )
                 ProxyProtocolSelector(
                     selectedType = state.editProxyType,
@@ -62,7 +63,7 @@ fun PluginProxyFormFields(
                     text = stringResource(Res.string.admin_plugin_proxy_port_placeholder),
                     fontSize = 12.sp,
                     fontWeight = FontWeight.Medium,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                    color = AvalonTheme.colors.onSurfaceVariant
                 )
                 AvalonTextField(
                     value = state.editProxyPort,
@@ -85,7 +86,7 @@ fun PluginProxyFormFields(
                 text = stringResource(Res.string.admin_plugin_proxy_host_placeholder),
                 fontSize = 12.sp,
                 fontWeight = FontWeight.Medium,
-                color = MaterialTheme.colorScheme.onSurfaceVariant
+                color = AvalonTheme.colors.onSurfaceVariant
             )
             AvalonTextField(
                 value = state.editProxyHost,
@@ -95,7 +96,7 @@ fun PluginProxyFormFields(
                     Icon(
                         imageVector = Lucide.Server,
                         contentDescription = null,
-                        tint = MaterialTheme.colorScheme.onSurfaceVariant,
+                        tint = AvalonTheme.colors.onSurfaceVariant,
                         modifier = Modifier.size(16.dp)
                     )
                 },
@@ -119,7 +120,7 @@ fun PluginProxyFormFields(
                     text = stringResource(Res.string.admin_plugin_proxy_username_placeholder),
                     fontSize = 12.sp,
                     fontWeight = FontWeight.Medium,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                    color = AvalonTheme.colors.onSurfaceVariant
                 )
                 AvalonTextField(
                     value = state.editProxyUsername,
@@ -129,7 +130,7 @@ fun PluginProxyFormFields(
                         Icon(
                             imageVector = Lucide.User,
                             contentDescription = null,
-                            tint = MaterialTheme.colorScheme.onSurfaceVariant,
+                            tint = AvalonTheme.colors.onSurfaceVariant,
                             modifier = Modifier.size(16.dp)
                         )
                     },
@@ -148,7 +149,7 @@ fun PluginProxyFormFields(
                     text = stringResource(Res.string.admin_plugin_proxy_password_placeholder),
                     fontSize = 12.sp,
                     fontWeight = FontWeight.Medium,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                    color = AvalonTheme.colors.onSurfaceVariant
                 )
                 AvalonTextField(
                     value = state.editProxyPassword,
@@ -159,7 +160,7 @@ fun PluginProxyFormFields(
                         Icon(
                             imageVector = Lucide.Lock,
                             contentDescription = null,
-                            tint = MaterialTheme.colorScheme.onSurfaceVariant,
+                            tint = AvalonTheme.colors.onSurfaceVariant,
                             modifier = Modifier.size(16.dp)
                         )
                     },

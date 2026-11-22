@@ -1,5 +1,7 @@
 package org.ensodai.avalonmediacard.presentation.components
 
+import org.ensodai.avalonmediacard.designsystem.theme.AvalonTheme
+
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
@@ -7,9 +9,6 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.Icon
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -26,6 +25,9 @@ import org.ensodai.avalonmediacard.contract.model.SidebarItem
 import org.ensodai.avalonmediacard.contract.model.SidebarItemType
 import org.ensodai.avalonmediacard.contract.model.UserRole
 import org.ensodai.avalonmediacard.data.selectAndUploadPlugin
+import org.ensodai.avalonmediacard.designsystem.components.AvalonDivider
+import org.ensodai.avalonmediacard.designsystem.components.AvalonIcon
+import org.ensodai.avalonmediacard.designsystem.components.AvalonText
 import org.ensodai.avalonmediacard.presentation.screens.commonComponents.AvalonDropdownMenu
 import org.ensodai.avalonmediacard.presentation.screens.commonComponents.AvalonDropdownMenuItem
 import org.ensodai.avalonmediacard.presentation.screens.commonComponents.PopupAnchorSide
@@ -72,7 +74,7 @@ fun Sidebar(
     userRole: UserRole? = null,
     onExpandedChange: (Boolean) -> Unit = {},
 ) {
-    val outlineColor = MaterialTheme.colorScheme.outline
+    val outlineColor = AvalonTheme.colors.borderSubtle
     var isProfileMenuExpanded by remember { mutableStateOf(false) }
     val selectedItemFocusRequester = remember { FocusRequester() }
 
@@ -102,7 +104,7 @@ fun Sidebar(
         modifier = modifier
             .width(width)
             .fillMaxHeight()
-            .background(MaterialTheme.colorScheme.background)
+            .background(AvalonTheme.colors.bgSidebar)
             .onFocusChanged {
                 hasFocus = it.hasFocus
                 if (it.hasFocus) {
@@ -328,11 +330,11 @@ fun Sidebar(
         if (uploadStatus.isNotEmpty()) {
             Column {
                 Spacer(modifier = Modifier.height(8.dp))
-                Text(
+                AvalonText(
                     text = uploadStatus,
                     fontSize = 12.sp,
-                    color = if (uploadStatus.contains("Error", ignoreCase = true) || uploadStatus.contains("Ошибка", ignoreCase = true)) MaterialTheme.colorScheme.error
-                    else MaterialTheme.colorScheme.primary,
+                    color = if (uploadStatus.contains("Error", ignoreCase = true) || uploadStatus.contains("Ошибка", ignoreCase = true)) AvalonTheme.colors.statusDanger
+                    else AvalonTheme.colors.accentPrimary,
                     modifier = Modifier.padding(horizontal = 12.dp).alpha(contentAlpha),
                     maxLines = 1,
                     overflow = TextOverflow.Ellipsis
@@ -353,9 +355,9 @@ fun SidebarMenuItem(
     modifier: Modifier = Modifier
 ) {
     if (item.type == SidebarItemType.DIVIDER) {
-        androidx.compose.material3.HorizontalDivider(
+        AvalonDivider(
             modifier = Modifier.padding(vertical = 4.dp),
-            color = MaterialTheme.colorScheme.outlineVariant
+            color = AvalonTheme.colors.borderSubtle
         )
         return
     }
@@ -381,8 +383,8 @@ fun SidebarMenuItem(
         else -> if (isMainGroup) Lucide.LayoutGrid else Lucide.Hash
     }
 
-    val contentColor = if (isSelected) MaterialTheme.colorScheme.onPrimaryContainer
-    else MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.8f)
+    val contentColor = if (isSelected) AvalonTheme.colors.textPrimary
+    else AvalonTheme.colors.textSecondary
 
     val isTv = LocalDeviceTarget.current.isTv
     val focusManager = LocalFocusManager.current
@@ -404,14 +406,14 @@ fun SidebarMenuItem(
             )
             .clip(RoundedCornerShape(8.dp))
             .background(
-                if (isSelected) MaterialTheme.colorScheme.primaryContainer.copy(alpha = 0.8f)
+                if (isSelected) AvalonTheme.colors.bgElevated
                 else Color.Transparent
             )
             
             .padding(vertical = if (isMainGroup) 12.dp else 10.dp, horizontal = 12.dp)
     ) {
         Row(verticalAlignment = Alignment.CenterVertically) {
-            Icon(
+            AvalonIcon(
                 imageVector = icon,
                 contentDescription = null,
                 modifier = Modifier.size(if (isMainGroup) 20.dp else 18.dp),
@@ -421,7 +423,7 @@ fun SidebarMenuItem(
             Row(modifier = Modifier.alpha(textAlpha)) {
                 Spacer(modifier = Modifier.width(12.dp))
                 val displayTitle = getLocalizedSidebarTitle(item)
-                Text(
+                AvalonText(
                     text = displayTitle,
                     fontSize = if (isMainGroup) 16.sp else 14.sp,
                     fontWeight = if (isSelected) FontWeight.Bold else FontWeight.Medium,
@@ -458,7 +460,7 @@ fun SidebarActionItem(
     isFocusable: Boolean,
     onClick: () -> Unit
 ) {
-    val contentColor = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.8f)
+    val contentColor = AvalonTheme.colors.textSecondary
     val isTv = LocalDeviceTarget.current.isTv
 
     Box(
@@ -475,7 +477,7 @@ fun SidebarActionItem(
             .padding(vertical = 12.dp, horizontal = 12.dp)
     ) {
         Row(verticalAlignment = Alignment.CenterVertically) {
-            Icon(
+            AvalonIcon(
                 imageVector = icon,
                 contentDescription = null,
                 modifier = Modifier.size(20.dp),
@@ -484,7 +486,7 @@ fun SidebarActionItem(
             val textAlpha by animateFloatAsState(targetValue = if (isExpanded) 1f else 0f, label = "textAlpha")
             Row(modifier = Modifier.alpha(textAlpha)) {
                 Spacer(modifier = Modifier.width(12.dp))
-                Text(
+                AvalonText(
                     text = title,
                     fontSize = 16.sp,
                     fontWeight = FontWeight.Medium,

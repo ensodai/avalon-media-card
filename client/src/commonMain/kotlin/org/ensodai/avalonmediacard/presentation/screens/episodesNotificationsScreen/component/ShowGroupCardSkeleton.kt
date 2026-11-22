@@ -1,5 +1,7 @@
 package org.ensodai.avalonmediacard.presentation.screens.episodesNotificationsScreen.component
 
+import org.ensodai.avalonmediacard.designsystem.theme.AvalonTheme
+
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
@@ -16,9 +18,8 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.Card
-import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.MaterialTheme
+import org.ensodai.avalonmediacard.designsystem.components.AvalonCard as Card
+import org.ensodai.avalonmediacard.designsystem.components.CardDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -38,13 +39,13 @@ fun ShowGroupCardSkeleton(
     Card(
         shape = RoundedCornerShape(16.dp),
         colors = CardDefaults.cardColors(
-            containerColor = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.2f)
+            containerColor = AvalonTheme.colors.surfaceVariant.copy(alpha = 0.2f)
         ),
         modifier = modifier
             .fillMaxWidth()
             .border(
                 width = 1.dp,
-                color = MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.3f),
+                color = AvalonTheme.colors.outlineVariant.copy(alpha = 0.3f),
                 shape = RoundedCornerShape(16.dp)
             )
             .clip(RoundedCornerShape(16.dp))

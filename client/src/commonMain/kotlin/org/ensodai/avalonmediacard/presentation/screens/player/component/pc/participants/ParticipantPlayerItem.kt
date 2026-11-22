@@ -1,5 +1,7 @@
 package org.ensodai.avalonmediacard.presentation.screens.player.component.pc.participants
 
+import org.ensodai.avalonmediacard.designsystem.theme.AvalonTheme
+
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
@@ -11,10 +13,9 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.CircularProgressIndicator
-import androidx.compose.material3.Icon
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
+import org.ensodai.avalonmediacard.designsystem.components.AvalonCircularProgressIndicator as CircularProgressIndicator
+import org.ensodai.avalonmediacard.designsystem.components.AvalonIcon as Icon
+import org.ensodai.avalonmediacard.designsystem.components.AvalonText as Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -57,7 +58,7 @@ fun ParticipantPlayerItem(
             .tvAndWebHoverEffect(
                 scaleTarget = 1.02f,
                 shape = RoundedCornerShape(14.dp),
-                activeBorderColor = MaterialTheme.colorScheme.primary.copy(alpha = 0.6f),
+                activeBorderColor = AvalonTheme.colors.primary.copy(alpha = 0.6f),
                 activeBorderWidth = 1.5.dp,
                 defaultBorderColor = Color.Transparent,
                 defaultBorderWidth = 0.dp,

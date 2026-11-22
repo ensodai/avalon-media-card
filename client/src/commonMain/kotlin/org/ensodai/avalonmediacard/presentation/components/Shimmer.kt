@@ -1,9 +1,10 @@
 package org.ensodai.avalonmediacard.presentation.components
 
+import org.ensodai.avalonmediacard.designsystem.theme.AvalonTheme
+
 
 import androidx.compose.animation.core.*
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.composed
@@ -39,8 +40,8 @@ fun Modifier.shimmerEffect(): Modifier = composed {
         )
     )
 
-    val baseColor = MaterialTheme.colorScheme.surfaceVariant
-    val highlightColor = MaterialTheme.colorScheme.outline
+    val baseColor = AvalonTheme.colors.bgElevated
+    val highlightColor = AvalonTheme.colors.borderSubtle
     val shimmerColors = listOf(
         baseColor.copy(alpha = 0.4f),
         highlightColor.copy(alpha = 0.6f),

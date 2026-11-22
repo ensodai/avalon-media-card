@@ -1,5 +1,7 @@
 package org.ensodai.avalonmediacard.presentation.components
 
+import org.ensodai.avalonmediacard.designsystem.theme.AvalonTheme
+
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
@@ -9,8 +11,6 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.size
-import androidx.compose.material3.Icon
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -31,6 +31,7 @@ import com.composables.icons.lucide.Film
 import com.composables.icons.lucide.Lucide
 import org.ensodai.avalonmediacard.core.player.StreamUrlResolver
 import org.ensodai.avalonmediacard.data.platformServerUrl
+import org.ensodai.avalonmediacard.designsystem.components.AvalonIcon
 
 @Composable
 fun ShimmerImage(
@@ -48,8 +49,8 @@ fun ShimmerImage(
     val tokenStorage = org.koin.compose.koinInject<org.ensodai.avalonmediacard.data.TokenStorage>()
     val serverUrlState by tokenStorage.serverUrl.collectAsState()
 
-    val actualErrorTint = errorIconTint ?: MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.4f)
-    val actualErrorBg = errorBackground ?: MaterialTheme.colorScheme.surfaceVariant
+    val actualErrorTint = errorIconTint ?: AvalonTheme.colors.textMuted
+    val actualErrorBg = errorBackground ?: AvalonTheme.colors.bgElevated
 
     if (isLoading) {
         Box(
@@ -100,7 +101,7 @@ fun ShimmerImage(
                                 .background(actualErrorBg),
                             contentAlignment = Alignment.Center
                         ) {
-                            Icon(
+                            AvalonIcon(
                                 imageVector = errorIcon,
                                 contentDescription = null,
                                 tint = actualErrorTint,

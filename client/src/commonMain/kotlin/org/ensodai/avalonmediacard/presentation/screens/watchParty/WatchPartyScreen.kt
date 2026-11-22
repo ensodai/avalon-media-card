@@ -1,10 +1,11 @@
 package org.ensodai.avalonmediacard.presentation.screens.watchParty
 
+import org.ensodai.avalonmediacard.designsystem.theme.AvalonTheme
+
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
@@ -268,7 +269,7 @@ fun WatchPartyScreen(
             }
         },
         callerFocusRequester = callerFocusRequester,
-        scrimColor = if (isTv) MaterialTheme.colorScheme.background else Color.Black.copy(alpha = 0.85f),
+        scrimColor = if (isTv) AvalonTheme.colors.background else Color.Black.copy(alpha = 0.85f),
     ) {
         if (state.isTestingSource && effectiveMediaKey != null) {
             PlayerScreen(

@@ -1,9 +1,9 @@
 package org.ensodai.avalonmediacard.presentation
 
+import org.ensodai.avalonmediacard.designsystem.theme.AvalonTheme
+
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
 import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveableStateHolder
 import androidx.compose.ui.Alignment
@@ -23,6 +23,7 @@ import kotlinx.coroutines.launch
 import org.ensodai.avalonmediacard.contract.model.SidebarItem
 import org.ensodai.avalonmediacard.contract.model.SidebarItemType
 import org.ensodai.avalonmediacard.contract.model.UserRole
+import org.ensodai.avalonmediacard.designsystem.components.AvalonText
 import org.ensodai.avalonmediacard.domain.repository.WatchPartyRepository
 import org.ensodai.avalonmediacard.contract.rpc.ActionRpcService
 import org.ensodai.avalonmediacard.contract.rpc.AuthRpcService
@@ -153,7 +154,7 @@ fun MainAppContent(
             Box(
                 modifier = Modifier
                     .fillMaxSize()
-                    .background(MaterialTheme.colorScheme.background)
+                    .background(AvalonTheme.colors.bgCanvas)
             ) {
                 Box(
                     modifier = Modifier
@@ -173,16 +174,16 @@ fun MainAppContent(
                             contentAlignment = Alignment.Center
                         ) {
                             Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                                Text(
+                                AvalonText(
                                     text = stringResource(Res.string.plugins_empty_title),
                                     fontSize = 20.sp,
-                                    color = MaterialTheme.colorScheme.onBackground
+                                    color = AvalonTheme.colors.textPrimary
                                 )
                                 Spacer(modifier = Modifier.height(8.dp))
-                                Text(
+                                AvalonText(
                                     text = stringResource(Res.string.plugins_empty_desc),
                                     fontSize = 14.sp,
-                                    color = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.6f)
+                                    color = AvalonTheme.colors.textSecondary
                                 )
                             }
                         }

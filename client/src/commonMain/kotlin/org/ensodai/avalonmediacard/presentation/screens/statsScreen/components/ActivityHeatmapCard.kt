@@ -21,10 +21,9 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.Icon
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Surface
-import androidx.compose.material3.Text
+import org.ensodai.avalonmediacard.designsystem.components.AvalonIcon as Icon
+import org.ensodai.avalonmediacard.designsystem.components.AvalonSurface as Surface
+import org.ensodai.avalonmediacard.designsystem.components.AvalonText as Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -56,7 +55,7 @@ import org.ensodai.avalonmediacard.contract.model.ActivityHeatmapDto
 import org.ensodai.avalonmediacard.contract.model.HeatmapDayDto
 import org.ensodai.avalonmediacard.presentation.navigation.LocalNavigation
 import org.ensodai.avalonmediacard.presentation.screens.commonComponents.tvDrawer.LocalTvDrawerState
-import org.ensodai.avalonmediacard.presentation.theme.AvalonTheme
+import org.ensodai.avalonmediacard.designsystem.theme.AvalonTheme
 import org.jetbrains.compose.resources.stringResource
 
 private enum class HeatmapLensMode {
@@ -142,13 +141,13 @@ fun ActivityHeatmapCard(
                         ) {
                             Text(
                                 text = "${heatmap.totalActiveDays}",
-                                style = MaterialTheme.typography.labelMedium.copy(fontFeatureSettings = "tnum"),
+                                style = AvalonTheme.typography.labelMedium.copy(fontFeatureSettings = "tnum"),
                                 fontWeight = FontWeight.Bold,
                                 color = colors.textPrimary
                             )
                             Text(
                                 text = "${stringResource(Res.string.stats_heatmap_days_suffix)} ${stringResource(Res.string.stats_heatmap_active_days).lowercase()}",
-                                style = MaterialTheme.typography.labelSmall,
+                                style = AvalonTheme.typography.labelSmall,
                                 color = colors.textSecondary
                             )
                         }
@@ -160,13 +159,13 @@ fun ActivityHeatmapCard(
                         ) {
                             Text(
                                 text = "${heatmap.currentStreakDays}",
-                                style = MaterialTheme.typography.labelMedium.copy(fontFeatureSettings = "tnum"),
+                                style = AvalonTheme.typography.labelMedium.copy(fontFeatureSettings = "tnum"),
                                 fontWeight = FontWeight.Bold,
                                 color = if (heatmap.currentStreakDays > 0) colors.accentGold else colors.textPrimary
                             )
                             Text(
                                 text = "${stringResource(Res.string.stats_heatmap_days_suffix)} ${stringResource(Res.string.stats_heatmap_current_streak).lowercase()}",
-                                style = MaterialTheme.typography.labelSmall,
+                                style = AvalonTheme.typography.labelSmall,
                                 color = colors.textSecondary
                             )
                             if (heatmap.currentStreakDays > 0) {
@@ -188,13 +187,13 @@ fun ActivityHeatmapCard(
                         ) {
                             Text(
                                 text = "$peakFormatted ${stringResource(Res.string.stats_heatmap_hours_suffix)}",
-                                style = MaterialTheme.typography.labelMedium.copy(fontFeatureSettings = "tnum"),
+                                style = AvalonTheme.typography.labelMedium.copy(fontFeatureSettings = "tnum"),
                                 fontWeight = FontWeight.Bold,
                                 color = colors.textPrimary
                             )
                             Text(
                                 text = stringResource(Res.string.stats_heatmap_peak_day).lowercase(),
-                                style = MaterialTheme.typography.labelSmall,
+                                style = AvalonTheme.typography.labelSmall,
                                 color = colors.textSecondary
                             )
                         }
@@ -415,31 +414,31 @@ fun ActivityHeatmapCard(
                     ) {
                         Text(
                             text = curHovered.date,
-                            style = MaterialTheme.typography.bodySmall.copy(fontFeatureSettings = "tnum"),
+                            style = AvalonTheme.typography.bodySmall.copy(fontFeatureSettings = "tnum"),
                             fontWeight = FontWeight.Bold,
                             color = colors.textPrimary
                         )
                         Text(
                             text = "·",
-                            style = MaterialTheme.typography.bodySmall,
+                            style = AvalonTheme.typography.bodySmall,
                             color = colors.textSecondary
                         )
                         Text(
                             text = timeStr,
-                            style = MaterialTheme.typography.bodySmall.copy(fontFeatureSettings = "tnum"),
+                            style = AvalonTheme.typography.bodySmall.copy(fontFeatureSettings = "tnum"),
                             color = colors.textPrimary
                         )
                         if (curHovered.count > 0) {
                             Text(
                                 text = "(${curHovered.count} ${pluralizeTitles(curHovered.count)})",
-                                style = MaterialTheme.typography.bodySmall,
+                                style = AvalonTheme.typography.bodySmall,
                                 color = colors.textSecondary
                             )
                         }
                         if (curHovered.avgRating != null) {
                             Text(
                                 text = "·",
-                                style = MaterialTheme.typography.bodySmall,
+                                style = AvalonTheme.typography.bodySmall,
                                 color = colors.textSecondary
                             )
                             Row(verticalAlignment = Alignment.CenterVertically) {
@@ -452,7 +451,7 @@ fun ActivityHeatmapCard(
                                 Spacer(modifier = Modifier.width(3.dp))
                                 Text(
                                     text = curHovered.avgRating.toString(),
-                                    style = MaterialTheme.typography.bodySmall.copy(fontFeatureSettings = "tnum"),
+                                    style = AvalonTheme.typography.bodySmall.copy(fontFeatureSettings = "tnum"),
                                     fontWeight = FontWeight.Bold,
                                     color = colors.accentGold
                                 )
@@ -462,7 +461,7 @@ fun ActivityHeatmapCard(
                 } else {
                     Text(
                         text = stringResource(Res.string.stats_heatmap_hint),
-                        style = MaterialTheme.typography.labelSmall,
+                        style = AvalonTheme.typography.labelSmall,
                         color = colors.textSecondary.copy(alpha = 0.7f)
                     )
                 }
@@ -474,7 +473,7 @@ fun ActivityHeatmapCard(
                 ) {
                     Text(
                         text = stringResource(Res.string.stats_heatmap_legend_less),
-                        style = MaterialTheme.typography.labelSmall,
+                        style = AvalonTheme.typography.labelSmall,
                         color = colors.textSecondary,
                         fontSize = 10.sp
                     )
@@ -507,7 +506,7 @@ fun ActivityHeatmapCard(
                     Spacer(modifier = Modifier.width(2.dp))
                     Text(
                         text = stringResource(Res.string.stats_heatmap_legend_more),
-                        style = MaterialTheme.typography.labelSmall,
+                        style = AvalonTheme.typography.labelSmall,
                         color = colors.textSecondary,
                         fontSize = 10.sp
                     )
@@ -561,7 +560,7 @@ private fun HeatmapTabPill(
     ) {
         Text(
             text = text,
-            style = MaterialTheme.typography.labelSmall,
+            style = AvalonTheme.typography.labelSmall,
             fontWeight = if (isSelected) FontWeight.Bold else FontWeight.Medium,
             color = animatedTextColor
         )

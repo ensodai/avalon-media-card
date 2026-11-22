@@ -1,5 +1,7 @@
 package org.ensodai.avalonmediacard.presentation.screens.player.component.pc.chat
 
+import org.ensodai.avalonmediacard.designsystem.theme.AvalonTheme
+
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.animateContentSize
 import androidx.compose.animation.core.Spring
@@ -29,10 +31,9 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.HorizontalDivider
-import androidx.compose.material3.Icon
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
+import org.ensodai.avalonmediacard.designsystem.components.AvalonDivider as HorizontalDivider
+import org.ensodai.avalonmediacard.designsystem.components.AvalonIcon as Icon
+import org.ensodai.avalonmediacard.designsystem.components.AvalonText as Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
@@ -121,7 +122,7 @@ fun WatchPartyChatPanel(
                     .tvAndWebHoverEffect(
                         scaleTarget = if (isExpanded) 1.0f else 1.08f,
                         shape = headerShape,
-                        activeBorderColor = MaterialTheme.colorScheme.primary,
+                        activeBorderColor = AvalonTheme.colors.primary,
                         activeBorderWidth = if (isExpanded) 1.5.dp else 2.dp,
                         defaultBorderColor = Color.Transparent,
                         defaultBorderWidth = 0.dp,

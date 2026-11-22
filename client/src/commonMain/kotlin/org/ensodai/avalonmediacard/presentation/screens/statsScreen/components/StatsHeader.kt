@@ -5,10 +5,9 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.size
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
+import org.ensodai.avalonmediacard.designsystem.components.AvalonIcon as Icon
+import org.ensodai.avalonmediacard.designsystem.components.AvalonIconButton as IconButton
+import org.ensodai.avalonmediacard.designsystem.components.AvalonText as Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -17,7 +16,7 @@ import androidx.compose.ui.unit.dp
 import avalonmediacard.client.generated.resources.*
 import com.composables.icons.lucide.Lucide
 import com.composables.icons.lucide.RefreshCw
-import org.ensodai.avalonmediacard.presentation.theme.AvalonTheme
+import org.ensodai.avalonmediacard.designsystem.theme.AvalonTheme
 import org.jetbrains.compose.resources.stringResource
 
 @Composable
@@ -36,13 +35,13 @@ fun StatsHeader(
         Column {
             Text(
                 text = stringResource(Res.string.stats_screen_title),
-                style = MaterialTheme.typography.headlineMedium,
+                style = AvalonTheme.typography.headlineMedium,
                 fontWeight = FontWeight.Bold,
                 color = colors.textPrimary
             )
             Text(
                 text = stringResource(Res.string.stats_screen_subtitle),
-                style = MaterialTheme.typography.bodyMedium,
+                style = AvalonTheme.typography.bodyMedium,
                 color = colors.textSecondary
             )
         }

@@ -1,5 +1,7 @@
 package org.ensodai.avalonmediacard.presentation.screens.player.component.pc
 
+import org.ensodai.avalonmediacard.designsystem.theme.AvalonTheme
+
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
@@ -10,9 +12,8 @@ import androidx.compose.foundation.gestures.scrollBy
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.*
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.Icon
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
+import org.ensodai.avalonmediacard.designsystem.components.AvalonIcon as Icon
+import org.ensodai.avalonmediacard.designsystem.components.AvalonText as Text
 import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
@@ -324,7 +325,7 @@ fun PlayerEpisodeCard(
 
             Text(
                 text = primaryText,
-                color = if (isPlaying) MaterialTheme.colorScheme.primary else Color.White.copy(
+                color = if (isPlaying) AvalonTheme.colors.primary else Color.White.copy(
                     alpha = 0.9f
                 ),
                 fontWeight = if (isPlaying) FontWeight.Bold else FontWeight.Medium,
@@ -402,7 +403,7 @@ fun PlayerEpisodeCard(
                         modifier = Modifier
                             .fillMaxWidth(fraction = (progress / duration).toFloat().coerceIn(0f, 1f))
                             .fillMaxHeight()
-                            .background(MaterialTheme.colorScheme.primary)
+                            .background(AvalonTheme.colors.primary)
                     )
                 }
             }

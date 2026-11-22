@@ -1,5 +1,7 @@
 package org.ensodai.avalonmediacard.presentation.screens.mediaSources.components
 
+import org.ensodai.avalonmediacard.designsystem.theme.AvalonTheme
+
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -15,10 +17,9 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.CircularProgressIndicator
-import androidx.compose.material3.Icon
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
+import org.ensodai.avalonmediacard.designsystem.components.AvalonCircularProgressIndicator as CircularProgressIndicator
+import org.ensodai.avalonmediacard.designsystem.components.AvalonIcon as Icon
+import org.ensodai.avalonmediacard.designsystem.components.AvalonText as Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
@@ -67,9 +68,9 @@ internal fun SourceTab(
     onClick: () -> Unit
 ) {
     val bgColor by animateColorAsState(
-        if (isSelected) MaterialTheme.colorScheme.primary else Color.White.copy(alpha = 0.05f)
+        if (isSelected) AvalonTheme.colors.primary else Color.White.copy(alpha = 0.05f)
     )
-    val textColor = if (isSelected) MaterialTheme.colorScheme.onPrimary else Color.White
+    val textColor = if (isSelected) AvalonTheme.colors.onPrimary else Color.White
 
     Row(
         modifier = modifier
@@ -119,15 +120,15 @@ internal fun SubFilterChip(
     onClick: () -> Unit
 ) {
     val backgroundColor by animateColorAsState(
-        if (isSelected) MaterialTheme.colorScheme.primary.copy(alpha = 0.2f)
+        if (isSelected) AvalonTheme.colors.primary.copy(alpha = 0.2f)
         else Color.White.copy(alpha = 0.05f)
     )
     val borderColor by animateColorAsState(
-        if (isSelected) MaterialTheme.colorScheme.primary.copy(alpha = 0.6f)
+        if (isSelected) AvalonTheme.colors.primary.copy(alpha = 0.6f)
         else Color.White.copy(alpha = 0.12f)
     )
     val textColor by animateColorAsState(
-        if (isSelected) MaterialTheme.colorScheme.primary
+        if (isSelected) AvalonTheme.colors.primary
         else Color.White.copy(alpha = 0.75f)
     )
 
@@ -151,12 +152,12 @@ internal fun SubFilterChip(
             Box(
                 modifier = Modifier
                     .clip(CircleShape)
-                    .background(if (isSelected) MaterialTheme.colorScheme.primary else Color.White.copy(alpha = 0.15f))
+                    .background(if (isSelected) AvalonTheme.colors.primary else Color.White.copy(alpha = 0.15f))
                     .padding(horizontal = 6.dp, vertical = 1.dp)
             ) {
                 Text(
                     text = "$count",
-                    color = if (isSelected) MaterialTheme.colorScheme.onPrimary else Color.White.copy(alpha = 0.9f),
+                    color = if (isSelected) AvalonTheme.colors.onPrimary else Color.White.copy(alpha = 0.9f),
                     fontSize = if (isTv) 11.sp else 10.sp,
                     fontWeight = FontWeight.Bold
                 )
@@ -596,13 +597,13 @@ internal fun MappedEpisodeCard(source: MediaStream, isTv: Boolean, onClick: () -
             .background(
                 brush = Brush.horizontalGradient(
                     listOf(
-                        MaterialTheme.colorScheme.primary.copy(alpha = 0.15f),
+                        AvalonTheme.colors.primary.copy(alpha = 0.15f),
                         Color(0xFF1A1A2E).copy(alpha = 0.8f)
                     )
                 ),
                 shape = RoundedCornerShape(12.dp)
             )
-            .border(1.dp, MaterialTheme.colorScheme.primary.copy(alpha = 0.3f), RoundedCornerShape(12.dp))
+            .border(1.dp, AvalonTheme.colors.primary.copy(alpha = 0.3f), RoundedCornerShape(12.dp))
             .padding(12.dp),
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.spacedBy(16.dp)
@@ -622,13 +623,13 @@ internal fun MappedEpisodeCard(source: MediaStream, isTv: Boolean, onClick: () -
             Box(
                 modifier = Modifier
                     .size(56.dp)
-                    .background(MaterialTheme.colorScheme.primary.copy(alpha = 0.2f), RoundedCornerShape(8.dp)),
+                    .background(AvalonTheme.colors.primary.copy(alpha = 0.2f), RoundedCornerShape(8.dp)),
                 contentAlignment = Alignment.Center
             ) {
                 Icon(
                     Lucide.Play,
                     contentDescription = null,
-                    tint = MaterialTheme.colorScheme.primary,
+                    tint = AvalonTheme.colors.primary,
                     modifier = Modifier.size(24.dp)
                 )
             }
@@ -664,13 +665,13 @@ internal fun MappedEpisodeCard(source: MediaStream, isTv: Boolean, onClick: () -
 
         Box(
             modifier = Modifier
-                .background(MaterialTheme.colorScheme.primary.copy(alpha = 0.2f), RoundedCornerShape(8.dp))
-                .border(1.dp, MaterialTheme.colorScheme.primary.copy(alpha = 0.5f), RoundedCornerShape(8.dp))
+                .background(AvalonTheme.colors.primary.copy(alpha = 0.2f), RoundedCornerShape(8.dp))
+                .border(1.dp, AvalonTheme.colors.primary.copy(alpha = 0.5f), RoundedCornerShape(8.dp))
                 .padding(horizontal = 16.dp, vertical = 8.dp)
         ) {
             Text(
                 text = stringResource(Res.string.details_sources_watch),
-                color = MaterialTheme.colorScheme.primary,
+                color = AvalonTheme.colors.primary,
                 fontSize = if (isTv) 14.sp else 12.sp,
                 fontWeight = FontWeight.Bold
             )

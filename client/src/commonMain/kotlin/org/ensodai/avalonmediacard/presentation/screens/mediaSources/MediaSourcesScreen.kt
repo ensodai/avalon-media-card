@@ -1,7 +1,8 @@
 package org.ensodai.avalonmediacard.presentation.screens.mediaSources
 
+import org.ensodai.avalonmediacard.designsystem.theme.AvalonTheme
+
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -84,7 +85,7 @@ fun MediaSourcesScreen(
         isOpen = isExpanded,
         onDismissRequest = actions.onClose,
         callerFocusRequester = callerFocusRequester,
-        scrimColor = if (isTv) MaterialTheme.colorScheme.background else Color.Black.copy(alpha = 0.9f),
+        scrimColor = if (isTv) AvalonTheme.colors.background else Color.Black.copy(alpha = 0.9f),
         modifier = if (isTv) Modifier.fillMaxSize() else Modifier
     ) {
         val inspectorData = torrentInspectorState?.data

@@ -1,5 +1,7 @@
 package org.ensodai.avalonmediacard.presentation.screens.player.component.pc.chat
 
+import org.ensodai.avalonmediacard.designsystem.theme.AvalonTheme
+
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -15,9 +17,8 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.material3.Icon
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
+import org.ensodai.avalonmediacard.designsystem.components.AvalonIcon as Icon
+import org.ensodai.avalonmediacard.designsystem.components.AvalonText as Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -83,7 +84,7 @@ fun WatchPartyChatInput(
                     color = Color.White,
                     fontSize = 13.sp
                 ),
-                cursorBrush = SolidColor(MaterialTheme.colorScheme.primary),
+                cursorBrush = SolidColor(AvalonTheme.colors.primary),
                 maxLines = 3,
                 keyboardOptions = KeyboardOptions(imeAction = ImeAction.Send),
                 keyboardActions = KeyboardActions(onSend = { onSendMessage() }),
@@ -119,12 +120,12 @@ fun WatchPartyChatInput(
                 .size(32.dp)
                 .clip(CircleShape)
                 .background(
-                    if (canSend) MaterialTheme.colorScheme.primary else Color.White.copy(alpha = 0.08f)
+                    if (canSend) AvalonTheme.colors.primary else Color.White.copy(alpha = 0.08f)
                 )
                 .tvAndWebHoverEffect(
                     scaleTarget = 1.15f,
                     shape = CircleShape,
-                    activeBorderColor = if (canSend) MaterialTheme.colorScheme.primary else Color.White.copy(alpha = 0.20f),
+                    activeBorderColor = if (canSend) AvalonTheme.colors.primary else Color.White.copy(alpha = 0.20f),
                     activeBorderWidth = 1.5.dp,
                     defaultBorderColor = Color.Transparent,
                     defaultBorderWidth = 0.dp,

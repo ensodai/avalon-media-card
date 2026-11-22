@@ -1,13 +1,14 @@
 package org.ensodai.avalonmediacard.presentation.screens.admin
 
+import org.ensodai.avalonmediacard.designsystem.theme.AvalonTheme
+
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.Icon
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
+import org.ensodai.avalonmediacard.designsystem.components.AvalonIcon as Icon
+import org.ensodai.avalonmediacard.designsystem.components.AvalonText as Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -42,7 +43,7 @@ fun AdminScreen(
     Box(
         modifier = Modifier
             .fillMaxSize()
-            .background(MaterialTheme.colorScheme.background),
+            .background(AvalonTheme.colors.background),
         contentAlignment = Alignment.TopCenter
     ) {
         Column(
@@ -61,13 +62,13 @@ fun AdminScreen(
                     text = stringResource(Res.string.admin_title),
                     fontSize = 28.sp,
                     fontWeight = FontWeight.Bold,
-                    color = MaterialTheme.colorScheme.onBackground
+                    color = AvalonTheme.colors.onBackground
                 )
                 Spacer(modifier = Modifier.height(4.dp))
                 Text(
                     text = stringResource(Res.string.admin_subtitle),
                     fontSize = 14.sp,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                    color = AvalonTheme.colors.onSurfaceVariant
                 )
 
                 Spacer(modifier = Modifier.height(20.dp))
@@ -86,12 +87,12 @@ fun AdminScreen(
                         }
 
                         val containerColor by animateColorAsState(
-                            targetValue = if (isSelected) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.3f)
+                            targetValue = if (isSelected) AvalonTheme.colors.primary else AvalonTheme.colors.surfaceVariant.copy(alpha = 0.3f)
                         )
                         val contentColor by animateColorAsState(
-                            targetValue = if (isSelected) MaterialTheme.colorScheme.onPrimary else MaterialTheme.colorScheme.onSurfaceVariant
+                            targetValue = if (isSelected) AvalonTheme.colors.onPrimary else AvalonTheme.colors.onSurfaceVariant
                         )
-                        val borderColor = if (isSelected) Color.Transparent else MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.3f)
+                        val borderColor = if (isSelected) Color.Transparent else AvalonTheme.colors.outlineVariant.copy(alpha = 0.3f)
 
                         Row(
                             modifier = Modifier

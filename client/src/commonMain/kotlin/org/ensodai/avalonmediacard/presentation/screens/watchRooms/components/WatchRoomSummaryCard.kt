@@ -1,12 +1,13 @@
 package org.ensodai.avalonmediacard.presentation.screens.watchRooms.components
 
+import org.ensodai.avalonmediacard.designsystem.theme.AvalonTheme
+
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
+import org.ensodai.avalonmediacard.designsystem.components.AvalonText as Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.produceState
@@ -69,14 +70,14 @@ fun WatchRoomSummaryCard(
             .tvAndWebHoverEffect(
                 scaleTarget = 1.02f,
                 defaultBorderWidth = 1.dp,
-                defaultBorderColor = MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.20f),
+                defaultBorderColor = AvalonTheme.colors.outlineVariant.copy(alpha = 0.20f),
                 activeBorderWidth = 2.dp,
-                activeBorderColor = MaterialTheme.colorScheme.primary,
+                activeBorderColor = AvalonTheme.colors.primary,
                 shape = RoundedCornerShape(14.dp),
                 tiltEnabled = false,
                 onClick = onClick
             )
-            .background(MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.25f))
+            .background(AvalonTheme.colors.surfaceVariant.copy(alpha = 0.25f))
     ) {
         // 1. Подложка арта (Backdrop)
         if (!room.backdropUrl.isNullOrBlank()) {
@@ -110,8 +111,8 @@ fun WatchRoomSummaryCard(
                     .background(
                         Brush.verticalGradient(
                             listOf(
-                                MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.35f),
-                                MaterialTheme.colorScheme.surface.copy(alpha = 0.65f)
+                                AvalonTheme.colors.surfaceVariant.copy(alpha = 0.35f),
+                                AvalonTheme.colors.surface.copy(alpha = 0.65f)
                             )
                         )
                     )
@@ -211,15 +212,15 @@ fun WatchRoomSummaryCard(
                     Box(
                         modifier = Modifier
                             .clip(RoundedCornerShape(6.dp))
-                            .background(MaterialTheme.colorScheme.primary.copy(alpha = 0.25f))
-                            .border(1.dp, MaterialTheme.colorScheme.primary.copy(alpha = 0.50f), RoundedCornerShape(6.dp))
+                            .background(AvalonTheme.colors.primary.copy(alpha = 0.25f))
+                            .border(1.dp, AvalonTheme.colors.primary.copy(alpha = 0.50f), RoundedCornerShape(6.dp))
                             .padding(horizontal = 7.dp, vertical = 3.dp)
                     ) {
                         Text(
                             text = stringResource(Res.string.watch_party_host_badge),
                             fontSize = 10.sp,
                             fontWeight = FontWeight.Bold,
-                            color = MaterialTheme.colorScheme.primary
+                            color = AvalonTheme.colors.primary
                         )
                     }
                 }
@@ -289,7 +290,7 @@ fun WatchRoomSummaryCard(
                                         .size(24.dp)
                                         .clip(CircleShape)
                                         .background(Color.White.copy(alpha = 0.20f))
-                                        .border(1.5.dp, MaterialTheme.colorScheme.background, CircleShape),
+                                        .border(1.5.dp, AvalonTheme.colors.background, CircleShape),
                                     contentAlignment = Alignment.Center
                                 ) {
                                     Text(
@@ -310,7 +311,7 @@ fun WatchRoomSummaryCard(
                             "● " + stringResource(Res.string.watch_party_online_watching, room.onlineParticipantsCount) to Color(0xFF81C784)
                         }
                         hasOnline -> {
-                            "● " + stringResource(Res.string.watch_party_participants_count, room.onlineParticipantsCount) to MaterialTheme.colorScheme.primary
+                            "● " + stringResource(Res.string.watch_party_participants_count, room.onlineParticipantsCount) to AvalonTheme.colors.primary
                         }
                         else -> {
                             formatParticipantsCount(room.participantsCount) to Color.White.copy(alpha = 0.65f)
@@ -349,10 +350,10 @@ private fun ParticipantMiniAvatar(
                     when {
                         !isOnline -> Color.White.copy(alpha = 0.10f)
                         isHost -> Color(0xFF64B5F6).copy(alpha = 0.35f)
-                        else -> MaterialTheme.colorScheme.primary.copy(alpha = 0.35f)
+                        else -> AvalonTheme.colors.primary.copy(alpha = 0.35f)
                     }
                 )
-                .border(1.5.dp, MaterialTheme.colorScheme.background, CircleShape),
+                .border(1.5.dp, AvalonTheme.colors.background, CircleShape),
             contentAlignment = Alignment.Center
         ) {
             Text(
@@ -373,7 +374,7 @@ private fun ParticipantMiniAvatar(
                 .size(7.dp)
                 .clip(CircleShape)
                 .background(if (isOnline) Color(0xFF4CAF50) else Color.Gray.copy(alpha = 0.6f))
-                .border(1.dp, MaterialTheme.colorScheme.background, CircleShape)
+                .border(1.dp, AvalonTheme.colors.background, CircleShape)
         )
     }
 }

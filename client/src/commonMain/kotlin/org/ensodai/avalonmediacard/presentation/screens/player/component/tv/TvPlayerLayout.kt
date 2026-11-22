@@ -1,5 +1,7 @@
 package org.ensodai.avalonmediacard.presentation.screens.player.component.tv
 
+import org.ensodai.avalonmediacard.designsystem.theme.AvalonTheme
+
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.expandVertically
 import androidx.compose.animation.fadeIn
@@ -11,9 +13,8 @@ import androidx.compose.foundation.gestures.detectVerticalDragGestures
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.Icon
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
+import org.ensodai.avalonmediacard.designsystem.components.AvalonIcon as Icon
+import org.ensodai.avalonmediacard.designsystem.components.AvalonText as Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -389,7 +390,7 @@ fun TvPlayerLayout(
                                                 .tvAndWebHoverEffect(
                                                     scaleTarget = 1.15f,
                                                     shape = CircleShape,
-                                                    activeBorderColor = MaterialTheme.colorScheme.primary,
+                                                    activeBorderColor = AvalonTheme.colors.primary,
                                                     activeBorderWidth = 2.dp,
                                                     onClick = {
                                                         wakeUpUi()
@@ -398,7 +399,7 @@ fun TvPlayerLayout(
                                                 )
                                                 .clip(CircleShape)
                                                 .background(
-                                                    if (showReactionsBar) MaterialTheme.colorScheme.primary.copy(alpha = 0.35f)
+                                                    if (showReactionsBar) AvalonTheme.colors.primary.copy(alpha = 0.35f)
                                                     else Color.White.copy(alpha = 0.12f)
                                                 ),
                                             contentAlignment = Alignment.Center
@@ -406,7 +407,7 @@ fun TvPlayerLayout(
                                             Icon(
                                                 imageVector = Lucide.Smile,
                                                 contentDescription = "Reactions",
-                                                tint = if (showReactionsBar) MaterialTheme.colorScheme.primary else Color.White,
+                                                tint = if (showReactionsBar) AvalonTheme.colors.primary else Color.White,
                                                 modifier = Modifier.size(18.dp)
                                             )
                                         }

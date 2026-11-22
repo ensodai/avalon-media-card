@@ -1,5 +1,7 @@
 package org.ensodai.avalonmediacard.presentation.screens.watchRooms.targets.web
 
+import org.ensodai.avalonmediacard.designsystem.theme.AvalonTheme
+
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
@@ -11,9 +13,8 @@ import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.GridItemSpan
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
-import androidx.compose.material3.CircularProgressIndicator
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
+import org.ensodai.avalonmediacard.designsystem.components.AvalonCircularProgressIndicator as CircularProgressIndicator
+import org.ensodai.avalonmediacard.designsystem.components.AvalonText as Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -68,14 +69,14 @@ fun WatchRoomsLayoutWeb(
                         text = stringResource(Res.string.watch_rooms_history_title),
                         fontSize = 20.sp,
                         fontWeight = FontWeight.SemiBold,
-                        color = MaterialTheme.colorScheme.onBackground
+                        color = AvalonTheme.colors.onBackground
                     )
 
                     if (state.isLoading) {
                         CircularProgressIndicator(
                             modifier = Modifier.size(20.dp),
                             strokeWidth = 2.dp,
-                            color = MaterialTheme.colorScheme.primary
+                            color = AvalonTheme.colors.primary
                         )
                     }
                 }
@@ -100,7 +101,7 @@ fun WatchRoomsLayoutWeb(
                             Text(
                                 text = stringResource(Res.string.watch_rooms_history_empty),
                                 fontSize = 14.sp,
-                                color = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.5f)
+                                color = AvalonTheme.colors.onBackground.copy(alpha = 0.5f)
                             )
                         }
                     }

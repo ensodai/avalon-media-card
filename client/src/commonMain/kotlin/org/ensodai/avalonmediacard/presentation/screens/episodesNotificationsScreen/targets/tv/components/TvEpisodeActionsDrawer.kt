@@ -1,5 +1,7 @@
 package org.ensodai.avalonmediacard.presentation.screens.episodesNotificationsScreen.targets.tv.components
 
+import org.ensodai.avalonmediacard.designsystem.theme.AvalonTheme
+
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.focusable
@@ -19,9 +21,8 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material3.Icon
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
+import org.ensodai.avalonmediacard.designsystem.components.AvalonIcon as Icon
+import org.ensodai.avalonmediacard.designsystem.components.AvalonText as Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -249,7 +250,7 @@ fun TvEpisodeActionsDrawer(
                         .background(if (isTextFocused) Color.White.copy(alpha = 0.08f) else Color.White.copy(alpha = 0.03f))
                         .border(
                             width = 1.dp,
-                            color = if (isTextFocused) MaterialTheme.colorScheme.primary else Color.White.copy(alpha = 0.08f),
+                            color = if (isTextFocused) AvalonTheme.colors.primary else Color.White.copy(alpha = 0.08f),
                             shape = RoundedCornerShape(12.dp)
                         )
                         .onFocusChanged { isTextFocused = it.isFocused }

@@ -1,5 +1,7 @@
 package org.ensodai.avalonmediacard.presentation.screens.episodesNotificationsScreen.component
 
+import org.ensodai.avalonmediacard.designsystem.theme.AvalonTheme
+
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -20,13 +22,12 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.Button
-import androidx.compose.material3.Card
-import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
+import org.ensodai.avalonmediacard.designsystem.components.AvalonButton as Button
+import org.ensodai.avalonmediacard.designsystem.components.AvalonCard as Card
+import org.ensodai.avalonmediacard.designsystem.components.CardDefaults
+import org.ensodai.avalonmediacard.designsystem.components.AvalonIcon as Icon
+import org.ensodai.avalonmediacard.designsystem.components.AvalonIconButton as IconButton
+import org.ensodai.avalonmediacard.designsystem.components.AvalonText as Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
@@ -72,9 +73,9 @@ fun MissedShowRollupCard(
         shape = RoundedCornerShape(14.dp),
         colors = CardDefaults.cardColors(
             containerColor = if (isHighlighted) {
-                MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.5f)
+                AvalonTheme.colors.surfaceVariant.copy(alpha = 0.5f)
             } else {
-                MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.25f)
+                AvalonTheme.colors.surfaceVariant.copy(alpha = 0.25f)
             }
         ),
         modifier = modifier
@@ -82,7 +83,7 @@ fun MissedShowRollupCard(
             .scale(cardScale)
             .border(
                 width = if (isFocused) 2.dp else 1.dp,
-                color = if (isFocused) MaterialTheme.colorScheme.primary else Color.White.copy(alpha = 0.06f),
+                color = if (isFocused) AvalonTheme.colors.primary else Color.White.copy(alpha = 0.06f),
                 shape = RoundedCornerShape(14.dp)
             )
             .clip(RoundedCornerShape(14.dp))
@@ -99,7 +100,7 @@ fun MissedShowRollupCard(
                     .width(60.dp)
                     .aspectRatio(2f / 3f)
                     .clip(RoundedCornerShape(8.dp))
-                    .background(MaterialTheme.colorScheme.surfaceVariant)
+                    .background(AvalonTheme.colors.surfaceVariant)
             ) {
                 ShimmerImage(
                     model = rollup.showPosterUrl,
@@ -120,15 +121,15 @@ fun MissedShowRollupCard(
                     Icon(
                         imageVector = Lucide.Folder,
                         contentDescription = null,
-                        tint = MaterialTheme.colorScheme.primary,
+                        tint = AvalonTheme.colors.primary,
                         modifier = Modifier.size(16.dp)
                     )
                     Spacer(modifier = Modifier.width(6.dp))
                     Text(
                         text = rollup.showTitle,
-                        style = MaterialTheme.typography.titleMedium.copy(
+                        style = AvalonTheme.typography.titleMedium.copy(
                             fontWeight = FontWeight.Bold,
-                            color = MaterialTheme.colorScheme.onSurface
+                            color = AvalonTheme.colors.onSurface
                         ),
                         maxLines = 1,
                         overflow = TextOverflow.Ellipsis
@@ -146,8 +147,8 @@ fun MissedShowRollupCard(
                         rollup.endSeason,
                         rollup.endEpisode
                     ),
-                    style = MaterialTheme.typography.bodyMedium.copy(
-                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                    style = AvalonTheme.typography.bodyMedium.copy(
+                        color = AvalonTheme.colors.onSurfaceVariant
                     ),
                     maxLines = 1,
                     overflow = TextOverflow.Ellipsis
@@ -193,7 +194,7 @@ fun MissedShowRollupCard(
                         Icon(
                             imageVector = Lucide.Info,
                             contentDescription = stringResource(Res.string.episodes_notifications_about_show),
-                            tint = MaterialTheme.colorScheme.onSurfaceVariant,
+                            tint = AvalonTheme.colors.onSurfaceVariant,
                             modifier = Modifier.size(16.dp)
                         )
                     }

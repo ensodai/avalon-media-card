@@ -1,11 +1,12 @@
 package org.ensodai.avalonmediacard.presentation.screens.detailsScreen.component.mediaDescriptionSlot
 
+import org.ensodai.avalonmediacard.designsystem.theme.AvalonTheme
+
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
+import org.ensodai.avalonmediacard.designsystem.components.AvalonText as Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -84,7 +85,7 @@ fun MediaDescriptionSlotContent(
                     text = if (isExpanded) stringResource(Res.string.details_desc_collapse) else stringResource(Res.string.details_desc_expand),
                     fontSize = 14.sp,
                     fontWeight = FontWeight.Bold,
-                    color = MaterialTheme.colorScheme.primary.copy(alpha = if (isActive) 1f else 0.8f)
+                    color = AvalonTheme.colors.primary.copy(alpha = if (isActive) 1f else 0.8f)
                 )
             }
         }

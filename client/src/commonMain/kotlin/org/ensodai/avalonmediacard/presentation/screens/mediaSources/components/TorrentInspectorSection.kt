@@ -1,5 +1,12 @@
 package org.ensodai.avalonmediacard.presentation.screens.mediaSources.components
 
+import org.ensodai.avalonmediacard.designsystem.theme.AvalonTheme
+import org.ensodai.avalonmediacard.designsystem.components.AvalonIcon as Icon
+import org.ensodai.avalonmediacard.designsystem.components.AvalonText as Text
+import org.ensodai.avalonmediacard.designsystem.components.AvalonIconButton as IconButton
+import org.ensodai.avalonmediacard.designsystem.components.AvalonButton as Button
+import org.ensodai.avalonmediacard.designsystem.components.ButtonDefaults
+
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
@@ -7,7 +14,6 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicTextField
-import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -42,7 +48,7 @@ fun TorrentInspectorSection(
     val containerModifier = if (isTv) {
         modifier
             .fillMaxSize()
-            .background(MaterialTheme.colorScheme.background)
+            .background(AvalonTheme.colors.background)
             .padding(horizontal = 24.dp, vertical = 24.dp)
     } else {
         modifier
@@ -169,7 +175,7 @@ private fun TorrentInspectorFileRow(
                     },
                     enabled = !isSaved && season.isNotBlank() && episode.isNotBlank(),
                     colors = ButtonDefaults.buttonColors(
-                        containerColor = if (isSaved) Color(0xFF4CAF50) else MaterialTheme.colorScheme.primary
+                        containerColor = if (isSaved) Color(0xFF4CAF50) else AvalonTheme.colors.primary
                     ),
                     contentPadding = PaddingValues(horizontal = if (isTv) 16.dp else 12.dp, vertical = if (isTv) 8.dp else 6.dp),
                     modifier = Modifier.height(if (isTv) 40.dp else 32.dp)

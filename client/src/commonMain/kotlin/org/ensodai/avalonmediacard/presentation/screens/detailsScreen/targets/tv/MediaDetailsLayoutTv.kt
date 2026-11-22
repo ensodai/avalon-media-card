@@ -1,5 +1,7 @@
 package org.ensodai.avalonmediacard.presentation.screens.detailsScreen.targets.tv
 
+import org.ensodai.avalonmediacard.designsystem.theme.AvalonTheme
+
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.ExperimentalFoundationApi
@@ -11,9 +13,8 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material3.Icon
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
+import org.ensodai.avalonmediacard.designsystem.components.AvalonIcon as Icon
+import org.ensodai.avalonmediacard.designsystem.components.AvalonText as Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.LaunchedEffect
@@ -90,7 +91,7 @@ fun MediaDetailsLayoutTv(
 ) {
     val isPlayerOpen = state.playerState !is DetailsViewState.PlayerState.Idle
     val scrollState = rememberScrollState()
-    val backgroundColor = MaterialTheme.colorScheme.background
+    val backgroundColor = AvalonTheme.colors.background
     val buttonsFocusRequester = remember { FocusRequester() }
     val focusZone = remember { mutableStateOf(TvFocusZone.HEADER) }
     val drawerNavigator = LocalTvDrawerNavigator.current

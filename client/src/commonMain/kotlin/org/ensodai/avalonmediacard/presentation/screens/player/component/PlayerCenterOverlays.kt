@@ -1,5 +1,7 @@
 package org.ensodai.avalonmediacard.presentation.screens.player.component
 
+import org.ensodai.avalonmediacard.designsystem.theme.AvalonTheme
+
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.Spring
 import androidx.compose.animation.core.spring
@@ -26,13 +28,12 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.Button
-import androidx.compose.material3.Card
-import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.CircularProgressIndicator
-import androidx.compose.material3.Icon
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
+import org.ensodai.avalonmediacard.designsystem.components.AvalonButton as Button
+import org.ensodai.avalonmediacard.designsystem.components.AvalonCard as Card
+import org.ensodai.avalonmediacard.designsystem.components.CardDefaults
+import org.ensodai.avalonmediacard.designsystem.components.AvalonCircularProgressIndicator as CircularProgressIndicator
+import org.ensodai.avalonmediacard.designsystem.components.AvalonIcon as Icon
+import org.ensodai.avalonmediacard.designsystem.components.AvalonText as Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -245,7 +246,7 @@ fun PlayerCenterOverlays(
                         Icon(
                             imageVector = Lucide.ChevronLeft,
                             contentDescription = null,
-                            tint = MaterialTheme.colorScheme.primary,
+                            tint = AvalonTheme.colors.primary,
                             modifier = Modifier.size(24.dp)
                         )
                     }
@@ -288,7 +289,7 @@ fun PlayerCenterOverlays(
                         Icon(
                             imageVector = Lucide.ChevronRight,
                             contentDescription = null,
-                            tint = MaterialTheme.colorScheme.primary,
+                            tint = AvalonTheme.colors.primary,
                             modifier = Modifier.size(24.dp)
                         )
                         Spacer(modifier = Modifier.width(6.dp))
@@ -312,13 +313,13 @@ fun PlayerCenterOverlays(
 
         if (playbackError != null) {
             Card(
-                colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.errorContainer),
+                colors = CardDefaults.cardColors(containerColor = AvalonTheme.colors.errorContainer),
                 modifier = Modifier.align(Alignment.Center).padding(24.dp)
             ) {
                 Column(modifier = Modifier.padding(16.dp), horizontalAlignment = Alignment.CenterHorizontally) {
                     Text(
                         text = playbackError,
-                        color = MaterialTheme.colorScheme.onErrorContainer,
+                        color = AvalonTheme.colors.onErrorContainer,
                         fontWeight = FontWeight.Bold
                     )
                     Spacer(modifier = Modifier.height(12.dp))

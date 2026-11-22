@@ -2,8 +2,8 @@ package org.ensodai.avalonmediacard.presentation.core
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.material3.SnackbarHost
-import androidx.compose.material3.SnackbarHostState
+import org.ensodai.avalonmediacard.designsystem.components.AvalonSnackbarHost as SnackbarHost
+import org.ensodai.avalonmediacard.designsystem.components.AvalonSnackbarHostState as SnackbarHostState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.compositionLocalOf

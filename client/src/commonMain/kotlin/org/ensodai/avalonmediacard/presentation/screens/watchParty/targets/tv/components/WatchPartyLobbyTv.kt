@@ -1,5 +1,7 @@
 package org.ensodai.avalonmediacard.presentation.screens.watchParty.targets.tv.components
 
+import org.ensodai.avalonmediacard.designsystem.theme.AvalonTheme
+
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
@@ -17,10 +19,9 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.CircularProgressIndicator
-import androidx.compose.material3.Icon
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
+import org.ensodai.avalonmediacard.designsystem.components.AvalonCircularProgressIndicator as CircularProgressIndicator
+import org.ensodai.avalonmediacard.designsystem.components.AvalonIcon as Icon
+import org.ensodai.avalonmediacard.designsystem.components.AvalonText as Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -86,7 +87,7 @@ fun WatchPartyLobbyTv(
     Box(
         modifier = modifier
             .fillMaxSize()
-            .background(MaterialTheme.colorScheme.background)
+            .background(AvalonTheme.colors.background)
     ) {
         // 1. Полноэкранный кинематографичный бэкдроп
         if (!backdropUrl.isNullOrBlank()) {
@@ -160,7 +161,7 @@ fun WatchPartyLobbyTv(
                         modifier = Modifier
                             .clip(RoundedCornerShape(12.dp))
                             .background(Color.White.copy(alpha = 0.06f))
-                            .border(1.dp, MaterialTheme.colorScheme.primary.copy(alpha = 0.5f), RoundedCornerShape(12.dp))
+                            .border(1.dp, AvalonTheme.colors.primary.copy(alpha = 0.5f), RoundedCornerShape(12.dp))
                             .padding(horizontal = 14.dp, vertical = 8.dp)
                     ) {
                         Row(
@@ -178,7 +179,7 @@ fun WatchPartyLobbyTv(
                                 text = "${joinPin.take(3)} ${joinPin.takeLast(3)}",
                                 fontSize = 18.sp,
                                 fontWeight = FontWeight.ExtraBold,
-                                color = MaterialTheme.colorScheme.primary,
+                                color = AvalonTheme.colors.primary,
                                 letterSpacing = 2.sp
                             )
                         }
@@ -308,7 +309,7 @@ fun WatchPartyLobbyTv(
                                 scaleTarget = 1.03f,
                                 shape = startShape,
                                 activeBorderWidth = 2.dp,
-                                activeBorderColor = MaterialTheme.colorScheme.primary,
+                                activeBorderColor = AvalonTheme.colors.primary,
                                 onClick = actions.onStartPlayback
                             )
                             .background(Color.White, startShape),

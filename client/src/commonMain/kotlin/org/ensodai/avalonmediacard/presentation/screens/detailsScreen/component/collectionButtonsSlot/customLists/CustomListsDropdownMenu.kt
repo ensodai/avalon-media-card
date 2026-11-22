@@ -1,5 +1,7 @@
 package org.ensodai.avalonmediacard.presentation.screens.detailsScreen.component.collectionButtonsSlot.customLists
 
+import org.ensodai.avalonmediacard.designsystem.theme.AvalonTheme
+
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -20,9 +22,8 @@ import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material3.Icon
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
+import org.ensodai.avalonmediacard.designsystem.components.AvalonIcon as Icon
+import org.ensodai.avalonmediacard.designsystem.components.AvalonText as Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -150,7 +151,7 @@ fun CustomListsDropdownMenu(
                         Icon(
                             imageVector = Lucide.Check,
                             contentDescription = "Added",
-                            tint = MaterialTheme.colorScheme.primary,
+                            tint = AvalonTheme.colors.primary,
                             modifier = Modifier.size(18.dp)
                         )
                     }
@@ -183,7 +184,7 @@ fun CustomListsDropdownMenu(
                         onValueChange = { listName = it },
                         textStyle = TextStyle(color = Color.White, fontSize = 14.sp),
                         singleLine = true,
-                        cursorBrush = SolidColor(MaterialTheme.colorScheme.primary),
+                        cursorBrush = SolidColor(AvalonTheme.colors.primary),
                         keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done),
                         keyboardActions = KeyboardActions(
                             onDone = { submitNewList() }
@@ -206,7 +207,7 @@ fun CustomListsDropdownMenu(
                             )
                             .border(
                                 width = 1.dp,
-                                color = if (isInputFocused) MaterialTheme.colorScheme.primary else Color.Transparent,
+                                color = if (isInputFocused) AvalonTheme.colors.primary else Color.Transparent,
                                 shape = RoundedCornerShape(6.dp)
                             )
                             .padding(horizontal = 12.dp, vertical = 10.dp),
@@ -226,7 +227,7 @@ fun CustomListsDropdownMenu(
                     Icon(
                         imageVector = Lucide.Check,
                         contentDescription = stringResource(Res.string.common_save),
-                        tint = if (listName.trim().isNotBlank()) MaterialTheme.colorScheme.primary else Color.White.copy(alpha = 0.3f),
+                        tint = if (listName.trim().isNotBlank()) AvalonTheme.colors.primary else Color.White.copy(alpha = 0.3f),
                         modifier = Modifier
                             .size(24.dp)
                             .pointerHoverIcon(if (listName.trim().isNotBlank()) PointerIcon.Hand else PointerIcon.Default)

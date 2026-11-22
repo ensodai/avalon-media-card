@@ -1,5 +1,7 @@
 package org.ensodai.avalonmediacard.presentation.screens.episodesNotificationsScreen.targets.web
 
+import org.ensodai.avalonmediacard.designsystem.theme.AvalonTheme
+
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -11,8 +13,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
+import org.ensodai.avalonmediacard.designsystem.components.AvalonText as Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
@@ -56,7 +57,7 @@ fun EpisodesNotificationsLayoutWeb(
     Box(
         modifier = modifier
             .fillMaxSize()
-            .background(MaterialTheme.colorScheme.background)
+            .background(AvalonTheme.colors.background)
     ) {
         Column(
             modifier = Modifier
@@ -127,9 +128,9 @@ fun EpisodesNotificationsLayoutWeb(
                                 item(key = "header_${section.sectionId}") {
                                     Text(
                                         text = section.title.uppercase(),
-                                        style = MaterialTheme.typography.labelLarge.copy(
+                                        style = AvalonTheme.typography.labelLarge.copy(
                                             fontWeight = FontWeight.Bold,
-                                            color = MaterialTheme.colorScheme.primary,
+                                            color = AvalonTheme.colors.primary,
                                             letterSpacing = TextUnit(1.2f, TextUnitType.Sp)
                                         ),
                                         modifier = Modifier.padding(top = 8.dp, bottom = 4.dp)
@@ -171,9 +172,9 @@ fun EpisodesNotificationsLayoutWeb(
                                 item(key = "header_missed_rollups") {
                                     Text(
                                         text = stringResource(Res.string.episodes_notifications_missed_title).uppercase(),
-                                        style = MaterialTheme.typography.labelLarge.copy(
+                                        style = AvalonTheme.typography.labelLarge.copy(
                                             fontWeight = FontWeight.Bold,
-                                            color = MaterialTheme.colorScheme.onSurfaceVariant,
+                                            color = AvalonTheme.colors.onSurfaceVariant,
                                             letterSpacing = TextUnit(1.2f, TextUnitType.Sp)
                                         ),
                                         modifier = Modifier.padding(top = 16.dp, bottom = 4.dp)

@@ -1,13 +1,14 @@
 package org.ensodai.avalonmediacard.presentation.screens.detailsScreen.component.statusAndRatingSlot
 
+import org.ensodai.avalonmediacard.designsystem.theme.AvalonTheme
+
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.Icon
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
+import org.ensodai.avalonmediacard.designsystem.components.AvalonIcon as Icon
+import org.ensodai.avalonmediacard.designsystem.components.AvalonText as Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -83,7 +84,7 @@ fun StatusDropdownButton(
     } else {
         stringResource(Res.string.details_status_add)
     }
-    val iconTint = if (currentStatusOption != null) MaterialTheme.colorScheme.primary else Color.White.copy(alpha = 0.7f)
+    val iconTint = if (currentStatusOption != null) AvalonTheme.colors.primary else Color.White.copy(alpha = 0.7f)
 
     fun safeDismiss() {
         expanded = false
@@ -183,8 +184,8 @@ fun StatusDropdownButton(
                         AvalonDropdownMenuItem(
                             text = optionLabel,
                             icon = if (isSelected) Lucide.Check else null,
-                            textColor = if (isSelected) MaterialTheme.colorScheme.primary else Color.White,
-                            iconColor = if (isSelected) MaterialTheme.colorScheme.primary else Color.White,
+                            textColor = if (isSelected) AvalonTheme.colors.primary else Color.White,
+                            iconColor = if (isSelected) AvalonTheme.colors.primary else Color.White,
                             onClick = {
                                 val newStatus = if (isSelected) MediaStatus.NONE else option.status
                                 val action = component.statusOptions[newStatus]

@@ -1,5 +1,7 @@
 package org.ensodai.avalonmediacard.presentation.screens.detailsScreen.targets.tv.components
 
+import org.ensodai.avalonmediacard.designsystem.theme.AvalonTheme
+
 import androidx.compose.foundation.background
 import androidx.compose.foundation.focusGroup
 import androidx.compose.foundation.layout.*
@@ -7,9 +9,8 @@ import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.Icon
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
+import org.ensodai.avalonmediacard.designsystem.components.AvalonIcon as Icon
+import org.ensodai.avalonmediacard.designsystem.components.AvalonText as Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -468,7 +469,7 @@ private fun TvEpisodeInfoBanner(
                         Text(
                             text = focusedEpisode.airDate.orEmpty(),
                             fontSize = 12.sp,
-                            color = MaterialTheme.colorScheme.primary,
+                            color = AvalonTheme.colors.primary,
                             fontWeight = FontWeight.Medium
                         )
                     }

@@ -1,5 +1,7 @@
 package org.ensodai.avalonmediacard.presentation.screens.commonComponents
 
+import org.ensodai.avalonmediacard.designsystem.theme.AvalonTheme
+
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -11,9 +13,8 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.material3.Icon
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
+import org.ensodai.avalonmediacard.designsystem.components.AvalonIcon as Icon
+import org.ensodai.avalonmediacard.designsystem.components.AvalonText as Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -63,7 +64,7 @@ fun AvalonTextField(
     var isFocused by remember { mutableStateOf(false) }
 
     val borderColor by animateColorAsState(
-        targetValue = if (isFocused) MaterialTheme.colorScheme.primary else Color.Transparent
+        targetValue = if (isFocused) AvalonTheme.colors.primary else Color.Transparent
     )
 
     val interactionSource = remember { MutableInteractionSource() }
@@ -80,7 +81,7 @@ fun AvalonTextField(
                 defaultBorderWidth = 0.dp
             )
             .clip(shape)
-            .background(MaterialTheme.colorScheme.surface)
+            .background(AvalonTheme.colors.surface)
             .border(1.dp, borderColor, shape)
             .clickable(
                 interactionSource = interactionSource,
@@ -100,11 +101,11 @@ fun AvalonTextField(
             value = value,
             onValueChange = onValueChange,
             textStyle = TextStyle(
-                color = MaterialTheme.colorScheme.onSurface,
+                color = AvalonTheme.colors.onSurface,
                 fontSize = fontSize,
                 fontWeight = FontWeight.Medium
             ),
-            cursorBrush = SolidColor(MaterialTheme.colorScheme.primary),
+            cursorBrush = SolidColor(AvalonTheme.colors.primary),
             modifier = Modifier
                 .weight(1f)
                 .focusRequester(effectiveRequester)

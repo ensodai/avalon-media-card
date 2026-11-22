@@ -12,10 +12,9 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
-import androidx.compose.material3.Icon
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Surface
-import androidx.compose.material3.Text
+import org.ensodai.avalonmediacard.designsystem.components.AvalonIcon as Icon
+import org.ensodai.avalonmediacard.designsystem.components.AvalonSurface as Surface
+import org.ensodai.avalonmediacard.designsystem.components.AvalonText as Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -28,7 +27,7 @@ import com.composables.icons.lucide.Lucide
 import com.composables.icons.lucide.Share2
 import org.ensodai.avalonmediacard.contract.model.ArchetypeDto
 import org.ensodai.avalonmediacard.contract.model.ArchetypeType
-import org.ensodai.avalonmediacard.presentation.theme.AvalonTheme
+import org.ensodai.avalonmediacard.designsystem.theme.AvalonTheme
 import org.jetbrains.compose.resources.stringResource
 
 @Composable
@@ -118,7 +117,7 @@ fun ArchetypeCard(
                             Spacer(modifier = Modifier.width(6.dp))
                             Text(
                                 text = stringResource(Res.string.stats_archetype_share),
-                                style = MaterialTheme.typography.labelSmall,
+                                style = AvalonTheme.typography.labelSmall,
                                 fontWeight = FontWeight.SemiBold,
                                 color = colors.textPrimary
                             )

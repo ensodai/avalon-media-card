@@ -1,11 +1,12 @@
 package org.ensodai.avalonmediacard.presentation.screens.admin.components.proxy
 
+import org.ensodai.avalonmediacard.designsystem.theme.AvalonTheme
+
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
+import org.ensodai.avalonmediacard.designsystem.components.AvalonText as Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
@@ -49,10 +50,10 @@ fun ProxyTypeButton(
 ) {
     val shape = RoundedCornerShape(8.dp)
     val bgColor by animateColorAsState(
-        targetValue = if (isSelected) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.4f)
+        targetValue = if (isSelected) AvalonTheme.colors.primary else AvalonTheme.colors.surfaceVariant.copy(alpha = 0.4f)
     )
     val textColor by animateColorAsState(
-        targetValue = if (isSelected) MaterialTheme.colorScheme.onPrimary else MaterialTheme.colorScheme.onSurfaceVariant
+        targetValue = if (isSelected) AvalonTheme.colors.onPrimary else AvalonTheme.colors.onSurfaceVariant
     )
 
     Box(

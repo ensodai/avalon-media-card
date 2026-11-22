@@ -6,7 +6,7 @@ import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.gestures.awaitFirstDown
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.material3.Icon
+import org.ensodai.avalonmediacard.designsystem.components.AvalonIcon as Icon
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi

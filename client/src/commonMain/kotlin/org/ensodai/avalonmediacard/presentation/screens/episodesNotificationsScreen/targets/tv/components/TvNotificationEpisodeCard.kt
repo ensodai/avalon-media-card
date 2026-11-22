@@ -1,5 +1,7 @@
 package org.ensodai.avalonmediacard.presentation.screens.episodesNotificationsScreen.targets.tv.components
 
+import org.ensodai.avalonmediacard.designsystem.theme.AvalonTheme
+
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.background
@@ -20,9 +22,8 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.Icon
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
+import org.ensodai.avalonmediacard.designsystem.components.AvalonIcon as Icon
+import org.ensodai.avalonmediacard.designsystem.components.AvalonText as Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -128,7 +129,7 @@ fun TvNotificationEpisodeCard(
                 activeBorderWidth = 2.dp,
                 activeBorderColor = Color.White,
                 defaultBorderWidth = 1.dp,
-                defaultBorderColor = if (isCurrentFocused) Color.White.copy(alpha = 0.3f) else MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.25f),
+                defaultBorderColor = if (isCurrentFocused) Color.White.copy(alpha = 0.3f) else AvalonTheme.colors.outlineVariant.copy(alpha = 0.25f),
                 shape = RoundedCornerShape(12.dp),
                 tiltEnabled = false,
                 clickEnabled = false,
@@ -138,7 +139,7 @@ fun TvNotificationEpisodeCard(
                 }
             )
             .clip(RoundedCornerShape(12.dp))
-            .background(MaterialTheme.colorScheme.surface.copy(alpha = 0.65f))
+            .background(AvalonTheme.colors.surface.copy(alpha = 0.65f))
             .clickable(
                 interactionSource = remember { MutableInteractionSource() },
                 indication = null,
@@ -229,12 +230,12 @@ fun TvNotificationEpisodeCard(
                         .align(Alignment.TopStart)
                         .padding(6.dp)
                         .clip(RoundedCornerShape(4.dp))
-                        .background(MaterialTheme.colorScheme.primary)
+                        .background(AvalonTheme.colors.primary)
                         .padding(horizontal = 5.dp, vertical = 2.dp)
                 ) {
                     Text(
                         text = stringResource(Res.string.episodes_notifications_badge_new),
-                        color = MaterialTheme.colorScheme.onPrimary,
+                        color = AvalonTheme.colors.onPrimary,
                         fontSize = 9.sp,
                         fontWeight = FontWeight.Bold
                     )
@@ -318,7 +319,7 @@ fun TvNotificationEpisodeCard(
                     text = episodePrefix,
                     fontSize = 11.sp,
                     fontWeight = FontWeight.Bold,
-                    color = MaterialTheme.colorScheme.primary.copy(alpha = if (isFocused) 1f else 0.8f),
+                    color = AvalonTheme.colors.primary.copy(alpha = if (isFocused) 1f else 0.8f),
                     maxLines = 1,
                     overflow = TextOverflow.Ellipsis
                 )
@@ -329,7 +330,7 @@ fun TvNotificationEpisodeCard(
                 text = title,
                 fontSize = 13.sp,
                 fontWeight = FontWeight.SemiBold,
-                color = if (isFocused) Color.White else MaterialTheme.colorScheme.onSurface.copy(alpha = 0.85f),
+                color = if (isFocused) Color.White else AvalonTheme.colors.onSurface.copy(alpha = 0.85f),
                 maxLines = 1,
                 overflow = TextOverflow.Ellipsis
             )
@@ -345,7 +346,7 @@ fun TvNotificationEpisodeCardSkeleton(
         modifier = modifier
             .width(250.dp)
             .padding(vertical = 4.dp)
-            .background(MaterialTheme.colorScheme.surface.copy(alpha = 0.4f), RoundedCornerShape(12.dp))
+            .background(AvalonTheme.colors.surface.copy(alpha = 0.4f), RoundedCornerShape(12.dp))
     ) {
         Box(
             modifier = Modifier

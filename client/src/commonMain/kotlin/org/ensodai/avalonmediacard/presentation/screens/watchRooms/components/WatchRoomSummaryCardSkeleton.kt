@@ -1,5 +1,7 @@
 package org.ensodai.avalonmediacard.presentation.screens.watchRooms.components
 
+import org.ensodai.avalonmediacard.designsystem.theme.AvalonTheme
+
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
@@ -14,7 +16,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -40,10 +41,10 @@ fun WatchRoomSummaryCardSkeleton(
             .fillMaxWidth()
             .height(210.dp)
             .clip(RoundedCornerShape(14.dp))
-            .background(MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.25f))
+            .background(AvalonTheme.colors.surfaceVariant.copy(alpha = 0.25f))
             .border(
                 width = 1.dp,
-                color = MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.20f),
+                color = AvalonTheme.colors.outlineVariant.copy(alpha = 0.20f),
                 shape = RoundedCornerShape(14.dp)
             )
             .padding(16.dp)

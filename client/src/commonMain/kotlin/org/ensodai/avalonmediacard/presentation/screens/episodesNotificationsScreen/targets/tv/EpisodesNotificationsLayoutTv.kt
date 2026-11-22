@@ -1,5 +1,7 @@
 package org.ensodai.avalonmediacard.presentation.screens.episodesNotificationsScreen.targets.tv
 
+import org.ensodai.avalonmediacard.designsystem.theme.AvalonTheme
+
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -13,8 +15,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
+import org.ensodai.avalonmediacard.designsystem.components.AvalonText as Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -76,7 +77,7 @@ fun EpisodesNotificationsLayoutTv(
         Box(
             modifier = modifier
                 .fillMaxSize()
-                .background(MaterialTheme.colorScheme.background)
+                .background(AvalonTheme.colors.background)
         ) {
             Column(
                 modifier = Modifier
@@ -153,7 +154,7 @@ fun EpisodesNotificationsLayoutTv(
                                             text = section.title.uppercase(),
                                             fontSize = 13.sp,
                                             fontWeight = FontWeight.Bold,
-                                            color = MaterialTheme.colorScheme.primary,
+                                            color = AvalonTheme.colors.primary,
                                             letterSpacing = TextUnit(1.2f, TextUnitType.Sp),
                                             modifier = Modifier.padding(start = 16.dp, end = 16.dp, top = 4.dp, bottom = 2.dp)
                                         )

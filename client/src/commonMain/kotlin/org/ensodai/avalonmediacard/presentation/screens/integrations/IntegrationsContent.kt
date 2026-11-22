@@ -1,13 +1,14 @@
 package org.ensodai.avalonmediacard.presentation.screens.integrations
 
+import org.ensodai.avalonmediacard.designsystem.theme.AvalonTheme
+
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.GridItemSpan
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
+import org.ensodai.avalonmediacard.designsystem.components.AvalonText as Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
@@ -29,7 +30,7 @@ fun IntegrationsContent(
         columns = GridCells.Adaptive(minSize = 340.dp),
         modifier = modifier
             .fillMaxSize()
-            .background(MaterialTheme.colorScheme.background),
+            .background(AvalonTheme.colors.background),
         contentPadding = PaddingValues(24.dp),
         horizontalArrangement = Arrangement.spacedBy(16.dp),
         verticalArrangement = Arrangement.spacedBy(16.dp)
@@ -40,13 +41,13 @@ fun IntegrationsContent(
                     text = stringResource(Res.string.integrations_title),
                     fontSize = 28.sp,
                     fontWeight = FontWeight.Bold,
-                    color = MaterialTheme.colorScheme.onBackground
+                    color = AvalonTheme.colors.onBackground
                 )
                 Spacer(modifier = Modifier.height(8.dp))
                 Text(
                     text = stringResource(Res.string.integrations_subtitle),
                     fontSize = 14.sp,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                    color = AvalonTheme.colors.onSurfaceVariant
                 )
                 Spacer(modifier = Modifier.height(24.dp))
             }

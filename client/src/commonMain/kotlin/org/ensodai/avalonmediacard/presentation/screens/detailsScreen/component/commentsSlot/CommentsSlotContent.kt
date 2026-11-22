@@ -1,5 +1,7 @@
 package org.ensodai.avalonmediacard.presentation.screens.detailsScreen.component.commentsSlot
 
+import org.ensodai.avalonmediacard.designsystem.theme.AvalonTheme
+
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.background
@@ -13,9 +15,8 @@ import androidx.compose.foundation.relocation.BringIntoViewRequester
 import androidx.compose.foundation.relocation.bringIntoViewRequester
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.Icon
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
+import org.ensodai.avalonmediacard.designsystem.components.AvalonIcon as Icon
+import org.ensodai.avalonmediacard.designsystem.components.AvalonText as Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -87,7 +88,7 @@ fun CommentsSlotContent(
             text = component.title,
             fontSize = 18.sp,
             fontWeight = FontWeight.SemiBold,
-            color = if (isLoading) Color.Transparent else MaterialTheme.colorScheme.onSurface,
+            color = if (isLoading) Color.Transparent else AvalonTheme.colors.onSurface,
             modifier = Modifier
                 .padding(horizontal = 40.dp, vertical = 4.dp)
                 .shimmerPlaceholder(isLoading, RoundedCornerShape(4.dp))
@@ -222,15 +223,15 @@ private fun CommentCard(comment: CommentItem) {
         }
     }
 
-    val defaultBorderColor = MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.3f)
-    val backgroundColor = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.2f)
+    val defaultBorderColor = AvalonTheme.colors.outlineVariant.copy(alpha = 0.3f)
+    val backgroundColor = AvalonTheme.colors.surfaceVariant.copy(alpha = 0.2f)
 
     // НОВОЕ: Динамические цвета для текста! Если карточка активна - текст белеет.
     val authorTextColor by animateColorAsState(
-        targetValue = if (isActive) Color.White else MaterialTheme.colorScheme.onSurface
+        targetValue = if (isActive) Color.White else AvalonTheme.colors.onSurface
     )
     val commentTextColor by animateColorAsState(
-        targetValue = if (isActive) Color.White.copy(alpha = 0.9f) else MaterialTheme.colorScheme.onSurfaceVariant
+        targetValue = if (isActive) Color.White.copy(alpha = 0.9f) else AvalonTheme.colors.onSurfaceVariant
     )
 
     // НОВОЕ: Решаем, какой цвет рамки будет при активности.
@@ -293,7 +294,7 @@ private fun CommentCard(comment: CommentItem) {
                 modifier = Modifier.size(36.dp),
                 shape = CircleShape,
                 errorIcon = Lucide.User,
-                errorIconTint = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.6f),
+                errorIconTint = AvalonTheme.colors.onSurfaceVariant.copy(alpha = 0.6f),
                 contentScale = ContentScale.Crop
             )
 
@@ -316,7 +317,7 @@ private fun CommentCard(comment: CommentItem) {
                     Text(
                         text = date,
                         fontSize = 11.sp,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.7f) // Дату можно не высветлять, чтобы был контраст
+                        color = AvalonTheme.colors.onSurfaceVariant.copy(alpha = 0.7f) // Дату можно не высветлять, чтобы был контраст
                     )
                 }
             }
@@ -359,7 +360,7 @@ private fun CommentCard(comment: CommentItem) {
                     Text(
                         text = comment.likesCount.toString(),
                         fontSize = 12.sp,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                        color = AvalonTheme.colors.onSurfaceVariant
                     )
                 }
             }
@@ -374,22 +375,22 @@ private fun CommentCard(comment: CommentItem) {
                 modifier = Modifier
                     .fillMaxWidth()
                     .weight(1f, fill = false)
-                    .background(MaterialTheme.colorScheme.errorContainer.copy(alpha = 0.15f), RoundedCornerShape(8.dp))
-                    .border(1.dp, MaterialTheme.colorScheme.error.copy(alpha = 0.2f), RoundedCornerShape(8.dp))
+                    .background(AvalonTheme.colors.errorContainer.copy(alpha = 0.15f), RoundedCornerShape(8.dp))
+                    .border(1.dp, AvalonTheme.colors.error.copy(alpha = 0.2f), RoundedCornerShape(8.dp))
                     .padding(horizontal = 12.dp, vertical = 8.dp),
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Icon(
                     imageVector = Lucide.EyeOff,
                     contentDescription = "Spoiler warning",
-                    tint = MaterialTheme.colorScheme.error,
+                    tint = AvalonTheme.colors.error,
                     modifier = Modifier.size(16.dp)
                 )
                 Spacer(modifier = Modifier.width(8.dp))
                 Text(
                     text = stringResource(Res.string.details_comments_spoilers),
                     fontSize = 12.sp,
-                    color = MaterialTheme.colorScheme.onErrorContainer,
+                    color = AvalonTheme.colors.onErrorContainer,
                     fontWeight = FontWeight.Medium,
                     maxLines = 1,
                     overflow = TextOverflow.Ellipsis

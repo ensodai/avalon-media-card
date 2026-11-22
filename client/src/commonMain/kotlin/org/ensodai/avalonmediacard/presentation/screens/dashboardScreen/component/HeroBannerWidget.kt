@@ -13,11 +13,10 @@ import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.Icon
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Surface
-import androidx.compose.material3.Text
 import androidx.compose.runtime.*
+import org.ensodai.avalonmediacard.designsystem.components.AvalonIcon as Icon
+import org.ensodai.avalonmediacard.designsystem.components.AvalonSurface as Surface
+import org.ensodai.avalonmediacard.designsystem.components.AvalonText as Text
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -45,7 +44,7 @@ import avalonmediacard.client.generated.resources.*
 import org.ensodai.avalonmediacard.presentation.core.SlotUiState
 import org.ensodai.avalonmediacard.presentation.screens.commonComponents.LocalDeviceTarget
 import org.ensodai.avalonmediacard.presentation.screens.commonComponents.tvAndWebHoverEffect
-import org.ensodai.avalonmediacard.presentation.theme.AvalonTheme
+import org.ensodai.avalonmediacard.designsystem.theme.AvalonTheme
 import org.jetbrains.compose.resources.stringResource
 import kotlin.time.Duration.Companion.milliseconds
 import org.ensodai.avalonmediacard.contract.logging.AppLogging

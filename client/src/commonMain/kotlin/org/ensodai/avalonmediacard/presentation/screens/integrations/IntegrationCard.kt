@@ -1,5 +1,13 @@
 package org.ensodai.avalonmediacard.presentation.screens.integrations
 
+import org.ensodai.avalonmediacard.designsystem.theme.AvalonTheme
+import org.ensodai.avalonmediacard.designsystem.components.AvalonButton as Button
+import org.ensodai.avalonmediacard.designsystem.components.AvalonText as Text
+import org.ensodai.avalonmediacard.designsystem.components.AvalonCircularProgressIndicator
+import org.ensodai.avalonmediacard.designsystem.components.ButtonDefaults
+import org.ensodai.avalonmediacard.designsystem.components.ButtonColors
+import org.ensodai.avalonmediacard.designsystem.components.AvalonSwitch as Switch
+
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.background
@@ -8,7 +16,6 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicTextField
-import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -64,15 +71,15 @@ private fun IntegrationCardInternal(
     val textStates = remember { mutableStateMapOf<String, String>() }
     val toggleStates = remember { mutableStateMapOf<String, Boolean>() }
 
-    val defaultBorderColor = MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.3f)
+    val defaultBorderColor = AvalonTheme.colors.outlineVariant.copy(alpha = 0.3f)
     val activeBorderColor = Color.White.copy(alpha = 0.8f)
-    val backgroundColor = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.2f)
+    val backgroundColor = AvalonTheme.colors.surfaceVariant.copy(alpha = 0.2f)
 
     val titleTextColor by animateColorAsState(
-        targetValue = if (isHovered) Color.White else MaterialTheme.colorScheme.onSurface
+        targetValue = if (isHovered) Color.White else AvalonTheme.colors.onSurface
     )
     val descTextColor by animateColorAsState(
-        targetValue = if (isHovered) Color.White.copy(alpha = 0.9f) else MaterialTheme.colorScheme.onSurfaceVariant
+        targetValue = if (isHovered) Color.White.copy(alpha = 0.9f) else AvalonTheme.colors.onSurfaceVariant
     )
 
     val hoverModifier = if (isExpanded) {
@@ -189,15 +196,15 @@ private fun IntegrationCardInternal(
                         },
                         enabled = component.isSaveEnabled && !isExecuting,
                         colors = ButtonDefaults.buttonColors(
-                            containerColor = MaterialTheme.colorScheme.primary,
-                            contentColor = MaterialTheme.colorScheme.onPrimary
+                            containerColor = AvalonTheme.colors.primary,
+                            contentColor = AvalonTheme.colors.onPrimary
                         ),
                         shape = RoundedCornerShape(8.dp),
                         modifier = Modifier.align(Alignment.End)
                     ) {
                         if (isExecuting) {
-                            androidx.compose.material3.CircularProgressIndicator(
-                                color = MaterialTheme.colorScheme.onPrimary,
+                            AvalonCircularProgressIndicator(
+                                color = AvalonTheme.colors.onPrimary,
                                 modifier = Modifier.size(16.dp),
                                 strokeWidth = 2.dp
                             )
@@ -234,10 +241,10 @@ private fun StatusBadge(status: ValidationStatus) {
         ValidationStatus.Error -> {
             statusText = stringResource(Res.string.integrations_error)
             badgeColors = ButtonDefaults.buttonColors(
-                containerColor = MaterialTheme.colorScheme.error.copy(alpha = 0.2f),
-                contentColor = MaterialTheme.colorScheme.error,
-                disabledContainerColor = MaterialTheme.colorScheme.error.copy(alpha = 0.2f),
-                disabledContentColor = MaterialTheme.colorScheme.error
+                containerColor = AvalonTheme.colors.error.copy(alpha = 0.2f),
+                contentColor = AvalonTheme.colors.error,
+                disabledContainerColor = AvalonTheme.colors.error.copy(alpha = 0.2f),
+                disabledContentColor = AvalonTheme.colors.error
             )
         }
 
@@ -334,7 +341,7 @@ private fun TextFieldRow(
                     .weight(1f)
                     .alpha(if (field.isEnabled) 1f else 0.5f)
                     .background(Color.Black.copy(alpha = 0.2f), RoundedCornerShape(8.dp))
-                    .border(1.dp, MaterialTheme.colorScheme.outline.copy(alpha = 0.5f), RoundedCornerShape(8.dp)),
+                    .border(1.dp, AvalonTheme.colors.outline.copy(alpha = 0.5f), RoundedCornerShape(8.dp)),
                 decorationBox = { innerTextField ->
                     Box(
                         modifier = Modifier
@@ -375,8 +382,8 @@ private fun TextFieldRow(
                     shape = RoundedCornerShape(8.dp)
                 ) {
                     if (isExecuting) {
-                        androidx.compose.material3.CircularProgressIndicator(
-                            color = MaterialTheme.colorScheme.onPrimary,
+                        AvalonCircularProgressIndicator(
+                            color = AvalonTheme.colors.onPrimary,
                             modifier = Modifier.size(16.dp),
                             strokeWidth = 2.dp
                         )
@@ -429,7 +436,7 @@ private fun InfoFieldRow(
             Spacer(modifier = Modifier.height(6.dp))
             Text(
                 text = field.actionLabel ?: stringResource(Res.string.integrations_details),
-                color = MaterialTheme.colorScheme.primary,
+                color = AvalonTheme.colors.primary,
                 fontSize = 13.sp,
                 fontWeight = FontWeight.Bold,
                 modifier = Modifier.clickable { onAction(action) }

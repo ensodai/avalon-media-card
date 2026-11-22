@@ -1,5 +1,7 @@
 package org.ensodai.avalonmediacard.presentation.screens.player.component.reactions
 
+import org.ensodai.avalonmediacard.designsystem.theme.AvalonTheme
+
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
@@ -13,9 +15,8 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.material3.Icon
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
+import org.ensodai.avalonmediacard.designsystem.components.AvalonIcon as Icon
+import org.ensodai.avalonmediacard.designsystem.components.AvalonText as Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -63,19 +64,19 @@ fun WatchPartyReactionsControl(
                 .size(42.dp)
                 .clip(CircleShape)
                 .background(
-                    if (isExpanded) MaterialTheme.colorScheme.primary.copy(alpha = 0.35f)
+                    if (isExpanded) AvalonTheme.colors.primary.copy(alpha = 0.35f)
                     else Color.Black.copy(alpha = 0.65f)
                 )
                 .border(
                     width = 1.dp,
-                    color = if (isExpanded) MaterialTheme.colorScheme.primary.copy(alpha = 0.60f)
+                    color = if (isExpanded) AvalonTheme.colors.primary.copy(alpha = 0.60f)
                     else Color.White.copy(alpha = 0.10f),
                     shape = CircleShape
                 )
                 .tvAndWebHoverEffect(
                     scaleTarget = 1.08f,
                     shape = CircleShape,
-                    activeBorderColor = MaterialTheme.colorScheme.primary,
+                    activeBorderColor = AvalonTheme.colors.primary,
                     activeBorderWidth = 1.5.dp,
                     defaultBorderColor = Color.Transparent,
                     defaultBorderWidth = 0.dp,
@@ -87,7 +88,7 @@ fun WatchPartyReactionsControl(
             Icon(
                 imageVector = Lucide.Smile,
                 contentDescription = "Reactions",
-                tint = if (isExpanded) MaterialTheme.colorScheme.primary else Color.White,
+                tint = if (isExpanded) AvalonTheme.colors.primary else Color.White,
                 modifier = Modifier.size(20.dp)
             )
         }
@@ -147,7 +148,7 @@ fun WatchPartyReactionsBar(
                         .tvAndWebHoverEffect(
                             scaleTarget = 1.30f,
                             shape = CircleShape,
-                            activeBorderColor = MaterialTheme.colorScheme.primary,
+                            activeBorderColor = AvalonTheme.colors.primary,
                             activeBorderWidth = 2.dp,
                             onClick = { onSendReaction(emoji) }
                         ),

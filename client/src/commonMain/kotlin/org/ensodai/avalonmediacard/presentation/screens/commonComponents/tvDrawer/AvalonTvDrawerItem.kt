@@ -1,12 +1,13 @@
 package org.ensodai.avalonmediacard.presentation.screens.commonComponents.tvDrawer
 
+import org.ensodai.avalonmediacard.designsystem.theme.AvalonTheme
+
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.Icon
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
+import org.ensodai.avalonmediacard.designsystem.components.AvalonIcon as Icon
+import org.ensodai.avalonmediacard.designsystem.components.AvalonText as Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -40,7 +41,7 @@ fun AvalonTvDrawerItem(
 
     val backgroundColor by animateColorAsState(
         targetValue = when {
-            isSelected -> MaterialTheme.colorScheme.primary.copy(alpha = 0.22f)
+            isSelected -> AvalonTheme.colors.primary.copy(alpha = 0.22f)
             isFocused -> Color.White.copy(alpha = 0.14f)
             else -> Color.White.copy(alpha = 0.05f)
         }
@@ -53,7 +54,7 @@ fun AvalonTvDrawerItem(
             .onFocusChanged { isFocused = it.isFocused }
             .tvAndWebHoverEffect(
                 scaleTarget = 1.02f,
-                activeBorderColor = MaterialTheme.colorScheme.primary,
+                activeBorderColor = AvalonTheme.colors.primary,
                 activeBorderWidth = 1.5.dp,
                 shape = RoundedCornerShape(12.dp),
                 onClick = onClick
@@ -67,7 +68,7 @@ fun AvalonTvDrawerItem(
             Icon(
                 imageVector = icon,
                 contentDescription = null,
-                tint = if (isSelected) MaterialTheme.colorScheme.primary else Color.White.copy(alpha = if (isFocused) 0.95f else 0.7f),
+                tint = if (isSelected) AvalonTheme.colors.primary else Color.White.copy(alpha = if (isFocused) 0.95f else 0.7f),
                 modifier = Modifier.size(24.dp)
             )
             Spacer(modifier = Modifier.width(14.dp))
@@ -76,7 +77,7 @@ fun AvalonTvDrawerItem(
         Column(modifier = Modifier.weight(1f)) {
             Text(
                 text = title,
-                color = if (isSelected) MaterialTheme.colorScheme.primary else Color.White,
+                color = if (isSelected) AvalonTheme.colors.primary else Color.White,
                 fontSize = 17.sp,
                 fontWeight = if (isSelected || isFocused) FontWeight.Bold else FontWeight.Medium
             )
@@ -93,7 +94,7 @@ fun AvalonTvDrawerItem(
             Icon(
                 imageVector = Lucide.Check,
                 contentDescription = "Selected",
-                tint = MaterialTheme.colorScheme.primary,
+                tint = AvalonTheme.colors.primary,
                 modifier = Modifier.size(20.dp)
             )
         }

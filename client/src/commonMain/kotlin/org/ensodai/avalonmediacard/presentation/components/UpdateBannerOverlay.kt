@@ -1,5 +1,7 @@
 package org.ensodai.avalonmediacard.presentation.components
 
+import org.ensodai.avalonmediacard.designsystem.theme.AvalonTheme
+
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
@@ -19,12 +21,11 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.Button
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Surface
-import androidx.compose.material3.Text
+import org.ensodai.avalonmediacard.designsystem.components.AvalonButton as Button
+import org.ensodai.avalonmediacard.designsystem.components.AvalonIcon as Icon
+import org.ensodai.avalonmediacard.designsystem.components.AvalonIconButton as IconButton
+import org.ensodai.avalonmediacard.designsystem.components.AvalonSurface as Surface
+import org.ensodai.avalonmediacard.designsystem.components.AvalonText as Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -67,11 +68,10 @@ fun UpdateBannerOverlay(
                     .clip(RoundedCornerShape(16.dp))
                     .border(
                         width = 1.dp,
-                        color = MaterialTheme.colorScheme.primary.copy(alpha = 0.5f),
+                        color = AvalonTheme.colors.primary.copy(alpha = 0.5f),
                         shape = RoundedCornerShape(16.dp)
                     ),
-                color = MaterialTheme.colorScheme.surface.copy(alpha = 0.95f),
-                shadowElevation = 8.dp
+                color = AvalonTheme.colors.surface.copy(alpha = 0.95f)
             ) {
                 Row(
                     modifier = Modifier
@@ -83,14 +83,14 @@ fun UpdateBannerOverlay(
                         modifier = Modifier
                             .size(36.dp)
                             .clip(CircleShape)
-                            .background(MaterialTheme.colorScheme.primary.copy(alpha = 0.2f)),
+                            .background(AvalonTheme.colors.primary.copy(alpha = 0.2f)),
                         contentAlignment = Alignment.Center
                     ) {
                         Icon(
                             imageVector = Lucide.Sparkles,
                             contentDescription = null,
                             modifier = Modifier.size(20.dp),
-                            tint = MaterialTheme.colorScheme.primary
+                            tint = AvalonTheme.colors.primary
                         )
                     }
 
@@ -99,7 +99,7 @@ fun UpdateBannerOverlay(
                             text = stringResource(Res.string.update_banner_title),
                             fontSize = 14.sp,
                             fontWeight = FontWeight.SemiBold,
-                            color = MaterialTheme.colorScheme.onSurface
+                            color = AvalonTheme.colors.onSurface
                         )
                         Text(
                             text = if (!versionName.isNullOrBlank()) {
@@ -108,7 +108,7 @@ fun UpdateBannerOverlay(
                                 stringResource(Res.string.update_banner_click_to_apply)
                             },
                             fontSize = 12.sp,
-                            color = MaterialTheme.colorScheme.onSurfaceVariant
+                            color = AvalonTheme.colors.onSurfaceVariant
                         )
                     }
 
@@ -136,7 +136,7 @@ fun UpdateBannerOverlay(
                             imageVector = Lucide.X,
                             contentDescription = stringResource(Res.string.common_close),
                             modifier = Modifier.size(18.dp),
-                            tint = MaterialTheme.colorScheme.onSurfaceVariant
+                            tint = AvalonTheme.colors.onSurfaceVariant
                         )
                     }
                 }

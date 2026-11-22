@@ -1,14 +1,15 @@
 package org.ensodai.avalonmediacard.presentation.screens.settings
 
+import org.ensodai.avalonmediacard.designsystem.theme.AvalonTheme
+
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material3.Icon
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
+import org.ensodai.avalonmediacard.designsystem.components.AvalonIcon as Icon
+import org.ensodai.avalonmediacard.designsystem.components.AvalonText as Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -108,7 +109,7 @@ fun SettingsScreen(
     Box(
         modifier = Modifier
             .fillMaxSize()
-            .background(MaterialTheme.colorScheme.background)
+            .background(AvalonTheme.colors.background)
     ) {
         Column(
             modifier = Modifier
@@ -133,13 +134,13 @@ fun SettingsScreen(
                         text = stringResource(Res.string.settings_title),
                         fontSize = 28.sp,
                         fontWeight = FontWeight.Bold,
-                        color = MaterialTheme.colorScheme.onBackground
+                        color = AvalonTheme.colors.onBackground
                     )
                     Spacer(modifier = Modifier.height(4.dp))
                     Text(
                         text = stringResource(Res.string.settings_subtitle),
                         fontSize = 14.sp,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                        color = AvalonTheme.colors.onSurfaceVariant
                     )
                 }
 
@@ -148,8 +149,8 @@ fun SettingsScreen(
                     modifier = Modifier
                         .fillMaxWidth()
                         .clip(RoundedCornerShape(16.dp))
-                        .background(MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.2f))
-                        .border(1.dp, MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.3f), RoundedCornerShape(16.dp))
+                        .background(AvalonTheme.colors.surfaceVariant.copy(alpha = 0.2f))
+                        .border(1.dp, AvalonTheme.colors.outlineVariant.copy(alpha = 0.3f), RoundedCornerShape(16.dp))
                         .padding(24.dp),
                     verticalArrangement = Arrangement.spacedBy(16.dp)
                 ) {
@@ -160,14 +161,14 @@ fun SettingsScreen(
                         Icon(
                             imageVector = Lucide.Settings,
                             contentDescription = null,
-                            tint = MaterialTheme.colorScheme.primary,
+                            tint = AvalonTheme.colors.primary,
                             modifier = Modifier.size(24.dp)
                         )
                         Text(
                             text = stringResource(Res.string.settings_section_general),
                             fontSize = 18.sp,
                             fontWeight = FontWeight.Bold,
-                            color = MaterialTheme.colorScheme.onSurface
+                            color = AvalonTheme.colors.onSurface
                         )
                     }
 
@@ -218,7 +219,7 @@ fun SettingsScreen(
                             text = uiModeTitle,
                             fontSize = 15.sp,
                             fontWeight = FontWeight.Medium,
-                            color = MaterialTheme.colorScheme.onSurface
+                            color = AvalonTheme.colors.onSurface
                         )
                         UiModeSegmentedSelector(
                             currentMode = state.uiModeOverride,
@@ -233,8 +234,8 @@ fun SettingsScreen(
                     modifier = Modifier
                         .fillMaxWidth()
                         .clip(RoundedCornerShape(16.dp))
-                        .background(MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.2f))
-                        .border(1.dp, MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.3f), RoundedCornerShape(16.dp))
+                        .background(AvalonTheme.colors.surfaceVariant.copy(alpha = 0.2f))
+                        .border(1.dp, AvalonTheme.colors.outlineVariant.copy(alpha = 0.3f), RoundedCornerShape(16.dp))
                         .padding(24.dp),
                     verticalArrangement = Arrangement.spacedBy(16.dp)
                 ) {
@@ -245,14 +246,14 @@ fun SettingsScreen(
                         Icon(
                             imageVector = Lucide.Globe,
                             contentDescription = null,
-                            tint = MaterialTheme.colorScheme.primary,
+                            tint = AvalonTheme.colors.primary,
                             modifier = Modifier.size(24.dp)
                         )
                         Text(
                             text = stringResource(Res.string.settings_section_media),
                             fontSize = 18.sp,
                             fontWeight = FontWeight.Bold,
-                            color = MaterialTheme.colorScheme.onSurface
+                            color = AvalonTheme.colors.onSurface
                         )
                     }
 
@@ -388,8 +389,8 @@ fun SettingsScreen(
                     modifier = Modifier
                         .fillMaxWidth()
                         .clip(RoundedCornerShape(16.dp))
-                        .background(MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.2f))
-                        .border(1.dp, MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.3f), RoundedCornerShape(16.dp))
+                        .background(AvalonTheme.colors.surfaceVariant.copy(alpha = 0.2f))
+                        .border(1.dp, AvalonTheme.colors.outlineVariant.copy(alpha = 0.3f), RoundedCornerShape(16.dp))
                         .padding(24.dp),
                     verticalArrangement = Arrangement.spacedBy(16.dp)
                 ) {
@@ -405,14 +406,14 @@ fun SettingsScreen(
                             Icon(
                                 imageVector = Lucide.Key,
                                 contentDescription = null,
-                                tint = MaterialTheme.colorScheme.primary,
+                                tint = AvalonTheme.colors.primary,
                                 modifier = Modifier.size(24.dp)
                             )
                             Text(
                                 text = stringResource(Res.string.settings_tmdb_token_title),
                                 fontSize = 18.sp,
                                 fontWeight = FontWeight.Bold,
-                                color = MaterialTheme.colorScheme.onSurface
+                                color = AvalonTheme.colors.onSurface
                             )
                         }
 
@@ -422,12 +423,12 @@ fun SettingsScreen(
                                 .clip(RoundedCornerShape(6.dp))
                                 .background(
                                     if (isConfigured) Color(0xFF10B981).copy(alpha = 0.15f)
-                                    else MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.5f)
+                                    else AvalonTheme.colors.surfaceVariant.copy(alpha = 0.5f)
                                 )
                                 .border(
                                     1.dp,
                                     if (isConfigured) Color(0xFF10B981).copy(alpha = 0.4f)
-                                    else MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.3f),
+                                    else AvalonTheme.colors.outlineVariant.copy(alpha = 0.3f),
                                     RoundedCornerShape(6.dp)
                                 )
                                 .padding(horizontal = 8.dp, vertical = 4.dp)
@@ -436,7 +437,7 @@ fun SettingsScreen(
                                 text = if (isConfigured) stringResource(Res.string.admin_integrations_configured) else stringResource(Res.string.admin_integrations_not_set),
                                 fontSize = 12.sp,
                                 fontWeight = FontWeight.SemiBold,
-                                color = if (isConfigured) Color(0xFF10B981) else MaterialTheme.colorScheme.onSurfaceVariant
+                                color = if (isConfigured) Color(0xFF10B981) else AvalonTheme.colors.onSurfaceVariant
                             )
                         }
                     }
@@ -444,7 +445,7 @@ fun SettingsScreen(
                     Text(
                         text = stringResource(Res.string.settings_tmdb_token_description),
                         fontSize = 13.sp,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                        color = AvalonTheme.colors.onSurfaceVariant
                     )
 
                     AvalonTextField(
@@ -455,7 +456,7 @@ fun SettingsScreen(
                             Icon(
                                 imageVector = Lucide.Key,
                                 contentDescription = null,
-                                tint = MaterialTheme.colorScheme.onSurfaceVariant,
+                                tint = AvalonTheme.colors.onSurfaceVariant,
                                 modifier = Modifier.size(20.dp)
                             )
                         },
@@ -477,7 +478,7 @@ fun SettingsScreen(
                     }
 
                     if (state.error != null) {
-                        Text(text = state.error!!, color = MaterialTheme.colorScheme.error, fontSize = 13.sp)
+                        Text(text = state.error!!, color = AvalonTheme.colors.error, fontSize = 13.sp)
                     }
                     if (state.successMessage != null) {
                         Text(text = state.successMessage!!, color = Color(0xFF10B981), fontSize = 13.sp)
@@ -489,7 +490,7 @@ fun SettingsScreen(
                     text = "Avalon Media Card v${AppVersion.displayVersion}",
                     fontSize = 12.sp,
                     fontWeight = FontWeight.Normal,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.5f),
+                    color = AvalonTheme.colors.onSurfaceVariant.copy(alpha = 0.5f),
                     modifier = Modifier.align(Alignment.CenterHorizontally)
                 )
             }
@@ -520,7 +521,7 @@ private fun SettingsRowItem(
                     activeBorderWidth = 1.5.dp
                 )
                 .clip(RoundedCornerShape(12.dp))
-                .background(MaterialTheme.colorScheme.surface.copy(alpha = 0.4f))
+                .background(AvalonTheme.colors.surface.copy(alpha = 0.4f))
                 .padding(horizontal = 16.dp, vertical = 14.dp),
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.SpaceBetween
@@ -530,19 +531,19 @@ private fun SettingsRowItem(
                     text = title,
                     fontSize = 15.sp,
                     fontWeight = FontWeight.Medium,
-                    color = MaterialTheme.colorScheme.onSurface
+                    color = AvalonTheme.colors.onSurface
                 )
                 Spacer(modifier = Modifier.height(2.dp))
                 Text(
                     text = value,
                     fontSize = 13.sp,
-                    color = MaterialTheme.colorScheme.primary
+                    color = AvalonTheme.colors.primary
                 )
             }
             Icon(
                 imageVector = icon,
                 contentDescription = null,
-                tint = MaterialTheme.colorScheme.onSurfaceVariant,
+                tint = AvalonTheme.colors.onSurfaceVariant,
                 modifier = Modifier.size(20.dp)
             )
         }
@@ -602,8 +603,8 @@ private fun UiModeSegmentedSelector(
         modifier = modifier
             .fillMaxWidth()
             .clip(RoundedCornerShape(12.dp))
-            .background(MaterialTheme.colorScheme.surface.copy(alpha = 0.4f))
-            .border(1.dp, MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.2f), RoundedCornerShape(12.dp))
+            .background(AvalonTheme.colors.surface.copy(alpha = 0.4f))
+            .border(1.dp, AvalonTheme.colors.outlineVariant.copy(alpha = 0.2f), RoundedCornerShape(12.dp))
             .padding(4.dp),
         horizontalArrangement = Arrangement.spacedBy(6.dp)
     ) {
@@ -630,7 +631,7 @@ private fun UiModeSegmentedSelector(
                 Icon(
                     imageVector = icon,
                     contentDescription = null,
-                    tint = if (isSelected) Color.Black else MaterialTheme.colorScheme.onSurfaceVariant,
+                    tint = if (isSelected) Color.Black else AvalonTheme.colors.onSurfaceVariant,
                     modifier = Modifier.size(18.dp)
                 )
                 Spacer(modifier = Modifier.width(8.dp))
@@ -638,7 +639,7 @@ private fun UiModeSegmentedSelector(
                     text = stringResource(titleRes),
                     fontSize = 14.sp,
                     fontWeight = if (isSelected) FontWeight.Bold else FontWeight.Medium,
-                    color = if (isSelected) Color.Black else MaterialTheme.colorScheme.onSurfaceVariant
+                    color = if (isSelected) Color.Black else AvalonTheme.colors.onSurfaceVariant
                 )
             }
         }

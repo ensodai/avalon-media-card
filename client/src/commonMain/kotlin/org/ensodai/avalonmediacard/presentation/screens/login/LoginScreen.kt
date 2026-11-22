@@ -1,11 +1,16 @@
 package org.ensodai.avalonmediacard.presentation.screens.login
 
+import org.ensodai.avalonmediacard.designsystem.theme.AvalonTheme
+import org.ensodai.avalonmediacard.designsystem.components.AvalonCard as Card
+import org.ensodai.avalonmediacard.designsystem.components.CardDefaults
+import org.ensodai.avalonmediacard.designsystem.components.AvalonText as Text
+import org.ensodai.avalonmediacard.designsystem.components.AvalonIcon as Icon
+
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -77,7 +82,7 @@ fun LoginScreen(
     BoxWithConstraints(
         modifier = Modifier
             .fillMaxSize()
-            .background(MaterialTheme.colorScheme.background)
+            .background(AvalonTheme.colors.background)
     ) {
         Box(
             modifier = Modifier
@@ -91,7 +96,7 @@ fun LoginScreen(
                 modifier = Modifier
                     .widthIn(max = 420.dp)
                     .fillMaxWidth(),
-                colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface)
+                colors = CardDefaults.cardColors(containerColor = AvalonTheme.colors.surface)
             ) {
                 Column(
                     modifier = Modifier
@@ -103,7 +108,7 @@ fun LoginScreen(
                         text = if (isRegisterMode) stringResource(Res.string.login_title_sign_up) else stringResource(Res.string.login_title_sign_in),
                         fontSize = 28.sp,
                         fontWeight = FontWeight.Bold,
-                        color = MaterialTheme.colorScheme.onSurface
+                        color = AvalonTheme.colors.onSurface
                     )
                     
                     Spacer(modifier = Modifier.height(24.dp))
@@ -119,7 +124,7 @@ fun LoginScreen(
                             Icon(
                                 imageVector = Lucide.User,
                                 contentDescription = null,
-                                tint = MaterialTheme.colorScheme.onSurfaceVariant,
+                                tint = AvalonTheme.colors.onSurfaceVariant,
                                 modifier = Modifier.size(20.dp)
                             )
                         },
@@ -141,7 +146,7 @@ fun LoginScreen(
                             Icon(
                                 imageVector = Lucide.Lock,
                                 contentDescription = null,
-                                tint = MaterialTheme.colorScheme.onSurfaceVariant,
+                                tint = AvalonTheme.colors.onSurfaceVariant,
                                 modifier = Modifier.size(20.dp)
                             )
                         },
@@ -161,7 +166,7 @@ fun LoginScreen(
                             Icon(
                                 imageVector = Lucide.Globe,
                                 contentDescription = null,
-                                tint = MaterialTheme.colorScheme.onSurfaceVariant,
+                                tint = AvalonTheme.colors.onSurfaceVariant,
                                 modifier = Modifier.size(20.dp)
                             )
                         },
@@ -172,7 +177,7 @@ fun LoginScreen(
                         Spacer(modifier = Modifier.height(16.dp))
                         Text(
                             text = error!!,
-                            color = MaterialTheme.colorScheme.error,
+                            color = AvalonTheme.colors.error,
                             fontSize = 14.sp
                         )
                     }
@@ -229,7 +234,7 @@ fun LoginScreen(
                         },
                         enabled = !isLoading,
                         containerColor = Color.Transparent,
-                        contentColor = MaterialTheme.colorScheme.primary,
+                        contentColor = AvalonTheme.colors.primary,
                         modifier = Modifier.fillMaxWidth()
                     )
                 }

@@ -1,12 +1,13 @@
 package org.ensodai.avalonmediacard.presentation.screens.admin.components.proxy
 
+import org.ensodai.avalonmediacard.designsystem.theme.AvalonTheme
+
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.Icon
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
+import org.ensodai.avalonmediacard.designsystem.components.AvalonIcon as Icon
+import org.ensodai.avalonmediacard.designsystem.components.AvalonText as Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -62,8 +63,8 @@ fun PluginProxyStatusBanners(
                 modifier = Modifier
                     .fillMaxWidth()
                     .clip(RoundedCornerShape(8.dp))
-                    .background(MaterialTheme.colorScheme.primary.copy(alpha = 0.12f))
-                    .border(1.dp, MaterialTheme.colorScheme.primary.copy(alpha = 0.35f), RoundedCornerShape(8.dp))
+                    .background(AvalonTheme.colors.primary.copy(alpha = 0.12f))
+                    .border(1.dp, AvalonTheme.colors.primary.copy(alpha = 0.35f), RoundedCornerShape(8.dp))
                     .padding(horizontal = 12.dp, vertical = 10.dp),
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.spacedBy(10.dp)
@@ -71,14 +72,14 @@ fun PluginProxyStatusBanners(
                 Icon(
                     imageVector = Lucide.Check,
                     contentDescription = null,
-                    tint = MaterialTheme.colorScheme.primary,
+                    tint = AvalonTheme.colors.primary,
                     modifier = Modifier.size(18.dp)
                 )
                 Text(
                     text = saveResult,
                     fontSize = 12.sp,
                     fontWeight = FontWeight.Medium,
-                    color = MaterialTheme.colorScheme.primary
+                    color = AvalonTheme.colors.primary
                 )
             }
         }

@@ -1,5 +1,7 @@
 package org.ensodai.avalonmediacard.presentation.screens.episodesNotificationsScreen.component
 
+import org.ensodai.avalonmediacard.designsystem.theme.AvalonTheme
+
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -11,10 +13,9 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.Button
-import androidx.compose.material3.Icon
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
+import org.ensodai.avalonmediacard.designsystem.components.AvalonButton as Button
+import org.ensodai.avalonmediacard.designsystem.components.AvalonIcon as Icon
+import org.ensodai.avalonmediacard.designsystem.components.AvalonText as Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -53,13 +54,13 @@ fun EpisodesNotificationsEmptyState(
                 modifier = Modifier
                     .size(80.dp)
                     .clip(CircleShape)
-                    .background(MaterialTheme.colorScheme.primaryContainer.copy(alpha = 0.6f)),
+                    .background(AvalonTheme.colors.primaryContainer.copy(alpha = 0.6f)),
                 contentAlignment = Alignment.Center
             ) {
                 Icon(
                     imageVector = Lucide.CheckCheck,
                     contentDescription = null,
-                    tint = MaterialTheme.colorScheme.primary,
+                    tint = AvalonTheme.colors.primary,
                     modifier = Modifier.size(44.dp)
                 )
             }
@@ -68,9 +69,9 @@ fun EpisodesNotificationsEmptyState(
 
             Text(
                 text = stringResource(Res.string.episodes_notifications_empty_title),
-                style = MaterialTheme.typography.titleLarge.copy(
+                style = AvalonTheme.typography.titleLarge.copy(
                     fontWeight = FontWeight.Bold,
-                    color = MaterialTheme.colorScheme.onSurface
+                    color = AvalonTheme.colors.onSurface
                 ),
                 textAlign = TextAlign.Center
             )
@@ -79,8 +80,8 @@ fun EpisodesNotificationsEmptyState(
 
             Text(
                 text = stringResource(Res.string.episodes_notifications_empty_desc),
-                style = MaterialTheme.typography.bodyMedium.copy(
-                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                style = AvalonTheme.typography.bodyMedium.copy(
+                    color = AvalonTheme.colors.onSurfaceVariant
                 ),
                 textAlign = TextAlign.Center,
                 modifier = Modifier.padding(horizontal = 16.dp)

@@ -1,5 +1,7 @@
 package org.ensodai.avalonmediacard.presentation.screens.watchRooms.targets.tv
 
+import org.ensodai.avalonmediacard.designsystem.theme.AvalonTheme
+
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.focusGroup
 import androidx.compose.foundation.gestures.BringIntoViewSpec
@@ -17,9 +19,8 @@ import androidx.compose.foundation.lazy.grid.GridItemSpan
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.lazy.grid.itemsIndexed
-import androidx.compose.material3.CircularProgressIndicator
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
+import org.ensodai.avalonmediacard.designsystem.components.AvalonCircularProgressIndicator as CircularProgressIndicator
+import org.ensodai.avalonmediacard.designsystem.components.AvalonText as Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.LaunchedEffect
@@ -161,14 +162,14 @@ fun WatchRoomsLayoutTv(
                         text = stringResource(Res.string.watch_rooms_history_title),
                         fontSize = 22.sp,
                         fontWeight = FontWeight.SemiBold,
-                        color = MaterialTheme.colorScheme.onBackground
+                        color = AvalonTheme.colors.onBackground
                     )
 
                     if (state.isLoading) {
                         CircularProgressIndicator(
                             modifier = Modifier.size(20.dp),
                             strokeWidth = 2.dp,
-                            color = MaterialTheme.colorScheme.primary
+                            color = AvalonTheme.colors.primary
                         )
                     }
                 }
@@ -193,7 +194,7 @@ fun WatchRoomsLayoutTv(
                             Text(
                                 text = stringResource(Res.string.watch_rooms_history_empty),
                                 fontSize = 16.sp,
-                                color = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.5f)
+                                color = AvalonTheme.colors.onBackground.copy(alpha = 0.5f)
                             )
                         }
                     }

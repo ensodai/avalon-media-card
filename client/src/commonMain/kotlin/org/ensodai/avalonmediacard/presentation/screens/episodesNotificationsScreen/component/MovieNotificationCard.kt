@@ -1,5 +1,7 @@
 package org.ensodai.avalonmediacard.presentation.screens.episodesNotificationsScreen.component
 
+import org.ensodai.avalonmediacard.designsystem.theme.AvalonTheme
+
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -17,11 +19,10 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.Card
-import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.Icon
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
+import org.ensodai.avalonmediacard.designsystem.components.AvalonCard as Card
+import org.ensodai.avalonmediacard.designsystem.components.CardDefaults
+import org.ensodai.avalonmediacard.designsystem.components.AvalonIcon as Icon
+import org.ensodai.avalonmediacard.designsystem.components.AvalonText as Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -72,13 +73,13 @@ fun MovieNotificationCard(
     Card(
         shape = RoundedCornerShape(16.dp),
         colors = CardDefaults.cardColors(
-            containerColor = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.2f)
+            containerColor = AvalonTheme.colors.surfaceVariant.copy(alpha = 0.2f)
         ),
         modifier = modifier
             .fillMaxWidth()
             .border(
                 width = 1.dp,
-                color = MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.3f),
+                color = AvalonTheme.colors.outlineVariant.copy(alpha = 0.3f),
                 shape = RoundedCornerShape(16.dp)
             )
             .clip(RoundedCornerShape(16.dp))
@@ -124,12 +125,12 @@ fun MovieNotificationCard(
                         .align(Alignment.TopStart)
                         .padding(8.dp)
                         .clip(RoundedCornerShape(4.dp))
-                        .background(MaterialTheme.colorScheme.primary)
+                        .background(AvalonTheme.colors.primary)
                         .padding(horizontal = 6.dp, vertical = 2.dp)
                 ) {
                     Text(
                         text = if (item.isNew) stringResource(Res.string.episodes_notifications_badge_movie_new) else stringResource(Res.string.episodes_notifications_badge_movie),
-                        color = MaterialTheme.colorScheme.onPrimary,
+                        color = AvalonTheme.colors.onPrimary,
                         fontSize = 10.sp,
                         fontWeight = FontWeight.Bold
                     )
@@ -186,13 +187,13 @@ fun MovieNotificationCard(
                             modifier = Modifier
                                 .size(44.dp)
                                 .clip(RoundedCornerShape(22.dp))
-                                .background(MaterialTheme.colorScheme.primary),
+                                .background(AvalonTheme.colors.primary),
                             contentAlignment = Alignment.Center
                         ) {
                             Icon(
                                 imageVector = Lucide.Play,
                                 contentDescription = null,
-                                tint = MaterialTheme.colorScheme.onPrimary,
+                                tint = AvalonTheme.colors.onPrimary,
                                 modifier = Modifier.size(22.dp)
                             )
                         }
@@ -217,9 +218,9 @@ fun MovieNotificationCard(
                     ) {
                         Text(
                             text = item.showTitle,
-                            style = MaterialTheme.typography.titleMedium.copy(
+                            style = AvalonTheme.typography.titleMedium.copy(
                                 fontWeight = FontWeight.Bold,
-                                color = MaterialTheme.colorScheme.onSurface
+                                color = AvalonTheme.colors.onSurface
                             ),
                             maxLines = 1,
                             overflow = TextOverflow.Ellipsis,
@@ -231,8 +232,8 @@ fun MovieNotificationCard(
                         if (formattedDate != null) {
                             Text(
                                 text = formattedDate,
-                                style = MaterialTheme.typography.labelSmall.copy(
-                                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                                style = AvalonTheme.typography.labelSmall.copy(
+                                    color = AvalonTheme.colors.onSurfaceVariant
                                 )
                             )
                         }
@@ -243,9 +244,9 @@ fun MovieNotificationCard(
                     Spacer(modifier = Modifier.height(2.dp))
                     Text(
                         text = tagText,
-                        style = MaterialTheme.typography.bodyMedium.copy(
+                        style = AvalonTheme.typography.bodyMedium.copy(
                             fontWeight = FontWeight.SemiBold,
-                            color = MaterialTheme.colorScheme.primary
+                            color = AvalonTheme.colors.primary
                         ),
                         maxLines = 1,
                         overflow = TextOverflow.Ellipsis
@@ -256,8 +257,8 @@ fun MovieNotificationCard(
                         Spacer(modifier = Modifier.height(6.dp))
                         Text(
                             text = overview,
-                            style = MaterialTheme.typography.bodySmall.copy(
-                                color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.85f),
+                            style = AvalonTheme.typography.bodySmall.copy(
+                                color = AvalonTheme.colors.onSurfaceVariant.copy(alpha = 0.85f),
                                 lineHeight = 17.sp
                             ),
                             maxLines = 3,
@@ -283,7 +284,7 @@ fun MovieNotificationCard(
                                     onClick = { onAction(playAction) }
                                 )
                                 .clip(RoundedCornerShape(8.dp))
-                                .background(MaterialTheme.colorScheme.primary)
+                                .background(AvalonTheme.colors.primary)
                                 .padding(horizontal = 14.dp, vertical = 7.dp),
                             verticalAlignment = Alignment.CenterVertically,
                             horizontalArrangement = Arrangement.Center
@@ -291,13 +292,13 @@ fun MovieNotificationCard(
                             Icon(
                                 imageVector = Lucide.Play,
                                 contentDescription = null,
-                                tint = MaterialTheme.colorScheme.onPrimary,
+                                tint = AvalonTheme.colors.onPrimary,
                                 modifier = Modifier.size(14.dp)
                             )
                             Spacer(modifier = Modifier.width(6.dp))
                             Text(
                                 text = stringResource(Res.string.episodes_notifications_watch_episode),
-                                color = MaterialTheme.colorScheme.onPrimary,
+                                color = AvalonTheme.colors.onPrimary,
                                 fontSize = 12.sp,
                                 fontWeight = FontWeight.SemiBold
                             )
@@ -315,7 +316,7 @@ fun MovieNotificationCard(
                                 )
                                 .clip(RoundedCornerShape(8.dp))
                                 .border(1.dp, Color.White.copy(alpha = 0.2f), RoundedCornerShape(8.dp))
-                                .background(MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.35f))
+                                .background(AvalonTheme.colors.surfaceVariant.copy(alpha = 0.35f))
                                 .padding(horizontal = 12.dp, vertical = 7.dp),
                             verticalAlignment = Alignment.CenterVertically,
                             horizontalArrangement = Arrangement.Center
@@ -323,13 +324,13 @@ fun MovieNotificationCard(
                             Icon(
                                 imageVector = Lucide.Check,
                                 contentDescription = null,
-                                tint = MaterialTheme.colorScheme.onSurface,
+                                tint = AvalonTheme.colors.onSurface,
                                 modifier = Modifier.size(14.dp)
                             )
                             Spacer(modifier = Modifier.width(6.dp))
                             Text(
                                 text = stringResource(Res.string.episodes_notifications_mark_watched),
-                                color = MaterialTheme.colorScheme.onSurface,
+                                color = AvalonTheme.colors.onSurface,
                                 fontSize = 12.sp,
                                 fontWeight = FontWeight.Medium
                             )
@@ -346,10 +347,10 @@ fun MovieNotificationCard(
                                     onClick = { onAction(openDetailsAction) }
                                 )
                                 .clip(RoundedCornerShape(8.dp))
-                                .background(MaterialTheme.colorScheme.surface.copy(alpha = 0.6f))
+                                .background(AvalonTheme.colors.surface.copy(alpha = 0.6f))
                                 .border(
                                     1.dp,
-                                    MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.3f),
+                                    AvalonTheme.colors.outlineVariant.copy(alpha = 0.3f),
                                     RoundedCornerShape(8.dp)
                                 )
                                 .padding(horizontal = 12.dp, vertical = 7.dp),
@@ -358,7 +359,7 @@ fun MovieNotificationCard(
                         ) {
                             Text(
                                 text = stringResource(Res.string.episodes_notifications_about_movie),
-                                color = MaterialTheme.colorScheme.onSurface,
+                                color = AvalonTheme.colors.onSurface,
                                 fontSize = 12.sp,
                                 fontWeight = FontWeight.Medium
                             )
@@ -366,7 +367,7 @@ fun MovieNotificationCard(
                             Icon(
                                 imageVector = Lucide.ChevronRight,
                                 contentDescription = null,
-                                tint = MaterialTheme.colorScheme.onSurfaceVariant,
+                                tint = AvalonTheme.colors.onSurfaceVariant,
                                 modifier = Modifier.size(14.dp)
                             )
                         }

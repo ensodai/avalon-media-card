@@ -1,5 +1,7 @@
 package org.ensodai.avalonmediacard.presentation.screens.episodesNotificationsScreen.component
 
+import org.ensodai.avalonmediacard.designsystem.theme.AvalonTheme
+
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -17,11 +19,10 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.Card
-import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.Icon
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
+import org.ensodai.avalonmediacard.designsystem.components.AvalonCard as Card
+import org.ensodai.avalonmediacard.designsystem.components.CardDefaults
+import org.ensodai.avalonmediacard.designsystem.components.AvalonIcon as Icon
+import org.ensodai.avalonmediacard.designsystem.components.AvalonText as Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -73,13 +74,13 @@ fun ShowGroupCard(
     Card(
         shape = RoundedCornerShape(16.dp),
         colors = CardDefaults.cardColors(
-            containerColor = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.2f)
+            containerColor = AvalonTheme.colors.surfaceVariant.copy(alpha = 0.2f)
         ),
         modifier = modifier
             .fillMaxWidth()
             .border(
                 width = 1.dp,
-                color = MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.3f),
+                color = AvalonTheme.colors.outlineVariant.copy(alpha = 0.3f),
                 shape = RoundedCornerShape(16.dp)
             )
             .clip(RoundedCornerShape(16.dp))
@@ -107,7 +108,7 @@ fun ShowGroupCard(
                             .width(36.dp)
                             .height(52.dp)
                             .clip(RoundedCornerShape(6.dp))
-                            .background(MaterialTheme.colorScheme.surfaceVariant)
+                            .background(AvalonTheme.colors.surfaceVariant)
                             .clickable(enabled = openDetailsAction != null) {
                                 openDetailsAction?.let(onAction)
                             }
@@ -125,9 +126,9 @@ fun ShowGroupCard(
                     Column(modifier = Modifier.weight(1f)) {
                         Text(
                             text = showTitle,
-                            style = MaterialTheme.typography.titleMedium.copy(
+                            style = AvalonTheme.typography.titleMedium.copy(
                                 fontWeight = FontWeight.Bold,
-                                color = MaterialTheme.colorScheme.onSurface
+                                color = AvalonTheme.colors.onSurface
                             ),
                             maxLines = 1,
                             overflow = TextOverflow.Ellipsis,
@@ -151,8 +152,8 @@ fun ShowGroupCard(
 
                             Text(
                                 text = countText,
-                                style = MaterialTheme.typography.bodySmall.copy(
-                                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                                style = AvalonTheme.typography.bodySmall.copy(
+                                    color = AvalonTheme.colors.onSurfaceVariant
                                 )
                             )
 
@@ -160,17 +161,17 @@ fun ShowGroupCard(
                                 Box(
                                     modifier = Modifier
                                         .clip(RoundedCornerShape(4.dp))
-                                        .background(MaterialTheme.colorScheme.primary.copy(alpha = 0.2f))
+                                        .background(AvalonTheme.colors.primary.copy(alpha = 0.2f))
                                         .border(
                                             1.dp,
-                                            MaterialTheme.colorScheme.primary.copy(alpha = 0.5f),
+                                            AvalonTheme.colors.primary.copy(alpha = 0.5f),
                                             RoundedCornerShape(4.dp)
                                         )
                                         .padding(horizontal = 6.dp, vertical = 1.dp)
                                 ) {
                                     Text(
                                         text = stringResource(Res.string.episodes_notifications_new_count, newCount),
-                                        color = MaterialTheme.colorScheme.primary,
+                                        color = AvalonTheme.colors.primary,
                                         fontSize = 10.sp,
                                         fontWeight = FontWeight.Bold
                                     )
@@ -193,10 +194,10 @@ fun ShowGroupCard(
                                 onClick = { onAction(openDetailsAction) }
                             )
                             .clip(RoundedCornerShape(8.dp))
-                            .background(MaterialTheme.colorScheme.surface.copy(alpha = 0.6f))
+                            .background(AvalonTheme.colors.surface.copy(alpha = 0.6f))
                             .border(
                                 1.dp,
-                                MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.3f),
+                                AvalonTheme.colors.outlineVariant.copy(alpha = 0.3f),
                                 RoundedCornerShape(8.dp)
                             )
                             .padding(horizontal = 12.dp, vertical = 6.dp),
@@ -206,14 +207,14 @@ fun ShowGroupCard(
                             text = stringResource(Res.string.episodes_notifications_to_show),
                             fontSize = 12.sp,
                             fontWeight = FontWeight.Medium,
-                            color = MaterialTheme.colorScheme.onSurface
+                            color = AvalonTheme.colors.onSurface
                         )
                         Spacer(modifier = Modifier.width(4.dp))
                         Icon(
                             imageVector = Lucide.ChevronRight,
                             contentDescription = null,
                             modifier = Modifier.size(14.dp),
-                            tint = MaterialTheme.colorScheme.onSurfaceVariant
+                            tint = AvalonTheme.colors.onSurfaceVariant
                         )
                     }
                 }

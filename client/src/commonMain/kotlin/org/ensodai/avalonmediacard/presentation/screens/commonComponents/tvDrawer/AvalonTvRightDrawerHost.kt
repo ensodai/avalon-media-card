@@ -1,5 +1,7 @@
 package org.ensodai.avalonmediacard.presentation.screens.commonComponents.tvDrawer
 
+import org.ensodai.avalonmediacard.designsystem.theme.AvalonTheme
+
 import androidx.compose.animation.*
 import androidx.compose.animation.core.FastOutSlowInEasing
 import androidx.compose.animation.core.LinearEasing
@@ -9,9 +11,8 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.focusGroup
 import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.*
-import androidx.compose.material3.Icon
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
+import org.ensodai.avalonmediacard.designsystem.components.AvalonIcon as Icon
+import org.ensodai.avalonmediacard.designsystem.components.AvalonText as Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
@@ -247,7 +248,7 @@ fun AvalonTvRightDrawerHost(
                                                     Icon(
                                                         imageVector = screen.icon!!,
                                                         contentDescription = null,
-                                                        tint = MaterialTheme.colorScheme.primary,
+                                                        tint = AvalonTheme.colors.primary,
                                                         modifier = Modifier.size(28.dp)
                                                     )
                                                     Spacer(modifier = Modifier.width(12.dp))

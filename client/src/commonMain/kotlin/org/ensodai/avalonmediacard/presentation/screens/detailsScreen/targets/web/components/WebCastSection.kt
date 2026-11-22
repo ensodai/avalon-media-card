@@ -1,5 +1,7 @@
 package org.ensodai.avalonmediacard.presentation.screens.detailsScreen.targets.web.components
 
+import org.ensodai.avalonmediacard.designsystem.theme.AvalonTheme
+
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
@@ -8,7 +10,6 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -26,7 +27,7 @@ import org.ensodai.avalonmediacard.contract.slot.CastMemberItem
 import org.ensodai.avalonmediacard.contract.slot.SlotData
 import org.ensodai.avalonmediacard.contract.ui.navigation.Screen
 import org.ensodai.avalonmediacard.designsystem.components.AvalonPersonCard
-import org.ensodai.avalonmediacard.designsystem.theme.AvalonTheme
+import org.ensodai.avalonmediacard.designsystem.components.AvalonText
 import org.ensodai.avalonmediacard.presentation.components.ShimmerImage
 import org.ensodai.avalonmediacard.presentation.components.shimmerPlaceholder
 import org.ensodai.avalonmediacard.presentation.screens.commonComponents.CarouselNavigationZone
@@ -52,7 +53,7 @@ fun WebCastSection(
             .padding(vertical = 16.dp)
     ) {
         // Section Title: clean typography without decorative bar accents
-        Text(
+        AvalonText(
             text = castData.title.ifBlank { "В главных ролях" },
             style = AvalonTheme.typography.sectionTitle.copy(color = AvalonTheme.colors.textPrimary),
             modifier = Modifier.padding(bottom = AvalonTheme.spacing.space16)

@@ -1,5 +1,7 @@
 package org.ensodai.avalonmediacard.presentation.screens.watchRooms.components
 
+import org.ensodai.avalonmediacard.designsystem.theme.AvalonTheme
+
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
@@ -11,9 +13,8 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.Icon
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
+import org.ensodai.avalonmediacard.designsystem.components.AvalonIcon as Icon
+import org.ensodai.avalonmediacard.designsystem.components.AvalonText as Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -48,12 +49,12 @@ fun WatchRoomsHeader(
                 text = stringResource(Res.string.watch_rooms_title),
                 fontSize = titleFontSize,
                 fontWeight = FontWeight.Bold,
-                color = MaterialTheme.colorScheme.onBackground
+                color = AvalonTheme.colors.onBackground
             )
             Text(
                 text = stringResource(Res.string.watch_rooms_subtitle),
                 fontSize = subtitleFontSize,
-                color = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.6f)
+                color = AvalonTheme.colors.onBackground.copy(alpha = 0.6f)
             )
         }
 

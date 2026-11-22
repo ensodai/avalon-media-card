@@ -6,6 +6,7 @@ import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.focusable
 import androidx.compose.foundation.gestures.awaitFirstDown
 import androidx.compose.foundation.hoverable
@@ -79,7 +80,13 @@ fun PremiumSeekBar(
         else -> progress
     }
 
-    val primaryColor = AvalonTheme.colors.primary
+    val colors = AvalonTheme.colors
+    val shapes = AvalonTheme.shapes
+    val primaryColor = colors.accentPrimary
+    val trackInactiveColor = colors.chartTrack
+    val bufferColor = colors.textMuted.copy(alpha = 0.35f)
+    val hoverPreviewColor = colors.borderStrong
+    val focusedThumbInnerColor = colors.bgCanvas
 
     BoxWithConstraints(modifier = modifier) {
         val widthPx = constraints.maxWidth.toFloat()
@@ -206,7 +213,7 @@ fun PremiumSeekBar(
 
             // 1. Background Track (Inactive)
             drawRoundRect(
-                color = Color.White.copy(alpha = 0.2f),
+                color = trackInactiveColor,
                 topLeft = Offset(0f, centerY - trackH / 2f),
                 size = Size(canvasWidth, trackH),
                 cornerRadius = cornerRadius
@@ -215,7 +222,7 @@ fun PremiumSeekBar(
             // 2. Buffer Track
             if (bufferProgress > 0f) {
                 drawRoundRect(
-                    color = Color.White.copy(alpha = 0.4f),
+                    color = bufferColor,
                     topLeft = Offset(0f, centerY - trackH / 2f),
                     size = Size(canvasWidth * bufferProgress, trackH),
                     cornerRadius = cornerRadius
@@ -225,7 +232,7 @@ fun PremiumSeekBar(
             // 3. Hover Preview Track
             if (isActive && !isDragging && hoverProgress > currentDrawProgress) {
                 drawRoundRect(
-                    color = Color.White.copy(alpha = 0.6f),
+                    color = hoverPreviewColor,
                     topLeft = Offset(0f, centerY - trackH / 2f),
                     size = Size(canvasWidth * hoverProgress, trackH),
                     cornerRadius = cornerRadius
@@ -250,7 +257,7 @@ fun PremiumSeekBar(
                 )
                 if (isFocused) {
                     drawCircle(
-                        color = Color.White,
+                        color = focusedThumbInnerColor,
                         radius = tRadius * 0.45f,
                         center = Offset(canvasWidth * currentDrawProgress, centerY)
                     )
@@ -287,14 +294,14 @@ fun PremiumSeekBar(
                         translationX = xPos.coerceIn(0f, maxX)
                         translationY = -size.height - 6.dp.toPx()
                     }
-                    .background(Color.Black.copy(alpha = 0.85f), RoundedCornerShape(6.dp))
+                    .background(colors.bgOverlay, shapes.micro)
+                    .border(1.dp, colors.borderOverlay, shapes.micro)
                     .padding(horizontal = 8.dp, vertical = 4.dp)
             ) {
                 Text(
                     text = formatTime(tooltipTime),
-                    color = Color.White,
-                    fontSize = 12.sp,
-                    fontWeight = FontWeight.Bold
+                    color = colors.textPrimary,
+                    style = AvalonTheme.typography.monoTech
                 )
             }
         }

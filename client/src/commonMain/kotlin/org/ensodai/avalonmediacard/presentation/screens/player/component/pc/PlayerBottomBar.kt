@@ -1,6 +1,11 @@
 package org.ensodai.avalonmediacard.presentation.screens.player.component.pc
 
+import org.ensodai.avalonmediacard.designsystem.theme.AvalonTheme
+import org.ensodai.avalonmediacard.designsystem.components.AvalonDropdownMenu
+import org.ensodai.avalonmediacard.designsystem.components.AvalonDropdownMenuItem
+
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
 import org.ensodai.avalonmediacard.designsystem.components.AvalonIcon as Icon
@@ -17,8 +22,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.composables.icons.lucide.*
 import org.ensodai.avalonmediacard.core.PlaybackController
-import org.ensodai.avalonmediacard.presentation.screens.commonComponents.AvalonDropdownMenu
-import org.ensodai.avalonmediacard.presentation.screens.commonComponents.AvalonDropdownMenuItem
 import org.ensodai.avalonmediacard.presentation.screens.commonComponents.tvAndWebHoverEffect
 import avalonmediacard.client.generated.resources.*
 import org.ensodai.avalonmediacard.presentation.screens.player.action.PlayerActions
@@ -71,6 +74,8 @@ fun PlayerBottomBar(
         if (currentIdx in 0 until playlist.size - 1) playlist.getOrNull(currentIdx + 1) else null
     }
 
+    val colors = AvalonTheme.colors
+
     Column(
         modifier = modifier
             .fillMaxWidth()
@@ -96,8 +101,8 @@ fun PlayerBottomBar(
                     .padding(horizontal = 24.dp)
                     .padding(top = 16.dp, bottom = 8.dp),
                 text = "Live / TS",
-                color = Color.White.copy(alpha = 0.5f),
-                fontSize = 14.sp
+                color = colors.textSecondary,
+                style = AvalonTheme.typography.metadata
             )
         }
 
@@ -113,7 +118,8 @@ fun PlayerBottomBar(
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.spacedBy(12.dp),
                 modifier = Modifier
-                    .background(Color.Black.copy(alpha = 0.65f), CircleShape)
+                    .background(colors.bgOverlay, CircleShape)
+                    .border(1.dp, colors.borderOverlay, CircleShape)
                     .padding(horizontal = 16.dp, vertical = 6.dp)
             ) {
                 // Previous Episode Button (for series)
@@ -136,7 +142,7 @@ fun PlayerBottomBar(
                         Icon(
                             imageVector = Lucide.SkipBack,
                             contentDescription = stringResource(Res.string.player_controls_prev_episode),
-                            tint = if (isPrevEnabled) Color.White else Color.White.copy(alpha = 0.3f),
+                            tint = if (isPrevEnabled) colors.textPrimary else colors.textMuted,
                             modifier = Modifier.size(20.dp)
                         )
                     }
@@ -158,7 +164,7 @@ fun PlayerBottomBar(
                     Icon(
                         imageVector = if (isPlaying) Lucide.Pause else Lucide.Play,
                         contentDescription = "Play/Pause",
-                        tint = Color.White,
+                        tint = colors.textPrimary,
                         modifier = Modifier.size(24.dp)
                     )
                 }
@@ -183,7 +189,7 @@ fun PlayerBottomBar(
                         Icon(
                             imageVector = Lucide.SkipForward,
                             contentDescription = stringResource(Res.string.player_controls_next_episode),
-                            tint = if (isNextEnabled) Color.White else Color.White.copy(alpha = 0.3f),
+                            tint = if (isNextEnabled) colors.textPrimary else colors.textMuted,
                             modifier = Modifier.size(20.dp)
                         )
                     }
@@ -193,16 +199,14 @@ fun PlayerBottomBar(
                 Row(verticalAlignment = Alignment.CenterVertically) {
                     Text(
                         text = formatTime(currentTime),
-                        color = Color.White,
-                        fontSize = 14.sp,
-                        fontWeight = FontWeight.Medium
+                        color = colors.textPrimary,
+                        style = AvalonTheme.typography.monoTech
                     )
                     if (duration > 0.0 && (duration > currentTime || !ctrlState.isBuffering)) {
                         Text(
                             text = " / ${formatTime(duration)}",
-                            color = Color.White.copy(alpha = 0.5f),
-                            fontSize = 14.sp,
-                            fontWeight = FontWeight.Medium
+                            color = colors.textSecondary,
+                            style = AvalonTheme.typography.monoTech
                         )
                     }
                 }
@@ -237,7 +241,8 @@ fun PlayerBottomBar(
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.spacedBy(16.dp),
                 modifier = Modifier
-                    .background(Color.Black.copy(alpha = 0.65f), CircleShape)
+                    .background(colors.bgOverlay, CircleShape)
+                    .border(1.dp, colors.borderOverlay, CircleShape)
                     .padding(horizontal = 16.dp, vertical = 6.dp)
             ) {
                 // Audio Tracks Selector
@@ -260,7 +265,7 @@ fun PlayerBottomBar(
                         Icon(
                             imageVector = Lucide.Languages,
                             contentDescription = stringResource(Res.string.player_audio_tracks),
-                            tint = if (controller.selectedAudioTrack != null) Color(0xFF4CAF50) else Color.White,
+                            tint = if (controller.selectedAudioTrack != null) colors.statusLive else colors.textPrimary,
                             modifier = Modifier.size(22.dp)
                         )
                     }
@@ -326,7 +331,7 @@ fun PlayerBottomBar(
                         Icon(
                             imageVector = Lucide.Captions,
                             contentDescription = stringResource(Res.string.player_subtitles),
-                            tint = if (controller.selectedSubtitleTrack != null || state.selectedSubtitleTrack != null) Color(0xFF4CAF50) else Color.White,
+                            tint = if (controller.selectedSubtitleTrack != null || state.selectedSubtitleTrack != null) colors.statusLive else colors.textPrimary,
                             modifier = Modifier.size(22.dp)
                         )
                     }
@@ -395,9 +400,8 @@ fun PlayerBottomBar(
                         ) {
                             Text(
                                 text = activeQuality,
-                                color = Color(0xFF4CAF50),
-                                fontSize = 14.5.sp,
-                                fontWeight = FontWeight.Bold
+                                color = colors.statusLive,
+                                style = AvalonTheme.typography.labelSmall
                             )
                         }
 
@@ -415,7 +419,7 @@ fun PlayerBottomBar(
                                     AvalonDropdownMenuItem(
                                         text = variant.label + if (isSelected) "  ✓" else "",
                                         icon = null,
-                                        textColor = if (isSelected) Color(0xFF4CAF50) else Color.White,
+                                        textColor = if (isSelected) colors.statusLive else colors.textPrimary,
                                         onClick = {
                                             showQualityMenu = false
                                             if (!isSelected) {
@@ -452,7 +456,7 @@ fun PlayerBottomBar(
                             Icon(
                                 imageVector = Lucide.Settings,
                                 contentDescription = stringResource(Res.string.player_settings_title),
-                                tint = Color.White,
+                                tint = colors.textPrimary,
                                 modifier = Modifier.size(22.dp)
                             )
                         }
@@ -505,7 +509,7 @@ fun PlayerBottomBar(
                     Icon(
                         imageVector = if (isFullscreen) Lucide.Minimize else Lucide.Maximize,
                         contentDescription = stringResource(Res.string.player_fullscreen),
-                        tint = Color.White,
+                        tint = colors.textPrimary,
                         modifier = Modifier.size(22.dp)
                     )
                 }

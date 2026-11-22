@@ -212,6 +212,9 @@ fun PlayerCenterOverlays(
         }
 
         // Индикатор перемотки назад (-10, -20, -30 сек) - только для сенсорных устройств
+        val colors = AvalonTheme.colors
+        val shapes = AvalonTheme.shapes
+
         AnimatedVisibility(
             visible = isTouch && seekDirection == SeekDirection.BACKWARD,
             enter = fadeIn(spring(stiffness = Spring.StiffnessMedium)) + scaleIn(initialScale = 0.82f),
@@ -222,9 +225,9 @@ fun PlayerCenterOverlays(
         ) {
             Box(
                 modifier = Modifier
-                    .clip(RoundedCornerShape(32.dp))
-                    .background(Color.Black.copy(alpha = 0.75f))
-                    .border(1.dp, Color.White.copy(alpha = 0.15f), RoundedCornerShape(32.dp))
+                    .clip(shapes.container)
+                    .background(colors.bgOverlay)
+                    .border(1.dp, colors.borderOverlay, shapes.container)
                     .padding(horizontal = 24.dp, vertical = 18.dp),
                 contentAlignment = Alignment.Center
             ) {
@@ -239,23 +242,22 @@ fun PlayerCenterOverlays(
                         Icon(
                             imageVector = Lucide.RotateCcw,
                             contentDescription = null,
-                            tint = Color.White,
+                            tint = colors.textPrimary,
                             modifier = Modifier.size(28.dp)
                         )
                         Spacer(modifier = Modifier.width(6.dp))
                         Icon(
                             imageVector = Lucide.ChevronLeft,
                             contentDescription = null,
-                            tint = AvalonTheme.colors.primary,
+                            tint = colors.accentPrimary,
                             modifier = Modifier.size(24.dp)
                         )
                     }
                     Spacer(modifier = Modifier.height(6.dp))
                     Text(
                         text = stringResource(Res.string.player_seconds_short_fmt, "-$accumulatedSeconds"),
-                        color = Color.White,
-                        fontSize = 16.sp,
-                        fontWeight = FontWeight.Bold
+                        color = colors.textPrimary,
+                        style = AvalonTheme.typography.cardTitle
                     )
                 }
             }
@@ -272,9 +274,9 @@ fun PlayerCenterOverlays(
         ) {
             Box(
                 modifier = Modifier
-                    .clip(RoundedCornerShape(32.dp))
-                    .background(Color.Black.copy(alpha = 0.75f))
-                    .border(1.dp, Color.White.copy(alpha = 0.15f), RoundedCornerShape(32.dp))
+                    .clip(shapes.container)
+                    .background(colors.bgOverlay)
+                    .border(1.dp, colors.borderOverlay, shapes.container)
                     .padding(horizontal = 24.dp, vertical = 18.dp),
                 contentAlignment = Alignment.Center
             ) {
@@ -289,23 +291,22 @@ fun PlayerCenterOverlays(
                         Icon(
                             imageVector = Lucide.ChevronRight,
                             contentDescription = null,
-                            tint = AvalonTheme.colors.primary,
+                            tint = colors.accentPrimary,
                             modifier = Modifier.size(24.dp)
                         )
                         Spacer(modifier = Modifier.width(6.dp))
                         Icon(
                             imageVector = Lucide.RotateCw,
                             contentDescription = null,
-                            tint = Color.White,
+                            tint = colors.textPrimary,
                             modifier = Modifier.size(28.dp)
                         )
                     }
                     Spacer(modifier = Modifier.height(6.dp))
                     Text(
                         text = stringResource(Res.string.player_seconds_short_fmt, "+$accumulatedSeconds"),
-                        color = Color.White,
-                        fontSize = 16.sp,
-                        fontWeight = FontWeight.Bold
+                        color = colors.textPrimary,
+                        style = AvalonTheme.typography.cardTitle
                     )
                 }
             }
@@ -313,13 +314,13 @@ fun PlayerCenterOverlays(
 
         if (playbackError != null) {
             Card(
-                colors = CardDefaults.cardColors(containerColor = AvalonTheme.colors.statusDanger.copy(alpha = 0.2f)),
+                colors = CardDefaults.cardColors(containerColor = colors.statusDanger.copy(alpha = 0.2f)),
                 modifier = Modifier.align(Alignment.Center).padding(24.dp)
             ) {
                 Column(modifier = Modifier.padding(16.dp), horizontalAlignment = Alignment.CenterHorizontally) {
                     Text(
                         text = playbackError,
-                        color = AvalonTheme.colors.textPrimary,
+                        color = colors.textPrimary,
                         fontWeight = FontWeight.Bold
                     )
                     Spacer(modifier = Modifier.height(12.dp))
@@ -339,7 +340,7 @@ fun PlayerCenterOverlays(
                 contentAlignment = Alignment.Center
             ) {
                 CircularProgressIndicator(
-                    color = Color.White,
+                    color = colors.accentPrimary,
                     modifier = Modifier.size(64.dp)
                 )
             }
@@ -353,12 +354,12 @@ fun PlayerCenterOverlays(
                 modifier = Modifier
                     .align(Alignment.BottomCenter)
                     .padding(bottom = 72.dp)
-                    .background(Color.Black.copy(alpha = 0.5f), RoundedCornerShape(8.dp))
+                    .background(colors.bgPureCinema.copy(alpha = 0.65f), shapes.control)
                     .padding(horizontal = 24.dp, vertical = 12.dp)
             ) {
                 Text(
                     text = currentSubtitleText,
-                    color = Color.White,
+                    color = colors.textPrimary,
                     fontSize = 28.sp,
                     fontWeight = FontWeight.Bold,
                     textAlign = TextAlign.Center,

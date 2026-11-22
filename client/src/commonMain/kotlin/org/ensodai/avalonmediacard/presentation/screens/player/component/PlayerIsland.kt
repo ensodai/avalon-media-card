@@ -41,9 +41,9 @@ import org.ensodai.avalonmediacard.presentation.screens.commonComponents.tvAndWe
 @Composable
 fun PlayerIslandContainer(
     modifier: Modifier = Modifier,
-    shape: Shape = RoundedCornerShape(22.dp),
-    backgroundColor: Color = Color.Black.copy(alpha = 0.65f),
-    borderColor: Color = Color.White.copy(alpha = 0.08f),
+    shape: Shape = AvalonTheme.shapes.container,
+    backgroundColor: Color = AvalonTheme.colors.bgOverlay,
+    borderColor: Color = AvalonTheme.colors.borderOverlay,
     borderWidth: Dp = 1.dp,
     content: @Composable () -> Unit
 ) {
@@ -70,9 +70,9 @@ fun PlayerIslandIconButton(
     shape: Shape = CircleShape,
     size: Dp = 44.dp,
     iconSize: Dp = 22.dp,
-    tint: Color = Color.White,
-    backgroundColor: Color = Color.Black.copy(alpha = 0.65f),
-    borderColor: Color = Color.White.copy(alpha = 0.08f)
+    tint: Color = AvalonTheme.colors.textPrimary,
+    backgroundColor: Color = AvalonTheme.colors.bgOverlay,
+    borderColor: Color = AvalonTheme.colors.borderOverlay
 ) {
     Box(
         modifier = modifier
@@ -80,8 +80,8 @@ fun PlayerIslandIconButton(
             .tvAndWebHoverEffect(
                 scaleTarget = 1.12f,
                 shape = shape,
-                activeBorderColor = AvalonTheme.colors.primary,
-                activeBorderWidth = 2.dp,
+                activeBorderColor = AvalonTheme.colors.accentPrimary,
+                activeBorderWidth = AvalonTheme.elevation.focusBorderWidth,
                 defaultBorderColor = borderColor,
                 defaultBorderWidth = 1.dp,
                 onClick = onClick
@@ -107,7 +107,7 @@ fun PlayerIslandTitle(
     topText: String,
     bottomText: String,
     modifier: Modifier = Modifier,
-    shape: Shape = RoundedCornerShape(22.dp)
+    shape: Shape = AvalonTheme.shapes.container
 ) {
     PlayerIslandContainer(
         modifier = modifier,
@@ -120,9 +120,8 @@ fun PlayerIslandTitle(
             if (topText.isNotBlank()) {
                 Text(
                     text = topText,
-                    color = Color.White.copy(alpha = 0.55f),
-                    fontSize = 12.5.sp,
-                    fontWeight = FontWeight.Medium,
+                    color = AvalonTheme.colors.textSecondary,
+                    style = AvalonTheme.typography.metadata,
                     maxLines = 1,
                     overflow = TextOverflow.Ellipsis
                 )
@@ -130,9 +129,8 @@ fun PlayerIslandTitle(
             }
             Text(
                 text = bottomText,
-                color = Color.White,
-                fontSize = 16.sp,
-                fontWeight = FontWeight.Bold,
+                color = AvalonTheme.colors.textPrimary,
+                style = AvalonTheme.typography.cardTitle,
                 maxLines = 1,
                 overflow = TextOverflow.Ellipsis
             )
@@ -149,19 +147,19 @@ fun PlayerIslandActionButton(
     text: String,
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
-    iconTint: Color = Color.White,
-    textColor: Color = Color.White,
-    shape: Shape = RoundedCornerShape(22.dp),
-    backgroundColor: Color = Color.Black.copy(alpha = 0.65f),
-    borderColor: Color = Color.White.copy(alpha = 0.08f)
+    iconTint: Color = AvalonTheme.colors.textPrimary,
+    textColor: Color = AvalonTheme.colors.textPrimary,
+    shape: Shape = AvalonTheme.shapes.control,
+    backgroundColor: Color = AvalonTheme.colors.bgOverlay,
+    borderColor: Color = AvalonTheme.colors.borderOverlay
 ) {
     Box(
         modifier = modifier
             .tvAndWebHoverEffect(
                 scaleTarget = 1.08f,
                 shape = shape,
-                activeBorderColor = AvalonTheme.colors.primary,
-                activeBorderWidth = 2.dp,
+                activeBorderColor = AvalonTheme.colors.accentPrimary,
+                activeBorderWidth = AvalonTheme.elevation.focusBorderWidth,
                 defaultBorderColor = borderColor,
                 defaultBorderWidth = 1.dp,
                 onClick = onClick
@@ -185,8 +183,7 @@ fun PlayerIslandActionButton(
             Text(
                 text = text,
                 color = textColor,
-                fontSize = 13.5.sp,
-                fontWeight = FontWeight.SemiBold
+                style = AvalonTheme.typography.labelSmall
             )
         }
     }
@@ -205,11 +202,11 @@ fun PlayerIslandDynamicButton(
     modifier: Modifier = Modifier,
     focusRequester: FocusRequester? = null,
     contentDescription: String? = null,
-    iconTint: Color = Color.White,
-    textColor: Color = Color.White,
-    shape: Shape = RoundedCornerShape(22.dp),
-    backgroundColor: Color = Color.Black.copy(alpha = 0.65f),
-    borderColor: Color = Color.White.copy(alpha = 0.08f)
+    iconTint: Color = AvalonTheme.colors.textPrimary,
+    textColor: Color = AvalonTheme.colors.textPrimary,
+    shape: Shape = AvalonTheme.shapes.control,
+    backgroundColor: Color = AvalonTheme.colors.bgOverlay,
+    borderColor: Color = AvalonTheme.colors.borderOverlay
 ) {
     val hasText = !text.isNullOrBlank()
     val finalShape = if (hasText) shape else CircleShape
@@ -225,8 +222,8 @@ fun PlayerIslandDynamicButton(
             .tvAndWebHoverEffect(
                 scaleTarget = 1.08f,
                 shape = finalShape,
-                activeBorderColor = AvalonTheme.colors.primary,
-                activeBorderWidth = 2.dp,
+                activeBorderColor = AvalonTheme.colors.accentPrimary,
+                activeBorderWidth = AvalonTheme.elevation.focusBorderWidth,
                 defaultBorderColor = borderColor,
                 defaultBorderWidth = 1.dp,
                 onClick = onClick
@@ -253,8 +250,7 @@ fun PlayerIslandDynamicButton(
                 Text(
                     text = text,
                     color = textColor,
-                    fontSize = 13.5.sp,
-                    fontWeight = FontWeight.SemiBold
+                    style = AvalonTheme.typography.labelSmall
                 )
             }
         }

@@ -1,5 +1,6 @@
 package org.ensodai.avalonmediacard.presentation.screens.player.component.pc
 
+import org.ensodai.avalonmediacard.designsystem.theme.AvalonTheme
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
@@ -42,6 +43,7 @@ fun PlayerTopBar(
     rightPadding: Dp,
     modifier: Modifier = Modifier
 ) {
+    val colors = AvalonTheme.colors
     val titleData = state.displayTitleData
     val topText = titleData.topText
     val bottomText = titleData.bottomText
@@ -86,8 +88,8 @@ fun PlayerTopBar(
                     icon = Lucide.Wrench,
                     text = stringResource(Res.string.player_test_mode_badge),
                     contentDescription = stringResource(Res.string.player_test_mode_badge),
-                    iconTint = Color(0xFFFFB74D),
-                    textColor = Color(0xFFFFB74D),
+                    iconTint = colors.accentGold,
+                    textColor = colors.accentGold,
                     onClick = {}
                 )
 
@@ -96,8 +98,8 @@ fun PlayerTopBar(
                     icon = Lucide.Check,
                     text = stringResource(Res.string.player_btn_confirm_source),
                     contentDescription = stringResource(Res.string.player_btn_confirm_source),
-                    iconTint = Color(0xFF4CAF50),
-                    textColor = Color(0xFF4CAF50),
+                    iconTint = colors.statusLive,
+                    textColor = colors.statusLive,
                     onClick = { actions.onConfirmSource?.invoke() }
                 )
             }
@@ -114,8 +116,8 @@ fun PlayerTopBar(
                         icon = if (currentEpisode.isWatched) Lucide.Check else Lucide.Eye,
                         text = if (currentEpisode.isWatched) stringResource(Res.string.player_watched) else null,
                         contentDescription = if (currentEpisode.isWatched) stringResource(Res.string.player_watched) else stringResource(Res.string.player_mark_watched),
-                        iconTint = if (currentEpisode.isWatched) Color(0xFF4CAF50) else Color.White.copy(alpha = 0.85f),
-                        textColor = if (currentEpisode.isWatched) Color(0xFF4CAF50) else Color.White,
+                        iconTint = if (currentEpisode.isWatched) colors.statusLive else colors.textPrimary,
+                        textColor = if (currentEpisode.isWatched) colors.statusLive else colors.textPrimary,
                         onClick = { actions.onToggleEpisodeWatched(currentEpisode) }
                     )
 
@@ -125,8 +127,8 @@ fun PlayerTopBar(
                             icon = Lucide.Star,
                             text = currentEpisode.userRating?.toString(),
                             contentDescription = if (currentEpisode.userRating != null) stringResource(Res.string.player_rating_val, currentEpisode.userRating.toString()) else stringResource(Res.string.player_rate),
-                            iconTint = if (currentEpisode.userRating != null) Color(0xFFFFC107) else Color.White.copy(alpha = 0.85f),
-                            textColor = if (currentEpisode.userRating != null) Color(0xFFFFC107) else Color.White,
+                            iconTint = if (currentEpisode.userRating != null) colors.accentGold else colors.textPrimary,
+                            textColor = if (currentEpisode.userRating != null) colors.accentGold else colors.textPrimary,
                             onClick = { showRatingPopup = true }
                         )
 

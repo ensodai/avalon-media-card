@@ -250,7 +250,7 @@ private fun CarouselHeader(
                 .tvAndWebHoverEffect(
                     scaleTarget = 1.0f,
                     activeBorderColor = Color.Transparent,
-                    shape = RoundedCornerShape(8.dp),
+                    shape = AvalonTheme.shapes.control,
                     onStateChange = { isHeaderActive = it },
                     onClick = { onAction(titleAction) }
                 ),
@@ -274,7 +274,7 @@ private fun CarouselHeader(
             text = title,
             style = AvalonTheme.typography.sectionTitle,
             color = if (isLoading) Color.Transparent else AvalonTheme.colors.textPrimary,
-            modifier = modifier.shimmerPlaceholder(isLoading, RoundedCornerShape(4.dp))
+            modifier = modifier.shimmerPlaceholder(isLoading, AvalonTheme.shapes.micro)
         )
     }
 }
@@ -300,7 +300,9 @@ private fun MovieCard(
             .width(cardWidth)
             .aspectRatio(2f / 3f)
             .tvAndWebHoverEffect(
-                shape = RoundedCornerShape(12.dp),
+                shape = AvalonTheme.shapes.media,
+                activeBorderColor = AvalonTheme.colors.borderFocus,
+                activeBorderWidth = AvalonTheme.elevation.focusBorderWidth,
                 onStateChange = { isHoveredOrFocused = it },
                 onClick = {
                     telemetry.logClick(
@@ -329,7 +331,7 @@ private fun MovieCard(
             contentDescription = item.title,
             contentScale = ContentScale.Crop,
             modifier = Modifier.fillMaxSize(),
-            shape = RoundedCornerShape(12.dp)
+            shape = AvalonTheme.shapes.media
         )
 
         // 6% затемняющая вуаль в покое для выравнивания контраста (снимается при hover/focus)
@@ -363,6 +365,6 @@ private fun MovieSkeletonCard(
         modifier = Modifier
             .width(cardWidth)
             .aspectRatio(2f / 3f)
-            .shimmerPlaceholder(true, RoundedCornerShape(12.dp))
+            .shimmerPlaceholder(true, AvalonTheme.shapes.media)
     )
 }

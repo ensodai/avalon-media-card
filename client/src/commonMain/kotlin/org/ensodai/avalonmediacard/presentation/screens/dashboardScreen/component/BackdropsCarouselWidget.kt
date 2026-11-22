@@ -42,6 +42,7 @@ import org.ensodai.avalonmediacard.presentation.screens.commonComponents.LocalDe
 import org.ensodai.avalonmediacard.presentation.screens.commonComponents.TvHorizontalFocusProvider
 import org.ensodai.avalonmediacard.presentation.screens.commonComponents.tvAndWebHoverEffect
 import org.ensodai.avalonmediacard.designsystem.theme.AvalonTheme
+import org.ensodai.avalonmediacard.designsystem.theme.AvalonGradients
 
 @Composable
 fun BackdropsCarouselWidget(
@@ -49,6 +50,8 @@ fun BackdropsCarouselWidget(
     onAction: (Action) -> Unit,
     modifier: Modifier = Modifier
 ) {
+    val shapes = AvalonTheme.shapes
+
     if (state.isLoading && state.data == null) {
         Column(modifier = modifier.fillMaxWidth()) {
             Box(
@@ -57,7 +60,7 @@ fun BackdropsCarouselWidget(
                     .padding(bottom = 16.dp)
                     .width(160.dp)
                     .height(24.dp)
-                    .shimmerPlaceholder(isLoading = true, shape = RoundedCornerShape(4.dp))
+                    .shimmerPlaceholder(isLoading = true, shape = shapes.micro)
             )
             LazyRow(
                 horizontalArrangement = Arrangement.spacedBy(16.dp),
@@ -68,7 +71,7 @@ fun BackdropsCarouselWidget(
                         modifier = Modifier
                             .width(280.dp)
                             .height(158.dp)
-                            .shimmerPlaceholder(isLoading = true, shape = RoundedCornerShape(12.dp))
+                            .shimmerPlaceholder(isLoading = true, shape = shapes.media)
                     )
                 }
             }
@@ -179,6 +182,8 @@ private fun BackdropCard(
     modifier: Modifier = Modifier
 ) {
     var isActive by remember { mutableStateOf(false) }
+    val colors = AvalonTheme.colors
+    val shapes = AvalonTheme.shapes
 
     Box(
         modifier = modifier
@@ -186,9 +191,9 @@ private fun BackdropCard(
             .height(cardHeight)
             .tvAndWebHoverEffect(
                 scaleTarget = 1.05f,
-                activeBorderColor = AvalonTheme.colors.accentPrimary,
-                activeBorderWidth = 2.dp,
-                shape = RoundedCornerShape(12.dp),
+                activeBorderColor = colors.accentPrimary,
+                activeBorderWidth = AvalonTheme.elevation.focusBorderWidth,
+                shape = shapes.media,
                 onStateChange = { isActive = it },
                 onClick = {
                     onAction(ActionNavigate(Screen.Details(item.key)))
@@ -199,18 +204,18 @@ private fun BackdropCard(
             model = item.backdropUrl ?: item.posterUrl,
             contentDescription = item.title,
             contentScale = ContentScale.Crop,
-            shape = RoundedCornerShape(12.dp),
+            shape = shapes.media,
             modifier = Modifier.fillMaxSize()
         )
 
-        // Внутренний волосковый контур 10% белого
+        // Внутренний волосковый контур (Закон 5 Design Craft)
         Box(
             modifier = Modifier
                 .fillMaxSize()
                 .border(
-                    width = 1.dp,
-                    color = Color.White.copy(alpha = 0.10f),
-                    shape = RoundedCornerShape(12.dp)
+                    width = AvalonTheme.elevation.borderWidth,
+                    color = colors.mediaHairline,
+                    shape = shapes.media
                 )
         )
 
@@ -223,15 +228,7 @@ private fun BackdropCard(
             Box(
                 modifier = Modifier
                     .fillMaxSize()
-                    .background(
-                        Brush.verticalGradient(
-                            colorStops = arrayOf(
-                                0.0f to Color.Transparent,
-                                0.5f to Color.Black.copy(alpha = 0.4f),
-                                1.0f to Color.Black.copy(alpha = 0.9f)
-                            )
-                        )
-                    )
+                    .background(AvalonGradients.larsenVerticalScrim(colors.bgCanvas))
             )
         }
 
@@ -251,12 +248,12 @@ private fun BackdropCard(
                 Icon(
                     imageVector = Lucide.Play,
                     contentDescription = null,
-                    tint = AvalonTheme.colors.accentPrimary,
+                    tint = colors.accentPrimary,
                     modifier = Modifier.size(14.dp)
                 )
                 Text(
                     text = item.title,
-                    color = Color.White,
+                    color = colors.textPrimary,
                     style = AvalonTheme.typography.cardTitle,
                     maxLines = 1,
                     overflow = TextOverflow.Ellipsis
@@ -270,7 +267,7 @@ private fun BackdropCard(
                     .align(Alignment.BottomCenter)
                     .fillMaxWidth()
                     .height(3.dp)
-                    .background(AvalonTheme.colors.accentPrimary)
+                    .background(colors.accentPrimary)
             )
         }
     }

@@ -3,6 +3,7 @@ package org.ensodai.avalonmediacard.presentation.screens.player.component.tv
 import org.ensodai.avalonmediacard.designsystem.theme.AvalonTheme
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
@@ -22,20 +23,26 @@ import org.ensodai.avalonmediacard.presentation.screens.commonComponents.tvAndWe
 fun TvIconButton(
     icon: androidx.compose.ui.graphics.vector.ImageVector,
     contentDescription: String,
-    tint: Color = Color.White,
+    tint: Color = AvalonTheme.colors.textPrimary,
     onClick: () -> Unit
 ) {
+    val colors = AvalonTheme.colors
+
     Box(
         modifier = Modifier
             .size(44.dp)
             .tvAndWebHoverEffect(
                 scaleTarget = 1.15f,
                 shape = CircleShape,
-                activeBorderColor = AvalonTheme.colors.primary,
+                activeBorderColor = colors.accentPrimary,
+                activeBorderWidth = AvalonTheme.elevation.focusBorderWidth,
+                defaultBorderColor = colors.borderOverlay,
+                defaultBorderWidth = 1.dp,
                 onClick = onClick
             )
             .clip(CircleShape)
-            .background(Color.White.copy(alpha = 0.12f)),
+            .background(colors.bgOverlay)
+            .border(1.dp, colors.borderOverlay, CircleShape),
         contentAlignment = Alignment.Center
     ) {
         Icon(

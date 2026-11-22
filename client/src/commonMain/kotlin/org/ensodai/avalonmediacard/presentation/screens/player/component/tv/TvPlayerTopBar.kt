@@ -1,5 +1,6 @@
 package org.ensodai.avalonmediacard.presentation.screens.player.component.tv
 
+import org.ensodai.avalonmediacard.designsystem.theme.AvalonTheme
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -55,6 +56,8 @@ fun TvPlayerTopBar(
     isLocalBuffering: Boolean = false,
     participantsFocusRequester: FocusRequester? = null
 ) {
+    val colors = AvalonTheme.colors
+
     Row(
         modifier = modifier
             .fillMaxWidth()
@@ -99,8 +102,8 @@ fun TvPlayerTopBar(
                         icon = if (isWatched) Lucide.Check else Lucide.Eye,
                         text = if (isWatched) stringResource(Res.string.player_watched) else null,
                         contentDescription = if (isWatched) stringResource(Res.string.player_watched) else stringResource(Res.string.player_mark_watched),
-                        iconTint = if (isWatched) Color(0xFF4CAF50) else Color.White.copy(alpha = 0.85f),
-                        textColor = if (isWatched) Color(0xFF4CAF50) else Color.White,
+                        iconTint = if (isWatched) colors.statusLive else colors.textPrimary,
+                        textColor = if (isWatched) colors.statusLive else colors.textPrimary,
                         focusRequester = watchedFocusRequester,
                         onClick = onToggleEpisodeWatched
                     )
@@ -111,8 +114,8 @@ fun TvPlayerTopBar(
                     icon = Lucide.Star,
                     text = userRating?.toString(),
                     contentDescription = if (userRating != null) stringResource(Res.string.player_rating_val, userRating.toString()) else stringResource(Res.string.player_rate),
-                    iconTint = if (userRating != null) Color(0xFFFFC107) else Color.White.copy(alpha = 0.85f),
-                    textColor = if (userRating != null) Color(0xFFFFC107) else Color.White,
+                    iconTint = if (userRating != null) colors.accentGold else colors.textPrimary,
+                    textColor = if (userRating != null) colors.accentGold else colors.textPrimary,
                     focusRequester = ratingFocusRequester,
                     onClick = { onRateEpisode?.invoke() }
                 )
@@ -134,7 +137,7 @@ fun TvPlayerTopBar(
             PlayerIslandIconButton(
                 icon = Lucide.Settings,
                 contentDescription = stringResource(Res.string.player_settings_title),
-                tint = if (hasCustomAudioOrSubtitle) Color(0xFF4CAF50) else Color.White,
+                tint = if (hasCustomAudioOrSubtitle) colors.statusLive else colors.textPrimary,
                 onClick = onOpenSettings,
                 modifier = (if (settingsFocusRequester != null) Modifier.focusRequester(settingsFocusRequester) else Modifier)
                     .focusProperties { right = FocusRequester.Cancel }
